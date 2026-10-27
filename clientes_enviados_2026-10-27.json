@@ -1,0 +1,59 @@
+{
+  "fecha": "2026-10-27",
+  "tarjetas_clientes": [
+    {
+      "tipo_tarjeta": "FREE",
+      "id_partido": "1550168",
+      "hora": "20:45",
+      "partido": "AS Roma vs Cagliari",
+      "selecciones": [
+        {
+          "mercado": "Faltas Totales > 21.5",
+          "prob": 84.5,
+          "cuota": 1.18
+        },
+        {
+          "mercado": "Doble Oport. 1X",
+          "prob": 84.5,
+          "cuota": 1.18
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "FREE",
+      "id_partido": "1638561",
+      "hora": "20:45",
+      "partido": "Borussia Dortmund vs Werder Bremen",
+      "selecciones": [
+        {
+          "mercado": "Gol en 2do Tiempo",
+          "prob": 81.7,
+          "cuota": 1.18
+        },
+        {
+          "mercado": "Córners > 7.5",
+          "prob": 81.6,
+          "cuota": 1.18
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "FREE",
+      "id_partido": "1640386",
+      "hora": "21:00",
+      "partido": "Fleetwood Town vs Arsenal",
+      "selecciones": [
+        {
+          "mercado": "Córners > 7.5",
+          "prob": 82.3,
+          "cuota": 1.18
+        },
+        {
+          "mercado": "Gol en 2do Tiempo",
+          "prob": 81.9,
+          "cuota": 1.18
+        }
+      ]
+    }
+  ]
+}
