@@ -1,0 +1,131 @@
+{
+  "fecha": "2026-10-26",
+  "tarjetas_clientes": [
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "1492423",
+      "hora": "00:00",
+      "partido": "Flamengo vs Atletico-MG",
+      "selecciones": [
+        {
+          "mercado": "Tarjetas > 3.5",
+          "prob": 68.0,
+          "cuota": 1.5
+        },
+        {
+          "mercado": "Córners > 8.5",
+          "prob": 68.0,
+          "cuota": 1.58
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "1549822",
+      "hora": "02:05",
+      "partido": "Santa Fe vs Bucaramanga",
+      "selecciones": [
+        {
+          "mercado": "Over 1.5 Goles",
+          "prob": 68.0,
+          "cuota": 1.54
+        },
+        {
+          "mercado": "Gol en 2do Tiempo",
+          "prob": 72.8,
+          "cuota": 1.4
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "1492421",
+      "hora": "23:30",
+      "partido": "Coritiba vs Gremio",
+      "selecciones": [
+        {
+          "mercado": "Over 1.5 Goles",
+          "prob": 71.0,
+          "cuota": 1.44
+        },
+        {
+          "mercado": "Tarjetas > 3.5",
+          "prob": 68.0,
+          "cuota": 1.5
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "1584446",
+      "hora": "17:00",
+      "partido": "Rizespor vs Trabzonspor",
+      "selecciones": [
+        {
+          "mercado": "Remates Puerta > 6.5",
+          "prob": 84.8,
+          "cuota": 1.42
+        },
+        {
+          "mercado": "Faltas Totales > 22.5",
+          "prob": 68.0,
+          "cuota": 1.62
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "FREE",
+      "id_partido": "1575524",
+      "hora": "19:45",
+      "partido": "Santa Clara vs Benfica",
+      "selecciones": [
+        {
+          "mercado": "Faltas Totales > 21.5",
+          "prob": 83.2,
+          "cuota": 1.16
+        },
+        {
+          "mercado": "Córners > 7.5",
+          "prob": 79.8,
+          "cuota": 1.16
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "FREE",
+      "id_partido": "1584442",
+      "hora": "19:30",
+      "partido": "Galatasaray vs Fenerbahçe",
+      "selecciones": [
+        {
+          "mercado": "Córners > 7.5",
+          "prob": 84.0,
+          "cuota": 1.16
+        },
+        {
+          "mercado": "Gol en 2do Tiempo",
+          "prob": 82.7,
+          "cuota": 1.16
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "FREE",
+      "id_partido": "1570431",
+      "hora": "21:00",
+      "partido": "Sevilla vs Osasuna",
+      "selecciones": [
+        {
+          "mercado": "Faltas Totales > 21.5",
+          "prob": 84.0,
+          "cuota": 1.16
+        },
+        {
+          "mercado": "Gol en 2do Tiempo",
+          "prob": 81.4,
+          "cuota": 1.16
+        }
+      ]
+    }
+  ]
+}

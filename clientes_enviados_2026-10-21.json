@@ -1,0 +1,103 @@
+{
+  "fecha": "2026-10-21",
+  "tarjetas_clientes": [
+    {
+      "tipo_tarjeta": "VIP",
+      "partido": "Real Madrid vs RB Leipzig",
+      "selecciones": [
+        {
+          "mercado": "Gol en 2do Tiempo",
+          "cuota": 1.32
+        },
+        {
+          "mercado": "Remates Puerta > 6.5",
+          "cuota": 1.32
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "VIP",
+      "partido": "Bayern München vs Arsenal",
+      "selecciones": [
+        {
+          "mercado": "Córners > 8.5",
+          "cuota": 1.32
+        },
+        {
+          "mercado": "Gol en 2do Tiempo",
+          "cuota": 1.32
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "VIP",
+      "partido": "Como vs Manchester United",
+      "selecciones": [
+        {
+          "mercado": "Remates Puerta > 6.5",
+          "cuota": 1.32
+        },
+        {
+          "mercado": "Over 1.5 Goles",
+          "cuota": 1.32
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "VIP",
+      "partido": "Club Brugge KV vs Lens",
+      "selecciones": [
+        {
+          "mercado": "Remates Puerta > 6.5",
+          "cuota": 1.32
+        },
+        {
+          "mercado": "Over 1.5 Goles",
+          "cuota": 1.32
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "FREE",
+      "partido": "Real Madrid vs RB Leipzig",
+      "selecciones": [
+        {
+          "mercado": "Remates Puerta > 5.5",
+          "cuota": 1.12
+        },
+        {
+          "mercado": "Córners > 7.5",
+          "cuota": 1.12
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "FREE",
+      "partido": "Como vs Manchester United",
+      "selecciones": [
+        {
+          "mercado": "Remates Puerta > 5.5",
+          "cuota": 1.12
+        },
+        {
+          "mercado": "Gol en 2do Tiempo",
+          "cuota": 1.14
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "FREE",
+      "partido": "Bayern München vs Arsenal",
+      "selecciones": [
+        {
+          "mercado": "Remates Puerta > 5.5",
+          "cuota": 1.12
+        },
+        {
+          "mercado": "Córners > 7.5",
+          "cuota": 1.12
+        }
+      ]
+    }
+  ]
+}

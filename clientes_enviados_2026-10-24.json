@@ -1,0 +1,131 @@
+{
+  "fecha": "2026-10-24",
+  "tarjetas_clientes": [
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "1492426",
+      "hora": "23:30",
+      "partido": "Palmeiras vs RB Bragantino",
+      "selecciones": [
+        {
+          "mercado": "Over 1.5 Goles",
+          "prob": 71.2,
+          "cuota": 1.43
+        },
+        {
+          "mercado": "Tarjetas > 3.5",
+          "prob": 68.0,
+          "cuota": 1.6
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "1492425",
+      "hora": "21:30",
+      "partido": "Mirassol vs Sao Paulo",
+      "selecciones": [
+        {
+          "mercado": "Over 1.5 Goles",
+          "prob": 71.0,
+          "cuota": 1.44
+        },
+        {
+          "mercado": "Tarjetas > 3.5",
+          "prob": 68.0,
+          "cuota": 1.5
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "1492429",
+      "hora": "21:30",
+      "partido": "Vitoria vs Atletico Paranaense",
+      "selecciones": [
+        {
+          "mercado": "Gol en 2do Tiempo",
+          "prob": 72.7,
+          "cuota": 1.4
+        },
+        {
+          "mercado": "Tarjetas > 3.5",
+          "prob": 68.0,
+          "cuota": 1.6
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "1492428",
+      "hora": "23:30",
+      "partido": "Vasco DA Gama vs Corinthians",
+      "selecciones": [
+        {
+          "mercado": "Tarjetas > 3.5",
+          "prob": 68.0,
+          "cuota": 1.5
+        },
+        {
+          "mercado": "Gol en 1T",
+          "prob": 68.0,
+          "cuota": 1.52
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "FREE",
+      "id_partido": "1492424",
+      "hora": "21:30",
+      "partido": "Internacional vs Botafogo",
+      "selecciones": [
+        {
+          "mercado": "Gol en 2do Tiempo",
+          "prob": 76.6,
+          "cuota": 1.23
+        },
+        {
+          "mercado": "Remates Puerta > 5.5",
+          "prob": 76.5,
+          "cuota": 1.23
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "FREE",
+      "id_partido": "1570425",
+      "hora": "21:00",
+      "partido": "Atletico Madrid vs Deportivo La Coruna",
+      "selecciones": [
+        {
+          "mercado": "Remates Puerta > 5.5",
+          "prob": 84.0,
+          "cuota": 1.16
+        },
+        {
+          "mercado": "Gol en 2do Tiempo",
+          "prob": 82.7,
+          "cuota": 1.16
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "FREE",
+      "id_partido": "1575521",
+      "hora": "21:30",
+      "partido": "GIL Vicente vs FC Porto",
+      "selecciones": [
+        {
+          "mercado": "Remates Puerta > 5.5",
+          "prob": 84.0,
+          "cuota": 1.16
+        },
+        {
+          "mercado": "Faltas Totales > 21.5",
+          "prob": 84.0,
+          "cuota": 1.16
+        }
+      ]
+    }
+  ]
+}

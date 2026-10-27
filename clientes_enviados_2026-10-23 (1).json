@@ -1,0 +1,131 @@
+{
+  "fecha": "2026-10-23",
+  "tarjetas_clientes": [
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "1549836",
+      "hora": "01:00",
+      "partido": "Chico vs Bucaramanga",
+      "selecciones": [
+        {
+          "mercado": "Total Menos de 2.5 (Under)",
+          "prob": 68.0,
+          "cuota": 1.61
+        },
+        {
+          "mercado": "Faltas Totales > 22.5",
+          "prob": 68.0,
+          "cuota": 1.73
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "1549840",
+      "hora": "03:10",
+      "partido": "Junior vs Águilas Doradas",
+      "selecciones": [
+        {
+          "mercado": "Total Menos de 2.5 (Under)",
+          "prob": 68.0,
+          "cuota": 1.61
+        },
+        {
+          "mercado": "Córners > 7.5",
+          "prob": 68.0,
+          "cuota": 1.74
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "1575196",
+      "hora": "20:30",
+      "partido": "VfB Stuttgart vs Borussia Mönchengladbach",
+      "selecciones": [
+        {
+          "mercado": "Córners > 8.5",
+          "prob": 68.3,
+          "cuota": 1.49
+        },
+        {
+          "mercado": "Total Asiático > 2.25",
+          "prob": 68.0,
+          "cuota": 1.55
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "1552794",
+      "hora": "20:45",
+      "partido": "Stade Brestois 29 vs Nice",
+      "selecciones": [
+        {
+          "mercado": "Gol en 1T",
+          "prob": 72.7,
+          "cuota": 1.4
+        },
+        {
+          "mercado": "Córners > 8.5",
+          "prob": 68.0,
+          "cuota": 1.52
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "FREE",
+      "id_partido": "1575196",
+      "hora": "20:30",
+      "partido": "VfB Stuttgart vs Borussia Mönchengladbach",
+      "selecciones": [
+        {
+          "mercado": "Gol en 2do Tiempo",
+          "prob": 82.7,
+          "cuota": 1.16
+        },
+        {
+          "mercado": "Córners > 7.5",
+          "prob": 79.2,
+          "cuota": 1.16
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "FREE",
+      "id_partido": "1552794",
+      "hora": "20:45",
+      "partido": "Stade Brestois 29 vs Nice",
+      "selecciones": [
+        {
+          "mercado": "Gol en 2do Tiempo",
+          "prob": 81.6,
+          "cuota": 1.16
+        },
+        {
+          "mercado": "Córners > 7.5",
+          "prob": 78.3,
+          "cuota": 1.16
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "FREE",
+      "id_partido": "1557443",
+      "hora": "21:00",
+      "partido": "Ipswich vs Nottingham Forest",
+      "selecciones": [
+        {
+          "mercado": "Gol en 2do Tiempo",
+          "prob": 81.8,
+          "cuota": 1.16
+        },
+        {
+          "mercado": "Remates Puerta > 5.5",
+          "prob": 72.2,
+          "cuota": 1.28
+        }
+      ]
+    }
+  ]
+}

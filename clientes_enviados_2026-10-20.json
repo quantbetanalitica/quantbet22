@@ -1,0 +1,103 @@
+{
+  "fecha": "2026-10-20",
+  "tarjetas_clientes": [
+    {
+      "tipo_tarjeta": "VIP",
+      "partido": "Sabah FA vs Borussia Dortmund",
+      "selecciones": [
+        {
+          "mercado": "Faltas Totales > 22.5",
+          "cuota": 1.32
+        },
+        {
+          "mercado": "Over 1.5 Goles",
+          "cuota": 1.32
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "VIP",
+      "partido": "AS Roma vs Slovan Bratislava",
+      "selecciones": [
+        {
+          "mercado": "Over 1.5 Goles",
+          "cuota": 1.34
+        },
+        {
+          "mercado": "Remates Puerta > 6.5",
+          "cuota": 1.32
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "VIP",
+      "partido": "FC Porto vs PSV Eindhoven",
+      "selecciones": [
+        {
+          "mercado": "Over 1.5 Goles",
+          "cuota": 1.35
+        },
+        {
+          "mercado": "Remates Puerta > 6.5",
+          "cuota": 1.43
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "VIP",
+      "partido": "Paris Saint Germain vs Barcelona",
+      "selecciones": [
+        {
+          "mercado": "Remates Puerta > 6.5",
+          "cuota": 1.32
+        },
+        {
+          "mercado": "Gol en 2do Tiempo",
+          "cuota": 1.32
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "FREE",
+      "partido": "Paris Saint Germain vs Barcelona",
+      "selecciones": [
+        {
+          "mercado": "Remates Puerta > 5.5",
+          "cuota": 1.12
+        },
+        {
+          "mercado": "Córners > 7.5",
+          "cuota": 1.15
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "FREE",
+      "partido": "Sabah FA vs Borussia Dortmund",
+      "selecciones": [
+        {
+          "mercado": "Faltas Totales > 21.5",
+          "cuota": 1.14
+        },
+        {
+          "mercado": "Gol en 2do Tiempo",
+          "cuota": 1.24
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "FREE",
+      "partido": "AS Roma vs Slovan Bratislava",
+      "selecciones": [
+        {
+          "mercado": "Remates Puerta > 5.5",
+          "cuota": 1.16
+        },
+        {
+          "mercado": "Gol en 2do Tiempo",
+          "cuota": 1.26
+        }
+      ]
+    }
+  ]
+}
