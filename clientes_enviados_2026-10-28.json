@@ -1,0 +1,131 @@
+{
+  "fecha": "2026-10-28",
+  "tarjetas_clientes": [
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "1640575",
+      "hora": "20:30",
+      "partido": "Manchester City vs Brighton",
+      "selecciones": [
+        {
+          "mercado": "Over 1.5 Goles",
+          "prob": 83.0,
+          "cuota": 1.38
+        },
+        {
+          "mercado": "Córners > 8.5",
+          "prob": 76.7,
+          "cuota": 1.48
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "1638558",
+      "hora": "20:45",
+      "partido": "Bayern München vs 1. FC Magdeburg",
+      "selecciones": [
+        {
+          "mercado": "Doble Oport. 1X",
+          "prob": 88.2,
+          "cuota": 1.38
+        },
+        {
+          "mercado": "Gol en 2do Tiempo",
+          "prob": 81.6,
+          "cuota": 1.38
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "1640383",
+      "hora": "20:45",
+      "partido": "Bournemouth vs Aston Villa",
+      "selecciones": [
+        {
+          "mercado": "Gol en 2do Tiempo",
+          "prob": 75.6,
+          "cuota": 1.38
+        },
+        {
+          "mercado": "Córners > 8.5",
+          "prob": 69.2,
+          "cuota": 1.48
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "1490579",
+      "hora": "01:30",
+      "partido": "Minnesota United FC vs Sporting Kansas City",
+      "selecciones": [
+        {
+          "mercado": "Over 1.5 Goles",
+          "prob": 73.1,
+          "cuota": 1.4
+        },
+        {
+          "mercado": "Córners > 8.5",
+          "prob": 68.0,
+          "cuota": 1.69
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "FREE",
+      "id_partido": "1640388",
+      "hora": "21:00",
+      "partido": "Liverpool vs Chelsea",
+      "selecciones": [
+        {
+          "mercado": "Gol en 2do Tiempo",
+          "prob": 82.6,
+          "cuota": 1.18
+        },
+        {
+          "mercado": "Córners > 7.5",
+          "prob": 84.5,
+          "cuota": 1.18
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "FREE",
+      "id_partido": "1550176",
+      "hora": "18:30",
+      "partido": "Venezia vs Inter",
+      "selecciones": [
+        {
+          "mercado": "Doble Oport. X2",
+          "prob": 84.5,
+          "cuota": 1.18
+        },
+        {
+          "mercado": "Faltas Totales > 22.5",
+          "prob": 81.6,
+          "cuota": 1.18
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "FREE",
+      "id_partido": "1550171",
+      "hora": "20:45",
+      "partido": "Genoa vs Juventus",
+      "selecciones": [
+        {
+          "mercado": "Gol en 2do Tiempo",
+          "prob": 81.1,
+          "cuota": 1.18
+        },
+        {
+          "mercado": "Doble Oport. X2",
+          "prob": 84.5,
+          "cuota": 1.18
+        }
+      ]
+    }
+  ]
+}
