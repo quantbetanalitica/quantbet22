@@ -376,7 +376,7 @@ if os.path.exists(ruta_json_dia):
         total_card = len(opciones_f)
         filas_html = ""
 
-        if ya_termino:
+        if ya_termino or (str(id_p) in mapa_ft_global) or (tf["partido"].strip().lower() in mapa_ft_global):
             for op in opciones_f:
                 marc_f, gano_f = evaluar_pick_tarjeta(mapa_ft_global, df_historial, jornada_elegida, id_p, tf["partido"], op["mercado"])
                 if gano_f:
@@ -416,7 +416,7 @@ if os.path.exists(ruta_json_dia):
         total_v = len(opciones_v)
         filas_v_html = ""
 
-        if ya_termino:
+        if ya_termino or (str(id_pv) in mapa_ft_global) or (tv["partido"].strip().lower() in mapa_ft_global):
             for op in opciones_v:
                 marc_v, gano_v = evaluar_pick_tarjeta(mapa_ft_global, df_historial, jornada_elegida, id_pv, tv["partido"], op["mercado"])
                 if gano_v:
@@ -504,4 +504,6 @@ if not df_historial.empty:
 
     vista_cajon = df_cajon[["Semáforo", "Fecha", "Partido", "Mercado", "Cuota", "Marcador"]].iloc[::-1]
     st.dataframe(vista_cajon, use_container_width=True, hide_index=True, height=380)
-# Sync: 2026-10-30 19:53:15
+# Sync: 2026-10-30 21:11:13
+
+# Sync: 2026-10-30 21:11:13
