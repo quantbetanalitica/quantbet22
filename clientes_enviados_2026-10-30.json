@@ -2,614 +2,128 @@
   "fecha": "2026-10-30",
   "tarjetas_clientes": [
     {
-      "id_partido": "1603071",
-      "partido": "Abha vs Al-Ittihad FC",
-      "hora": "20:00",
-      "tipo_tarjeta": "FREE",
-      "selecciones": [
-        {
-          "mercado": "Doble Oport. X2",
-          "prob": 78.0,
-          "cuota": 1.18
-        },
-        {
-          "mercado": "Córners > 7.5",
-          "prob": 78.0,
-          "cuota": 1.28
-        }
-      ]
-    },
-    {
-      "id_partido": "1603071",
-      "partido": "Abha vs Al-Ittihad FC",
-      "hora": "20:00",
       "tipo_tarjeta": "VIP",
+      "id_partido": "1492433",
+      "hora": "00:00",
+      "partido": "Corinthians vs Mirassol",
       "selecciones": [
         {
-          "mercado": "Córners > 8.5",
-          "prob": 80.0,
-          "cuota": 1.64
-        },
-        {
-          "mercado": "Over 1.5 Goles",
-          "prob": 80.0,
-          "cuota": 1.75
-        }
-      ]
-    },
-    {
-      "id_partido": "1584455",
-      "partido": "Konyaspor vs Galatasaray",
-      "hora": "20:00",
-      "tipo_tarjeta": "FREE",
-      "selecciones": [
-        {
-          "mercado": "Faltas Totales > 22.5",
-          "prob": 78.0,
-          "cuota": 1.18
-        },
-        {
-          "mercado": "Doble Oport. X2",
-          "prob": 78.0,
-          "cuota": 1.18
-        }
-      ]
-    },
-    {
-      "id_partido": "1584455",
-      "partido": "Konyaspor vs Galatasaray",
-      "hora": "20:00",
-      "tipo_tarjeta": "VIP",
-      "selecciones": [
-        {
-          "mercado": "Faltas Totales > 22.5",
-          "prob": 80.0,
-          "cuota": 1.42
-        },
-        {
-          "mercado": "Remates Puerta > 5.5",
-          "prob": 80.0,
-          "cuota": 1.48
-        }
-      ]
-    },
-    {
-      "id_partido": "1552801",
-      "partido": "Le Havre vs Paris Saint Germain",
-      "hora": "20:00",
-      "tipo_tarjeta": "FREE",
-      "selecciones": [
-        {
-          "mercado": "Doble Oport. X2",
-          "prob": 78.0,
-          "cuota": 1.18
-        },
-        {
-          "mercado": "Córners > 7.5",
-          "prob": 78.0,
-          "cuota": 1.26
-        }
-      ]
-    },
-    {
-      "id_partido": "1552801",
-      "partido": "Le Havre vs Paris Saint Germain",
-      "hora": "20:00",
-      "tipo_tarjeta": "VIP",
-      "selecciones": [
-        {
-          "mercado": "Córners > 8.5",
-          "prob": 80.0,
+          "mercado": "Tarjetas > 3.5",
+          "prob": 68.0,
           "cuota": 1.6
         },
         {
-          "mercado": "Over 1.5 Goles",
-          "prob": 80.0,
-          "cuota": 1.68
+          "mercado": "Córners > 8.5",
+          "prob": 68.0,
+          "cuota": 1.63
         }
       ]
     },
     {
-      "id_partido": "1552806",
-      "partido": "Nice vs Rennes",
-      "hora": "20:00",
-      "tipo_tarjeta": "FREE",
-      "selecciones": [
-        {
-          "mercado": "Over 1.5 Goles",
-          "prob": 78.0,
-          "cuota": 1.18
-        },
-        {
-          "mercado": "Córners > 7.5",
-          "prob": 78.0,
-          "cuota": 1.18
-        }
-      ]
-    },
-    {
-      "id_partido": "1552806",
-      "partido": "Nice vs Rennes",
-      "hora": "20:00",
       "tipo_tarjeta": "VIP",
+      "id_partido": "1493224",
+      "hora": "01:15",
+      "partido": "Racing Club vs Aldosivi",
       "selecciones": [
+        {
+          "mercado": "Remates Puerta > 5.5",
+          "prob": 70.6,
+          "cuota": 1.45
+        },
         {
           "mercado": "Gol en 2do Tiempo",
-          "prob": 80.0,
-          "cuota": 1.42
-        },
-        {
-          "mercado": "Ambos Marcan (BTTS)",
-          "prob": 80.0,
-          "cuota": 1.65
-        }
-      ]
-    },
-    {
-      "id_partido": "1603078",
-      "partido": "Al Shabab vs Al-Ahli Jeddah",
-      "hora": "20:00",
-      "tipo_tarjeta": "FREE",
-      "selecciones": [
-        {
-          "mercado": "Doble Oport. X2",
-          "prob": 78.0,
-          "cuota": 1.18
-        },
-        {
-          "mercado": "Córners > 7.5",
-          "prob": 78.0,
-          "cuota": 1.25
-        }
-      ]
-    },
-    {
-      "id_partido": "1603078",
-      "partido": "Al Shabab vs Al-Ahli Jeddah",
-      "hora": "20:00",
-      "tipo_tarjeta": "VIP",
-      "selecciones": [
-        {
-          "mercado": "Córners > 8.5",
-          "prob": 80.0,
-          "cuota": 1.59
-        },
-        {
-          "mercado": "Over 1.5 Goles",
-          "prob": 80.0,
-          "cuota": 1.68
-        }
-      ]
-    },
-    {
-      "id_partido": "1575211",
-      "partido": "SV Elversberg vs FSV Mainz 05",
-      "hora": "20:00",
-      "tipo_tarjeta": "FREE",
-      "selecciones": [
-        {
-          "mercado": "Córners > 7.5",
-          "prob": 78.0,
-          "cuota": 1.18
-        },
-        {
-          "mercado": "Over 1.5 Goles",
-          "prob": 78.0,
-          "cuota": 1.18
-        }
-      ]
-    },
-    {
-      "id_partido": "1575211",
-      "partido": "SV Elversberg vs FSV Mainz 05",
-      "hora": "20:00",
-      "tipo_tarjeta": "VIP",
-      "selecciones": [
-        {
-          "mercado": "Gol en 2do Tiempo",
-          "prob": 80.0,
-          "cuota": 1.38
-        },
-        {
-          "mercado": "Faltas Totales > 22.5",
-          "prob": 80.0,
-          "cuota": 1.42
-        }
-      ]
-    },
-    {
-      "id_partido": "1570442",
-      "partido": "Villarreal vs Espanyol",
-      "hora": "20:00",
-      "tipo_tarjeta": "FREE",
-      "selecciones": [
-        {
-          "mercado": "Faltas Totales > 22.5",
-          "prob": 78.0,
-          "cuota": 1.18
-        },
-        {
-          "mercado": "Over 1.5 Goles",
-          "prob": 78.0,
-          "cuota": 1.18
-        }
-      ]
-    },
-    {
-      "id_partido": "1570442",
-      "partido": "Villarreal vs Espanyol",
-      "hora": "20:00",
-      "tipo_tarjeta": "VIP",
-      "selecciones": [
-        {
-          "mercado": "Over 1.5 Goles",
-          "prob": 80.0,
-          "cuota": 1.38
-        },
-        {
-          "mercado": "Faltas Totales > 22.5",
-          "prob": 80.0,
-          "cuota": 1.42
-        }
-      ]
-    },
-    {
-      "id_partido": "1552802",
-      "partido": "Lille vs Lens",
-      "hora": "20:00",
-      "tipo_tarjeta": "FREE",
-      "selecciones": [
-        {
-          "mercado": "Córners > 7.5",
-          "prob": 78.0,
-          "cuota": 1.18
-        },
-        {
-          "mercado": "Córners > 8.5",
-          "prob": 78.0,
-          "cuota": 1.32
-        }
-      ]
-    },
-    {
-      "id_partido": "1552802",
-      "partido": "Lille vs Lens",
-      "hora": "20:00",
-      "tipo_tarjeta": "VIP",
-      "selecciones": [
-        {
-          "mercado": "Tarjetas > 3.5",
-          "prob": 80.0,
-          "cuota": 1.61
-        },
-        {
-          "mercado": "Córners > 8.5",
-          "prob": 80.0,
+          "prob": 69.0,
           "cuota": 1.48
         }
       ]
     },
     {
-      "id_partido": "1575531",
-      "partido": "Casa Pia vs Sporting CP",
-      "hora": "20:00",
-      "tipo_tarjeta": "FREE",
-      "selecciones": [
-        {
-          "mercado": "Faltas Totales > 22.5",
-          "prob": 78.0,
-          "cuota": 1.18
-        },
-        {
-          "mercado": "Doble Oport. X2",
-          "prob": 78.0,
-          "cuota": 1.18
-        }
-      ]
-    },
-    {
-      "id_partido": "1575531",
-      "partido": "Casa Pia vs Sporting CP",
-      "hora": "20:00",
       "tipo_tarjeta": "VIP",
+      "id_partido": "1551022",
+      "hora": "04:00",
+      "partido": "Puebla vs U.N.A.M. - Pumas",
       "selecciones": [
         {
-          "mercado": "Faltas Totales > 22.5",
-          "prob": 80.0,
+          "mercado": "Gol en 2do Tiempo",
+          "prob": 71.7,
           "cuota": 1.42
         },
         {
-          "mercado": "Combo X2 + O1.5",
-          "prob": 80.0,
-          "cuota": 1.52
+          "mercado": "Remates Puerta > 7.5",
+          "prob": 68.0,
+          "cuota": 1.53
         }
       ]
     },
     {
-      "id_partido": "1549732",
-      "partido": "Deportivo Pereira vs Jaguares",
-      "hora": "20:00",
-      "tipo_tarjeta": "FREE",
-      "selecciones": [
-        {
-          "mercado": "Total Menos de 3.5 (Under)",
-          "prob": 78.0,
-          "cuota": 1.18
-        },
-        {
-          "mercado": "Doble Oport. 1X",
-          "prob": 78.0,
-          "cuota": 1.18
-        }
-      ]
-    },
-    {
-      "id_partido": "1549732",
-      "partido": "Deportivo Pereira vs Jaguares",
-      "hora": "20:00",
       "tipo_tarjeta": "VIP",
+      "id_partido": "1493218",
+      "hora": "23:00",
+      "partido": "Estudiantes de Rio Cuarto vs Gimnasia L.P.",
       "selecciones": [
         {
           "mercado": "Remates Puerta > 5.5",
-          "prob": 80.0,
-          "cuota": 1.69
+          "prob": 70.6,
+          "cuota": 1.45
         },
         {
-          "mercado": "Doble Oport. 1X",
-          "prob": 80.0,
-          "cuota": 1.38
-        }
-      ]
-    },
-    {
-      "id_partido": "1493218",
-      "partido": "Estudiantes de Rio Cuarto vs Gimnasia L.P.",
-      "hora": "20:00",
-      "tipo_tarjeta": "FREE",
-      "selecciones": [
-        {
-          "mercado": "Total Menos de 3.5 (Under)",
-          "prob": 78.0,
-          "cuota": 1.18
-        },
-        {
-          "mercado": "Tarjetas > 3.5",
-          "prob": 78.0,
-          "cuota": 1.32
-        }
-      ]
-    },
-    {
-      "id_partido": "1493218",
-      "partido": "Estudiantes de Rio Cuarto vs Gimnasia L.P.",
-      "hora": "20:00",
-      "tipo_tarjeta": "VIP",
-      "selecciones": [
-        {
-          "mercado": "Total Menos de 2.5 (Under)",
-          "prob": 80.0,
-          "cuota": 1.68
-        },
-        {
-          "mercado": "Tarjetas > 3.5",
-          "prob": 80.0,
+          "mercado": "Gol en 2do Tiempo",
+          "prob": 68.0,
           "cuota": 1.51
         }
       ]
     },
     {
-      "id_partido": "1492433",
-      "partido": "Corinthians vs Mirassol",
-      "hora": "20:00",
       "tipo_tarjeta": "FREE",
+      "id_partido": "1570442",
+      "hora": "21:00",
+      "partido": "Villarreal vs Espanyol",
       "selecciones": [
-        {
-          "mercado": "Doble Oport. 1X",
-          "prob": 78.0,
-          "cuota": 1.18
-        },
-        {
-          "mercado": "Tarjetas > 3.5",
-          "prob": 78.0,
-          "cuota": 1.32
-        }
-      ]
-    },
-    {
-      "id_partido": "1492433",
-      "partido": "Corinthians vs Mirassol",
-      "hora": "20:00",
-      "tipo_tarjeta": "VIP",
-      "selecciones": [
-        {
-          "mercado": "Tarjetas > 3.5",
-          "prob": 80.0,
-          "cuota": 1.45
-        },
         {
           "mercado": "Faltas Totales > 21.5",
-          "prob": 80.0,
-          "cuota": 1.67
-        }
-      ]
-    },
-    {
-      "id_partido": "1493224",
-      "partido": "Racing Club vs Aldosivi",
-      "hora": "20:00",
-      "tipo_tarjeta": "FREE",
-      "selecciones": [
-        {
-          "mercado": "Total Menos de 3.5 (Under)",
-          "prob": 78.0,
+          "prob": 84.5,
           "cuota": 1.18
         },
-        {
-          "mercado": "Doble Oport. 1X",
-          "prob": 78.0,
-          "cuota": 1.18
-        }
-      ]
-    },
-    {
-      "id_partido": "1493224",
-      "partido": "Racing Club vs Aldosivi",
-      "hora": "20:00",
-      "tipo_tarjeta": "VIP",
-      "selecciones": [
-        {
-          "mercado": "Tarjetas > 3.5",
-          "prob": 80.0,
-          "cuota": 1.45
-        },
-        {
-          "mercado": "Faltas Totales > 21.5",
-          "prob": 80.0,
-          "cuota": 1.67
-        }
-      ]
-    },
-    {
-      "id_partido": "1551020",
-      "partido": "Atletico San Luis vs Atlas",
-      "hora": "20:00",
-      "tipo_tarjeta": "FREE",
-      "selecciones": [
         {
           "mercado": "Over 1.5 Goles",
-          "prob": 78.0,
-          "cuota": 1.18
-        },
-        {
-          "mercado": "Córners > 7.5",
-          "prob": 78.0,
+          "prob": 81.8,
           "cuota": 1.18
         }
       ]
     },
     {
-      "id_partido": "1551020",
-      "partido": "Atletico San Luis vs Atlas",
-      "hora": "20:00",
-      "tipo_tarjeta": "VIP",
-      "selecciones": [
-        {
-          "mercado": "Gol en 2do Tiempo",
-          "prob": 80.0,
-          "cuota": 1.38
-        },
-        {
-          "mercado": "Córners > 8.5",
-          "prob": 80.0,
-          "cuota": 1.5
-        }
-      ]
-    },
-    {
-      "id_partido": "1551021",
-      "partido": "FC Juarez vs Club Queretaro",
-      "hora": "20:00",
       "tipo_tarjeta": "FREE",
-      "selecciones": [
-        {
-          "mercado": "Tarjetas > 3.5",
-          "prob": 78.0,
-          "cuota": 1.32
-        },
-        {
-          "mercado": "Córners > 7.5",
-          "prob": 78.0,
-          "cuota": 1.32
-        }
-      ]
-    },
-    {
-      "id_partido": "1551021",
-      "partido": "FC Juarez vs Club Queretaro",
-      "hora": "20:00",
-      "tipo_tarjeta": "VIP",
-      "selecciones": [
-        {
-          "mercado": "Remates Puerta > 5.5",
-          "prob": 80.0,
-          "cuota": 1.42
-        },
-        {
-          "mercado": "Tarjetas > 3.5",
-          "prob": 80.0,
-          "cuota": 1.52
-        }
-      ]
-    },
-    {
-      "id_partido": "1549725",
-      "partido": "Bucaramanga vs Deportivo Pasto",
-      "hora": "20:00",
-      "tipo_tarjeta": "FREE",
+      "id_partido": "1575531",
+      "hora": "21:15",
+      "partido": "Casa Pia vs Sporting CP",
       "selecciones": [
         {
           "mercado": "Faltas Totales > 22.5",
-          "prob": 78.0,
+          "prob": 84.5,
           "cuota": 1.18
         },
-        {
-          "mercado": "Total Menos de 3.5 (Under)",
-          "prob": 78.0,
-          "cuota": 1.18
-        }
-      ]
-    },
-    {
-      "id_partido": "1549725",
-      "partido": "Bucaramanga vs Deportivo Pasto",
-      "hora": "20:00",
-      "tipo_tarjeta": "VIP",
-      "selecciones": [
-        {
-          "mercado": "Faltas Totales > 22.5",
-          "prob": 80.0,
-          "cuota": 1.42
-        },
-        {
-          "mercado": "Total Menos de 2.5 (Under)",
-          "prob": 80.0,
-          "cuota": 1.68
-        }
-      ]
-    },
-    {
-      "id_partido": "1551022",
-      "partido": "Puebla vs U.N.A.M. - Pumas",
-      "hora": "20:00",
-      "tipo_tarjeta": "FREE",
-      "selecciones": [
-        {
-          "mercado": "Over 1.5 Goles",
-          "prob": 78.0,
-          "cuota": 1.26
-        },
-        {
-          "mercado": "Córners > 7.5",
-          "prob": 78.0,
-          "cuota": 1.27
-        }
-      ]
-    },
-    {
-      "id_partido": "1551022",
-      "partido": "Puebla vs U.N.A.M. - Pumas",
-      "hora": "20:00",
-      "tipo_tarjeta": "VIP",
-      "selecciones": [
         {
           "mercado": "Gol en 2do Tiempo",
-          "prob": 80.0,
-          "cuota": 1.45
+          "prob": 81.9,
+          "cuota": 1.18
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "FREE",
+      "id_partido": "1552802",
+      "hora": "21:05",
+      "partido": "Lille vs Lens",
+      "selecciones": [
+        {
+          "mercado": "Córners > 7.5",
+          "prob": 81.7,
+          "cuota": 1.18
         },
         {
-          "mercado": "Tarjetas > 3.5",
-          "prob": 80.0,
-          "cuota": 1.54
+          "mercado": "Gol en 2do Tiempo",
+          "prob": 73.9,
+          "cuota": 1.29
         }
       ]
     }
