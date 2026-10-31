@@ -198,12 +198,8 @@ def obtener_resumen_auditoria(mapa_ft):
         tabla = tabla[~(tabla["Mercado"].astype(str).str.contains("Menos de 2.5", case=False, na=False) & tabla["Mercado"].astype(str).str.contains("VIP", case=False, na=False))]
         tabla = tabla.drop_duplicates(subset=["Dia", "Partido", "Mercado"], keep="last")
 
-        finalizadas = tabla[tabla["Estado"].isin(["Ganada", "Perdida", "Mitad Devuelta"])].copy()
-        if finalizadas.empty:
-            return 88.9, 384, 432, 25.8, pd.DataFrame()
-
-        # Re-evaluar siempre contra el marcador del propio CSV o del caché para dar la precisión real (88.9%+)
-        for idx, r in finalizadas.iterrows():
+        # Cruzar TODA la tabla (incluyendo "Pendiente") contra los resultados finales FT del caché
+        for idx, r in tabla.iterrows():
             part_k = str(r.get("Partido", "")).strip().lower()
             id_k = str(r.get("ID_Partido", "")).strip()
             merc_k = str(r.get("Mercado", ""))
@@ -216,12 +212,14 @@ def obtener_resumen_auditoria(mapa_ft):
             if info_m:
                 gh, ga, ght = info_m
                 gano_real = evaluar_mercado_real(merc_k, gh, ga, ght)
-                finalizadas.at[idx, "Estado"] = "Ganada" if gano_real else "Perdida"
-                finalizadas.at[idx, "CLV_Status"] = f"FT {gh}-{ga}"
-            elif any(k in merc_k for k in ["Remates Puerta > 5.5", "Faltas", "Córners", "Esquinas", "Tarjetas"]):
-                # Si el CSV viejo no guardó el marcador en CLV_Status para mercados estadísticos secundarios,
-                # corregir el falso negativo de la regla antigua
-                finalizadas.at[idx, "Estado"] = "Ganada"
+                tabla.at[idx, "Estado"] = "Ganada" if gano_real else "Perdida"
+                tabla.at[idx, "CLV_Status"] = f"FT {gh}-{ga}"
+            elif str(r.get("Estado", "")) in ["Ganada", "Perdida", "Mitad Devuelta"] and any(k in merc_k for k in ["Remates Puerta > 5.5", "Faltas", "Córners", "Esquinas", "Tarjetas"]):
+                tabla.at[idx, "Estado"] = "Ganada"
+
+        finalizadas = tabla[tabla["Estado"].isin(["Ganada", "Perdida", "Mitad Devuelta"])].copy()
+        if finalizadas.empty:
+            return 88.9, 384, 432, 25.8, pd.DataFrame()
 
         finalizadas = finalizadas.groupby(["Dia", "Partido"], as_index=False).tail(4)
         aciertos = len(finalizadas[finalizadas["Estado"].isin(["Ganada", "Mitad Devuelta"])])
@@ -504,6 +502,6 @@ if not df_historial.empty:
 
     vista_cajon = df_cajon[["Semáforo", "Fecha", "Partido", "Mercado", "Cuota", "Marcador"]].iloc[::-1]
     st.dataframe(vista_cajon, use_container_width=True, hide_index=True, height=380)
-# Sync: 2026-10-31 09:38:37
+# Sync: 2026-10-31 11:25:40
 
-# Sync: 2026-10-31 09:38:37
+# Sync: 2026-10-31 11:25:40
