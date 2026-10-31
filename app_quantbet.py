@@ -159,11 +159,14 @@ def evaluar_mercado_real(merc, gh, ga, g_ht):
     return tot >= 2
 
 
-@st.cache_data(ttl=120)
+@st.cache_data(ttl=180)
 def cargar_mapa_resultados_caches():
+    import requests as req_api
+    from datetime import timedelta
     mapa = {}
     for arch in sorted(os.listdir(".")):
         if arch.startswith("cache_partidos_") and arch.endswith(".json"):
+            fecha_arch = arch.replace("cache_partidos_", "").replace(".json", "")
             try:
                 with open(arch, "r", encoding="utf-8") as f:
                     for p in json.load(f):
@@ -178,9 +181,37 @@ def cargar_mapa_resultados_caches():
                             ght = int(sh.get("home") or 0) + int(sh.get("away") or 0)
                             info = (gh, ga, ght)
                             mapa[fid] = info
-                            mapa[f"{loc} vs {vis}"] = info
+                            mapa[f"{fecha_arch}_{loc} vs {vis}"] = info
             except Exception:
                 pass
+
+    # Consulta directa en tiempo real a la API para hoy y ayer (actualiza FT en vivo sin depender del PC)
+    api_key = os.getenv("API_SPORTS_KEY", "48f391f30e76d9c84e5c94b6a4cccdb4")
+    hoy_s = datetime.now().strftime("%Y-%m-%d")
+    ayer_s = (datetime.now() - timedelta(days=1)).strftime("%Y-%m-%d")
+    for f_live in [ayer_s, hoy_s]:
+        try:
+            r = req_api.get(
+                f"https://v3.football.api-sports.io/fixtures?date={f_live}",
+                headers={"x-apisports-key": api_key},
+                timeout=10,
+            )
+            if r.status_code == 200:
+                for p in r.json().get("response", []):
+                    est = p.get("fixture", {}).get("status", {}).get("short", "")
+                    if est in ["FT", "AET", "PEN"]:
+                        loc = p["teams"]["home"]["name"].strip().lower()
+                        vis = p["teams"]["away"]["name"].strip().lower()
+                        fid = str(p["fixture"]["id"])
+                        gh = int(p["goals"]["home"] or 0)
+                        ga = int(p["goals"]["away"] or 0)
+                        sh = p.get("score", {}).get("halftime", {})
+                        ght = int(sh.get("home") or 0) + int(sh.get("away") or 0)
+                        info = (gh, ga, ght)
+                        mapa[fid] = info
+                        mapa[f"{f_live}_{loc} vs {vis}"] = info
+        except Exception:
+            pass
     return mapa
 
 
@@ -198,12 +229,13 @@ def obtener_resumen_auditoria(mapa_ft):
         tabla = tabla[~(tabla["Mercado"].astype(str).str.contains("Menos de 2.5", case=False, na=False) & tabla["Mercado"].astype(str).str.contains("VIP", case=False, na=False))]
         tabla = tabla.drop_duplicates(subset=["Dia", "Partido", "Mercado"], keep="last")
 
-        # Cruzar TODA la tabla (incluyendo "Pendiente") contra los resultados finales FT del caché
+        # Evaluar TODAS las filas (incluyendo las "Pendiente" de hoy) contra los resultados FT en vivo
         for idx, r in tabla.iterrows():
             part_k = str(r.get("Partido", "")).strip().lower()
+            dia_k = str(r.get("Dia", "")).strip()
             id_k = str(r.get("ID_Partido", "")).strip()
             merc_k = str(r.get("Mercado", ""))
-            info_m = mapa_ft.get(id_k) or mapa_ft.get(part_k)
+            info_m = mapa_ft.get(id_k) or mapa_ft.get(f"{dia_k}_{part_k}")
             if not info_m:
                 m_sc = re.search(r"(\d+)-(\d+)", str(r.get("CLV_Status", "")))
                 if m_sc:
@@ -249,7 +281,7 @@ def listar_jornadas():
 
 
 def evaluar_pick_tarjeta(mapa_ft, df_hist, dia_str, id_partido, duelo_str, pick_str):
-    info_m = mapa_ft.get(str(id_partido)) or mapa_ft.get(duelo_str.strip().lower())
+    info_m = mapa_ft.get(str(id_partido)) or mapa_ft.get(f"{dia_str}_{duelo_str.strip().lower()}")
     if info_m:
         gh, ga, ght = info_m
         gano = evaluar_mercado_real(pick_str, gh, ga, ght)
@@ -374,7 +406,7 @@ if os.path.exists(ruta_json_dia):
         total_card = len(opciones_f)
         filas_html = ""
 
-        if ya_termino or (str(id_p) in mapa_ft_global) or (tf["partido"].strip().lower() in mapa_ft_global):
+        if ya_termino or (str(id_p) in mapa_ft_global) or (f"{jornada_elegida}_{tf['partido'].strip().lower()}" in mapa_ft_global):
             for op in opciones_f:
                 marc_f, gano_f = evaluar_pick_tarjeta(mapa_ft_global, df_historial, jornada_elegida, id_p, tf["partido"], op["mercado"])
                 if gano_f:
@@ -414,7 +446,7 @@ if os.path.exists(ruta_json_dia):
         total_v = len(opciones_v)
         filas_v_html = ""
 
-        if ya_termino or (str(id_pv) in mapa_ft_global) or (tv["partido"].strip().lower() in mapa_ft_global):
+        if ya_termino or (str(id_pv) in mapa_ft_global) or (f"{jornada_elegida}_{tv['partido'].strip().lower()}" in mapa_ft_global):
             for op in opciones_v:
                 marc_v, gano_v = evaluar_pick_tarjeta(mapa_ft_global, df_historial, jornada_elegida, id_pv, tv["partido"], op["mercado"])
                 if gano_v:
@@ -502,6 +534,6 @@ if not df_historial.empty:
 
     vista_cajon = df_cajon[["Semáforo", "Fecha", "Partido", "Mercado", "Cuota", "Marcador"]].iloc[::-1]
     st.dataframe(vista_cajon, use_container_width=True, hide_index=True, height=380)
-# Sync: 2026-10-31 11:25:40
+# Sync: 2026-11-01 00:35:10
 
-# Sync: 2026-10-31 11:25:40
+# Sync: 2026-11-01 00:35:10
