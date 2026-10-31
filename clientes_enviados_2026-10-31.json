@@ -1,0 +1,131 @@
+{
+  "fecha": "2026-10-31",
+  "tarjetas_clientes": [
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "1550177",
+      "hora": "20:45",
+      "partido": "AC Milan vs Inter",
+      "selecciones": [
+        {
+          "mercado": "Gol en 1T",
+          "prob": 76.5,
+          "cuota": 1.38
+        },
+        {
+          "mercado": "Remates Puerta > 7.5",
+          "prob": 76.1,
+          "cuota": 1.48
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "1570439",
+      "hora": "14:00",
+      "partido": "Levante vs Atletico Madrid",
+      "selecciones": [
+        {
+          "mercado": "Gol en 2do Tiempo",
+          "prob": 76.6,
+          "cuota": 1.38
+        },
+        {
+          "mercado": "Córners > 8.5",
+          "prob": 68.0,
+          "cuota": 1.55
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "1575204",
+      "hora": "15:30",
+      "partido": "Bayer Leverkusen vs VfB Stuttgart",
+      "selecciones": [
+        {
+          "mercado": "Over 1.5 Goles",
+          "prob": 83.7,
+          "cuota": 1.38
+        },
+        {
+          "mercado": "Remates Puerta > 7.5",
+          "prob": 76.1,
+          "cuota": 1.48
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "1557456",
+      "hora": "18:30",
+      "partido": "Tottenham vs Crystal Palace",
+      "selecciones": [
+        {
+          "mercado": "Gol en 2do Tiempo",
+          "prob": 74.8,
+          "cuota": 1.38
+        },
+        {
+          "mercado": "Doble Oport. 1X",
+          "prob": 74.0,
+          "cuota": 1.38
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "FREE",
+      "id_partido": "1557450",
+      "hora": "13:30",
+      "partido": "Chelsea vs Manchester United",
+      "selecciones": [
+        {
+          "mercado": "Remates Puerta > 6.5",
+          "prob": 80.0,
+          "cuota": 1.18
+        },
+        {
+          "mercado": "Córners > 7.5",
+          "prob": 82.1,
+          "cuota": 1.18
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "FREE",
+      "id_partido": "1557454",
+      "hora": "16:00",
+      "partido": "Manchester City vs Brighton",
+      "selecciones": [
+        {
+          "mercado": "Córners > 7.5",
+          "prob": 84.5,
+          "cuota": 1.18
+        },
+        {
+          "mercado": "Over 1.5 Goles",
+          "prob": 82.7,
+          "cuota": 1.18
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "FREE",
+      "id_partido": "1575203",
+      "hora": "18:30",
+      "partido": "Bayern München vs Borussia Dortmund",
+      "selecciones": [
+        {
+          "mercado": "Córners > 7.5",
+          "prob": 80.4,
+          "cuota": 1.18
+        },
+        {
+          "mercado": "Remates Puerta > 6.5",
+          "prob": 84.5,
+          "cuota": 1.18
+        }
+      ]
+    }
+  ]
+}
