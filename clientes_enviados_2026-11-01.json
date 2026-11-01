@@ -1,0 +1,131 @@
+{
+  "fecha": "2026-11-01",
+  "tarjetas_clientes": [
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "1552804",
+      "hora": "17:15",
+      "partido": "Lyon vs Angers",
+      "selecciones": [
+        {
+          "mercado": "Combo 1X + O1.5",
+          "prob": 72.3,
+          "cuota": 1.52
+        },
+        {
+          "mercado": "Remates Puerta > 6.5",
+          "prob": 69.8,
+          "cuota": 1.46
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "1552805",
+      "hora": "20:45",
+      "partido": "Marseille vs Toulouse",
+      "selecciones": [
+        {
+          "mercado": "Gol en 1T",
+          "prob": 75.6,
+          "cuota": 1.38
+        },
+        {
+          "mercado": "Remates Puerta > 7.5",
+          "prob": 71.1,
+          "cuota": 1.48
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "1570440",
+      "hora": "16:15",
+      "partido": "Racing Santander vs Real Madrid",
+      "selecciones": [
+        {
+          "mercado": "Gol en 1T",
+          "prob": 78.2,
+          "cuota": 1.38
+        },
+        {
+          "mercado": "Remates Puerta > 7.5",
+          "prob": 71.1,
+          "cuota": 1.48
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "1552807",
+      "hora": "17:15",
+      "partido": "Paris FC vs Monaco",
+      "selecciones": [
+        {
+          "mercado": "Tarjetas > 3.5",
+          "prob": 68.4,
+          "cuota": 1.49
+        },
+        {
+          "mercado": "Gol en 2do Tiempo",
+          "prob": 68.0,
+          "cuota": 1.5
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "FREE",
+      "id_partido": "1570433",
+      "hora": "21:00",
+      "partido": "Athletic Club vs Real Sociedad",
+      "selecciones": [
+        {
+          "mercado": "Córners > 7.5",
+          "prob": 78.2,
+          "cuota": 1.18
+        },
+        {
+          "mercado": "Tarjetas > 3.5",
+          "prob": 67.6,
+          "cuota": 1.32
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "FREE",
+      "id_partido": "1557453",
+      "hora": "17:30",
+      "partido": "Liverpool vs Arsenal",
+      "selecciones": [
+        {
+          "mercado": "Córners > 7.5",
+          "prob": 81.7,
+          "cuota": 1.18
+        },
+        {
+          "mercado": "Córners > 8.5",
+          "prob": 71.4,
+          "cuota": 1.32
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "FREE",
+      "id_partido": "1550182",
+      "hora": "20:45",
+      "partido": "Juventus vs Napoli",
+      "selecciones": [
+        {
+          "mercado": "Córners > 7.5",
+          "prob": 77.5,
+          "cuota": 1.23
+        },
+        {
+          "mercado": "Córners > 8.5",
+          "prob": 66.2,
+          "cuota": 1.32
+        }
+      ]
+    }
+  ]
+}
