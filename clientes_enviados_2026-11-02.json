@@ -1,0 +1,131 @@
+{
+  "fecha": "2026-11-02",
+  "tarjetas_clientes": [
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "1575529",
+      "hora": "21:15",
+      "partido": "Benfica vs Alverca",
+      "selecciones": [
+        {
+          "mercado": "Córners > 8.5",
+          "prob": 73.3,
+          "cuota": 1.48
+        },
+        {
+          "mercado": "Remates Puerta > 7.5",
+          "prob": 71.7,
+          "cuota": 1.48
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "1570436",
+      "hora": "21:00",
+      "partido": "Deportivo La Coruna vs Osasuna",
+      "selecciones": [
+        {
+          "mercado": "Remates Puerta > 6.5",
+          "prob": 68.0,
+          "cuota": 1.65
+        },
+        {
+          "mercado": "Total Asiático > 2.25",
+          "prob": 68.0,
+          "cuota": 1.66
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "1575533",
+      "hora": "21:15",
+      "partido": "GIL Vicente vs Vitória SC",
+      "selecciones": [
+        {
+          "mercado": "Gol en 2do Tiempo",
+          "prob": 75.8,
+          "cuota": 1.38
+        },
+        {
+          "mercado": "Tarjetas > 3.5",
+          "prob": 68.0,
+          "cuota": 1.61
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "1584452",
+      "hora": "18:00",
+      "partido": "Gençlerbirliği S.K. vs Alanyaspor",
+      "selecciones": [
+        {
+          "mercado": "Tarjetas > 3.5",
+          "prob": 68.0,
+          "cuota": 1.53
+        },
+        {
+          "mercado": "Over 1.5 Goles",
+          "prob": 68.0,
+          "cuota": 1.56
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "FREE",
+      "id_partido": "1557455",
+      "hora": "21:00",
+      "partido": "Newcastle vs Everton",
+      "selecciones": [
+        {
+          "mercado": "Córners > 7.5",
+          "prob": 78.1,
+          "cuota": 1.18
+        },
+        {
+          "mercado": "Remates Puerta > 6.5",
+          "prob": 72.2,
+          "cuota": 1.32
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "FREE",
+      "id_partido": "1550185",
+      "hora": "18:30",
+      "partido": "Sassuolo vs Fiorentina",
+      "selecciones": [
+        {
+          "mercado": "Over 1.5 Goles",
+          "prob": 82.1,
+          "cuota": 1.18
+        },
+        {
+          "mercado": "Gol en 1T",
+          "prob": 73.3,
+          "cuota": 1.3
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "FREE",
+      "id_partido": "1550178",
+      "hora": "20:45",
+      "partido": "Atalanta vs Parma",
+      "selecciones": [
+        {
+          "mercado": "Doble Oport. 1X",
+          "prob": 83.5,
+          "cuota": 1.18
+        },
+        {
+          "mercado": "Córners > 7.5",
+          "prob": 62.7,
+          "cuota": 1.32
+        }
+      ]
+    }
+  ]
+}
