@@ -615,6 +615,6 @@ if not df_historial.empty:
 
     vista_cajon = df_cajon[["Semáforo", "Fecha y Hora Fin", "Partido", "Mercado", "Cuota", "Marcador"]].iloc[::-1]
     st.dataframe(vista_cajon, use_container_width=True, hide_index=True, height=380)
-# Sync: 2026-11-03 00:34:34
+# Sync: 2026-11-03 00:38:41
 
-# Sync: 2026-11-03 00:34:34
+# Sync: 2026-11-03 00:38:41
