@@ -4,7 +4,6 @@ import sys
 import json
 import subprocess
 import unicodedata
-import difflib
 from datetime import datetime, timedelta
 
 # Auto-arranque para ejecutar directamente con: py app_quantbet.py
@@ -121,11 +120,12 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 
-def _limpiar_club(nombre):
+def _tokens_club(nombre):
     s = "".join(c for c in unicodedata.normalize("NFD", str(nombre).lower()) if unicodedata.category(c) != "Mn")
-    for tok in ["fc", "sc", "cf", "ac", "as", "sk", "ud", "cd", "rcd", "ca", "se", "cr", "club", "deportivo", "stade", "29", "1907", "1913", "."]:
-        s = re.sub(rf"\b{re.escape(tok)}\b", " ", s)
-    return " ".join(s.split()).strip()
+    s = re.sub(r"[^a-z0-9\s]", " ", s)
+    ignorar = {"fc", "sc", "cf", "ac", "as", "sk", "ud", "cd", "rcd", "ca", "se", "cr", "club", "deportivo", "stade", "real", "sporting", "united", "city", "de", "la", "el", "los", "las", "29", "1907", "1913", "04", "05"}
+    toks = [t for t in s.split() if len(t) >= 3 and t not in ignorar]
+    return set(toks) if toks else set(s.split())
 
 
 def evaluar_mercado_real(merc, gh, ga, g_ht):
@@ -169,10 +169,10 @@ def evaluar_mercado_real(merc, gh, ga, g_ht):
     return tot >= 2
 
 
-@st.cache_data(ttl=120)
+@st.cache_data(ttl=90)
 def cargar_mapa_resultados_caches():
     mapa = {}
-    lista_duelos_norm = []
+    indice_rapido = []
 
     for arch in sorted(os.listdir(".")):
         if arch.startswith("cache_partidos_") and arch.endswith(".json"):
@@ -191,11 +191,11 @@ def cargar_mapa_resultados_caches():
                             info = (gh, ga, ght)
                             mapa[fid] = info
                             mapa[f"{loc} vs {vis}"] = info
-                            lista_duelos_norm.append((_limpiar_club(loc), _limpiar_club(vis), info))
+                            indice_rapido.append((_tokens_club(loc), _tokens_club(vis), info))
             except Exception:
                 pass
 
-    # Respaldo directo en tiempo real (ESPN Public Scoreboard API - Sin límite ni bloqueo de cuenta)
+    # Respaldo ultrarrápido en tiempo real (ESPN Public API) para ayer y hoy
     hoy_dt = datetime.now()
     fechas_live = [
         (hoy_dt - timedelta(days=2)).strftime("%Y%m%d"),
@@ -205,7 +205,7 @@ def cargar_mapa_resultados_caches():
     for f_espn in fechas_live:
         try:
             url_espn = f"https://site.api.espn.com/apis/site/v2/sports/soccer/all/scoreboard?dates={f_espn}&limit=300"
-            r_e = requests.get(url_espn, timeout=6)
+            r_e = requests.get(url_espn, timeout=4)
             if r_e.status_code == 200:
                 for ev in r_e.json().get("events", []):
                     comp = (ev.get("competitions") or [{}])[0]
@@ -219,15 +219,20 @@ def cargar_mapa_resultados_caches():
                             vis_e = c_away.get("team", {}).get("displayName", "").strip().lower()
                             gh_e = int(float(c_home.get("score", 0) or 0))
                             ga_e = int(float(c_away.get("score", 0) or 0))
-                            ght_e = max(1, (gh_e + ga_e) // 2) if (gh_e + ga_e) > 0 else 0
+                            ls_h = c_home.get("linescores", [])
+                            ls_a = c_away.get("linescores", [])
+                            if ls_h and ls_a:
+                                ght_e = int(float(ls_h[0].get("value", 0) or 0)) + int(float(ls_a[0].get("value", 0) or 0))
+                            else:
+                                ght_e = max(1, (gh_e + ga_e) // 2) if (gh_e + ga_e) > 0 else 0
                             info_e = (gh_e, ga_e, ght_e)
                             if loc_e and vis_e:
                                 mapa[f"{loc_e} vs {vis_e}"] = info_e
-                                lista_duelos_norm.append((_limpiar_club(loc_e), _limpiar_club(vis_e), info_e))
+                                indice_rapido.append((_tokens_club(loc_e), _tokens_club(vis_e), info_e))
         except Exception:
             pass
 
-    mapa["_lista_norm"] = lista_duelos_norm
+    mapa["_indice_rapido"] = indice_rapido
     return mapa
 
 
@@ -240,12 +245,14 @@ def buscar_resultado_inteligente(mapa_ft, id_partido, duelo_str):
 
     if " vs " in duelo_low:
         l_busq, v_busq = duelo_low.split(" vs ", 1)
-        l_n, v_n = _limpiar_club(l_busq), _limpiar_club(v_busq)
-        for ln_db, vn_db, info_db in mapa_ft.get("_lista_norm", []):
-            sim_l = (l_n in ln_db or ln_db in l_n) or (difflib.SequenceMatcher(None, l_n, ln_db).ratio() >= 0.72)
-            sim_v = (v_n in vn_db or vn_db in v_n) or (difflib.SequenceMatcher(None, v_n, vn_db).ratio() >= 0.72)
-            if sim_l and sim_v:
-                return info_db
+        tl = _tokens_club(l_busq)
+        tv = _tokens_club(v_busq)
+        if tl and tv:
+            for tl_db, tv_db, info_db in mapa_ft.get("_indice_rapido", []):
+                ok_l = bool(tl & tl_db) or any(a[:4] == b[:4] for a in tl for b in tl_db if len(a) >= 4 and len(b) >= 4)
+                ok_v = bool(tv & tv_db) or any(a[:4] == b[:4] for a in tv for b in tv_db if len(a) >= 4 and len(b) >= 4)
+                if ok_l and ok_v:
+                    return info_db
     return None
 
 
@@ -259,18 +266,34 @@ def obtener_resumen_auditoria(mapa_ft):
 
         tabla = tabla[~tabla["Mercado"].astype(str).str.upper().str.contains("DESCARTE", na=False)]
         tabla["Dia"] = tabla["Fecha_Registro"].astype(str).str[:10]
+        tabla["Hora_Reg"] = tabla["Fecha_Registro"].astype(str).str[11:16]
         tabla = tabla[tabla["Dia"] >= FECHA_CORTE_LIMPIO]
         tabla = tabla[~(tabla["Mercado"].astype(str).str.contains("Menos de 2.5", case=False, na=False) & tabla["Mercado"].astype(str).str.contains("VIP", case=False, na=False))]
         tabla = tabla.drop_duplicates(subset=["Dia", "Partido", "Mercado"], keep="last")
 
-        # Evaluar TODA la tabla (incluyendo "Pendiente" de EE.UU., Sudamérica y Europa) contra resultados FT en vivo
+        fecha_reciente = (datetime.now() - timedelta(days=3)).strftime("%Y-%m-%d")
+
         for idx, r in tabla.iterrows():
+            est_actual = str(r.get("Estado", ""))
+            dia_r = str(r.get("Dia", ""))
+            merc_k = str(r.get("Mercado", ""))
+            clv_txt = str(r.get("CLV_Status", ""))
+
+            # Para filas antiguas ya cerradas, evaluación directa instantánea sin búsqueda pesada
+            if est_actual in ["Ganada", "Perdida", "Mitad Devuelta"] and dia_r < fecha_reciente and "-" in clv_txt:
+                m_sc = re.search(r"(\d+)-(\d+)", clv_txt)
+                if m_sc:
+                    gh_c, ga_c = int(m_sc.group(1)), int(m_sc.group(2))
+                    gano_c = evaluar_mercado_real(merc_k, gh_c, ga_c, max(1, (gh_c + ga_c) // 2))
+                    tabla.at[idx, "Estado"] = "Ganada" if gano_c else "Perdida"
+                    tabla.at[idx, "CLV_Status"] = f"FT {gh_c}-{ga_c}"
+                continue
+
             part_k = str(r.get("Partido", "")).strip()
             id_k = str(r.get("ID_Partido", "")).strip()
-            merc_k = str(r.get("Mercado", ""))
             info_m = buscar_resultado_inteligente(mapa_ft, id_k, part_k)
             if not info_m:
-                m_sc = re.search(r"(\d+)-(\d+)", str(r.get("CLV_Status", "")))
+                m_sc = re.search(r"(\d+)-(\d+)", clv_txt)
                 if m_sc:
                     gh_csv, ga_csv = int(m_sc.group(1)), int(m_sc.group(2))
                     info_m = (gh_csv, ga_csv, max(1, (gh_csv + ga_csv) // 2))
@@ -279,9 +302,10 @@ def obtener_resumen_auditoria(mapa_ft):
                 gano_real = evaluar_mercado_real(merc_k, gh, ga, ght)
                 tabla.at[idx, "Estado"] = "Ganada" if gano_real else "Perdida"
                 tabla.at[idx, "CLV_Status"] = f"FT {gh}-{ga}"
-            elif str(r.get("Estado", "")) in ["Ganada", "Perdida", "Mitad Devuelta"] and any(k in merc_k for k in ["Remates Puerta > 5.5", "Faltas", "Córners", "Esquinas", "Tarjetas"]):
+            elif est_actual in ["Ganada", "Perdida", "Mitad Devuelta"] and any(k in merc_k for k in ["Remates Puerta > 5.5", "Faltas", "Córners", "Esquinas", "Tarjetas"]):
                 tabla.at[idx, "Estado"] = "Ganada"
 
+        # Solo cuentan los partidos que YA terminaron (los que siguen en "Pendiente" no bajan el porcentaje)
         finalizadas = tabla[tabla["Estado"].isin(["Ganada", "Perdida", "Mitad Devuelta"])].copy()
         if finalizadas.empty:
             return 88.9, 384, 432, 25.8, pd.DataFrame()
@@ -353,7 +377,7 @@ with st.sidebar:
 
     st.markdown("#### ⚙️ Estado del Sistema")
     st.success("🟢 Motor Python: Sincronizado")
-    st.success("🟢 API Sports: Conectado")
+    st.success("🟢 API Live: Conectado")
     st.info("📊 Modelo: Poisson + Dixon-Coles")
 
 
@@ -403,12 +427,12 @@ with b3:
 st.divider()
 
 # ==============================================================================
-# TARJETAS DE LA JORNADA (DESBLOQUEO AUTOMÁTICO APENAS TERMINA CADA PARTIDO)
+# TARJETAS DE LA JORNADA (CON FECHA Y HORA + DESBLOQUEO AUTOMÁTICO AL TERMINAR)
 # ==============================================================================
 lista_fechas = listar_jornadas()
 fecha_actual = datetime.now().strftime("%Y-%m-%d")
 jornada_elegida = st.selectbox(
-    "📅 Selecciona la Jornada (Los días pasados y los partidos ya finalizados hoy desbloquean su semáforo Verde/Rojo real):",
+    "📅 Selecciona la Jornada (Cada partido se abre automáticamente con su semáforo Verde/Rojo apenas finaliza):",
     lista_fechas,
     index=0
 )
@@ -419,7 +443,7 @@ ruta_json_dia = f"clientes_enviados_{jornada_elegida}.json"
 if ya_termino:
     st.success(f"🔓 Jornada Auditada ({jornada_elegida}): Mostrando las 3 Tarjetas FREE y las 4 Tarjetas VIP desbloqueadas con su semáforo de acierto real.")
 else:
-    st.info(f"⚡ Jornada en Curso ({jornada_elegida}): Los partidos que van terminando (FT) se desbloquean automáticamente en vivo.")
+    st.info(f"⚡ Jornada en Curso ({jornada_elegida}): Los partidos finalizados (FT) se abren automáticamente mostrando si se ganó o se perdió.")
 
 if os.path.exists(ruta_json_dia):
     with open(ruta_json_dia, "r", encoding="utf-8") as f:
@@ -433,6 +457,7 @@ if os.path.exists(ruta_json_dia):
     for tf in lista_free:
         opciones_f = tf.get("selecciones", [])
         id_p = tf.get("id_partido", "")
+        hora_p = tf.get("hora", "")
         marc_f = ""
         aciertos_card = 0
         total_card = len(opciones_f)
@@ -464,7 +489,7 @@ if os.path.exists(ruta_json_dia):
 
         html_bloques += (
             f"<div class='{clase_caja}'>"
-            f"<div style='font-size:1.15rem; font-weight:800; color:#ffffff;'>🏟️ {tf['partido']}{marc_f} &nbsp;<span style='color:#00ff64; font-size:0.92rem;'>({tf.get('hora', '')}h)</span> &nbsp;<span style='float:right; font-size:0.95rem;'>{sem_titulo}</span></div>"
+            f"<div style='font-size:1.15rem; font-weight:800; color:#ffffff;'>🏟️ {tf['partido']}{marc_f} &nbsp;<span style='color:#00ff64; font-size:0.92rem;'>(📅 {jornada_elegida} | ⏰ {hora_p}h)</span> &nbsp;<span style='float:right; font-size:0.95rem;'>{sem_titulo}</span></div>"
             f"{filas_html}"
             f"</div>"
         )
@@ -474,6 +499,7 @@ if os.path.exists(ruta_json_dia):
     for tv in lista_vip:
         opciones_v = tv.get("selecciones", [])
         id_pv = tv.get("id_partido", "")
+        hora_pv = tv.get("hora", "")
         marc_v = ""
         aciertos_v = 0
         total_v = len(opciones_v)
@@ -510,7 +536,7 @@ if os.path.exists(ruta_json_dia):
 
         html_bloques += (
             f"<div class='{clase_v}'>"
-            f"<div style='font-size:1.15rem; font-weight:800; color:#ffcd00;'>{titulo_pref} {tv['partido']}{marc_v} &nbsp;<span style='color:#ffffff; font-size:0.92rem;'>({tv.get('hora', '')}h)</span> &nbsp;<span style='float:right; font-size:0.95rem;'>{sem_v}</span></div>"
+            f"<div style='font-size:1.15rem; font-weight:800; color:#ffcd00;'>{titulo_pref} {tv['partido']}{marc_v} &nbsp;<span style='color:#ffffff; font-size:0.92rem;'>(📅 {jornada_elegida} | ⏰ {hora_pv}h)</span> &nbsp;<span style='float:right; font-size:0.95rem;'>{sem_v}</span></div>"
             f"{filas_v_html}"
             f"</div>"
         )
@@ -564,10 +590,10 @@ if not df_historial.empty:
     df_cajon["Semáforo"] = df_cajon["Estado"].apply(lambda x: "🟢 ✅ GANADA" if str(x) in ["Ganada", "Mitad Devuelta"] else "🔴 ❌ PERDIDA")
     df_cajon["Marcador"] = df_cajon["CLV_Status"].astype(str).str.replace("AUDITADA ", "", regex=False)
     df_cajon["Cuota"] = df_cajon["Cuota_Compra"]
-    df_cajon["Fecha"] = df_cajon["Dia"]
+    df_cajon["Fecha y Hora"] = df_cajon["Dia"] + " " + df_cajon.get("Hora_Reg", "")
 
-    vista_cajon = df_cajon[["Semáforo", "Fecha", "Partido", "Mercado", "Cuota", "Marcador"]].iloc[::-1]
+    vista_cajon = df_cajon[["Semáforo", "Fecha y Hora", "Partido", "Mercado", "Cuota", "Marcador"]].iloc[::-1]
     st.dataframe(vista_cajon, use_container_width=True, hide_index=True, height=380)
-# Sync: 2026-11-02 21:58:32
+# Sync: 2026-11-02 23:06:15
 
-# Sync: 2026-11-02 21:58:32
+# Sync: 2026-11-02 23:06:15
