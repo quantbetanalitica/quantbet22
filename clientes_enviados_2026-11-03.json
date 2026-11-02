@@ -1,0 +1,121 @@
+{
+  "fecha": "2026-11-03",
+  "tarjetas_clientes": [
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "401915386",
+      "hora": "21:00",
+      "partido": "Atlético Madrid vs Bayern Munich",
+      "selecciones": [
+        {
+          "mercado": "Combo X2 + O1.5",
+          "prob": 70.9,
+          "cuota": 1.52
+        },
+        {
+          "mercado": "Córners > 9.5",
+          "prob": 68.0,
+          "cuota": 1.73
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "401915309",
+      "hora": "21:00",
+      "partido": "Villarreal vs Paris Saint-Germain",
+      "selecciones": [
+        {
+          "mercado": "Córners > 9.5",
+          "prob": 68.0,
+          "cuota": 1.69
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "401915311",
+      "hora": "18:45",
+      "partido": "Galatasaray vs VfB Stuttgart",
+      "selecciones": [
+        {
+          "mercado": "Gol en 2do Tiempo",
+          "prob": 75.6,
+          "cuota": 1.38
+        },
+        {
+          "mercado": "Córners > 8.5",
+          "prob": 75.4,
+          "cuota": 1.48
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "401841301",
+      "hora": "01:30",
+      "partido": "Internacional vs Coritiba",
+      "selecciones": [
+        {
+          "mercado": "Tarjetas > 3.5",
+          "prob": 68.0,
+          "cuota": 1.65
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "FREE",
+      "id_partido": "401915308",
+      "hora": "21:00",
+      "partido": "Manchester United vs AS Roma",
+      "selecciones": [
+        {
+          "mercado": "Remates Puerta > 6.5",
+          "prob": 83.7,
+          "cuota": 1.18
+        },
+        {
+          "mercado": "Córners > 8.5",
+          "prob": 62.5,
+          "cuota": 1.28
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "FREE",
+      "id_partido": "401915387",
+      "hora": "21:00",
+      "partido": "Barcelona vs Aston Villa",
+      "selecciones": [
+        {
+          "mercado": "Remates Puerta > 6.5",
+          "prob": 77.8,
+          "cuota": 1.22
+        },
+        {
+          "mercado": "Córners > 8.5",
+          "prob": 76.9,
+          "cuota": 1.24
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "FREE",
+      "id_partido": "401915310",
+      "hora": "18:45",
+      "partido": "Shakhtar Donetsk vs Sporting CP",
+      "selecciones": [
+        {
+          "mercado": "Gol en 1T",
+          "prob": 78.2,
+          "cuota": 1.18
+        },
+        {
+          "mercado": "Córners > 8.5",
+          "prob": 70.4,
+          "cuota": 1.28
+        }
+      ]
+    }
+  ]
+}
