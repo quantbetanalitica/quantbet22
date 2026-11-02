@@ -13,9 +13,27 @@
           "cuota": 1.48
         },
         {
-          "mercado": "Remates Puerta > 7.5",
-          "prob": 70.6,
-          "cuota": 1.48
+          "mercado": "Remates Puerta > 8.5",
+          "prob": 68.0,
+          "cuota": 1.59
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "401841644",
+      "hora": "01:15",
+      "partido": "Atlético Tucumán vs Argentinos Juniors",
+      "selecciones": [
+        {
+          "mercado": "Córners > 8.5",
+          "prob": 68.0,
+          "cuota": 1.7
+        },
+        {
+          "mercado": "Tarjetas > 3.5",
+          "prob": 68.0,
+          "cuota": 1.57
         }
       ]
     },
@@ -26,32 +44,14 @@
       "partido": "GIL Vicente vs Vitória SC",
       "selecciones": [
         {
-          "mercado": "Doble Oport. X2",
-          "prob": 73.8,
-          "cuota": 1.38
+          "mercado": "Total Asiático > 2.25",
+          "prob": 68.0,
+          "cuota": 1.59
         },
-        {
-          "mercado": "Over 1.5 Goles",
-          "prob": 69.8,
-          "cuota": 1.46
-        }
-      ]
-    },
-    {
-      "tipo_tarjeta": "VIP",
-      "id_partido": "1552803",
-      "hora": "20:45",
-      "partido": "Lorient vs Stade Brestois 29",
-      "selecciones": [
         {
           "mercado": "Tarjetas > 3.5",
-          "prob": 78.0,
-          "cuota": 1.28
-        },
-        {
-          "mercado": "Córners > 7.5",
-          "prob": 76.5,
-          "cuota": 1.25
+          "prob": 68.0,
+          "cuota": 1.61
         }
       ]
     },
@@ -62,14 +62,14 @@
       "partido": "Gençlerbirliği S.K. vs Alanyaspor",
       "selecciones": [
         {
-          "mercado": "Tarjetas > 3.5",
-          "prob": 68.0,
-          "cuota": 1.53
-        },
-        {
           "mercado": "Córners > 8.5",
           "prob": 68.0,
-          "cuota": 1.62
+          "cuota": 1.65
+        },
+        {
+          "mercado": "Remates Puerta > 6.5",
+          "prob": 68.0,
+          "cuota": 1.69
         }
       ]
     },
@@ -82,12 +82,7 @@
         {
           "mercado": "Córners > 8.5",
           "prob": 66.8,
-          "cuota": 1.32
-        },
-        {
-          "mercado": "Over 1.5 Goles",
-          "prob": 61.8,
-          "cuota": 1.32
+          "cuota": 1.28
         }
       ]
     },
@@ -123,7 +118,7 @@
         {
           "mercado": "Remates Puerta > 5.5",
           "prob": 63.5,
-          "cuota": 1.32
+          "cuota": 1.28
         }
       ]
     }
