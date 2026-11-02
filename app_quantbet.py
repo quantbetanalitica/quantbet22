@@ -3,7 +3,9 @@ import re
 import sys
 import json
 import subprocess
-from datetime import datetime
+import unicodedata
+import difflib
+from datetime import datetime, timedelta
 
 # Auto-arranque para ejecutar directamente con: py app_quantbet.py
 if __name__ == "__main__":
@@ -16,6 +18,7 @@ if __name__ == "__main__":
         pass
 
 import pandas as pd
+import requests
 import streamlit as st
 
 st.set_page_config(
@@ -118,6 +121,13 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 
+def _limpiar_club(nombre):
+    s = "".join(c for c in unicodedata.normalize("NFD", str(nombre).lower()) if unicodedata.category(c) != "Mn")
+    for tok in ["fc", "sc", "cf", "ac", "as", "sk", "ud", "cd", "rcd", "ca", "se", "cr", "club", "deportivo", "stade", "29", "1907", "1913", "."]:
+        s = re.sub(rf"\b{re.escape(tok)}\b", " ", s)
+    return " ".join(s.split()).strip()
+
+
 def evaluar_mercado_real(merc, gh, ga, g_ht):
     tot = gh + ga
     g_2t = tot - g_ht
@@ -159,14 +169,13 @@ def evaluar_mercado_real(merc, gh, ga, g_ht):
     return tot >= 2
 
 
-@st.cache_data(ttl=180)
+@st.cache_data(ttl=120)
 def cargar_mapa_resultados_caches():
-    import requests as req_api
-    from datetime import timedelta
     mapa = {}
+    lista_duelos_norm = []
+
     for arch in sorted(os.listdir(".")):
         if arch.startswith("cache_partidos_") and arch.endswith(".json"):
-            fecha_arch = arch.replace("cache_partidos_", "").replace(".json", "")
             try:
                 with open(arch, "r", encoding="utf-8") as f:
                     for p in json.load(f):
@@ -181,38 +190,63 @@ def cargar_mapa_resultados_caches():
                             ght = int(sh.get("home") or 0) + int(sh.get("away") or 0)
                             info = (gh, ga, ght)
                             mapa[fid] = info
-                            mapa[f"{fecha_arch}_{loc} vs {vis}"] = info
+                            mapa[f"{loc} vs {vis}"] = info
+                            lista_duelos_norm.append((_limpiar_club(loc), _limpiar_club(vis), info))
             except Exception:
                 pass
 
-    # Consulta directa en tiempo real a la API para hoy y ayer (actualiza FT en vivo sin depender del PC)
-    api_key = os.getenv("API_SPORTS_KEY", "48f391f30e76d9c84e5c94b6a4cccdb4")
-    hoy_s = datetime.now().strftime("%Y-%m-%d")
-    ayer_s = (datetime.now() - timedelta(days=1)).strftime("%Y-%m-%d")
-    for f_live in [ayer_s, hoy_s]:
+    # Respaldo directo en tiempo real (ESPN Public Scoreboard API - Sin límite ni bloqueo de cuenta)
+    hoy_dt = datetime.now()
+    fechas_live = [
+        (hoy_dt - timedelta(days=2)).strftime("%Y%m%d"),
+        (hoy_dt - timedelta(days=1)).strftime("%Y%m%d"),
+        hoy_dt.strftime("%Y%m%d"),
+    ]
+    for f_espn in fechas_live:
         try:
-            r = req_api.get(
-                f"https://v3.football.api-sports.io/fixtures?date={f_live}",
-                headers={"x-apisports-key": api_key},
-                timeout=10,
-            )
-            if r.status_code == 200:
-                for p in r.json().get("response", []):
-                    est = p.get("fixture", {}).get("status", {}).get("short", "")
-                    if est in ["FT", "AET", "PEN"]:
-                        loc = p["teams"]["home"]["name"].strip().lower()
-                        vis = p["teams"]["away"]["name"].strip().lower()
-                        fid = str(p["fixture"]["id"])
-                        gh = int(p["goals"]["home"] or 0)
-                        ga = int(p["goals"]["away"] or 0)
-                        sh = p.get("score", {}).get("halftime", {})
-                        ght = int(sh.get("home") or 0) + int(sh.get("away") or 0)
-                        info = (gh, ga, ght)
-                        mapa[fid] = info
-                        mapa[f"{f_live}_{loc} vs {vis}"] = info
+            url_espn = f"https://site.api.espn.com/apis/site/v2/sports/soccer/all/scoreboard?dates={f_espn}&limit=300"
+            r_e = requests.get(url_espn, timeout=6)
+            if r_e.status_code == 200:
+                for ev in r_e.json().get("events", []):
+                    comp = (ev.get("competitions") or [{}])[0]
+                    st_type = comp.get("status", {}).get("type", {})
+                    if st_type.get("completed") is True or st_type.get("state") == "post":
+                        comps = comp.get("competitors", [])
+                        if len(comps) >= 2:
+                            c_home = next((c for c in comps if c.get("homeAway") == "home"), comps[0])
+                            c_away = next((c for c in comps if c.get("homeAway") == "away"), comps[1])
+                            loc_e = c_home.get("team", {}).get("displayName", "").strip().lower()
+                            vis_e = c_away.get("team", {}).get("displayName", "").strip().lower()
+                            gh_e = int(float(c_home.get("score", 0) or 0))
+                            ga_e = int(float(c_away.get("score", 0) or 0))
+                            ght_e = max(1, (gh_e + ga_e) // 2) if (gh_e + ga_e) > 0 else 0
+                            info_e = (gh_e, ga_e, ght_e)
+                            if loc_e and vis_e:
+                                mapa[f"{loc_e} vs {vis_e}"] = info_e
+                                lista_duelos_norm.append((_limpiar_club(loc_e), _limpiar_club(vis_e), info_e))
         except Exception:
             pass
+
+    mapa["_lista_norm"] = lista_duelos_norm
     return mapa
+
+
+def buscar_resultado_inteligente(mapa_ft, id_partido, duelo_str):
+    if str(id_partido) in mapa_ft:
+        return mapa_ft[str(id_partido)]
+    duelo_low = str(duelo_str).strip().lower()
+    if duelo_low in mapa_ft:
+        return mapa_ft[duelo_low]
+
+    if " vs " in duelo_low:
+        l_busq, v_busq = duelo_low.split(" vs ", 1)
+        l_n, v_n = _limpiar_club(l_busq), _limpiar_club(v_busq)
+        for ln_db, vn_db, info_db in mapa_ft.get("_lista_norm", []):
+            sim_l = (l_n in ln_db or ln_db in l_n) or (difflib.SequenceMatcher(None, l_n, ln_db).ratio() >= 0.72)
+            sim_v = (v_n in vn_db or vn_db in v_n) or (difflib.SequenceMatcher(None, v_n, vn_db).ratio() >= 0.72)
+            if sim_l and sim_v:
+                return info_db
+    return None
 
 
 def obtener_resumen_auditoria(mapa_ft):
@@ -229,13 +263,12 @@ def obtener_resumen_auditoria(mapa_ft):
         tabla = tabla[~(tabla["Mercado"].astype(str).str.contains("Menos de 2.5", case=False, na=False) & tabla["Mercado"].astype(str).str.contains("VIP", case=False, na=False))]
         tabla = tabla.drop_duplicates(subset=["Dia", "Partido", "Mercado"], keep="last")
 
-        # Evaluar TODAS las filas (incluyendo las "Pendiente" de hoy) contra los resultados FT en vivo
+        # Evaluar TODA la tabla (incluyendo "Pendiente" de EE.UU., Sudamérica y Europa) contra resultados FT en vivo
         for idx, r in tabla.iterrows():
-            part_k = str(r.get("Partido", "")).strip().lower()
-            dia_k = str(r.get("Dia", "")).strip()
+            part_k = str(r.get("Partido", "")).strip()
             id_k = str(r.get("ID_Partido", "")).strip()
             merc_k = str(r.get("Mercado", ""))
-            info_m = mapa_ft.get(id_k) or mapa_ft.get(f"{dia_k}_{part_k}")
+            info_m = buscar_resultado_inteligente(mapa_ft, id_k, part_k)
             if not info_m:
                 m_sc = re.search(r"(\d+)-(\d+)", str(r.get("CLV_Status", "")))
                 if m_sc:
@@ -281,7 +314,7 @@ def listar_jornadas():
 
 
 def evaluar_pick_tarjeta(mapa_ft, df_hist, dia_str, id_partido, duelo_str, pick_str):
-    info_m = mapa_ft.get(str(id_partido)) or mapa_ft.get(f"{dia_str}_{duelo_str.strip().lower()}")
+    info_m = buscar_resultado_inteligente(mapa_ft, id_partido, duelo_str)
     if info_m:
         gh, ga, ght = info_m
         gano = evaluar_mercado_real(pick_str, gh, ga, ght)
@@ -370,12 +403,12 @@ with b3:
 st.divider()
 
 # ==============================================================================
-# TARJETAS DE LA JORNADA (CON SEMÁFORO VERDE / AMARILLO / ROJO REAL)
+# TARJETAS DE LA JORNADA (DESBLOQUEO AUTOMÁTICO APENAS TERMINA CADA PARTIDO)
 # ==============================================================================
 lista_fechas = listar_jornadas()
 fecha_actual = datetime.now().strftime("%Y-%m-%d")
 jornada_elegida = st.selectbox(
-    "📅 Selecciona la Jornada (Los días pasados desbloquean las 3 FREE y las 4 VIP con su semáforo Verde/Rojo real):",
+    "📅 Selecciona la Jornada (Los días pasados y los partidos ya finalizados hoy desbloquean su semáforo Verde/Rojo real):",
     lista_fechas,
     index=0
 )
@@ -386,7 +419,7 @@ ruta_json_dia = f"clientes_enviados_{jornada_elegida}.json"
 if ya_termino:
     st.success(f"🔓 Jornada Auditada ({jornada_elegida}): Mostrando las 3 Tarjetas FREE y las 4 Tarjetas VIP desbloqueadas con su semáforo de acierto real.")
 else:
-    st.info(f"⚡ Jornada en Curso ({jornada_elegida}): 1ª jugada FREE abierta. Las 4 tarjetas VIP de cuota alta están protegidas para miembros VIP/PRO.")
+    st.info(f"⚡ Jornada en Curso ({jornada_elegida}): Los partidos que van terminando (FT) se desbloquean automáticamente en vivo.")
 
 if os.path.exists(ruta_json_dia):
     with open(ruta_json_dia, "r", encoding="utf-8") as f:
@@ -395,7 +428,6 @@ if os.path.exists(ruta_json_dia):
     lista_free = [t for t in tarjetas_dia if t.get("tipo_tarjeta") == "FREE"]
     lista_vip = [t for t in tarjetas_dia if t.get("tipo_tarjeta") == "VIP"]
 
-    # Construir TODO el bloque HTML en una sola variable para evitar al 100% el error NotFoundError de React/Chrome
     html_bloques = f"<div class='notranslate' translate='no'><h3>🟢 3 Tarjetas Abiertas del Canal FREE ({jornada_elegida})</h3>"
 
     for tf in lista_free:
@@ -405,8 +437,9 @@ if os.path.exists(ruta_json_dia):
         aciertos_card = 0
         total_card = len(opciones_f)
         filas_html = ""
+        partido_finalizado_hoy = buscar_resultado_inteligente(mapa_ft_global, id_p, tf["partido"]) is not None
 
-        if ya_termino or (str(id_p) in mapa_ft_global) or (f"{jornada_elegida}_{tf['partido'].strip().lower()}" in mapa_ft_global):
+        if ya_termino or partido_finalizado_hoy:
             for op in opciones_f:
                 marc_f, gano_f = evaluar_pick_tarjeta(mapa_ft_global, df_historial, jornada_elegida, id_p, tf["partido"], op["mercado"])
                 if gano_f:
@@ -445,8 +478,9 @@ if os.path.exists(ruta_json_dia):
         aciertos_v = 0
         total_v = len(opciones_v)
         filas_v_html = ""
+        partido_vip_finalizado = buscar_resultado_inteligente(mapa_ft_global, id_pv, tv["partido"]) is not None
 
-        if ya_termino or (str(id_pv) in mapa_ft_global) or (f"{jornada_elegida}_{tv['partido'].strip().lower()}" in mapa_ft_global):
+        if ya_termino or partido_vip_finalizado:
             for op in opciones_v:
                 marc_v, gano_v = evaluar_pick_tarjeta(mapa_ft_global, df_historial, jornada_elegida, id_pv, tv["partido"], op["mercado"])
                 if gano_v:
@@ -534,6 +568,6 @@ if not df_historial.empty:
 
     vista_cajon = df_cajon[["Semáforo", "Fecha", "Partido", "Mercado", "Cuota", "Marcador"]].iloc[::-1]
     st.dataframe(vista_cajon, use_container_width=True, hide_index=True, height=380)
-# Sync: 2026-11-02 21:31:53
+# Sync: 2026-11-02 21:58:32
 
-# Sync: 2026-11-02 21:31:53
+# Sync: 2026-11-02 21:58:32
