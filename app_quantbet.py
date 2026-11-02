@@ -269,7 +269,8 @@ def obtener_resumen_auditoria(mapa_ft):
         tabla["Hora_Reg"] = tabla["Fecha_Registro"].astype(str).str[11:16]
         tabla = tabla[tabla["Dia"] >= FECHA_CORTE_LIMPIO]
         tabla = tabla[~(tabla["Mercado"].astype(str).str.contains("Menos de 2.5", case=False, na=False) & tabla["Mercado"].astype(str).str.contains("VIP", case=False, na=False))]
-        tabla = tabla.drop_duplicates(subset=["Dia", "Partido", "Mercado"], keep="last")
+        tabla["Mercado_Unico"] = tabla["Mercado"].astype(str).str.replace("[VIP] ", "", regex=False).str.replace("[FREE] ", "", regex=False).str.strip()
+        tabla = tabla.drop_duplicates(subset=["Dia", "Partido", "Mercado_Unico"], keep="first")
 
         fecha_reciente = (datetime.now() - timedelta(days=3)).strftime("%Y-%m-%d")
 
@@ -586,14 +587,34 @@ st.subheader("📋 Últimos Resultados Auditados en Tiempo Real (FT)")
 st.caption("Cajón deslizable verificable: muestra únicamente selecciones operables (VIP y FREE) con su semáforo final.")
 
 if not df_historial.empty:
+    mapa_horas_fin = {}
+    for arch_c in sorted(os.listdir(".")):
+        if arch_c.startswith("cache_partidos_") and arch_c.endswith(".json"):
+            try:
+                with open(arch_c, "r", encoding="utf-8") as fc:
+                    for p_c in json.load(fc):
+                        loc_c = p_c.get("teams", {}).get("home", {}).get("name", "").strip().lower()
+                        vis_c = p_c.get("teams", {}).get("away", {}).get("name", "").strip().lower()
+                        f_iso = p_c.get("fixture", {}).get("date", "")
+                        if loc_c and vis_c and len(f_iso) >= 16:
+                            dt_ini = datetime.strptime(f_iso[:19], "%Y-%m-%dT%H:%M:%S") + timedelta(hours=1)
+                            dt_fin = dt_ini + timedelta(hours=1, minutes=55)
+                            mapa_horas_fin[f"{loc_c} vs {vis_c}"] = f"{dt_fin.strftime('%H:%M')}h (FT)"
+                            mapa_horas_fin[str(p_c.get("fixture", {}).get("id", ""))] = f"{dt_fin.strftime('%H:%M')}h (FT)"
+            except Exception:
+                pass
+
     df_cajon = df_historial.copy()
     df_cajon["Semáforo"] = df_cajon["Estado"].apply(lambda x: "🟢 ✅ GANADA" if str(x) in ["Ganada", "Mitad Devuelta"] else "🔴 ❌ PERDIDA")
     df_cajon["Marcador"] = df_cajon["CLV_Status"].astype(str).str.replace("AUDITADA ", "", regex=False)
     df_cajon["Cuota"] = df_cajon["Cuota_Compra"]
-    df_cajon["Fecha y Hora"] = df_cajon["Dia"] + " " + df_cajon.get("Hora_Reg", "")
+    df_cajon["Fecha y Hora Fin"] = df_cajon.apply(
+        lambda r: f"{r['Dia']} | 🏁 {mapa_horas_fin.get(str(r.get('ID_Partido', '')).strip()) or mapa_horas_fin.get(str(r.get('Partido', '')).strip().lower()) or 'FT Finalizado'}",
+        axis=1
+    )
 
-    vista_cajon = df_cajon[["Semáforo", "Fecha y Hora", "Partido", "Mercado", "Cuota", "Marcador"]].iloc[::-1]
+    vista_cajon = df_cajon[["Semáforo", "Fecha y Hora Fin", "Partido", "Mercado", "Cuota", "Marcador"]].iloc[::-1]
     st.dataframe(vista_cajon, use_container_width=True, hide_index=True, height=380)
-# Sync: 2026-11-03 00:01:50
+# Sync: 2026-11-03 00:34:34
 
-# Sync: 2026-11-03 00:01:50
+# Sync: 2026-11-03 00:34:34
