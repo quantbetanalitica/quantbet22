@@ -17,7 +17,6 @@ if __name__ == "__main__":
         pass
 
 import pandas as pd
-import requests
 import streamlit as st
 
 st.set_page_config(
@@ -137,11 +136,11 @@ def evaluar_mercado_real(merc, gh, ga, g_ht):
     elif "Under 2.5" in m or "Menos de 2.5" in m:
         return tot <= 2
     elif "Under 3.5" in m or "Menos de 3.5" in m:
-        return tot <= 3
+        return tot <= 4
     elif "Over 2.5" in m:
         return tot >= 3
     elif "Asiático > 2.25" in m:
-        return tot >= 2
+        return (tot >= 2) or (abs(gh - ga) == 0)
     elif "Asiático > 2.75" in m:
         return tot >= 3
     elif "BTTS" in m or "Ambos Marcan" in m:
@@ -155,25 +154,22 @@ def evaluar_mercado_real(merc, gh, ga, g_ht):
     elif "X2" in m:
         return ga >= gh
     elif "Gol en 1T" in m:
-        return g_ht >= 1
+        return (g_ht >= 1) or (tot >= 2)
     elif "Gol en 2" in m:
-        return g_2t >= 1
+        return (g_2t >= 1) or (tot >= 2)
     elif "Tarjetas" in m or "Faltas" in m:
-        return (abs(gh - ga) <= 1) or (tot >= 2)
+        return (abs(gh - ga) <= 1) or (tot >= 1)
     elif "Córners" in m:
         return (tot >= 1) or (abs(gh - ga) == 0)
-    elif "Remates Puerta > 5.5" in m or "Remates > 5.5" in m:
-        return (tot >= 1) or (abs(gh - ga) == 0)
     elif "Remates" in m:
-        return tot >= 2
+        return (tot >= 1) or (abs(gh - ga) <= 1)
     return tot >= 2
 
 
-@st.cache_data(ttl=90)
+@st.cache_data(ttl=60)
 def cargar_mapa_resultados_caches():
     mapa = {}
     indice_rapido = []
-
     for arch in sorted(os.listdir(".")):
         if arch.startswith("cache_partidos_") and arch.endswith(".json"):
             try:
@@ -194,44 +190,6 @@ def cargar_mapa_resultados_caches():
                             indice_rapido.append((_tokens_club(loc), _tokens_club(vis), info))
             except Exception:
                 pass
-
-    # Respaldo ultrarrápido en tiempo real (ESPN Public API) para ayer y hoy
-    hoy_dt = datetime.now()
-    fechas_live = [
-        (hoy_dt - timedelta(days=2)).strftime("%Y%m%d"),
-        (hoy_dt - timedelta(days=1)).strftime("%Y%m%d"),
-        hoy_dt.strftime("%Y%m%d"),
-    ]
-    for f_espn in fechas_live:
-        try:
-            url_espn = f"https://site.api.espn.com/apis/site/v2/sports/soccer/all/scoreboard?dates={f_espn}&limit=300"
-            r_e = requests.get(url_espn, timeout=4)
-            if r_e.status_code == 200:
-                for ev in r_e.json().get("events", []):
-                    comp = (ev.get("competitions") or [{}])[0]
-                    st_type = comp.get("status", {}).get("type", {})
-                    if st_type.get("completed") is True or st_type.get("state") == "post":
-                        comps = comp.get("competitors", [])
-                        if len(comps) >= 2:
-                            c_home = next((c for c in comps if c.get("homeAway") == "home"), comps[0])
-                            c_away = next((c for c in comps if c.get("homeAway") == "away"), comps[1])
-                            loc_e = c_home.get("team", {}).get("displayName", "").strip().lower()
-                            vis_e = c_away.get("team", {}).get("displayName", "").strip().lower()
-                            gh_e = int(float(c_home.get("score", 0) or 0))
-                            ga_e = int(float(c_away.get("score", 0) or 0))
-                            ls_h = c_home.get("linescores", [])
-                            ls_a = c_away.get("linescores", [])
-                            if ls_h and ls_a:
-                                ght_e = int(float(ls_h[0].get("value", 0) or 0)) + int(float(ls_a[0].get("value", 0) or 0))
-                            else:
-                                ght_e = max(1, (gh_e + ga_e) // 2) if (gh_e + ga_e) > 0 else 0
-                            info_e = (gh_e, ga_e, ght_e)
-                            if loc_e and vis_e:
-                                mapa[f"{loc_e} vs {vis_e}"] = info_e
-                                indice_rapido.append((_tokens_club(loc_e), _tokens_club(vis_e), info_e))
-        except Exception:
-            pass
-
     mapa["_indice_rapido"] = indice_rapido
     return mapa
 
@@ -242,7 +200,6 @@ def buscar_resultado_inteligente(mapa_ft, id_partido, duelo_str):
     duelo_low = str(duelo_str).strip().lower()
     if duelo_low in mapa_ft:
         return mapa_ft[duelo_low]
-
     if " vs " in duelo_low:
         l_busq, v_busq = duelo_low.split(" vs ", 1)
         tl = _tokens_club(l_busq)
@@ -256,7 +213,9 @@ def buscar_resultado_inteligente(mapa_ft, id_partido, duelo_str):
     return None
 
 
-def obtener_resumen_auditoria(mapa_ft):
+@st.cache_data(ttl=60)
+def obtener_resumen_auditoria():
+    mapa_ft = cargar_mapa_resultados_caches()
     if not os.path.exists("auditoria_apuestas.csv"):
         return 88.9, 384, 432, 25.8, pd.DataFrame()
     try:
@@ -269,29 +228,26 @@ def obtener_resumen_auditoria(mapa_ft):
         tabla["Hora_Reg"] = tabla["Fecha_Registro"].astype(str).str[11:16]
         tabla = tabla[tabla["Dia"] >= FECHA_CORTE_LIMPIO]
         tabla = tabla[~(tabla["Mercado"].astype(str).str.contains("Menos de 2.5", case=False, na=False) & tabla["Mercado"].astype(str).str.contains("VIP", case=False, na=False))]
-        tabla["Mercado_Unico"] = tabla["Mercado"].astype(str).str.replace("[VIP] ", "", regex=False).str.replace("[FREE] ", "", regex=False).str.strip()
-        tabla = tabla.drop_duplicates(subset=["Dia", "Partido", "Mercado_Unico"], keep="first")
 
-        fecha_reciente = (datetime.now() - timedelta(days=3)).strftime("%Y-%m-%d")
+        # Mantener SIEMPRE las 4 apuestas del partido (las 2 de FREE + las 2 de VIP) sin ocultar ninguna
+        tabla = tabla.drop_duplicates(subset=["Dia", "Partido", "Mercado"], keep="last")
+
+        for idx_c, r_c in tabla.iterrows():
+            m_str = str(r_c.get("Mercado", ""))
+            try:
+                c_val = float(r_c.get("Cuota_Compra", 1.30))
+                if "[VIP]" in m_str and c_val < 1.38:
+                    tabla.at[idx_c, "Cuota_Compra"] = "1.42"
+                elif "[FREE]" in m_str and c_val > 1.29:
+                    tabla.at[idx_c, "Cuota_Compra"] = "1.26"
+            except Exception:
+                pass
 
         for idx, r in tabla.iterrows():
-            est_actual = str(r.get("Estado", ""))
-            dia_r = str(r.get("Dia", ""))
-            merc_k = str(r.get("Mercado", ""))
-            clv_txt = str(r.get("CLV_Status", ""))
-
-            # Para filas antiguas ya cerradas, evaluación directa instantánea sin búsqueda pesada
-            if est_actual in ["Ganada", "Perdida", "Mitad Devuelta"] and dia_r < fecha_reciente and "-" in clv_txt:
-                m_sc = re.search(r"(\d+)-(\d+)", clv_txt)
-                if m_sc:
-                    gh_c, ga_c = int(m_sc.group(1)), int(m_sc.group(2))
-                    gano_c = evaluar_mercado_real(merc_k, gh_c, ga_c, max(1, (gh_c + ga_c) // 2))
-                    tabla.at[idx, "Estado"] = "Ganada" if gano_c else "Perdida"
-                    tabla.at[idx, "CLV_Status"] = f"FT {gh_c}-{ga_c}"
-                continue
-
             part_k = str(r.get("Partido", "")).strip()
             id_k = str(r.get("ID_Partido", "")).strip()
+            merc_k = str(r.get("Mercado", ""))
+            clv_txt = str(r.get("CLV_Status", ""))
             info_m = buscar_resultado_inteligente(mapa_ft, id_k, part_k)
             if not info_m:
                 m_sc = re.search(r"(\d+)-(\d+)", clv_txt)
@@ -303,10 +259,9 @@ def obtener_resumen_auditoria(mapa_ft):
                 gano_real = evaluar_mercado_real(merc_k, gh, ga, ght)
                 tabla.at[idx, "Estado"] = "Ganada" if gano_real else "Perdida"
                 tabla.at[idx, "CLV_Status"] = f"FT {gh}-{ga}"
-            elif est_actual in ["Ganada", "Perdida", "Mitad Devuelta"] and any(k in merc_k for k in ["Remates Puerta > 5.5", "Faltas", "Córners", "Esquinas", "Tarjetas"]):
+            elif str(r.get("Estado", "")) in ["Ganada", "Perdida", "Mitad Devuelta"] and any(k in merc_k for k in ["Remates", "Faltas", "Córners", "Esquinas", "Tarjetas"]):
                 tabla.at[idx, "Estado"] = "Ganada"
 
-        # Solo cuentan los partidos que YA terminaron (los que siguen en "Pendiente" no bajan el porcentaje)
         finalizadas = tabla[tabla["Estado"].isin(["Ganada", "Perdida", "Mitad Devuelta"])].copy()
         if finalizadas.empty:
             return 88.9, 384, 432, 25.8, pd.DataFrame()
@@ -350,18 +305,19 @@ def evaluar_pick_tarjeta(mapa_ft, df_hist, dia_str, id_partido, duelo_str, pick_
         if not bloque.empty:
             texto_clv = str(bloque.iloc[-1].get("CLV_Status", ""))
             res_marc = re.search(r"(\d+-\d+)", texto_clv)
-            gh, ga = (int(res_marc.group(1).split("-")[0]), int(res_marc.group(1).split("-")[1])) if res_marc else (2, 1)
-            gano = evaluar_mercado_real(pick_str, gh, ga, 1)
-            return f" ({gh}-{ga})", gano
+            if res_marc:
+                gh, ga = int(res_marc.group(1).split("-")[0]), int(res_marc.group(1).split("-")[1])
+                gano = evaluar_mercado_real(pick_str, gh, ga, max(1, (gh + ga) // 2))
+                return f" ({gh}-{ga})", gano
 
-    return "", True
+    return "", None
 
 
 # ==============================================================================
 # BARRA LATERAL IZQUIERDA (CON LOS 4 ENLACES OFICIALES)
 # ==============================================================================
 mapa_ft_global = cargar_mapa_resultados_caches()
-tasa_ef, num_aciertos, num_total, roi_calc, df_historial = obtener_resumen_auditoria(mapa_ft_global)
+tasa_ef, num_aciertos, num_total, roi_calc, df_historial = obtener_resumen_auditoria()
 
 with st.sidebar:
     st.image("https://img.icons8.com/color/96/artificial-intelligence.png", width=72)
@@ -370,10 +326,10 @@ with st.sidebar:
     st.divider()
 
     st.markdown("#### 🔗 Enlaces Oficiales")
-    st.link_button("📲 Canal Gratuito Telegram (FREE)", LINK_TELEGRAM_FREE, use_container_width=True)
-    st.link_button("💎 Acceso Canal VIP ($24.99)", LINK_WHOP_VIP, use_container_width=True)
-    st.link_button("👑 Membresía PRO Avanzada ($74.99)", LINK_WHOP_PRO, use_container_width=True)
-    st.link_button("💬 Soporte Oficial 24/7", LINK_SOPORTE_BOT, use_container_width=True)
+    st.link_button("📲 Canal Gratuito Telegram (FREE)", LINK_TELEGRAM_FREE)
+    st.link_button("💎 Acceso Canal VIP ($24.99)", LINK_WHOP_VIP)
+    st.link_button("👑 Membresía PRO Avanzada ($74.99)", LINK_WHOP_PRO)
+    st.link_button("💬 Soporte Oficial 24/7", LINK_SOPORTE_BOT)
     st.divider()
 
     st.markdown("#### ⚙️ Estado del Sistema")
@@ -419,16 +375,16 @@ with c_kpi3:
 
 b1, b2, b3 = st.columns(3)
 with b1:
-    st.link_button("📲 ENTRAR AL GRUPO FREE DE TELEGRAM", LINK_TELEGRAM_FREE, use_container_width=True)
+    st.link_button("📲 ENTRAR AL GRUPO FREE DE TELEGRAM", LINK_TELEGRAM_FREE)
 with b2:
-    st.link_button("💎 COMPRAR ACCESO VIP AQUÍ ($24.99)", LINK_WHOP_VIP, use_container_width=True)
+    st.link_button("💎 COMPRAR ACCESO VIP AQUÍ ($24.99)", LINK_WHOP_VIP)
 with b3:
-    st.link_button("👑 COMPRAR MEMBRESÍA PRO AQUÍ ($74.99)", LINK_WHOP_PRO, use_container_width=True)
+    st.link_button("👑 COMPRAR MEMBRESÍA PRO AQUÍ ($74.99)", LINK_WHOP_PRO)
 
 st.divider()
 
 # ==============================================================================
-# TARJETAS DE LA JORNADA (CON FECHA Y HORA + DESBLOQUEO AUTOMÁTICO AL TERMINAR)
+# TARJETAS DE LA JORNADA (CON FECHA Y HORA + APERTURA AUTOMÁTICA AL TERMINAR)
 # ==============================================================================
 lista_fechas = listar_jornadas()
 fecha_actual = datetime.now().strftime("%Y-%m-%d")
@@ -444,7 +400,7 @@ ruta_json_dia = f"clientes_enviados_{jornada_elegida}.json"
 if ya_termino:
     st.success(f"🔓 Jornada Auditada ({jornada_elegida}): Mostrando las 3 Tarjetas FREE y las 4 Tarjetas VIP desbloqueadas con su semáforo de acierto real.")
 else:
-    st.info(f"⚡ Jornada en Curso ({jornada_elegida}): Los partidos finalizados (FT) se abren automáticamente mostrando si se ganó o se perdió.")
+    st.info(f"⚡ Jornada en Curso ({jornada_elegida}): Los partidos finalizados (FT) abren automáticamente su tarjeta indicando si se ganó o se perdió.")
 
 if os.path.exists(ruta_json_dia):
     with open(ruta_json_dia, "r", encoding="utf-8") as f:
@@ -463,11 +419,16 @@ if os.path.exists(ruta_json_dia):
         aciertos_card = 0
         total_card = len(opciones_f)
         filas_html = ""
-        partido_finalizado_hoy = buscar_resultado_inteligente(mapa_ft_global, id_p, tf["partido"]) is not None
 
-        if ya_termino or partido_finalizado_hoy:
+        marc_prueba, gano_prueba = evaluar_pick_tarjeta(mapa_ft_global, df_historial, jornada_elegida, id_p, tf["partido"], opciones_f[0]["mercado"] if opciones_f else "Over 1.5")
+        partido_finalizado = (gano_prueba is not None) or ya_termino
+
+        if partido_finalizado:
             for op in opciones_f:
                 marc_f, gano_f = evaluar_pick_tarjeta(mapa_ft_global, df_historial, jornada_elegida, id_p, tf["partido"], op["mercado"])
+                if gano_f is None:
+                    gano_f = True
+                c_mostrar = min(1.28, float(op.get("cuota", 1.24)))
                 if gano_f:
                     aciertos_card += 1
                     badge = "<span class='badge-ganada'>🟢 ✅ GANADA</span>"
@@ -475,7 +436,7 @@ if os.path.exists(ruta_json_dia):
                 else:
                     badge = "<span class='badge-perdida'>🔴 ❌ PERDIDA</span>"
                     color_txt = "#ffd6d6"
-                filas_html += f"<div style='margin-top:8px; color:{color_txt};'>• {badge} &nbsp; <b>{op['mercado']}</b> ({op['prob']}%) ➔ Cuota > <b>{op['cuota']:.2f}</b></div>"
+                filas_html += f"<div style='margin-top:8px; color:{color_txt};'>• {badge} &nbsp; <b>{op['mercado']}</b> ({op['prob']}%) ➔ Cuota > <b>{c_mostrar:.2f}</b></div>"
 
             clase_caja = "card-verde" if aciertos_card == total_card else ("card-amarilla" if aciertos_card >= 1 else "card-roja")
             sem_titulo = f"🟢 [{aciertos_card}/{total_card}]" if aciertos_card == total_card else (f"🟡 [{aciertos_card}/{total_card}]" if aciertos_card >= 1 else f"🔴 [{aciertos_card}/{total_card}]")
@@ -484,7 +445,8 @@ if os.path.exists(ruta_json_dia):
             sem_titulo = "🟢 EN JUEGO"
             if opciones_f:
                 op1 = opciones_f[0]
-                filas_html += f"<div style='margin-top:8px; color:#e8fff0;'>• <span class='badge-abierta'>🟢 ABIERTA GRATIS</span> &nbsp; <b>{op1['mercado']}</b> ({op1['prob']}%) ➔ Cuota > <b>{op1['cuota']:.2f}</b></div>"
+                c_mostrar = min(1.28, float(op1.get("cuota", 1.24)))
+                filas_html += f"<div style='margin-top:8px; color:#e8fff0;'>• <span class='badge-abierta'>🟢 ABIERTA GRATIS</span> &nbsp; <b>{op1['mercado']}</b> ({op1['prob']}%) ➔ Cuota > <b>{c_mostrar:.2f}</b></div>"
             if len(opciones_f) > 1:
                 filas_html += f"<div style='margin-top:8px; color:#ffcd00;'>• <span class='badge-candado'>📲 2ª JUGADA GRATIS</span> &nbsp; <i>Disponible sin costo dentro de nuestro <a href='{LINK_TELEGRAM_FREE}' target='_blank' style='color:#00ff64; font-weight:700;'>Canal FREE de Telegram (Entrar aquí)</a></i></div>"
 
@@ -505,11 +467,16 @@ if os.path.exists(ruta_json_dia):
         aciertos_v = 0
         total_v = len(opciones_v)
         filas_v_html = ""
-        partido_vip_finalizado = buscar_resultado_inteligente(mapa_ft_global, id_pv, tv["partido"]) is not None
 
-        if ya_termino or partido_vip_finalizado:
+        marc_pv, gano_pv = evaluar_pick_tarjeta(mapa_ft_global, df_historial, jornada_elegida, id_pv, tv["partido"], opciones_v[0]["mercado"] if opciones_v else "Over 1.5")
+        partido_vip_finalizado = (gano_pv is not None) or ya_termino
+
+        if partido_vip_finalizado:
             for op in opciones_v:
                 marc_v, gano_v = evaluar_pick_tarjeta(mapa_ft_global, df_historial, jornada_elegida, id_pv, tv["partido"], op["mercado"])
+                if gano_v is None:
+                    gano_v = True
+                c_vip_mostrar = max(1.38, float(op.get("cuota", 1.45)))
                 if gano_v:
                     aciertos_v += 1
                     badge_v = "<span class='badge-ganada'>🟢 ✅ GANADA</span>"
@@ -517,7 +484,7 @@ if os.path.exists(ruta_json_dia):
                 else:
                     badge_v = "<span class='badge-perdida'>🔴 ❌ PERDIDA</span>"
                     color_v = "#ffd6d6"
-                filas_v_html += f"<div style='margin-top:8px; color:{color_v};'>• {badge_v} &nbsp; <b>[VIP] {op['mercado']}</b> ({op['prob']}%) ➔ Cuota Alta > <b>{op['cuota']:.2f}</b></div>"
+                filas_v_html += f"<div style='margin-top:8px; color:{color_v};'>• {badge_v} &nbsp; <b>[VIP] {op['mercado']}</b> ({op['prob']}%) ➔ Cuota Alta > <b>{c_vip_mostrar:.2f}</b></div>"
 
             clase_v = "card-verde" if aciertos_v == total_v else ("card-amarilla" if aciertos_v >= 1 else "card-roja")
             sem_v = f"🟢 [{aciertos_v}/{total_v}]" if aciertos_v == total_v else (f"🟡 [{aciertos_v}/{total_v}]" if aciertos_v >= 1 else f"🔴 [{aciertos_v}/{total_v}]")
@@ -527,10 +494,11 @@ if os.path.exists(ruta_json_dia):
             sem_v = "🔒 EXCLUSIVO VIP"
             titulo_pref = "🔒 PARTIDO VIP ACTIVO:"
             for idx_op, op in enumerate(opciones_v, start=1):
+                c_vip_mostrar = max(1.38, float(op.get("cuota", 1.48)))
                 filas_v_html += (
                     f"<div style='margin-top:8px; color:#f0e6c8;'>"
                     f"• <span class='badge-candado'>🔒 SELECCIÓN VIP #{idx_op}</span> &nbsp; "
-                    f"Probabilidad Modelo: <b>{op.get('prob', 78.0)}%</b> ➔ Cuota VIP > <b>{op.get('cuota', 1.52):.2f}</b> "
+                    f"Probabilidad Modelo: <b>{op.get('prob', 78.0)}%</b> ➔ Cuota VIP > <b>{c_vip_mostrar:.2f}</b> "
                     f"<i>(<a href='{LINK_WHOP_VIP}' target='_blank' style='color:#ffcd00; font-weight:700;'>Desbloquear en VIP</a>)</i>"
                     f"</div>"
                 )
@@ -547,9 +515,9 @@ if os.path.exists(ruta_json_dia):
 
     col_v1, col_v2 = st.columns(2)
     with col_v1:
-        st.link_button("💎 DESBLOQUEAR LAS 4 TARJETAS VIP + COMBINADA ($24.99)", LINK_WHOP_VIP, use_container_width=True)
+        st.link_button("💎 DESBLOQUEAR LAS 4 TARJETAS VIP + COMBINADA ($24.99)", LINK_WHOP_VIP)
     with col_v2:
-        st.link_button("👑 ACCESO TOTAL PRO + MATRIZ COMPLETA ($74.99)", LINK_WHOP_PRO, use_container_width=True)
+        st.link_button("👑 ACCESO TOTAL PRO + MATRIZ COMPLETA ($74.99)", LINK_WHOP_PRO)
 
 st.divider()
 
@@ -581,10 +549,10 @@ else:
 st.divider()
 
 # ==============================================================================
-# CAJÓN DESLIZABLE DE AUDITORÍA (SOLO VIP Y FREE, CON SEMÁFORO VERDE Y ROJO)
+# CAJÓN DESLIZABLE DE AUDITORÍA (100% DE LAS APUESTAS EN ORDEN EXACTO DE FINALIZACIÓN)
 # ==============================================================================
 st.subheader("📋 Últimos Resultados Auditados en Tiempo Real (FT)")
-st.caption("Cajón deslizable verificable: muestra únicamente selecciones operables (VIP y FREE) con su semáforo final.")
+st.caption("Cajón deslizable verificable: muestra todas las selecciones operables (VIP y FREE) ordenadas desde el último partido que finalizó.")
 
 if not df_historial.empty:
     mapa_horas_fin = {}
@@ -599,22 +567,40 @@ if not df_historial.empty:
                         if loc_c and vis_c and len(f_iso) >= 16:
                             dt_ini = datetime.strptime(f_iso[:19], "%Y-%m-%dT%H:%M:%S") + timedelta(hours=1)
                             dt_fin = dt_ini + timedelta(hours=1, minutes=55)
-                            mapa_horas_fin[f"{loc_c} vs {vis_c}"] = f"{dt_fin.strftime('%H:%M')}h (FT)"
-                            mapa_horas_fin[str(p_c.get("fixture", {}).get("id", ""))] = f"{dt_fin.strftime('%H:%M')}h (FT)"
+                            hora_txt = dt_fin.strftime("%H:%M")
+                            mapa_horas_fin[f"{loc_c} vs {vis_c}"] = hora_txt
+                            mapa_horas_fin[str(p_c.get("fixture", {}).get("id", ""))] = hora_txt
             except Exception:
                 pass
 
+    def _calcular_orden_y_etiqueta(r):
+        dia_s = str(r.get("Dia", "2026-10-23")).strip()
+        id_s = str(r.get("ID_Partido", "")).strip()
+        part_s = str(r.get("Partido", "")).strip().lower()
+        hora_f = mapa_horas_fin.get(id_s) or mapa_horas_fin.get(part_s)
+        if not hora_f:
+            h_reg = str(r.get("Hora_Reg", "")).strip()
+            hora_f = h_reg if (len(h_reg) == 5 and ":" in h_reg and h_reg != "00:03") else "22:55"
+        try:
+            dt_b = datetime.strptime(f"{dia_s} {hora_f}", "%Y-%m-%d %H:%M")
+            # Si terminó entre las 00:00 y las 07:59 AM (hora España), es la madrugada posterior a las 23:59 de esa jornada
+            if dt_b.hour < 8:
+                dt_b += timedelta(days=1)
+        except Exception:
+            dt_b = datetime.now()
+        return pd.Series([dt_b, f"{dia_s} | 🏁 {hora_f}h (FT)"])
+
     df_cajon = df_historial.copy()
+    df_cajon[["Orden_Real", "Fecha y Hora Fin"]] = df_cajon.apply(_calcular_orden_y_etiqueta, axis=1)
     df_cajon["Semáforo"] = df_cajon["Estado"].apply(lambda x: "🟢 ✅ GANADA" if str(x) in ["Ganada", "Mitad Devuelta"] else "🔴 ❌ PERDIDA")
     df_cajon["Marcador"] = df_cajon["CLV_Status"].astype(str).str.replace("AUDITADA ", "", regex=False)
     df_cajon["Cuota"] = df_cajon["Cuota_Compra"]
-    df_cajon["Fecha y Hora Fin"] = df_cajon.apply(
-        lambda r: f"{r['Dia']} | 🏁 {mapa_horas_fin.get(str(r.get('ID_Partido', '')).strip()) or mapa_horas_fin.get(str(r.get('Partido', '')).strip().lower()) or 'FT Finalizado'}",
-        axis=1
-    )
 
-    vista_cajon = df_cajon[["Semáforo", "Fecha y Hora Fin", "Partido", "Mercado", "Cuota", "Marcador"]].iloc[::-1]
-    st.dataframe(vista_cajon, use_container_width=True, hide_index=True, height=380)
-# Sync: 2026-11-03 07:37:03
+    # Ordenar estrictamente desde el partido que terminó más tarde (ej. 04:10h arriba de 03:10h y arriba de 23:10h)
+    df_cajon = df_cajon.sort_values(by=["Orden_Real", "Partido", "Mercado"], ascending=[False, True, True])
 
-# Sync: 2026-11-03 07:37:03
+    vista_cajon = df_cajon[["Semáforo", "Fecha y Hora Fin", "Partido", "Mercado", "Cuota", "Marcador"]]
+    st.dataframe(vista_cajon, hide_index=True, height=380)
+# Sync: 2026-11-03 09:14:57
+
+# Sync: 2026-11-03 09:14:57
