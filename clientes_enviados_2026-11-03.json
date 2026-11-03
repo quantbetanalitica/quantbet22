@@ -65,6 +65,24 @@
     },
     {
       "tipo_tarjeta": "FREE",
+      "id_partido": "401915387",
+      "hora": "21:00",
+      "partido": "Barcelona vs Aston Villa",
+      "selecciones": [
+        {
+          "mercado": "Córners > 8.5",
+          "prob": 76.9,
+          "cuota": 1.24
+        },
+        {
+          "mercado": "Remates Puerta > 6.5",
+          "prob": 70.2,
+          "cuota": 1.28
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "FREE",
       "id_partido": "401915308",
       "hora": "21:00",
       "partido": "Manchester United vs AS Roma",
@@ -78,24 +96,6 @@
           "mercado": "Córners > 8.5",
           "prob": 62.5,
           "cuota": 1.28
-        }
-      ]
-    },
-    {
-      "tipo_tarjeta": "FREE",
-      "id_partido": "401915387",
-      "hora": "21:00",
-      "partido": "Barcelona vs Aston Villa",
-      "selecciones": [
-        {
-          "mercado": "Remates Puerta > 6.5",
-          "prob": 77.8,
-          "cuota": 1.22
-        },
-        {
-          "mercado": "Córners > 8.5",
-          "prob": 76.9,
-          "cuota": 1.24
         }
       ]
     },
