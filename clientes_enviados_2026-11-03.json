@@ -29,6 +29,11 @@
           "mercado": "Córners > 9.5",
           "prob": 68.0,
           "cuota": 1.69
+        },
+        {
+          "mercado": "Tarjetas > 3.5",
+          "prob": 73.5,
+          "cuota": 1.46
         }
       ]
     },
@@ -60,6 +65,11 @@
           "mercado": "Tarjetas > 3.5",
           "prob": 68.0,
           "cuota": 1.65
+        },
+        {
+          "mercado": "Córners > 8.5",
+          "prob": 73.5,
+          "cuota": 1.46
         }
       ]
     },
