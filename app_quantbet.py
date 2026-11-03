@@ -37,6 +37,16 @@ LINK_SOPORTE_BOT = "https://t.me/QuantBetSoporte_bot"
 
 FECHA_CORTE_LIMPIO = "2026-10-23"
 
+
+def _ahora_es():
+    """Hora oficial de España (Streamlit Cloud corre en UTC; sin esto la jornada y las fechas de ESPN se desfasan)."""
+    try:
+        from zoneinfo import ZoneInfo
+        return datetime.now(ZoneInfo("Europe/Madrid")).replace(tzinfo=None)
+    except Exception:
+        from datetime import timezone
+        return datetime.now(timezone.utc).replace(tzinfo=None) + timedelta(hours=1)
+
 st.markdown("""
 <meta name="google" content="notranslate">
 <style>
@@ -216,19 +226,41 @@ def cargar_mapa_resultados_caches():
                 pass
 
     # 2. Consulta directa ultrarrápida (3 llamadas HTTP a ESPN Global/Champions/Latam) para actualizar en vivo al dar F5
-    hoy_dt = datetime.now()
+    hoy_dt = _ahora_es()
     fechas_ymd = [(hoy_dt - timedelta(days=1)).strftime("%Y%m%d"), hoy_dt.strftime("%Y%m%d")]
     endpoints_rapidos = ["all", "uefa.champions", "col.1", "arg.1", "bra.1"]
+
+    # Descarga en PARALELO (antes eran 10 llamadas en serie con 2.2s: en Streamlit Cloud se cortaban y los FT de hoy no entraban)
+    def _bajar_scoreboard_espn(par_q):
+        ymd_q, ep_q = par_q
+        try:
+            url_q = f"https://site.api.espn.com/apis/site/v2/sports/soccer/{ep_q}/scoreboard?dates={ymd_q}&limit=300"
+            r_q = requests.get(url_q, timeout=6.0, headers={"Cache-Control": "no-cache"})
+            if r_q.status_code == 200:
+                return par_q, r_q.json()
+        except Exception:
+            pass
+        return par_q, None
+
+    respuestas_espn = {}
+    try:
+        from concurrent.futures import ThreadPoolExecutor
+        with ThreadPoolExecutor(max_workers=10) as ex_espn:
+            respuestas_espn = dict(ex_espn.map(_bajar_scoreboard_espn, [(y_q, e_q) for y_q in fechas_ymd for e_q in endpoints_rapidos]))
+    except Exception:
+        respuestas_espn = {}
 
     for ymd in fechas_ymd:
         for ep in endpoints_rapidos:
             try:
-                url = f"https://site.api.espn.com/apis/site/v2/sports/soccer/{ep}/scoreboard?dates={ymd}&limit=300"
-                r = requests.get(url, timeout=2.2)
-                if r.status_code == 200:
-                    for ev in r.json().get("events", []):
+                datos_espn = respuestas_espn.get((ymd, ep))
+                if datos_espn:
+                    for ev in datos_espn.get("events", []):
                         comp = (ev.get("competitions") or [{}])[0]
                         st_type = comp.get("status", {}).get("type", {})
+                        nombre_estado = str(st_type.get("name", "")).upper()
+                        if any(k_e in nombre_estado for k_e in ["POSTPONED", "CANCELED", "CANCELLED", "ABANDONED", "SUSPENDED"]):
+                            continue
                         if st_type.get("completed") is True or st_type.get("state") == "post":
                             comps = comp.get("competitors", [])
                             if len(comps) >= 2:
@@ -408,7 +440,7 @@ def listar_jornadas():
         if coincidencia and coincidencia.group(1) >= FECHA_CORTE_LIMPIO:
             dias.add(coincidencia.group(1))
     if not dias:
-        dias.add(datetime.now().strftime("%Y-%m-%d"))
+        dias.add(_ahora_es().strftime("%Y-%m-%d"))
     return sorted(list(dias), reverse=True)
 
 
@@ -437,6 +469,28 @@ def evaluar_pick_tarjeta(mapa_ft, df_hist, dia_str, id_partido, duelo_str, pick_
 # ==============================================================================
 mapa_ft_global = cargar_mapa_resultados_caches()
 tasa_ef, num_aciertos, num_total, roi_calc, df_historial = obtener_resumen_auditoria()
+
+
+# ==============================================================================
+# VIGÍA EN TIEMPO REAL: cada 60s mira si terminó algún partido (FT) y recarga la web sola (sin F5)
+# ==============================================================================
+def _firma_resultados_ft():
+    m_firma = cargar_mapa_resultados_caches()
+    return len([k_f for k_f in m_firma.keys() if not str(k_f).startswith("_")])
+
+
+if hasattr(st, "fragment"):
+    @st.fragment(run_every=60)
+    def _vigia_tiempo_real():
+        firma_nueva = _firma_resultados_ft()
+        firma_previa = st.session_state.get("_firma_ft_quantbet")
+        if firma_previa is None or firma_nueva > firma_previa:
+            st.session_state["_firma_ft_quantbet"] = firma_nueva
+        if firma_previa is not None and firma_nueva > firma_previa:
+            obtener_resumen_auditoria.clear()
+            st.rerun()
+
+    _vigia_tiempo_real()
 
 with st.sidebar:
     st.image("https://img.icons8.com/color/96/artificial-intelligence.png", width=72)
@@ -514,14 +568,18 @@ st.divider()
 # TARJETAS DE LA JORNADA (CON FECHA Y HORA + APERTURA AUTOMÁTICA AL TERMINAR)
 # ==============================================================================
 lista_fechas = listar_jornadas()
-fecha_actual = datetime.now().strftime("%Y-%m-%d")
+fecha_actual = _ahora_es().strftime("%Y-%m-%d")
+# Jornada viva: de 00:00h a 07:59h (hora España) sigue abierta la jornada anterior (partidos de madrugada en Latam)
+fecha_jornada_viva = (_ahora_es() - timedelta(hours=8)).strftime("%Y-%m-%d")
+indice_jornada_defecto = lista_fechas.index(fecha_jornada_viva) if fecha_jornada_viva in lista_fechas else 0
 jornada_elegida = st.selectbox(
     "📅 Selecciona la Jornada (Cada partido se abre automáticamente con su semáforo Verde/Rojo apenas finaliza):",
     lista_fechas,
-    index=0
+    index=indice_jornada_defecto
 )
 
-ya_termino = jornada_elegida < fecha_actual
+# Antes se comparaba con la fecha de calendario UTC: a las 00:00h marcaba como GANADA un partido de las 01:30h aún sin jugar
+ya_termino = jornada_elegida < fecha_jornada_viva
 ruta_json_dia = f"clientes_enviados_{jornada_elegida}.json"
 
 if ya_termino:
