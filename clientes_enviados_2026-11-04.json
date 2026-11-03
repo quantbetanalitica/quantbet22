@@ -3,24 +3,6 @@
   "tarjetas_clientes": [
     {
       "tipo_tarjeta": "VIP",
-      "id_partido": "401915382",
-      "hora": "18:45",
-      "partido": "Fenerbahce vs Liverpool",
-      "selecciones": [
-        {
-          "mercado": "Córners > 8.5",
-          "prob": 78.6,
-          "cuota": 1.48
-        },
-        {
-          "mercado": "Gol en 1T",
-          "prob": 72.6,
-          "cuota": 1.4
-        }
-      ]
-    },
-    {
-      "tipo_tarjeta": "VIP",
       "id_partido": "401915383",
       "hora": "18:45",
       "partido": "AEK Athens vs Real Madrid",
@@ -31,9 +13,27 @@
           "cuota": 1.57
         },
         {
-          "mercado": "Gol en 2do Tiempo",
+          "mercado": "Remates Puerta > 6.5",
           "prob": 68.0,
-          "cuota": 1.63
+          "cuota": 1.64
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "401915382",
+      "hora": "18:45",
+      "partido": "Fenerbahce vs Liverpool",
+      "selecciones": [
+        {
+          "mercado": "Córners > 8.5",
+          "prob": 78.6,
+          "cuota": 1.48
+        },
+        {
+          "mercado": "Gol en 2do Tiempo",
+          "prob": 75.1,
+          "cuota": 1.38
         }
       ]
     },
@@ -44,14 +44,14 @@
       "partido": "Slavia Prague vs Arsenal",
       "selecciones": [
         {
-          "mercado": "Over 1.5 Goles",
-          "prob": 75.5,
-          "cuota": 1.38
-        },
-        {
           "mercado": "Tarjetas > 3.5",
           "prob": 68.0,
           "cuota": 1.67
+        },
+        {
+          "mercado": "Córners > 9.5",
+          "prob": 68.0,
+          "cuota": 1.68
         }
       ]
     },
