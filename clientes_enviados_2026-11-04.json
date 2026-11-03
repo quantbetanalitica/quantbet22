@@ -1,0 +1,131 @@
+{
+  "fecha": "2026-11-04",
+  "tarjetas_clientes": [
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "401915382",
+      "hora": "18:45",
+      "partido": "Fenerbahce vs Liverpool",
+      "selecciones": [
+        {
+          "mercado": "Córners > 8.5",
+          "prob": 78.6,
+          "cuota": 1.48
+        },
+        {
+          "mercado": "Gol en 1T",
+          "prob": 72.6,
+          "cuota": 1.4
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "401915383",
+      "hora": "18:45",
+      "partido": "AEK Athens vs Real Madrid",
+      "selecciones": [
+        {
+          "mercado": "Tarjetas > 3.5",
+          "prob": 68.0,
+          "cuota": 1.57
+        },
+        {
+          "mercado": "Gol en 2do Tiempo",
+          "prob": 68.0,
+          "cuota": 1.63
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "401915381",
+      "hora": "21:00",
+      "partido": "Slavia Prague vs Arsenal",
+      "selecciones": [
+        {
+          "mercado": "Over 1.5 Goles",
+          "prob": 75.5,
+          "cuota": 1.38
+        },
+        {
+          "mercado": "Tarjetas > 3.5",
+          "prob": 68.0,
+          "cuota": 1.67
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "401841298",
+      "hora": "01:30",
+      "partido": "São Paulo vs Corinthians",
+      "selecciones": [
+        {
+          "mercado": "Over 1.5 Goles",
+          "prob": 81.3,
+          "cuota": 1.38
+        },
+        {
+          "mercado": "Córners > 8.5",
+          "prob": 76.1,
+          "cuota": 1.48
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "FREE",
+      "id_partido": "401915304",
+      "hora": "21:00",
+      "partido": "Borussia Dortmund vs Real Betis",
+      "selecciones": [
+        {
+          "mercado": "Remates Puerta > 6.5",
+          "prob": 84.3,
+          "cuota": 1.18
+        },
+        {
+          "mercado": "Over 1.5 Goles",
+          "prob": 82.7,
+          "cuota": 1.18
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "FREE",
+      "id_partido": "401915306",
+      "hora": "21:00",
+      "partido": "RB Leipzig vs Manchester City",
+      "selecciones": [
+        {
+          "mercado": "Remates Puerta > 6.5",
+          "prob": 76.3,
+          "cuota": 1.25
+        },
+        {
+          "mercado": "Córners > 8.5",
+          "prob": 78.3,
+          "cuota": 1.18
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "FREE",
+      "id_partido": "401915301",
+      "hora": "21:00",
+      "partido": "FC Porto vs Napoli",
+      "selecciones": [
+        {
+          "mercado": "Córners > 8.5",
+          "prob": 75.9,
+          "cuota": 1.25
+        },
+        {
+          "mercado": "Tarjetas > 3.5",
+          "prob": 60.0,
+          "cuota": 1.28
+        }
+      ]
+    }
+  ]
+}
