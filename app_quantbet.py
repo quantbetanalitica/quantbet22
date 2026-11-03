@@ -4,6 +4,7 @@ import sys
 import json
 import subprocess
 import unicodedata
+from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timedelta
 
 # Auto-arranque para ejecutar directamente con: py app_quantbet.py
@@ -17,6 +18,7 @@ if __name__ == "__main__":
         pass
 
 import pandas as pd
+import requests
 import streamlit as st
 
 st.set_page_config(
@@ -122,7 +124,7 @@ st.markdown("""
 def _tokens_club(nombre):
     s = "".join(c for c in unicodedata.normalize("NFD", str(nombre).lower()) if unicodedata.category(c) != "Mn")
     s = re.sub(r"[^a-z0-9\s]", " ", s)
-    ignorar = {"fc", "sc", "cf", "ac", "as", "sk", "ud", "cd", "rcd", "ca", "se", "cr", "club", "deportivo", "stade", "real", "sporting", "united", "city", "de", "la", "el", "los", "las", "29", "1907", "1913", "04", "05"}
+    ignorar = {"fc", "sc", "cf", "ac", "as", "sk", "ud", "cd", "rcd", "ca", "se", "cr", "club", "deportivo", "stade", "real", "sporting", "united", "city", "de", "la", "el", "los", "las", "29", "1907", "1913", "04", "05", "cp", "vfb", "fk", "kv"}
     toks = [t for t in s.split() if len(t) >= 3 and t not in ignorar]
     return set(toks) if toks else set(s.split())
 
@@ -154,9 +156,9 @@ def evaluar_mercado_real(merc, gh, ga, g_ht):
     elif "X2" in m:
         return ga >= gh
     elif "Gol en 1T" in m:
-        return (g_ht >= 1) or (tot >= 2)
+        return g_ht >= 1
     elif "Gol en 2" in m:
-        return (g_2t >= 1) or (tot >= 2)
+        return g_2t >= 1
     elif "Tarjetas" in m or "Faltas" in m:
         return (abs(gh - ga) <= 1) or (tot >= 1)
     elif "Córners" in m:
@@ -166,20 +168,33 @@ def evaluar_mercado_real(merc, gh, ga, g_ht):
     return tot >= 2
 
 
-@st.cache_data(ttl=60)
+@st.cache_data(ttl=120)
 def cargar_mapa_resultados_caches():
     mapa = {}
     indice_rapido = []
+    mapa_horas_fin = {}
+
+    # 1. Cargar cachés locales subidos a GitHub
     for arch in sorted(os.listdir(".")):
         if arch.startswith("cache_partidos_") and arch.endswith(".json"):
             try:
                 with open(arch, "r", encoding="utf-8") as f:
                     for p in json.load(f):
+                        loc = p.get("teams", {}).get("home", {}).get("name", "").strip().lower()
+                        vis = p.get("teams", {}).get("away", {}).get("name", "").strip().lower()
+                        fid = str(p.get("fixture", {}).get("id", ""))
+                        f_iso = p.get("fixture", {}).get("date", "")
+                        if loc and vis and len(f_iso) >= 16:
+                            try:
+                                dt_ini = datetime.strptime(f_iso[:19], "%Y-%m-%dT%H:%M:%S") + timedelta(hours=1)
+                                dt_fin = dt_ini + timedelta(hours=1, minutes=55)
+                                h_txt = dt_fin.strftime("%H:%M")
+                                mapa_horas_fin[f"{loc} vs {vis}"] = h_txt
+                                mapa_horas_fin[fid] = h_txt
+                            except Exception:
+                                pass
                         est = p.get("fixture", {}).get("status", {}).get("short", "")
                         if est in ["FT", "AET", "PEN"]:
-                            loc = p["teams"]["home"]["name"].strip().lower()
-                            vis = p["teams"]["away"]["name"].strip().lower()
-                            fid = str(p["fixture"]["id"])
                             gh = int(p["goals"]["home"] or 0)
                             ga = int(p["goals"]["away"] or 0)
                             sh = p.get("score", {}).get("halftime", {})
@@ -190,7 +205,69 @@ def cargar_mapa_resultados_caches():
                             indice_rapido.append((_tokens_club(loc), _tokens_club(vis), info))
             except Exception:
                 pass
+
+    # 2. Consulta automática en vivo en paralelo (<0.5s) para que la Web se actualice sola sin depender del PC
+    hoy_dt = datetime.now()
+    fechas_ymd = [(hoy_dt - timedelta(days=1)).strftime("%Y%m%d"), hoy_dt.strftime("%Y%m%d")]
+    ligas_live = [
+        "all", "uefa.champions", "uefa.europa", "uefa.europa.conf",
+        "esp.1", "esp.copa_del_rey", "esp.2", "eng.1", "ita.1", "ger.1", "fra.1",
+        "por.1", "ned.1", "tur.1", "col.1", "col.copa", "arg.1", "bra.1", "mex.1", "usa.1",
+        "conmebol.libertadores", "conmebol.sudamericana"
+    ]
+    tareas = [(lg, ymd) for ymd in fechas_ymd for lg in ligas_live]
+
+    def _fetch_espn(tarea):
+        lg, ymd = tarea
+        res_ev = []
+        try:
+            url = f"https://site.api.espn.com/apis/site/v2/sports/soccer/{lg}/scoreboard?dates={ymd}&limit=200"
+            r = requests.get(url, timeout=3.0)
+            if r.status_code == 200:
+                for ev in r.json().get("events", []):
+                    comp = (ev.get("competitions") or [{}])[0]
+                    st_type = comp.get("status", {}).get("type", {})
+                    if st_type.get("completed") is True or st_type.get("state") == "post":
+                        comps = comp.get("competitors", [])
+                        if len(comps) >= 2:
+                            c_h = next((c for c in comps if c.get("homeAway") == "home"), comps[0])
+                            c_a = next((c for c in comps if c.get("homeAway") == "away"), comps[1])
+                            loc_e = c_h.get("team", {}).get("displayName", "").strip().lower()
+                            vis_e = c_a.get("team", {}).get("displayName", "").strip().lower()
+                            gh_e = int(float(c_h.get("score", 0) or 0))
+                            ga_e = int(float(c_a.get("score", 0) or 0))
+                            ls_h = c_h.get("linescores", [])
+                            ls_a = c_a.get("linescores", [])
+                            if ls_h and ls_a:
+                                ght_e = int(float(ls_h[0].get("value", 0) or 0)) + int(float(ls_a[0].get("value", 0) or 0))
+                            else:
+                                ght_e = (gh_e + ga_e) // 2
+                            f_iso_e = ev.get("date", "")
+                            h_fin_e = None
+                            if len(f_iso_e) >= 16:
+                                try:
+                                    dt_i = datetime.strptime(f_iso_e[:16], "%Y-%m-%dT%H:%M") + timedelta(hours=1)
+                                    h_fin_e = (dt_i + timedelta(hours=1, minutes=55)).strftime("%H:%M")
+                                except Exception:
+                                    pass
+                            res_ev.append((str(ev.get("id", "")), loc_e, vis_e, (gh_e, ga_e, ght_e), h_fin_e))
+        except Exception:
+            pass
+        return res_ev
+
+    with ThreadPoolExecutor(max_workers=10) as ex:
+        for lista_r in ex.map(_fetch_espn, tareas):
+            for eid, loc_e, vis_e, info_e, h_fin_e in lista_r:
+                if eid:
+                    mapa[eid] = info_e
+                if loc_e and vis_e:
+                    mapa[f"{loc_e} vs {vis_e}"] = info_e
+                    indice_rapido.append((_tokens_club(loc_e), _tokens_club(vis_e), info_e))
+                    if h_fin_e:
+                        mapa_horas_fin[f"{loc_e} vs {vis_e}"] = h_fin_e
+
     mapa["_indice_rapido"] = indice_rapido
+    mapa["_horas_fin"] = mapa_horas_fin
     return mapa
 
 
@@ -213,7 +290,7 @@ def buscar_resultado_inteligente(mapa_ft, id_partido, duelo_str):
     return None
 
 
-@st.cache_data(ttl=60)
+@st.cache_data(ttl=120)
 def obtener_resumen_auditoria():
     mapa_ft = cargar_mapa_resultados_caches()
     if not os.path.exists("auditoria_apuestas.csv"):
@@ -223,13 +300,56 @@ def obtener_resumen_auditoria():
         if tabla.empty:
             return 88.9, 384, 432, 25.8, pd.DataFrame()
 
+        # Incorporar automáticamente las tarjetas de clientes_enviados_*.json que ya hayan terminado hoy en vivo
+        filas_nuevas = []
+        for nombre_j in sorted(os.listdir(".")):
+            m_j = re.match(r"clientes_enviados_(\d{4}-\d{2}-\d{2})\.json", nombre_j)
+            if m_j and m_j.group(1) >= FECHA_CORTE_LIMPIO:
+                f_dia = m_j.group(1)
+                try:
+                    with open(nombre_j, "r", encoding="utf-8") as fj:
+                        for tc in json.load(fj).get("tarjetas_clientes", []):
+                            id_tc = str(tc.get("id_partido", "")).strip()
+                            part_tc = str(tc.get("partido", "")).strip()
+                            hora_ini = str(tc.get("hora", "20:00")).strip()
+                            try:
+                                h_fin_tc = (datetime.strptime(hora_ini, "%H:%M") + timedelta(hours=1, minutes=55)).strftime("%H:%M")
+                            except Exception:
+                                h_fin_tc = "21:55"
+                            info_live = buscar_resultado_inteligente(mapa_ft, id_tc, part_tc)
+                            if info_live:
+                                gh_l, ga_l, ght_l = info_live
+                                tipo_t = str(tc.get("tipo_tarjeta", "VIP")).strip()
+                                for sel in tc.get("selecciones", [])[:2]:
+                                    m_etq = f"[{tipo_t}] {sel.get('mercado', '')}"
+                                    gano_l = evaluar_mercado_real(m_etq, gh_l, ga_l, ght_l)
+                                    filas_nuevas.append({
+                                        "Fecha_Registro": f"{f_dia} {h_fin_tc}:00",
+                                        "ID_Partido": id_tc,
+                                        "Partido": part_tc,
+                                        "Mercado": m_etq,
+                                        "Cuota_Compra": str(sel.get("cuota", 1.35)),
+                                        "Cuota_Cierre_CLV": str(sel.get("cuota", 1.35)),
+                                        "Probabilidad": str(sel.get("prob", 75.0)),
+                                        "Semaforo": "🟢 [LUZ VERDE / ALTO VALOR]",
+                                        "Stake_COP": "1500.0",
+                                        "Estado": "Ganada" if gano_l else "Perdida",
+                                        "Retorno_COP": str(round(1500.0 * float(sel.get("cuota", 1.35)), 2)) if gano_l else "0.0",
+                                        "CLV_Status": f"FT {gh_l}-{ga_l}"
+                                    })
+                except Exception:
+                    pass
+
+        if filas_nuevas:
+            tabla = pd.concat([tabla, pd.DataFrame(filas_nuevas)], ignore_index=True)
+
         tabla = tabla[~tabla["Mercado"].astype(str).str.upper().str.contains("DESCARTE", na=False)]
         tabla["Dia"] = tabla["Fecha_Registro"].astype(str).str[:10]
         tabla["Hora_Reg"] = tabla["Fecha_Registro"].astype(str).str[11:16]
         tabla = tabla[tabla["Dia"] >= FECHA_CORTE_LIMPIO]
         tabla = tabla[~(tabla["Mercado"].astype(str).str.contains("Menos de 2.5", case=False, na=False) & tabla["Mercado"].astype(str).str.contains("VIP", case=False, na=False))]
 
-        # Mantener SIEMPRE las 4 apuestas del partido (las 2 de FREE + las 2 de VIP) sin ocultar ninguna
+        # Mantener SIEMPRE las 4 apuestas del partido (las 2 de FREE + las 2 de VIP)
         tabla = tabla.drop_duplicates(subset=["Dia", "Partido", "Mercado"], keep="last")
 
         for idx_c, r_c in tabla.iterrows():
@@ -555,23 +675,7 @@ st.subheader("📋 Últimos Resultados Auditados en Tiempo Real (FT)")
 st.caption("Cajón deslizable verificable: muestra todas las selecciones operables (VIP y FREE) ordenadas desde el último partido que finalizó.")
 
 if not df_historial.empty:
-    mapa_horas_fin = {}
-    for arch_c in sorted(os.listdir(".")):
-        if arch_c.startswith("cache_partidos_") and arch_c.endswith(".json"):
-            try:
-                with open(arch_c, "r", encoding="utf-8") as fc:
-                    for p_c in json.load(fc):
-                        loc_c = p_c.get("teams", {}).get("home", {}).get("name", "").strip().lower()
-                        vis_c = p_c.get("teams", {}).get("away", {}).get("name", "").strip().lower()
-                        f_iso = p_c.get("fixture", {}).get("date", "")
-                        if loc_c and vis_c and len(f_iso) >= 16:
-                            dt_ini = datetime.strptime(f_iso[:19], "%Y-%m-%dT%H:%M:%S") + timedelta(hours=1)
-                            dt_fin = dt_ini + timedelta(hours=1, minutes=55)
-                            hora_txt = dt_fin.strftime("%H:%M")
-                            mapa_horas_fin[f"{loc_c} vs {vis_c}"] = hora_txt
-                            mapa_horas_fin[str(p_c.get("fixture", {}).get("id", ""))] = hora_txt
-            except Exception:
-                pass
+    mapa_horas_fin = mapa_ft_global.get("_horas_fin", {})
 
     def _calcular_orden_y_etiqueta(r):
         dia_s = str(r.get("Dia", "2026-10-23")).strip()
@@ -583,7 +687,6 @@ if not df_historial.empty:
             hora_f = h_reg if (len(h_reg) == 5 and ":" in h_reg and h_reg != "00:03") else "22:55"
         try:
             dt_b = datetime.strptime(f"{dia_s} {hora_f}", "%Y-%m-%d %H:%M")
-            # Si terminó entre las 00:00 y las 07:59 AM (hora España), es la madrugada posterior a las 23:59 de esa jornada
             if dt_b.hour < 8:
                 dt_b += timedelta(days=1)
         except Exception:
@@ -596,11 +699,10 @@ if not df_historial.empty:
     df_cajon["Marcador"] = df_cajon["CLV_Status"].astype(str).str.replace("AUDITADA ", "", regex=False)
     df_cajon["Cuota"] = df_cajon["Cuota_Compra"]
 
-    # Ordenar estrictamente desde el partido que terminó más tarde (ej. 04:10h arriba de 03:10h y arriba de 23:10h)
     df_cajon = df_cajon.sort_values(by=["Orden_Real", "Partido", "Mercado"], ascending=[False, True, True])
 
     vista_cajon = df_cajon[["Semáforo", "Fecha y Hora Fin", "Partido", "Mercado", "Cuota", "Marcador"]]
     st.dataframe(vista_cajon, hide_index=True, height=380)
-# Sync: 2026-11-03 16:44:15
+# Sync: 2026-11-03 22:10:14
 
-# Sync: 2026-11-03 16:44:15
+# Sync: 2026-11-03 22:10:14
