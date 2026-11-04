@@ -507,7 +507,7 @@ def evaluar_pick_tarjeta(mapa_ft, df_hist, dia_str, id_partido, duelo_str, pick_
 
 
 # ==============================================================================
-# BARRA LATERAL IZQUIERDA (CON PROMOCIÓN $9.99 Y ENLACES OFICIALES)
+# BARRA LATERAL IZQUIERDA (CON PROMOCIÓN $7.99 Y ENLACES OFICIALES)
 # ==============================================================================
 mapa_ft_global = cargar_mapa_resultados_caches()
 tasa_ef, num_aciertos, num_total, roi_calc, df_historial = obtener_resumen_auditoria()
@@ -520,7 +520,7 @@ with st.sidebar:
 
     st.markdown("#### 🔗 Enlaces Oficiales y Promoción")
     st.link_button("📲 Canal Gratuito Telegram (FREE)", LINK_TELEGRAM_FREE)
-    st.link_button("🔥 PASE 10 DÍAS VIP ($9.99) | Mes $24.99", LINK_WHOP_VIP)
+    st.link_button("🔥 PASE 10 DÍAS VIP ($7.99) | Mes $24.99", LINK_WHOP_VIP)
     st.link_button("👑 Membresía PRO Avanzada ($74.99)", LINK_WHOP_PRO)
     st.link_button("💬 Soporte Oficial 24/7 (Pagos Locales)", LINK_SOPORTE_BOT)
     st.divider()
@@ -532,7 +532,7 @@ with st.sidebar:
 
 
 # ==============================================================================
-# CABECERA, 3 INDICADORES Y BANNER DORADO DE LA PROMOCIÓN $9.99 POR 10 DÍAS
+# CABECERA, 3 INDICADORES Y BANNER DORADO DE LA PROMOCIÓN $7.99 POR 10 DÍAS
 # ==============================================================================
 st.markdown("<h1 class='notranslate' translate='no' style='text-align: center; color: #00ff64; margin-bottom: 0;'>🧬 ESCÁNER CUANTITATIVO</h1>", unsafe_allow_html=True)
 st.markdown("<p style='text-align: center; color: #b5b5b5;'>Modelos Matemáticos de Valor (EV+) Aplicados al Fútbol Profesional</p>", unsafe_allow_html=True)
@@ -580,7 +580,7 @@ st.markdown(
                 margin-bottom: 22px; 
                 box-shadow: 0 6px 25px rgba(255, 205, 0, 0.25);">
         <div style="color: #ffcd00; font-size: 1.45rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.5px;">
-            🔥 ¡OFERTA EXCLUSIVA NUEVOS USUARIOS: PASE VIP 10 DÍAS POR SOLO $9.99 USD! 🔥
+            🔥 ¡OFERTA EXCLUSIVA NUEVOS USUARIOS: PASE VIP 10 DÍAS POR SOLO $7.99 USD! 🔥
         </div>
         <div style="color: #f5f5f5; font-size: 1.05rem; margin-top: 8px; font-weight: 500;">
             Prueba nuestro motor matemático de alta precisión durante 10 días completos 
@@ -599,7 +599,7 @@ with b1:
   st.link_button("📲 ENTRAR AL GRUPO FREE DE TELEGRAM", LINK_TELEGRAM_FREE)
 with b2:
   st.link_button(
-      "🔥 ¡PROBAR 10 DÍAS VIP POR $9.99 AQUÍ!", LINK_WHOP_VIP, type="primary"
+      "🔥 ¡PROBAR 10 DÍAS VIP POR $7.99 AQUÍ!", LINK_WHOP_VIP, type="primary"
   )
 with b3:
   st.link_button("👑 MEMBRESÍA PRO AVANZADA ($74.99)", LINK_WHOP_PRO)
@@ -722,7 +722,7 @@ if os.path.exists(ruta_json_dia):
                     f"<div style='margin-top:8px; color:#f0e6c8;'>"
                     f"• <span class='badge-candado'>🔒 SELECCIÓN VIP #{idx_op}</span> &nbsp; "
                     f"Probabilidad Modelo: <b>{op.get('prob', 78.0)}%</b> ➔ Cuota VIP > <b>{c_vip_mostrar:.2f}</b> "
-                    f"<i>(<a href='{LINK_WHOP_VIP}' target='_blank' style='color:#ffcd00; font-weight:700;'>Probar 10 Días VIP por $9.99</a>)</i>"
+                    f"<i>(<a href='{LINK_WHOP_VIP}' target='_blank' style='color:#ffcd00; font-weight:700;'>Probar 10 Días VIP por $7.99</a>)</i>"
                     f"</div>"
                 )
 
@@ -738,7 +738,7 @@ if os.path.exists(ruta_json_dia):
 
     col_v1, col_v2 = st.columns(2)
     with col_v1:
-        st.link_button("🔥 PROBAR PASE VIP 10 DÍAS ($9.99) | MENSUAL ($24.99)", LINK_WHOP_VIP)
+        st.link_button("🔥 PROBAR PASE VIP 10 DÍAS ($7.99) | MENSUAL ($24.99)", LINK_WHOP_VIP)
     with col_v2:
         st.link_button("👑 ACCESO TOTAL PRO + MATRIZ COMPLETA ($74.99)", LINK_WHOP_PRO)
 
