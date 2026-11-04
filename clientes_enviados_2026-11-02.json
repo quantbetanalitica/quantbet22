@@ -83,6 +83,11 @@
           "mercado": "Córners > 8.5",
           "prob": 66.8,
           "cuota": 1.28
+        },
+        {
+          "mercado": "Tarjetas > 3.5",
+          "prob": 73.5,
+          "cuota": 1.25
         }
       ]
     },
