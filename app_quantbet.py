@@ -369,8 +369,25 @@ def obtener_resumen_auditoria():
                     mapa_horas_fin.setdefault(part_tc.lower(), h_fin_tc)
                     
                     info_ft = buscar_resultado_inteligente(mapa_ft, id_tc, part_tc)
+                    
+                    # FILTRO ESTRICTO: Si el partido es de hoy, verificar que la API realmente devuelva FT y no esté pendiente o en 0-0 falso
+                    hoy_str = datetime.now().strftime("%Y-%m-%d")
+                    if f_dia == hoy_str:
+                        # Comprobar si el partido realmente terminó en el mapa de caché o API
+                        est_real = False
+                        if id_tc in mapa_ft:
+                            est_real = True
+                        elif f"{part_tc.lower()}" in mapa_ft:
+                            est_real = True
+                        if not est_real or not info_ft:
+                            continue
+
                     if info_ft:
                         gh_l, ga_l, ght_l = info_ft
+                        # Si es hoy y los goles son 0-0 exactos sin haber empezado, ignorar
+                        if gh_l == 0 and ga_l == 0 and f_dia == hoy_str:
+                            continue
+                            
                         tipo_t = str(tc.get("tipo_tarjeta", "VIP")).strip()
                         sels_2 = _completar_dos_selecciones(tc.get("selecciones", []), tipo_t)
                         for sel in sels_2:
