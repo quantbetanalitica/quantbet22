@@ -295,7 +295,30 @@ def cargar_mapa_resultados_caches():
 
     mapa["_indice_rapido"] = indice_rapido
     mapa["_horas_fin"] = mapa_horas_fin
+
+    # Índice invertido (rendimiento): antes cada búsqueda recorría los ~9.000 partidos uno a uno
+    # (23 millones de operaciones por carga) y Streamlit Cloud se caía por falta de CPU.
+    try:
+        claves_indice = []
+        inv_local = {}
+        for pos_i, (tl_db, tv_db, info_db) in enumerate(indice_rapido):
+            kl_db = _claves_coincidencia(tl_db)
+            kv_db = _claves_coincidencia(tv_db)
+            claves_indice.append((kv_db, info_db))
+            for k_i in kl_db:
+                inv_local.setdefault(k_i, []).append(pos_i)
+        mapa["_indice_claves"] = claves_indice
+        mapa["_inv_local"] = inv_local
+    except Exception:
+        pass
     return mapa
+
+
+def _claves_coincidencia(tokens):
+    """Claves equivalentes al criterio de buscar_resultado_inteligente: token exacto o mismo prefijo de 4 letras."""
+    claves = set(tokens)
+    claves.update("#" + t[:4] for t in tokens if len(t) >= 4)
+    return claves
 
 
 def buscar_resultado_inteligente(mapa_ft, id_partido, duelo_str):
@@ -308,6 +331,24 @@ def buscar_resultado_inteligente(mapa_ft, id_partido, duelo_str):
         l_busq, v_busq = duelo_low.split(" vs ", 1)
         tl = _tokens_club(l_busq)
         tv = _tokens_club(v_busq)
+        # Vía rápida con índice invertido (mismo resultado y mismo orden de prioridad que el bucle original)
+        if tl and tv and "_inv_local" in mapa_ft and "_indice_claves" in mapa_ft:
+            memo = mapa_ft.setdefault("_memo_busquedas", {})
+            if duelo_low in memo:
+                return memo[duelo_low]
+            kl_q = _claves_coincidencia(tl)
+            kv_q = _claves_coincidencia(tv)
+            inv_l = mapa_ft["_inv_local"]
+            claves_idx = mapa_ft["_indice_claves"]
+            candidatos = sorted({p for k_q in kl_q for p in inv_l.get(k_q, ())})
+            encontrado = None
+            for p in candidatos:
+                kv_db, info_db = claves_idx[p]
+                if kv_q & kv_db:
+                    encontrado = info_db
+                    break
+            memo[duelo_low] = encontrado
+            return encontrado
         if tl and tv:
             for tl_db, tv_db, info_db in mapa_ft.get("_indice_rapido", []):
                 ok_l = bool(tl & tl_db) or any(a[:4] == b[:4] for a in tl for b in tl_db if len(a) >= 4 and len(b) >= 4)
