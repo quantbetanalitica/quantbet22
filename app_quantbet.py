@@ -335,11 +335,12 @@ def buscar_resultado_inteligente(mapa_ft, id_partido, duelo_str):
     return None
 
 
-@st.cache_data(ttl=60)
+@st.cache_data(ttl=45)
 def obtener_resumen_auditoria():
     mapa_ft = cargar_mapa_resultados_caches()
     mapa_horas_fin = mapa_ft.get("_horas_fin", {})
 
+    # Leer auditoria_apuestas.csv si existe
     if os.path.exists("auditoria_apuestas.csv"):
         try:
             tabla = pd.read_csv("auditoria_apuestas.csv", dtype=str)
@@ -348,7 +349,7 @@ def obtener_resumen_auditoria():
     else:
         tabla = pd.DataFrame()
 
-    # Incorporar SIEMPRE todas las tarjetas de clientes_enviados_YYYY-MM-DD.json que ya tengan marcador FT
+    # FUSIÓN AUTOMÁTICA: Leer TODOS los archivos de clientes enviados (2026-11-02, 03, 04...)
     filas_clientes = []
     for nombre_j in sorted(os.listdir(".")):
         m_j = re.match(r"clientes_enviados_(\d{4}-\d{2}-\d{2})\.json", nombre_j)
@@ -366,9 +367,7 @@ def obtener_resumen_auditoria():
                     except Exception:
                         h_fin_tc = "21:55"
                     mapa_horas_fin.setdefault(part_tc.lower(), h_fin_tc)
-                    if id_tc:
-                        mapa_horas_fin.setdefault(id_tc, h_fin_tc)
-
+                    
                     info_ft = buscar_resultado_inteligente(mapa_ft, id_tc, part_tc)
                     if info_ft:
                         gh_l, ga_l, ght_l = info_ft
@@ -385,7 +384,7 @@ def obtener_resumen_auditoria():
                                 "Mercado": m_etq,
                                 "Cuota_Compra": f"{cuo_s:.2f}",
                                 "Cuota_Cierre_CLV": f"{cuo_s:.2f}",
-                                "Probabilidad": str(sel.get("prob", 75.0)),
+                                "Probabilidad": str(sel.get("prob", 74.0)),
                                 "Semaforo": "🟢 [LUZ VERDE / ALTO VALOR]",
                                 "Stake_COP": "1500.0",
                                 "Estado": "Ganada" if gano_l else "Perdida",
@@ -396,7 +395,8 @@ def obtener_resumen_auditoria():
                 continue
 
     if filas_clientes:
-        tabla = pd.concat([tabla, pd.DataFrame(filas_clientes)], ignore_index=True)
+        df_cli_s = pd.DataFrame(filas_clientes)
+        tabla = pd.concat([tabla, df_cli_s], ignore_index=True) if not tabla.empty else df_cli_s
 
     if tabla.empty:
         return 94.2, 1440, 1529, 36.6, pd.DataFrame()
