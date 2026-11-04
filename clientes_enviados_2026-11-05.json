@@ -1,0 +1,131 @@
+{
+  "fecha": "2026-11-05",
+  "tarjetas_clientes": [
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "401915525",
+      "hora": "21:00",
+      "partido": "Benfica vs Lech Poznan",
+      "selecciones": [
+        {
+          "mercado": "Tarjetas > 3.5",
+          "prob": 68.0,
+          "cuota": 1.75
+        },
+        {
+          "mercado": "Córners > 9.5",
+          "prob": 68.0,
+          "cuota": 1.64
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "401915824",
+      "hora": "21:00",
+      "partido": "AS Monaco vs FC Nordsjælland",
+      "selecciones": [
+        {
+          "mercado": "Córners > 8.5",
+          "prob": 74.5,
+          "cuota": 1.48
+        },
+        {
+          "mercado": "Tarjetas > 4.5",
+          "prob": 73.0,
+          "cuota": 1.46
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "401915821",
+      "hora": "21:00",
+      "partido": "Getafe vs Brighton & Hove Albion",
+      "selecciones": [
+        {
+          "mercado": "Córners > 9.5",
+          "prob": 68.0,
+          "cuota": 1.67
+        },
+        {
+          "mercado": "Tarjetas > 4.5",
+          "prob": 73.0,
+          "cuota": 1.46
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "401915529",
+      "hora": "21:00",
+      "partido": "AZ Alkmaar vs Juventus",
+      "selecciones": [
+        {
+          "mercado": "Over 1.5 Goles",
+          "prob": 69.7,
+          "cuota": 1.46
+        },
+        {
+          "mercado": "Remates Puerta > 7.5",
+          "prob": 68.0,
+          "cuota": 1.67
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "FREE",
+      "id_partido": "401915533",
+      "hora": "21:00",
+      "partido": "Bayer Leverkusen vs Marseille",
+      "selecciones": [
+        {
+          "mercado": "Córners > 8.5",
+          "prob": 77.3,
+          "cuota": 1.23
+        },
+        {
+          "mercado": "Remates Puerta > 6.5",
+          "prob": 71.6,
+          "cuota": 1.28
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "FREE",
+      "id_partido": "401915537",
+      "hora": "18:45",
+      "partido": "Real Sociedad vs Lyon",
+      "selecciones": [
+        {
+          "mercado": "Córners > 8.5",
+          "prob": 73.9,
+          "cuota": 1.28
+        },
+        {
+          "mercado": "Over 1.5 Goles",
+          "prob": 68.4,
+          "cuota": 1.28
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "FREE",
+      "id_partido": "401915534",
+      "hora": "18:45",
+      "partido": "AC Milan vs Ferencvaros",
+      "selecciones": [
+        {
+          "mercado": "Córners > 8.5",
+          "prob": 74.8,
+          "cuota": 1.27
+        },
+        {
+          "mercado": "Tarjetas > 3.5",
+          "prob": 69.8,
+          "cuota": 1.28
+        }
+      ]
+    }
+  ]
+}
