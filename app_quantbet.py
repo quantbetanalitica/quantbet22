@@ -38,11 +38,21 @@ LINK_SOPORTE_BOT = "https://t.me/QuantBetSoporte_bot"
 
 FECHA_CORTE_LIMPIO = "2026-10-23"
 
-# Auto-actualización cada 60 segundos y tipografía uniforme en todos los botones y precios
+# Auto-actualización cada 60 segundos + Animación de botón verde parpadeante en vivo
 st.markdown("""
 <meta name="google" content="notranslate">
 <meta http-equiv="refresh" content="60">
 <style>
+    @keyframes pulse-green {
+        0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(0, 255, 100, 0.85); opacity: 1; }
+        50% { transform: scale(1.15); box-shadow: 0 0 12px 5px rgba(0, 255, 100, 0.35); opacity: 0.45; }
+        100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(0, 255, 100, 0); opacity: 1; }
+    }
+    @keyframes border-glow {
+        0% { border-color: #00ff64; box-shadow: 0 0 8px rgba(0, 255, 100, 0.35); }
+        50% { border-color: #ffffff; box-shadow: 0 0 16px rgba(0, 255, 100, 0.75); }
+        100% { border-color: #00ff64; box-shadow: 0 0 8px rgba(0, 255, 100, 0.35); }
+    }
     .stApp {
         background-color: #0b0e14;
         color: #f5f5f5;
@@ -127,6 +137,37 @@ st.markdown("""
         margin-left: 10px;
         box-shadow: 0 2px 10px rgba(255, 205, 0, 0.35);
     }
+    .badge-live-blink {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        background: rgba(0, 255, 100, 0.18);
+        border: 2px solid #00ff64;
+        color: #00ff64;
+        font-weight: 900;
+        font-size: 0.92rem;
+        padding: 3px 12px;
+        border-radius: 20px;
+        animation: border-glow 1.4s infinite ease-in-out;
+    }
+    .dot-blink {
+        width: 10px;
+        height: 10px;
+        background-color: #00ff64;
+        border-radius: 50%;
+        display: inline-block;
+        animation: pulse-green 1.1s infinite ease-in-out;
+    }
+    .badge-programado {
+        display: inline-block;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid #8b949e;
+        color: #d0d7de;
+        font-weight: 700;
+        font-size: 0.86rem;
+        padding: 3px 10px;
+        border-radius: 16px;
+    }
     .card-verde {
         background: #0d1a14;
         border-left: 6px solid #00ff64;
@@ -209,15 +250,14 @@ st.markdown("""
 
 
 def obtener_hora_espana():
-    """Devuelve siempre la hora exacta de España (CET, UTC+1) sin importar dónde corra el servidor."""
+    """Devuelve siempre la hora exacta de España (CET, UTC+1)."""
     return datetime.now(timezone.utc).replace(tzinfo=None) + timedelta(hours=1)
 
 
 def formatear_horario_multizona(jornada_str, hora_str):
     """
-    Formato profesional con barra '|':
-    Primero la fecha y hora exacta de Europa (España) | al lado la fecha y hora exacta de Sudamérica (ARG/BRA y COL).
-    Si el partido es entre las 00:00h y las 07:59h de España, suma +1 día a la fecha europea y calcula la noche sudamericana.
+    Muestra con barra '|':
+    🇪🇸 Europa: YYYY-MM-DD (HH:MMh ESP) | 🌎 Sudamérica: YYYY-MM-DD (HH:MMh ARG/BRA • HH:MMh COL)
     """
     try:
         h_limpia = str(hora_str).strip()[:5]
@@ -237,15 +277,67 @@ def formatear_horario_multizona(jornada_str, hora_str):
         return f"🇪🇸 Europa: {jornada_str} ({hora_str}h)"
 
 
-def calcular_dt_fin_real(dia_str, hora_ini_str):
-    """Calcula la fecha y hora exacta en que termina el partido en horario de España."""
+def calcular_dt_inicio_y_fin(dia_str, hora_ini_str):
+    """Devuelve (dt_inicio, dt_fin) en horario de España."""
     try:
         dt_ini = datetime.strptime(f"{dia_str} {str(hora_ini_str).strip()[:5]}", "%Y-%m-%d %H:%M")
         if dt_ini.hour < 8:
             dt_ini += timedelta(days=1)
-        return dt_ini + timedelta(hours=1, minutes=55)
+        return dt_ini, dt_ini + timedelta(hours=1, minutes=55)
     except Exception:
-        return datetime.strptime(dia_str, "%Y-%m-%d") + timedelta(hours=22, minutes=55)
+        dt_f = datetime.strptime(dia_str, "%Y-%m-%d") + timedelta(hours=21)
+        return dt_f, dt_f + timedelta(hours=1, minutes=55)
+
+
+def calcular_dt_fin_real(dia_str, hora_ini_str):
+    return calcular_dt_inicio_y_fin(dia_str, hora_ini_str)[1]
+
+
+def obtener_estado_minuto_en_vivo(mapa_ft, dia_str, hora_ini_str, id_partido, duelo_str):
+    """
+    Determina si un partido no finalizado está EN JUEGO ahora mismo y devuelve el minuto exacto:
+    (esta_en_juego: bool, texto_minuto_o_estado: str)
+    """
+    ahora_esp = obtener_hora_espana()
+    dt_ini, dt_fin = calcular_dt_inicio_y_fin(dia_str, hora_ini_str)
+    mapa_vivo = mapa_ft.get("_en_vivo", {})
+
+    # 1. Buscar primero si ESPN reporta minuto y marcador en vivo
+    info_live = None
+    if id_partido and str(id_partido) in mapa_vivo:
+        info_live = mapa_vivo[str(id_partido)]
+    elif str(duelo_str).strip().lower() in mapa_vivo:
+        info_live = mapa_vivo[str(duelo_str).strip().lower()]
+    else:
+        duelo_low = str(duelo_str).strip().lower()
+        if " vs " in duelo_low:
+            l_b, v_b = duelo_low.split(" vs ", 1)
+            tl, tv = _tokens_club(l_b), _tokens_club(v_b)
+            for tl_v, tv_v, dato_v in mapa_ft.get("_indice_vivo", []):
+                ok_l = bool(tl & tl_v) or any(a[:4] == b[:4] for a in tl for b in tl_v if len(a) >= 4 and len(b) >= 4)
+                ok_v = bool(tv & tv_v) or any(a[:4] == b[:4] for a in tv for b in tv_v if len(a) >= 4 and len(b) >= 4)
+                if ok_l and ok_v:
+                    info_live = dato_v
+                    break
+
+    if info_live:
+        reloj_espn, gh_v, ga_v = info_live
+        return True, f"EN JUEGO ({gh_v}-{ga_v}) • ⏱️ {reloj_espn}"
+
+    # 2. Si ya pasó la hora de inicio y aún no termina, calcular el minuto exacto por reloj oficial
+    if dt_ini <= ahora_esp <= dt_fin:
+        min_trans = int((ahora_esp - dt_ini).total_seconds() // 60)
+        if min_trans <= 45:
+            min_txt = f"{max(1, min_trans)}' (1T)"
+        elif min_trans <= 60:
+            min_txt = "Descanso (HT)"
+        elif min_trans <= 105:
+            min_txt = f"{min_trans - 15}' (2T)"
+        else:
+            min_txt = "90+' ( Recta Final)"
+        return True, f"EN JUEGO • ⏱️ {min_txt}"
+
+    return False, f"⏳ POR JUGAR ({hora_ini_str}h ESP)"
 
 
 def _tokens_club(nombre):
@@ -320,6 +412,8 @@ def cargar_mapa_resultados_caches():
     mapa = {}
     indice_rapido = []
     mapa_horas_fin = {}
+    mapa_en_vivo = {}
+    indice_vivo = []
     ahora_esp = obtener_hora_espana()
 
     for arch in sorted(os.listdir(".")):
@@ -357,7 +451,6 @@ def cargar_mapa_resultados_caches():
                         except Exception:
                             pass
 
-                    # Si el partido aún no ha llegado a su hora real de término, NO está finalizado
                     if dt_fin_p and dt_fin_p > ahora_esp:
                         continue
 
@@ -380,7 +473,7 @@ def cargar_mapa_resultados_caches():
                 except Exception:
                     continue
 
-    # Consulta en vivo a ESPN cada 45s para detectar el pitazo final (FT) automáticamente
+    # Consulta en vivo a ESPN cada 45s para marcadores FT y minutos EN JUEGO
     fechas_ymd = [
         (ahora_esp - timedelta(days=1)).strftime("%Y%m%d"),
         ahora_esp.strftime("%Y%m%d"),
@@ -394,15 +487,33 @@ def cargar_mapa_resultados_caches():
 
     def _consultar_espn_ligero(t):
         ep, ymd = t
-        hallados = []
+        hallados_ft = []
+        hallados_vivo = []
         try:
             r = requests.get(f"https://site.api.espn.com/apis/site/v2/sports/soccer/{ep}/scoreboard?dates={ymd}&limit=100", timeout=1.8)
             if r.status_code == 200:
                 for ev in r.json().get("events", []):
                     comp = (ev.get("competitions") or [{}])[0]
-                    st_t = (comp.get("status") or {}).get("type") or {}
-                    # SOLO aceptar partidos cuyo pitazo final (completed=True / post) ya haya sonado
-                    if st_t.get("completed") is True or st_t.get("state") == "post":
+                    st_obj = comp.get("status") or {}
+                    st_t = st_obj.get("type") or {}
+                    estado_espn = str(st_t.get("state") or "")
+                    comps = comp.get("competitors") or []
+                    if len(comps) < 2:
+                        continue
+                    c_h = next((c for c in comps if c.get("homeAway") == "home"), comps[0])
+                    c_a = next((c for c in comps if c.get("homeAway") == "away"), comps[1])
+                    loc_e = str((c_h.get("team") or {}).get("displayName") or "").strip().lower()
+                    vis_e = str((c_a.get("team") or {}).get("displayName") or "").strip().lower()
+                    if any(x in loc_e or x in vis_e for x in PARTIDOS_EXCLUIDOS):
+                        continue
+                    gh_e = int(float(c_h.get("score") or 0))
+                    ga_e = int(float(c_a.get("score") or 0))
+                    eid = str(ev.get("id") or "")
+
+                    if estado_espn == "in":
+                        reloj = str(st_obj.get("displayClock") or st_t.get("shortDetail") or "En Vivo").strip()
+                        hallados_vivo.append((eid, loc_e, vis_e, (reloj, gh_e, ga_e)))
+                    elif st_t.get("completed") is True or estado_espn == "post":
                         f_iso_e = str(ev.get("date") or "")
                         if len(f_iso_e) >= 16:
                             try:
@@ -417,31 +528,21 @@ def cargar_mapa_resultados_caches():
                         else:
                             continue
 
-                        comps = comp.get("competitors") or []
-                        if len(comps) >= 2:
-                            c_h = next((c for c in comps if c.get("homeAway") == "home"), comps[0])
-                            c_a = next((c for c in comps if c.get("homeAway") == "away"), comps[1])
-                            loc_e = str((c_h.get("team") or {}).get("displayName") or "").strip().lower()
-                            vis_e = str((c_a.get("team") or {}).get("displayName") or "").strip().lower()
-                            if any(x in loc_e or x in vis_e for x in PARTIDOS_EXCLUIDOS):
-                                continue
-                            gh_e = int(float(c_h.get("score") or 0))
-                            ga_e = int(float(c_a.get("score") or 0))
-                            ls_h = c_h.get("linescores") or []
-                            ls_a = c_a.get("linescores") or []
-                            if ls_h and ls_a:
-                                ght_e = int(float(ls_h[0].get("value") or 0)) + int(float(ls_a[0].get("value") or 0))
-                            else:
-                                ght_e = (gh_e + ga_e) // 2
-                            hallados.append((str(ev.get("id") or ""), f_dia_e, loc_e, vis_e, (gh_e, ga_e, ght_e), h_fin_e))
+                        ls_h = c_h.get("linescores") or []
+                        ls_a = c_a.get("linescores") or []
+                        if ls_h and ls_a:
+                            ght_e = int(float(ls_h[0].get("value") or 0)) + int(float(ls_a[0].get("value") or 0))
+                        else:
+                            ght_e = (gh_e + ga_e) // 2
+                        hallados_ft.append((eid, f_dia_e, loc_e, vis_e, (gh_e, ga_e, ght_e), h_fin_e))
         except Exception:
             pass
-        return hallados
+        return hallados_ft, hallados_vivo
 
     try:
         with ThreadPoolExecutor(max_workers=8) as ex:
-            for res_l in ex.map(_consultar_espn_ligero, tareas):
-                for eid, f_dia_e, loc_e, vis_e, info_e, h_fin_e in res_l:
+            for res_ft, res_vivo in ex.map(_consultar_espn_ligero, tareas):
+                for eid, f_dia_e, loc_e, vis_e, info_e, h_fin_e in res_ft:
                     if eid:
                         mapa[eid] = info_e
                     if loc_e and vis_e:
@@ -450,11 +551,19 @@ def cargar_mapa_resultados_caches():
                         indice_rapido.append((f_dia_e, _tokens_club(loc_e), _tokens_club(vis_e), info_e))
                         if h_fin_e:
                             mapa_horas_fin[clave_lv] = h_fin_e
+                for eid_v, loc_v, vis_v, dato_vivo in res_vivo:
+                    if eid_v:
+                        mapa_en_vivo[eid_v] = dato_vivo
+                    if loc_v and vis_v:
+                        mapa_en_vivo[f"{loc_v} vs {vis_v}"] = dato_vivo
+                        indice_vivo.append((_tokens_club(loc_v), _tokens_club(vis_v), dato_vivo))
     except Exception:
         pass
 
     mapa["_indice_rapido"] = indice_rapido
     mapa["_horas_fin"] = mapa_horas_fin
+    mapa["_en_vivo"] = mapa_en_vivo
+    mapa["_indice_vivo"] = indice_vivo
     return mapa
 
 
@@ -524,7 +633,6 @@ def obtener_resumen_auditoria():
                     if id_tc:
                         mapa_horas_fin[id_tc] = h_fin_tc
 
-                    # BLOQUEO TOTAL: Si no ha pitado el final por reloj, NO entra en la tabla
                     if dt_fin_tc > ahora_esp:
                         continue
 
@@ -590,7 +698,6 @@ def obtener_resumen_auditoria():
             except Exception:
                 dt_fin_row = ahora_esp
 
-            # Si el partido aún no ha llegado a su hora real de término, NO mostrarlo en la auditoría
             if dt_fin_row > ahora_esp:
                 indices_no_finalizados.append(idx)
                 continue
@@ -657,7 +764,6 @@ def evaluar_pick_tarjeta(mapa_ft, df_hist, dia_str, id_partido, duelo_str, pick_
     ahora_esp = obtener_hora_espana()
     dt_fin_est = calcular_dt_fin_real(dia_str, hora_ini_str)
 
-    # Si el partido aún no ha llegado a su pitazo final, se mantiene activo/en juego
     if dt_fin_est > ahora_esp:
         return "", None
 
@@ -752,7 +858,7 @@ st.markdown(
     f"💎 ACCESO TOTAL 10 DÍAS POR SOLO 7.99 USD — ¡ACTIVAR AHORA!"
     f"</a>"
     f"<div style='color:#ffffff; font-size:1.12rem; font-weight:700; margin-top:6px;'>"
-    f"Incluye: 4 Tarjetas VIP Diarias + Combinada Doble VIP + Matriz PRO + Soporte 24/7 (Válido 1 única vez por usuario)"
+    f"Incluye: 4 Tarjetas VIP Diarias + Combinada Doble VIP + Soporte 24/7 (Válido 1 única vez por usuario)"
     f"</div>"
     f"</div>",
     unsafe_allow_html=True
@@ -769,12 +875,12 @@ with b3:
 st.divider()
 
 # ==============================================================================
-# TARJETAS DE LA JORNADA (CON HORARIO EUROPA | SUDAMÉRICA Y APERTURA EN FT)
+# TARJETAS DE LA JORNADA (CON MINUTO EN VIVO PARPADEANTE + EUROPA | SUDAMÉRICA)
 # ==============================================================================
 lista_fechas = listar_jornadas()
 fecha_actual = obtener_hora_espana().strftime("%Y-%m-%d")
 jornada_elegida = st.selectbox(
-    "📅 Selecciona la Jornada (Cada partido se abre automáticamente con su semáforo Verde/Rojo apenas suena el pitazo final):",
+    "📅 Selecciona la Jornada (Cada partido muestra su minuto en vivo y se abre automáticamente apenas suena el pitazo final):",
     lista_fechas,
     index=0
 )
@@ -785,7 +891,7 @@ ruta_json_dia = f"clientes_enviados_{jornada_elegida}.json"
 if ya_termino:
     st.success(f"🔓 Jornada Auditada ({jornada_elegida}): Mostrando las 3 Tarjetas FREE y las 4 Tarjetas VIP desbloqueadas con su marcador y semáforo real.")
 else:
-    st.info(f"⚡ Jornada en Tiempo Real ({jornada_elegida}): Cada partido finalizado (FT) desbloquea automáticamente su tarjeta y se agrega a la tabla inferior.")
+    st.info(f"⚡ Jornada en Tiempo Real ({jornada_elegida}): Los partidos en curso muestran el minuto en vivo parpadeando y se abren solos al finalizar (FT).")
 
 if os.path.exists(ruta_json_dia):
     with open(ruta_json_dia, "r", encoding="utf-8") as f:
@@ -834,7 +940,12 @@ if os.path.exists(ruta_json_dia):
             sem_titulo = f"🟢 [{aciertos_card}/{total_card}]" if aciertos_card == total_card else (f"🟡 [{aciertos_card}/{total_card}]" if aciertos_card >= 1 else f"🔴 [{aciertos_card}/{total_card}]")
         else:
             clase_caja = "card-verde"
-            sem_titulo = "🟢 EN JUEGO"
+            en_juego_f, txt_minuto_f = obtener_estado_minuto_en_vivo(mapa_ft_global, jornada_elegida, hora_p, id_p, tf["partido"])
+            if en_juego_f:
+                sem_titulo = f"<span class='badge-live-blink'><span class='dot-blink'></span> {txt_minuto_f}</span>"
+            else:
+                sem_titulo = f"<span class='badge-programado'>{txt_minuto_f}</span>"
+
             if opciones_f:
                 op1 = opciones_f[0]
                 c_mostrar = min(1.28, float(op1.get("cuota", 1.24)))
@@ -844,7 +955,7 @@ if os.path.exists(ruta_json_dia):
 
         html_bloques += (
             f"<div class='{clase_caja}'>"
-            f"<div style='font-size:1.18rem; font-weight:800; color:#ffffff;'>🏟️ {tf['partido']}{marc_f} &nbsp;<span style='float:right; font-size:0.95rem;'>{sem_titulo}</span></div>"
+            f"<div style='font-size:1.18rem; font-weight:800; color:#ffffff;'>🏟️ {tf['partido']}{marc_f} &nbsp;<span style='float:right;'>{sem_titulo}</span></div>"
             f"<div class='horario-multizona'>{etiqueta_horario_f}</div>"
             f"{filas_html}"
             f"</div>"
@@ -891,8 +1002,14 @@ if os.path.exists(ruta_json_dia):
             titulo_pref = "🔓 VIP AUDITADO:"
         else:
             clase_v = "card-amarilla"
-            sem_v = "🔒 EXCLUSIVO VIP"
-            titulo_pref = "🔒 PARTIDO VIP ACTIVO:"
+            en_juego_v, txt_minuto_v = obtener_estado_minuto_en_vivo(mapa_ft_global, jornada_elegida, hora_pv, id_pv, tv["partido"])
+            if en_juego_v:
+                sem_v = f"<span class='badge-live-blink'><span class='dot-blink'></span> {txt_minuto_v}</span> &nbsp;<span class='badge-candado'>🔒 EXCLUSIVO VIP</span>"
+                titulo_pref = "⚡ PARTIDO VIP EN JUEGO:"
+            else:
+                sem_v = f"<span class='badge-programado'>{txt_minuto_v}</span> &nbsp;<span class='badge-candado'>🔒 EXCLUSIVO VIP</span>"
+                titulo_pref = "🔒 PARTIDO VIP ACTIVO:"
+
             for idx_op, op in enumerate(opciones_v, start=1):
                 c_vip_mostrar = max(1.38, float(op.get("cuota", 1.48)))
                 filas_v_html += (
@@ -907,7 +1024,7 @@ if os.path.exists(ruta_json_dia):
 
         html_bloques += (
             f"<div class='{clase_v}'>"
-            f"<div style='font-size:1.18rem; font-weight:800; color:#ffcd00;'>{titulo_pref} {tv['partido']}{marc_v} &nbsp;<span style='float:right; font-size:0.95rem;'>{sem_v}</span></div>"
+            f"<div style='font-size:1.18rem; font-weight:800; color:#ffcd00;'>{titulo_pref} {tv['partido']}{marc_v} &nbsp;<span style='float:right;'>{sem_v}</span></div>"
             f"<div class='horario-multizona'>{etiqueta_horario_v}</div>"
             f"{filas_v_html}"
             f"</div>"
@@ -980,7 +1097,6 @@ if not df_historial.empty:
     df_cajon = df_historial.copy()
     df_cajon[["Orden_Real", "Fecha y Hora Fin"]] = df_cajon.apply(_calcular_orden_y_etiqueta, axis=1)
 
-    # FILTRO ESTRICTO: Prohibido mostrar partidos cuya hora de fin no haya llegado aún
     df_cajon = df_cajon[df_cajon["Orden_Real"] <= ahora_esp_tabla].copy()
 
     df_cajon["Semáforo"] = df_cajon["Estado"].apply(lambda x: "🟢 ✅ GANADA" if str(x) in ["Ganada", "Mitad Devuelta"] else "🔴 ❌ PERDIDA")
