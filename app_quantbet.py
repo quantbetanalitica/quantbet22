@@ -349,67 +349,64 @@ def obtener_resumen_auditoria():
     else:
         tabla = pd.DataFrame()
 
-    # FUSIÓN AUTOMÁTICA: Leer TODOS los archivos de clientes enviados (2026-11-02, 03, 04...)
+    # FUSIÓN AUTOMÁTICA (Excluyendo estrictamente el día de hoy en la tabla inferior para evitar falsos FT 0-0)
     filas_clientes = []
-    for nombre_j in sorted(os.listdir(".")):
-        m_j = re.match(r"clientes_enviados_(\d{4}-\d{2}-\d{2})\.json", nombre_j)
-        if m_j and m_j.group(1) >= FECHA_CORTE_LIMPIO:
-            f_dia = m_j.group(1)
-            try:
-                with open(nombre_j, "r", encoding="utf-8") as fj:
-                    tarjetas_j = json.load(fj).get("tarjetas_clientes", [])
-                for tc in tarjetas_j:
-                    id_tc = str(tc.get("id_partido", "")).strip()
-                    part_tc = str(tc.get("partido", "")).strip()
-                    hora_ini = str(tc.get("hora", "20:00")).strip()
-                    try:
-                        h_fin_tc = (datetime.strptime(hora_ini, "%H:%M") + timedelta(hours=1, minutes=55)).strftime("%H:%M")
-                    except Exception:
-                        h_fin_tc = "21:55"
-                    mapa_horas_fin.setdefault(part_tc.lower(), h_fin_tc)
-                    
-                    info_ft = buscar_resultado_inteligente(mapa_ft, id_tc, part_tc)
-                    
-                    # FILTRO ESTRICTO: Si el partido es de hoy, verificar que la API realmente devuelva FT y no esté pendiente o en 0-0 falso
-                    hoy_str = datetime.now().strftime("%Y-%m-%d")
-                    if f_dia == hoy_str:
-                        # Comprobar si el partido realmente terminó en el mapa de caché o API
-                        est_real = False
-                        if id_tc in mapa_ft:
-                            est_real = True
-                        elif f"{part_tc.lower()}" in mapa_ft:
-                            est_real = True
-                        if not est_real or not info_ft:
-                            continue
+    hoy_str = datetime.now().strftime("%Y-%m-%d")
 
-                    if info_ft:
-                        gh_l, ga_l, ght_l = info_ft
-                        # Si es hoy y los goles son 0-0 exactos sin haber empezado, ignorar
-                        if gh_l == 0 and ga_l == 0 and f_dia == hoy_str:
-                            continue
-                            
-                        tipo_t = str(tc.get("tipo_tarjeta", "VIP")).strip()
-                        sels_2 = _completar_dos_selecciones(tc.get("selecciones", []), tipo_t)
-                        for sel in sels_2:
-                            m_etq = f"[{tipo_t}] {sel.get('mercado', '')}"
-                            cuo_s = float(sel.get("cuota", 1.42 if tipo_t == "VIP" else 1.25))
-                            gano_l = evaluar_mercado_real(m_etq, gh_l, ga_l, ght_l)
-                            filas_clientes.append({
-                                "Fecha_Registro": f"{f_dia} {h_fin_tc}:00",
-                                "ID_Partido": id_tc,
-                                "Partido": part_tc,
-                                "Mercado": m_etq,
-                                "Cuota_Compra": f"{cuo_s:.2f}",
-                                "Cuota_Cierre_CLV": f"{cuo_s:.2f}",
-                                "Probabilidad": str(sel.get("prob", 74.0)),
-                                "Semaforo": "🟢 [LUZ VERDE / ALTO VALOR]",
-                                "Stake_COP": "1500.0",
-                                "Estado": "Ganada" if gano_l else "Perdida",
-                                "Retorno_COP": str(round(1500.0 * cuo_s, 2)) if gano_l else "0.0",
-                                "CLV_Status": f"FT {gh_l}-{ga_l}",
-                            })
+    for nombre_j in sorted(os.listdir(".")):
+      m_j = re.match(r"clientes_enviados_(\d{4}-\d{2}-\d{2})\.json", nombre_j)
+      if m_j and m_j.group(1) >= FECHA_CORTE_LIMPIO:
+        f_dia = m_j.group(1)
+        # BLINDAJE: Los partidos de hoy NO deben salir en la tabla inferior de resultados hasta que acaben
+        if f_dia >= hoy_str:
+          continue
+        try:
+          with open(nombre_j, "r", encoding="utf-8") as fj:
+            tarjetas_j = json.load(fj).get("tarjetas_clientes", [])
+          for tc in tarjetas_j:
+            id_tc = str(tc.get("id_partido", "")).strip()
+            part_tc = str(tc.get("partido", "")).strip()
+            hora_ini = str(tc.get("hora", "20:00")).strip()
+            try:
+              h_fin_tc = (
+                  datetime.strptime(hora_ini, "%H:%M")
+                  + timedelta(hours=1, minutes=55)
+              ).strftime("%H:%M")
             except Exception:
-                continue
+              h_fin_tc = "21:55"
+            mapa_horas_fin.setdefault(part_tc.lower(), h_fin_tc)
+
+            info_ft = buscar_resultado_inteligente(mapa_ft, id_tc, part_tc)
+            if info_ft:
+              gh_l, ga_l, ght_l = info_ft
+              tipo_t = str(tc.get("tipo_tarjeta", "VIP")).strip()
+              sels_2 = _completar_dos_selecciones(
+                  tc.get("selecciones", []), tipo_t
+              )
+              for sel in sels_2:
+                m_etq = f"[{tipo_t}] {sel.get('mercado', '')}"
+                cuo_s = float(
+                    sel.get("cuota", 1.42 if tipo_t == "VIP" else 1.25)
+                )
+                gano_l = evaluar_mercado_real(m_etq, gh_l, ga_l, ght_l)
+                filas_clientes.append({
+                    "Fecha_Registro": f"{f_dia} {h_fin_tc}:00",
+                    "ID_Partido": id_tc,
+                    "Partido": part_tc,
+                    "Mercado": m_etq,
+                    "Cuota_Compra": f"{cuo_s:.2f}",
+                    "Cuota_Cierre_CLV": f"{cuo_s:.2f}",
+                    "Probabilidad": str(sel.get("prob", 74.0)),
+                    "Semaforo": "🟢 [LUZ VERDE / ALTO VALOR]",
+                    "Stake_COP": "1500.0",
+                    "Estado": "Ganada" if gano_l else "Perdida",
+                    "Retorno_COP": (
+                        str(round(1500.0 * cuo_s, 2)) if gano_l else "0.0"
+                    ),
+                    "CLV_Status": f"FT {gh_l}-{ga_l}",
+                })
+        except Exception:
+          continue
 
     if filas_clientes:
         df_cli_s = pd.DataFrame(filas_clientes)
@@ -566,21 +563,43 @@ with c_kpi3:
         unsafe_allow_html=True
     )
 
+# ==============================================================================
+# BANNER PROMOCIONAL GIGANTE Y LLAMATIVO (MÁXIMA CONVERSIÓN)
+# ==============================================================================
 st.markdown(
-    "<div class='banner-promo notranslate' translate='no'>"
-    "<div style='color:#ffcd00; font-size:1.12rem; font-weight:800;'>🔥 OFERTA EXCLUSIVA NUEVOS USUARIOS: PASE VIP 10 DÍAS POR SOLO $9.99 USD 🔥</div>"
-    "<div style='color:#e8fff0; font-size:0.93rem; margin-top:4px;'>Prueba nuestro motor matemático durante 10 días completos (4 Tarjetas VIP diarias + Matriz Doble PRO + Soporte 24/7). ¡Válido 1 única vez por usuario!</div>"
-    "</div>",
-    unsafe_allow_html=True
+    """
+    <div style="background: linear-gradient(135deg, #1f1802 0%, #112918 50%, #1f1802 100%); 
+                border: 3px solid #ffcd00; 
+                border-radius: 16px; 
+                padding: 24px 20px; 
+                text-align: center; 
+                margin-top: 10px; 
+                margin-bottom: 22px; 
+                box-shadow: 0 6px 25px rgba(255, 205, 0, 0.25);">
+        <div style="color: #ffcd00; font-size: 1.45rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.5px;">
+            🔥 ¡OFERTA EXCLUSIVA NUEVOS USUARIOS: PASE VIP 10 DÍAS POR SOLO $9.99 USD! 🔥
+        </div>
+        <div style="color: #f5f5f5; font-size: 1.05rem; margin-top: 8px; font-weight: 500;">
+            Prueba nuestro motor matemático de alta precisión durante 10 días completos 
+            (<b>4 Tarjetas VIP diarias + Matriz Doble PRO + Soporte 24/7</b>). 
+        </div>
+        <div style="color: #00ff64; font-size: 0.9rem; margin-top: 6px; font-weight: 700;">
+            ⚡ ¡Válido 1 única vez por usuario antes de la renovación mensual! ⚡
+        </div>
+    </div>
+    """,
+    unsafe_allow_html=True,
 )
 
 b1, b2, b3 = st.columns(3)
 with b1:
-    st.link_button("📲 ENTRAR AL GRUPO FREE DE TELEGRAM", LINK_TELEGRAM_FREE)
+  st.link_button("📲 ENTRAR AL GRUPO FREE DE TELEGRAM", LINK_TELEGRAM_FREE)
 with b2:
-    st.link_button("🔥 PROBAR 10 DÍAS VIP POR $9.99 AQUÍ (O MES $24.99)", LINK_WHOP_VIP)
+  st.link_button(
+      "🔥 ¡PROBAR 10 DÍAS VIP POR $9.99 AQUÍ!", LINK_WHOP_VIP, type="primary"
+  )
 with b3:
-    st.link_button("👑 COMPRAR MEMBRESÍA PRO AQUÍ ($74.99)", LINK_WHOP_PRO)
+  st.link_button("👑 MEMBRESÍA PRO AVANZADA ($74.99)", LINK_WHOP_PRO)
 
 st.divider()
 
