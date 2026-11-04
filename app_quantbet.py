@@ -349,64 +349,67 @@ def obtener_resumen_auditoria():
     else:
         tabla = pd.DataFrame()
 
-    # FUSIÓN AUTOMÁTICA (Excluyendo estrictamente el día de hoy en la tabla inferior para evitar falsos FT 0-0)
+    # FUSIÓN AUTOMÁTICA: Leer TODOS los archivos de clientes enviados (2026-11-02, 03, 04...)
     filas_clientes = []
-    hoy_str = datetime.now().strftime("%Y-%m-%d")
-
     for nombre_j in sorted(os.listdir(".")):
-      m_j = re.match(r"clientes_enviados_(\d{4}-\d{2}-\d{2})\.json", nombre_j)
-      if m_j and m_j.group(1) >= FECHA_CORTE_LIMPIO:
-        f_dia = m_j.group(1)
-        # BLINDAJE: Los partidos de hoy NO deben salir en la tabla inferior de resultados hasta que acaben
-        if f_dia >= hoy_str:
-          continue
-        try:
-          with open(nombre_j, "r", encoding="utf-8") as fj:
-            tarjetas_j = json.load(fj).get("tarjetas_clientes", [])
-          for tc in tarjetas_j:
-            id_tc = str(tc.get("id_partido", "")).strip()
-            part_tc = str(tc.get("partido", "")).strip()
-            hora_ini = str(tc.get("hora", "20:00")).strip()
+        m_j = re.match(r"clientes_enviados_(\d{4}-\d{2}-\d{2})\.json", nombre_j)
+        if m_j and m_j.group(1) >= FECHA_CORTE_LIMPIO:
+            f_dia = m_j.group(1)
             try:
-              h_fin_tc = (
-                  datetime.strptime(hora_ini, "%H:%M")
-                  + timedelta(hours=1, minutes=55)
-              ).strftime("%H:%M")
-            except Exception:
-              h_fin_tc = "21:55"
-            mapa_horas_fin.setdefault(part_tc.lower(), h_fin_tc)
+                with open(nombre_j, "r", encoding="utf-8") as fj:
+                    tarjetas_j = json.load(fj).get("tarjetas_clientes", [])
+                for tc in tarjetas_j:
+                    id_tc = str(tc.get("id_partido", "")).strip()
+                    part_tc = str(tc.get("partido", "")).strip()
+                    hora_ini = str(tc.get("hora", "20:00")).strip()
+                    try:
+                        h_fin_tc = (datetime.strptime(hora_ini, "%H:%M") + timedelta(hours=1, minutes=55)).strftime("%H:%M")
+                    except Exception:
+                        h_fin_tc = "21:55"
+                    mapa_horas_fin.setdefault(part_tc.lower(), h_fin_tc)
+                    
+                    info_ft = buscar_resultado_inteligente(mapa_ft, id_tc, part_tc)
+                    
+                    # FILTRO ESTRICTO: Si el partido es de hoy, verificar que la API realmente devuelva FT y no esté pendiente o en 0-0 falso
+                    hoy_str = datetime.now().strftime("%Y-%m-%d")
+                    if f_dia == hoy_str:
+                        # Comprobar si el partido realmente terminó en el mapa de caché o API
+                        est_real = False
+                        if id_tc in mapa_ft:
+                            est_real = True
+                        elif f"{part_tc.lower()}" in mapa_ft:
+                            est_real = True
+                        if not est_real or not info_ft:
+                            continue
 
-            info_ft = buscar_resultado_inteligente(mapa_ft, id_tc, part_tc)
-            if info_ft:
-              gh_l, ga_l, ght_l = info_ft
-              tipo_t = str(tc.get("tipo_tarjeta", "VIP")).strip()
-              sels_2 = _completar_dos_selecciones(
-                  tc.get("selecciones", []), tipo_t
-              )
-              for sel in sels_2:
-                m_etq = f"[{tipo_t}] {sel.get('mercado', '')}"
-                cuo_s = float(
-                    sel.get("cuota", 1.42 if tipo_t == "VIP" else 1.25)
-                )
-                gano_l = evaluar_mercado_real(m_etq, gh_l, ga_l, ght_l)
-                filas_clientes.append({
-                    "Fecha_Registro": f"{f_dia} {h_fin_tc}:00",
-                    "ID_Partido": id_tc,
-                    "Partido": part_tc,
-                    "Mercado": m_etq,
-                    "Cuota_Compra": f"{cuo_s:.2f}",
-                    "Cuota_Cierre_CLV": f"{cuo_s:.2f}",
-                    "Probabilidad": str(sel.get("prob", 74.0)),
-                    "Semaforo": "🟢 [LUZ VERDE / ALTO VALOR]",
-                    "Stake_COP": "1500.0",
-                    "Estado": "Ganada" if gano_l else "Perdida",
-                    "Retorno_COP": (
-                        str(round(1500.0 * cuo_s, 2)) if gano_l else "0.0"
-                    ),
-                    "CLV_Status": f"FT {gh_l}-{ga_l}",
-                })
-        except Exception:
-          continue
+                    if info_ft:
+                        gh_l, ga_l, ght_l = info_ft
+                        # Si es hoy y los goles son 0-0 exactos sin haber empezado, ignorar
+                        if gh_l == 0 and ga_l == 0 and f_dia == hoy_str:
+                            continue
+                            
+                        tipo_t = str(tc.get("tipo_tarjeta", "VIP")).strip()
+                        sels_2 = _completar_dos_selecciones(tc.get("selecciones", []), tipo_t)
+                        for sel in sels_2:
+                            m_etq = f"[{tipo_t}] {sel.get('mercado', '')}"
+                            cuo_s = float(sel.get("cuota", 1.42 if tipo_t == "VIP" else 1.25))
+                            gano_l = evaluar_mercado_real(m_etq, gh_l, ga_l, ght_l)
+                            filas_clientes.append({
+                                "Fecha_Registro": f"{f_dia} {h_fin_tc}:00",
+                                "ID_Partido": id_tc,
+                                "Partido": part_tc,
+                                "Mercado": m_etq,
+                                "Cuota_Compra": f"{cuo_s:.2f}",
+                                "Cuota_Cierre_CLV": f"{cuo_s:.2f}",
+                                "Probabilidad": str(sel.get("prob", 74.0)),
+                                "Semaforo": "🟢 [LUZ VERDE / ALTO VALOR]",
+                                "Stake_COP": "1500.0",
+                                "Estado": "Ganada" if gano_l else "Perdida",
+                                "Retorno_COP": str(round(1500.0 * cuo_s, 2)) if gano_l else "0.0",
+                                "CLV_Status": f"FT {gh_l}-{ga_l}",
+                            })
+            except Exception:
+                continue
 
     if filas_clientes:
         df_cli_s = pd.DataFrame(filas_clientes)
