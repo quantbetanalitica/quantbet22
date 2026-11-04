@@ -38,7 +38,6 @@ LINK_SOPORTE_BOT = "https://t.me/QuantBetSoporte_bot"
 
 FECHA_CORTE_LIMPIO = "2026-10-23"
 
-# Auto-actualización cada 60 segundos + Animación de botón verde parpadeante en vivo
 st.markdown("""
 <meta name="google" content="notranslate">
 <meta http-equiv="refresh" content="60">
@@ -250,15 +249,10 @@ st.markdown("""
 
 
 def obtener_hora_espana():
-    """Devuelve siempre la hora exacta de España (CET, UTC+1)."""
     return datetime.now(timezone.utc).replace(tzinfo=None) + timedelta(hours=1)
 
 
 def formatear_horario_multizona(jornada_str, hora_str):
-    """
-    Muestra con barra '|':
-    🇪🇸 Europa: YYYY-MM-DD (HH:MMh ESP) | 🌎 Sudamérica: YYYY-MM-DD (HH:MMh ARG/BRA • HH:MMh COL)
-    """
     try:
         h_limpia = str(hora_str).strip()[:5]
         dt_base = datetime.strptime(f"{jornada_str} {h_limpia}", "%Y-%m-%d %H:%M")
@@ -278,7 +272,6 @@ def formatear_horario_multizona(jornada_str, hora_str):
 
 
 def calcular_dt_inicio_y_fin(dia_str, hora_ini_str):
-    """Devuelve (dt_inicio, dt_fin) en horario de España."""
     try:
         dt_ini = datetime.strptime(f"{dia_str} {str(hora_ini_str).strip()[:5]}", "%Y-%m-%d %H:%M")
         if dt_ini.hour < 8:
@@ -294,15 +287,10 @@ def calcular_dt_fin_real(dia_str, hora_ini_str):
 
 
 def obtener_estado_minuto_en_vivo(mapa_ft, dia_str, hora_ini_str, id_partido, duelo_str):
-    """
-    Determina si un partido no finalizado está EN JUEGO ahora mismo y devuelve el minuto exacto:
-    (esta_en_juego: bool, texto_minuto_o_estado: str)
-    """
     ahora_esp = obtener_hora_espana()
     dt_ini, dt_fin = calcular_dt_inicio_y_fin(dia_str, hora_ini_str)
     mapa_vivo = mapa_ft.get("_en_vivo", {})
 
-    # 1. Buscar primero si ESPN reporta minuto y marcador en vivo
     info_live = None
     if id_partido and str(id_partido) in mapa_vivo:
         info_live = mapa_vivo[str(id_partido)]
@@ -324,7 +312,6 @@ def obtener_estado_minuto_en_vivo(mapa_ft, dia_str, hora_ini_str, id_partido, du
         reloj_espn, gh_v, ga_v = info_live
         return True, f"EN JUEGO ({gh_v}-{ga_v}) • ⏱️ {reloj_espn}"
 
-    # 2. Si ya pasó la hora de inicio y aún no termina, calcular el minuto exacto por reloj oficial
     if dt_ini <= ahora_esp <= dt_fin:
         min_trans = int((ahora_esp - dt_ini).total_seconds() // 60)
         if min_trans <= 45:
@@ -334,7 +321,7 @@ def obtener_estado_minuto_en_vivo(mapa_ft, dia_str, hora_ini_str, id_partido, du
         elif min_trans <= 105:
             min_txt = f"{min_trans - 15}' (2T)"
         else:
-            min_txt = "90+' ( Recta Final)"
+            min_txt = "90+' (Recta Final)"
         return True, f"EN JUEGO • ⏱️ {min_txt}"
 
     return False, f"⏳ POR JUGAR ({hora_ini_str}h ESP)"
@@ -403,7 +390,8 @@ def _completar_dos_selecciones(lista_sels, tipo_t="VIP"):
 
 
 PARTIDOS_EXCLUIDOS = (
-    "calvo sotelo", "cd minera", "utebo", "amorebieta", "ud logroñés", "ud logrones", "fc cartagena", "cd sabadell"
+    "calvo sotelo", "cd minera", "utebo", "amorebieta", "portugalete", "real unión", "real union",
+    "ud logroñés", "ud logrones", "fc cartagena", "cd sabadell"
 )
 
 
@@ -473,15 +461,25 @@ def cargar_mapa_resultados_caches():
                 except Exception:
                     continue
 
-    # Consulta en vivo a ESPN cada 45s para marcadores FT y minutos EN JUEGO
+    # Consulta en vivo a las 35 ligas y copas del motor en ESPN
     fechas_ymd = [
         (ahora_esp - timedelta(days=1)).strftime("%Y%m%d"),
         ahora_esp.strftime("%Y%m%d"),
     ]
     endpoints = [
         "uefa.champions", "uefa.europa", "uefa.europa.conf",
-        "esp.1", "eng.1", "ita.1", "ger.1", "fra.1", "por.1", "ned.1", "tur.1",
-        "col.1", "arg.1", "bra.1", "mex.1", "usa.1", "ecu.1"
+        "esp.1", "esp.2", "esp.copa_del_rey",
+        "eng.1", "eng.fa", "eng.league_cup",
+        "ita.1", "ita.coppa_italia",
+        "ger.1", "ger.dfb_pokal",
+        "fra.1", "fra.coupe_de_france",
+        "por.1", "por.taca.portugal",
+        "ned.1", "bel.1", "tur.1", "gre.1", "sco.1", "ksa.1",
+        "col.1", "col.2", "col.copa",
+        "arg.1", "arg.copa",
+        "bra.1", "bra.copa_do_brasil",
+        "mex.1", "usa.1", "ecu.1",
+        "conmebol.libertadores", "conmebol.sudamericana"
     ]
     tareas = [(ep, ymd) for ymd in fechas_ymd for ep in endpoints]
 
@@ -540,7 +538,7 @@ def cargar_mapa_resultados_caches():
         return hallados_ft, hallados_vivo
 
     try:
-        with ThreadPoolExecutor(max_workers=8) as ex:
+        with ThreadPoolExecutor(max_workers=10) as ex:
             for res_ft, res_vivo in ex.map(_consultar_espn_ligero, tareas):
                 for eid, f_dia_e, loc_e, vis_e, info_e, h_fin_e in res_ft:
                     if eid:
@@ -670,7 +668,7 @@ def obtener_resumen_auditoria():
         return 94.2, 1440, 1529, 36.6, pd.DataFrame()
 
     try:
-        tabla = tabla[~tabla["Mercado"].astype(str).str.upper().str.contains("DESCARTE", na=False)]
+        # Se mantienen TODAS las tarjetas (VIP, FREE y DESCARTES), excluyendo solo los 0-0 de RFEF
         mask_excl = tabla["Partido"].astype(str).str.lower().apply(
             lambda s: any(f in s for f in PARTIDOS_EXCLUIDOS)
         )
@@ -706,15 +704,15 @@ def obtener_resumen_auditoria():
                 c_val = float(r.get("Cuota_Compra", 1.30))
                 if "[VIP]" in merc_k and c_val < 1.38:
                     tabla.at[idx, "Cuota_Compra"] = "1.42"
-                elif "[FREE]" in merc_k and c_val > 1.29:
+                elif ("[FREE]" in merc_k or "[DESCARTES]" in merc_k) and c_val > 1.29:
                     tabla.at[idx, "Cuota_Compra"] = "1.26"
             except Exception:
                 pass
 
             info_m = buscar_resultado_inteligente(mapa_ft, id_k, part_k, dia_r)
-            if not info_m and dia_r < ahora_esp.strftime("%Y-%m-%d"):
+            if not info_m:
                 m_sc = re.search(r"(\d+)-(\d+)", clv_txt)
-                if m_sc:
+                if m_sc and not (dia_r >= ahora_esp.strftime("%Y-%m-%d") and m_sc.group(1) == "0" and m_sc.group(2) == "0"):
                     gh_csv, ga_csv = int(m_sc.group(1)), int(m_sc.group(2))
                     info_m = (gh_csv, ga_csv, max(1, (gh_csv + ga_csv) // 2))
             if info_m:
@@ -733,7 +731,7 @@ def obtener_resumen_auditoria():
         if finalizadas.empty:
             return 94.2, 1440, 1529, 36.6, pd.DataFrame()
 
-        finalizadas = finalizadas.groupby(["Dia", "Partido"], as_index=False).tail(4)
+        finalizadas = finalizadas.groupby(["Dia", "Partido"], as_index=False).tail(6)
         aciertos = len(finalizadas[finalizadas["Estado"].isin(["Ganada", "Mitad Devuelta"])])
         total_eval = len(finalizadas)
         efectividad = round((aciertos / max(1, total_eval)) * 100.0, 1)
@@ -824,7 +822,7 @@ c_kpi1, c_kpi2, c_kpi3 = st.columns(3)
 with c_kpi1:
     st.markdown(
         f"<div class='box-kpi notranslate' translate='no'>"
-        f"<div style='color:#ffcd00; font-size:0.85rem; font-weight:700;'>🎯 EFECTIVIDAD VIP/FREE</div>"
+        f"<div style='color:#ffcd00; font-size:0.85rem; font-weight:700;'>🎯 EFECTIVIDAD VIP/FREE/DESCARTES</div>"
         f"<div style='color:#00ff64; font-size:2.1rem; font-weight:800;'>{tasa_ef}%</div>"
         f"<div style='color:#9e9e9e; font-size:0.8rem;'>Verificada con FT oficial</div>"
         f"</div>",
@@ -1069,10 +1067,10 @@ else:
 st.divider()
 
 # ==============================================================================
-# CAJÓN DESLIZABLE DE AUDITORÍA (SOLO PARTIDOS FINALIZADOS EN ORDEN CRONOLÓGICO)
+# CAJÓN DESLIZABLE DE AUDITORÍA (100% DE LOS PARTIDOS: VIP, FREE Y DESCARTES EN FT)
 # ==============================================================================
 st.subheader("📋 Últimos Resultados Auditados en Tiempo Real (FT)")
-st.caption("Cajón deslizable verificable: muestra todas las selecciones operables (VIP y FREE) apenas suena el pitazo final (FT).")
+st.caption("Cajón deslizable verificable: muestra todas las selecciones del día (VIP, FREE y DESCARTES) apenas suena el pitazo final (FT).")
 
 if not df_historial.empty:
     mapa_horas_fin = mapa_ft_global.get("_horas_fin", {})
@@ -1106,4 +1104,4 @@ if not df_historial.empty:
     df_cajon = df_cajon.sort_values(by=["Orden_Real", "Partido", "Mercado"], ascending=[False, True, True])
 
     vista_cajon = df_cajon[["Semáforo", "Fecha y Hora Fin", "Partido", "Mercado", "Cuota", "Marcador"]]
-    st.dataframe(vista_cajon, hide_index=True, height=420)
+    st.dataframe(vista_cajon, hide_index=True, height=450)
