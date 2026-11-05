@@ -1,0 +1,131 @@
+{
+  "fecha": "2026-11-06",
+  "tarjetas_clientes": [
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "401841670",
+      "hora": "19:00",
+      "partido": "Barracas Central vs Racing Club",
+      "selecciones": [
+        {
+          "mercado": "Córners > 8.5",
+          "prob": 74.5,
+          "cuota": 1.48
+        },
+        {
+          "mercado": "Tarjetas > 4.5",
+          "prob": 73.0,
+          "cuota": 1.46
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "401841302",
+      "hora": "00:00",
+      "partido": "Vitória vs Fluminense",
+      "selecciones": [
+        {
+          "mercado": "Córners > 8.5",
+          "prob": 74.5,
+          "cuota": 1.48
+        },
+        {
+          "mercado": "Tarjetas > 5.5",
+          "prob": 73.0,
+          "cuota": 1.46
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "401877916",
+      "hora": "02:00",
+      "partido": "Fortaleza CEIF vs Independiente Medellín",
+      "selecciones": [
+        {
+          "mercado": "Córners > 8.5",
+          "prob": 68.0,
+          "cuota": 1.75
+        },
+        {
+          "mercado": "Tarjetas > 3.5",
+          "prob": 73.0,
+          "cuota": 1.46
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "401884739",
+      "hora": "20:30",
+      "partido": "Hamburg SV vs Borussia Mönchengladbach",
+      "selecciones": [
+        {
+          "mercado": "Gol en 1T",
+          "prob": 78.7,
+          "cuota": 1.38
+        },
+        {
+          "mercado": "Remates Puerta > 7.5",
+          "prob": 71.6,
+          "cuota": 1.48
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "FREE",
+      "id_partido": "401882809",
+      "hora": "21:00",
+      "partido": "Sevilla vs Alavés",
+      "selecciones": [
+        {
+          "mercado": "Córners > 7.5",
+          "prob": 62.7,
+          "cuota": 1.28
+        },
+        {
+          "mercado": "Tarjetas > 4.5",
+          "prob": 62.7,
+          "cuota": 1.28
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "FREE",
+      "id_partido": "401879242",
+      "hora": "21:00",
+      "partido": "Everton vs Coventry City",
+      "selecciones": [
+        {
+          "mercado": "Doble Oport. 1X",
+          "prob": 77.8,
+          "cuota": 1.18
+        },
+        {
+          "mercado": "Córners > 7.5",
+          "prob": 62.0,
+          "cuota": 1.28
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "FREE",
+      "id_partido": "401874815",
+      "hora": "20:45",
+      "partido": "Venezia vs Udinese",
+      "selecciones": [
+        {
+          "mercado": "Over 1.5 Goles",
+          "prob": 73.0,
+          "cuota": 1.28
+        },
+        {
+          "mercado": "Córners > 7.5",
+          "prob": 59.7,
+          "cuota": 1.28
+        }
+      ]
+    }
+  ]
+}
