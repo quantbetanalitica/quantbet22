@@ -1,0 +1,131 @@
+{
+  "fecha": "2026-11-07",
+  "tarjetas_clientes": [
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "401878760",
+      "hora": "16:00",
+      "partido": "Arsenal vs Hull City",
+      "selecciones": [
+        {
+          "mercado": "Faltas Totales > 22.5",
+          "prob": 72.1,
+          "cuota": 1.42
+        },
+        {
+          "mercado": "Doble Oport. 1X",
+          "prob": 70.6,
+          "cuota": 1.44
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "401879241",
+      "hora": "16:00",
+      "partido": "Fulham vs Newcastle United",
+      "selecciones": [
+        {
+          "mercado": "Victoria Fulham",
+          "prob": 71.1,
+          "cuota": 1.43
+        },
+        {
+          "mercado": "Remates Puerta > 6.5",
+          "prob": 66.5,
+          "cuota": 1.65
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "401931083",
+      "hora": "16:00",
+      "partido": "Boreham Wood vs Wigan Athletic",
+      "selecciones": [
+        {
+          "mercado": "Remates Puerta > 6.5",
+          "prob": 73.7,
+          "cuota": 1.42
+        },
+        {
+          "mercado": "Victoria Boreham Wood",
+          "prob": 68.0,
+          "cuota": 1.5
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "401874803",
+      "hora": "20:45",
+      "partido": "AS Roma vs Sassuolo",
+      "selecciones": [
+        {
+          "mercado": "Combo 1X + O1.5",
+          "prob": 69.5,
+          "cuota": 1.5
+        },
+        {
+          "mercado": "Gol en 2do Tiempo",
+          "prob": 68.6,
+          "cuota": 1.49
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "FREE",
+      "id_partido": "401882808",
+      "hora": "21:00",
+      "partido": "Valencia vs Real Madrid",
+      "selecciones": [
+        {
+          "mercado": "Doble Oport. X2",
+          "prob": 83.6,
+          "cuota": 1.18
+        },
+        {
+          "mercado": "Over 1.5 Goles",
+          "prob": 74.5,
+          "cuota": 1.28
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "FREE",
+      "id_partido": "401884740",
+      "hora": "15:30",
+      "partido": "Mainz vs Bayern Munich",
+      "selecciones": [
+        {
+          "mercado": "Gol en 1T",
+          "prob": 81.9,
+          "cuota": 1.18
+        },
+        {
+          "mercado": "Doble Oport. X2",
+          "prob": 80.6,
+          "cuota": 1.18
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "FREE",
+      "id_partido": "401884744",
+      "hora": "15:30",
+      "partido": "RB Leipzig vs FC Augsburg",
+      "selecciones": [
+        {
+          "mercado": "Doble Oport. 1X",
+          "prob": 84.7,
+          "cuota": 1.18
+        },
+        {
+          "mercado": "Over 1.5 Goles",
+          "prob": 79.8,
+          "cuota": 1.18
+        }
+      ]
+    }
+  ]
+}
