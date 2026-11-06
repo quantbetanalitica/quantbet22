@@ -40,7 +40,6 @@ FECHA_CORTE_LIMPIO = "2026-10-23"
 
 st.markdown("""
 <meta name="google" content="notranslate">
-<meta http-equiv="refresh" content="60">
 <style>
     @keyframes pulse-green {
         0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(0, 255, 100, 0.85); opacity: 1; }
@@ -876,11 +875,21 @@ st.divider()
 # TARJETAS DE LA JORNADA (CON MINUTO EN VIVO PARPADEANTE + EUROPA | SUDAMÉRICA)
 # ==============================================================================
 lista_fechas = listar_jornadas()
-fecha_actual = obtener_hora_espana().strftime("%Y-%m-%d")
+ahora_esp_actual = obtener_hora_espana()
+fecha_actual = ahora_esp_actual.strftime("%Y-%m-%d")
+# Antes de las 03:00 AM hora España, mostrar por defecto la jornada en juego y no la de mañana
+fecha_activa_defecto = (
+    (ahora_esp_actual - timedelta(days=1)).strftime("%Y-%m-%d")
+    if ahora_esp_actual.hour < 3
+    else fecha_actual
+)
+idx_defecto = lista_fechas.index(fecha_activa_defecto) if fecha_activa_defecto in lista_fechas else 0
+
 jornada_elegida = st.selectbox(
     "📅 Selecciona la Jornada (Cada partido muestra su minuto en vivo y se abre automáticamente apenas suena el pitazo final):",
     lista_fechas,
-    index=0
+    index=idx_defecto,
+    key="selector_jornada_fijo"
 )
 
 ya_termino = jornada_elegida < fecha_actual
