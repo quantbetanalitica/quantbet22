@@ -39,37 +39,37 @@
     },
     {
       "tipo_tarjeta": "VIP",
-      "id_partido": "401931083",
-      "hora": "16:00",
-      "partido": "Boreham Wood vs Wigan Athletic",
-      "selecciones": [
-        {
-          "mercado": "Remates Puerta > 6.5",
-          "prob": 73.7,
-          "cuota": 1.42
-        },
-        {
-          "mercado": "Victoria Boreham Wood",
-          "prob": 68.0,
-          "cuota": 1.5
-        }
-      ]
-    },
-    {
-      "tipo_tarjeta": "VIP",
       "id_partido": "401931107",
       "hora": "16:00",
       "partido": "Dover Athletic vs Wealdstone",
       "selecciones": [
         {
-          "mercado": "Córners > 8.5",
-          "prob": 73.5,
-          "cuota": 1.45
-        },
-        {
           "mercado": "Ambos Marcan (BTTS)",
           "prob": 66.5,
           "cuota": 1.69
+        },
+        {
+          "mercado": "Faltas Totales > 22.5",
+          "prob": 66.5,
+          "cuota": 1.7
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "401874803",
+      "hora": "20:45",
+      "partido": "AS Roma vs Sassuolo",
+      "selecciones": [
+        {
+          "mercado": "Combo 1X + O1.5",
+          "prob": 69.5,
+          "cuota": 1.5
+        },
+        {
+          "mercado": "Gol en 2do Tiempo",
+          "prob": 68.6,
+          "cuota": 1.49
         }
       ]
     },
