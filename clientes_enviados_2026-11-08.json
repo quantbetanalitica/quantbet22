@@ -1,0 +1,131 @@
+{
+  "fecha": "2026-11-08",
+  "tarjetas_clientes": [
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "401882814",
+      "hora": "14:00",
+      "partido": "Elche vs Real Betis",
+      "selecciones": [
+        {
+          "mercado": "Doble Oport. X2",
+          "prob": 73.1,
+          "cuota": 1.4
+        },
+        {
+          "mercado": "Faltas Totales > 22.5",
+          "prob": 67.5,
+          "cuota": 1.51
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "401879243",
+      "hora": "15:00",
+      "partido": "Crystal Palace vs Liverpool",
+      "selecciones": [
+        {
+          "mercado": "Combo X2 + O1.5",
+          "prob": 69.4,
+          "cuota": 1.5
+        },
+        {
+          "mercado": "Remates Puerta > 6.5",
+          "prob": 66.5,
+          "cuota": 1.67
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "401884738",
+      "hora": "15:30",
+      "partido": "FC Cologne vs Bayer Leverkusen",
+      "selecciones": [
+        {
+          "mercado": "Córners > 8.5",
+          "prob": 71.7,
+          "cuota": 1.45
+        },
+        {
+          "mercado": "Ambos Marcan (BTTS)",
+          "prob": 66.5,
+          "cuota": 1.69
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "401882810",
+      "hora": "16:15",
+      "partido": "Real Sociedad vs Rayo Vallecano",
+      "selecciones": [
+        {
+          "mercado": "Doble Oport. 1X",
+          "prob": 77.3,
+          "cuota": 1.38
+        },
+        {
+          "mercado": "Remates Puerta > 6.5",
+          "prob": 71.5,
+          "cuota": 1.43
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "FREE",
+      "id_partido": "401879240",
+      "hora": "17:30",
+      "partido": "Manchester United vs Aston Villa",
+      "selecciones": [
+        {
+          "mercado": "Doble Oport. 1X",
+          "prob": 79.3,
+          "cuota": 1.18
+        },
+        {
+          "mercado": "Gol en 2do Tiempo",
+          "prob": 78.3,
+          "cuota": 1.18
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "FREE",
+      "id_partido": "401875003",
+      "hora": "20:45",
+      "partido": "Fiorentina vs Juventus",
+      "selecciones": [
+        {
+          "mercado": "Doble Oport. X2",
+          "prob": 85.1,
+          "cuota": 1.18
+        },
+        {
+          "mercado": "Over 1.5 Goles",
+          "prob": 71.8,
+          "cuota": 1.28
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "FREE",
+      "id_partido": "401874810",
+      "hora": "12:30",
+      "partido": "Napoli vs Lazio",
+      "selecciones": [
+        {
+          "mercado": "Doble Oport. X2",
+          "prob": 69.6,
+          "cuota": 1.28
+        },
+        {
+          "mercado": "Total Menos de 3.5 (Under)",
+          "prob": 86.5,
+          "cuota": 1.18
+        }
+      ]
+    }
+  ]
+}
