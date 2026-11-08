@@ -394,7 +394,7 @@ PARTIDOS_EXCLUIDOS = (
 )
 
 
-@st.cache_data(ttl=45)
+@st.cache_data(ttl=300, show_spinner=False)
 def cargar_mapa_resultados_caches():
     mapa = {}
     indice_rapido = []
@@ -596,7 +596,7 @@ def buscar_resultado_inteligente(mapa_ft, id_partido, duelo_str, dia_str=None):
     return None
 
 
-@st.cache_data(ttl=45)
+@st.cache_data(ttl=300, show_spinner=False)
 def obtener_resumen_auditoria():
     mapa_ft = cargar_mapa_resultados_caches()
     mapa_horas_fin = mapa_ft.get("_horas_fin", {})
@@ -874,7 +874,6 @@ st.divider()
 # ==============================================================================
 # TARJETAS DE LA JORNADA (CON MINUTO EN VIVO PARPADEANTE + EUROPA | SUDAMÉRICA)
 # ==============================================================================
-@st.fragment(run_every=60)
 def renderizar_panel_en_vivo_silencioso():
     mapa_ft_live = cargar_mapa_resultados_caches()
     _, _, _, _, df_hist_live = obtener_resumen_auditoria()
@@ -887,7 +886,12 @@ def renderizar_panel_en_vivo_silencioso():
         "📅 Selecciona la Jornada (Cada partido muestra su minuto en vivo y se abre automáticamente apenas suena el pitazo final):",
         lista_fechas,
         index=0,
-        key="selector_jornada_fijo"
+        jornada_elegida = st.selectbox(
+        "📅 Selecciona la Jornada (Cada partido muestra su minuto en vivo y se abre automáticamente apenas suena el pitazo final):",
+        lista_fechas,
+        index=0,
+        key=f"selector_jornada_{lista_fechas[0]}"
+    )
     )
 
     ya_termino = jornada_elegida < fecha_actual
