@@ -3,19 +3,19 @@
   "tarjetas_clientes": [
     {
       "tipo_tarjeta": "VIP",
-      "id_partido": "401875003",
-      "hora": "20:45",
-      "partido": "Fiorentina vs Juventus",
+      "id_partido": "401874808",
+      "hora": "18:00",
+      "partido": "Internazionale vs Como",
       "selecciones": [
         {
-          "mercado": "Córners > 8.5",
-          "prob": 72.4,
-          "cuota": 1.45
+          "mercado": "Faltas Totales > 22.5",
+          "prob": 66.5,
+          "cuota": 1.78
         },
         {
-          "mercado": "Faltas Totales > 22.5",
-          "prob": 73.3,
-          "cuota": 1.42
+          "mercado": "Remates Puerta > 6.5",
+          "prob": 67.3,
+          "cuota": 1.51
         }
       ]
     },
@@ -39,19 +39,19 @@
     },
     {
       "tipo_tarjeta": "VIP",
-      "id_partido": "401874808",
-      "hora": "18:00",
-      "partido": "Internazionale vs Como",
+      "id_partido": "401875003",
+      "hora": "20:45",
+      "partido": "Fiorentina vs Juventus",
       "selecciones": [
         {
-          "mercado": "Ambos Marcan (BTTS)",
-          "prob": 66.5,
-          "cuota": 1.73
+          "mercado": "Córners > 8.5",
+          "prob": 72.4,
+          "cuota": 1.45
         },
         {
           "mercado": "Faltas Totales > 22.5",
-          "prob": 66.5,
-          "cuota": 1.78
+          "prob": 73.3,
+          "cuota": 1.42
         }
       ]
     },
@@ -67,9 +67,9 @@
           "cuota": 1.4
         },
         {
-          "mercado": "Faltas Totales > 22.5",
-          "prob": 67.5,
-          "cuota": 1.51
+          "mercado": "Ambos Marcan (BTTS)",
+          "prob": 68.7,
+          "cuota": 1.5
         }
       ]
     },
@@ -85,8 +85,8 @@
           "cuota": 1.18
         },
         {
-          "mercado": "Córners Atlético Mad > 4.5",
-          "prob": 84.4,
+          "mercado": "Gol en 2do Tiempo",
+          "prob": 86.5,
           "cuota": 1.18
         }
       ]
@@ -99,7 +99,7 @@
       "selecciones": [
         {
           "mercado": "Gol en 2do Tiempo",
-          "prob": 84.8,
+          "prob": 86.5,
           "cuota": 1.18
         },
         {
@@ -121,8 +121,8 @@
           "cuota": 1.18
         },
         {
-          "mercado": "Over 1.5 Goles",
-          "prob": 80.7,
+          "mercado": "Gol en 2do Tiempo",
+          "prob": 86.5,
           "cuota": 1.18
         }
       ]
