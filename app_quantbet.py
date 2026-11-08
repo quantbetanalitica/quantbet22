@@ -874,243 +874,235 @@ st.divider()
 # ==============================================================================
 # TARJETAS DE LA JORNADA (CON MINUTO EN VIVO PARPADEANTE + EUROPA | SUDAMÉRICA)
 # ==============================================================================
-lista_fechas = listar_jornadas()
-ahora_esp_actual = obtener_hora_espana()
-fecha_actual = ahora_esp_actual.strftime("%Y-%m-%d")
-# Antes de las 03:00 AM hora España, mostrar por defecto la jornada en juego y no la de mañana
-fecha_activa_defecto = (
-    (ahora_esp_actual - timedelta(days=1)).strftime("%Y-%m-%d")
-    if ahora_esp_actual.hour < 3
-    else fecha_actual
-)
-idx_defecto = lista_fechas.index(fecha_activa_defecto) if fecha_activa_defecto in lista_fechas else 0
+@st.fragment(run_every=60)
+def renderizar_panel_en_vivo_silencioso():
+    mapa_ft_live = cargar_mapa_resultados_caches()
+    _, _, _, _, df_hist_live = obtener_resumen_auditoria()
 
-jornada_elegida = st.selectbox(
-    "📅 Selecciona la Jornada (Cada partido muestra su minuto en vivo y se abre automáticamente apenas suena el pitazo final):",
-    lista_fechas,
-    index=idx_defecto,
-    key="selector_jornada_fijo"
-)
+    lista_fechas = listar_jornadas()
+    ahora_esp_actual = obtener_hora_espana()
+    fecha_actual = ahora_esp_actual.strftime("%Y-%m-%d")
 
-ya_termino = jornada_elegida < fecha_actual
-ruta_json_dia = f"clientes_enviados_{jornada_elegida}.json"
+    jornada_elegida = st.selectbox(
+        "📅 Selecciona la Jornada (Cada partido muestra su minuto en vivo y se abre automáticamente apenas suena el pitazo final):",
+        lista_fechas,
+        index=0,
+        key="selector_jornada_fijo"
+    )
 
-if ya_termino:
-    st.success(f"🔓 Jornada Auditada ({jornada_elegida}): Mostrando las 3 Tarjetas FREE y las 4 Tarjetas VIP desbloqueadas con su marcador y semáforo real.")
-else:
-    st.info(f"⚡ Jornada en Tiempo Real ({jornada_elegida}): Los partidos en curso muestran el minuto en vivo parpadeando y se abren solos al finalizar (FT).")
+    ya_termino = jornada_elegida < fecha_actual
+    ruta_json_dia = f"clientes_enviados_{jornada_elegida}.json"
 
-if os.path.exists(ruta_json_dia):
-    with open(ruta_json_dia, "r", encoding="utf-8") as f:
-        tarjetas_dia = json.load(f).get("tarjetas_clientes", [])
+    if ya_termino:
+        st.success(f"🔓 Jornada Auditada ({jornada_elegida}): Mostrando las 3 Tarjetas FREE y las 4 Tarjetas VIP desbloqueadas con su marcador y semáforo real.")
+    else:
+        st.info(f"⚡ Jornada en Tiempo Real ({jornada_elegida}): Los partidos en curso se actualizan en segundo plano sin recargar tu pantalla.")
 
-    lista_free = [t for t in tarjetas_dia if t.get("tipo_tarjeta") == "FREE"]
-    lista_vip = [t for t in tarjetas_dia if t.get("tipo_tarjeta") == "VIP"]
+    if os.path.exists(ruta_json_dia):
+        with open(ruta_json_dia, "r", encoding="utf-8") as f:
+            tarjetas_dia = json.load(f).get("tarjetas_clientes", [])
 
-    html_bloques = f"<div class='notranslate' translate='no'><h3>🟢 3 Tarjetas Abiertas del Canal FREE ({jornada_elegida})</h3>"
+        lista_free = [t for t in tarjetas_dia if t.get("tipo_tarjeta") == "FREE"]
+        lista_vip = [t for t in tarjetas_dia if t.get("tipo_tarjeta") == "VIP"]
 
-    for tf in lista_free:
-        opciones_f = _completar_dos_selecciones(tf.get("selecciones", []), "FREE")
-        id_p = tf.get("id_partido", "")
-        hora_p = tf.get("hora", "20:00")
-        etiqueta_horario_f = formatear_horario_multizona(jornada_elegida, hora_p)
-        marc_f = ""
-        aciertos_card = 0
-        total_card = len(opciones_f)
-        filas_html = ""
+        html_bloques = f"<div class='notranslate' translate='no'><h3>🟢 3 Tarjetas Abiertas del Canal FREE ({jornada_elegida})</h3>"
 
-        marc_prueba, gano_prueba = evaluar_pick_tarjeta(
-            mapa_ft_global, df_historial, jornada_elegida, id_p, tf["partido"],
-            opciones_f[0]["mercado"] if opciones_f else "Over 1.5", hora_p
-        )
-        dt_fin_f = calcular_dt_fin_real(jornada_elegida, hora_p)
-        partido_finalizado = (gano_prueba is not None) or (ya_termino and dt_fin_f <= obtener_hora_espana())
+        for tf in lista_free:
+            opciones_f = _completar_dos_selecciones(tf.get("selecciones", []), "FREE")
+            id_p = tf.get("id_partido", "")
+            hora_p = tf.get("hora", "20:00")
+            etiqueta_horario_f = formatear_horario_multizona(jornada_elegida, hora_p)
+            marc_f = ""
+            aciertos_card = 0
+            total_card = len(opciones_f)
+            filas_html = ""
 
-        if partido_finalizado:
-            for op in opciones_f:
-                marc_f, gano_f = evaluar_pick_tarjeta(
-                    mapa_ft_global, df_historial, jornada_elegida, id_p, tf["partido"], op["mercado"], hora_p
-                )
-                if gano_f is None:
-                    gano_f = True
-                c_mostrar = min(1.28, float(op.get("cuota", 1.24)))
-                if gano_f:
-                    aciertos_card += 1
-                    badge = "<span class='badge-ganada'>🟢 ✅ GANADA</span>"
-                    color_txt = "#e8fff0"
-                else:
-                    badge = "<span class='badge-perdida'>🔴 ❌ PERDIDA</span>"
-                    color_txt = "#ffd6d6"
-                filas_html += f"<div style='margin-top:8px; color:{color_txt};'>• {badge} &nbsp; <b>{op['mercado']}</b> ({op['prob']}%) ➔ Cuota > <b>{c_mostrar:.2f}</b></div>"
+            marc_prueba, gano_prueba = evaluar_pick_tarjeta(
+                mapa_ft_live, df_hist_live, jornada_elegida, id_p, tf["partido"],
+                opciones_f[0]["mercado"] if opciones_f else "Over 1.5", hora_p
+            )
+            dt_fin_f = calcular_dt_fin_real(jornada_elegida, hora_p)
+            partido_finalizado = (gano_prueba is not None) or (ya_termino and dt_fin_f <= obtener_hora_espana())
 
-            clase_caja = "card-verde" if aciertos_card == total_card else ("card-amarilla" if aciertos_card >= 1 else "card-roja")
-            sem_titulo = f"🟢 [{aciertos_card}/{total_card}]" if aciertos_card == total_card else (f"🟡 [{aciertos_card}/{total_card}]" if aciertos_card >= 1 else f"🔴 [{aciertos_card}/{total_card}]")
-        else:
-            clase_caja = "card-verde"
-            en_juego_f, txt_minuto_f = obtener_estado_minuto_en_vivo(mapa_ft_global, jornada_elegida, hora_p, id_p, tf["partido"])
-            if en_juego_f:
-                sem_titulo = f"<span class='badge-live-blink'><span class='dot-blink'></span> {txt_minuto_f}</span>"
+            if partido_finalizado:
+                for op in opciones_f:
+                    marc_f, gano_f = evaluar_pick_tarjeta(
+                        mapa_ft_live, df_hist_live, jornada_elegida, id_p, tf["partido"], op["mercado"], hora_p
+                    )
+                    if gano_f is None:
+                        gano_f = True
+                    c_mostrar = min(1.28, float(op.get("cuota", 1.24)))
+                    if gano_f:
+                        aciertos_card += 1
+                        badge = "<span class='badge-ganada'>🟢 ✅ GANADA</span>"
+                        color_txt = "#e8fff0"
+                    else:
+                        badge = "<span class='badge-perdida'>🔴 ❌ PERDIDA</span>"
+                        color_txt = "#ffd6d6"
+                    filas_html += f"<div style='margin-top:8px; color:{color_txt};'>• {badge} &nbsp; <b>{op['mercado']}</b> ({op['prob']}%) ➔ Cuota > <b>{c_mostrar:.2f}</b></div>"
+
+                clase_caja = "card-verde" if aciertos_card == total_card else ("card-amarilla" if aciertos_card >= 1 else "card-roja")
+                sem_titulo = f"🟢 [{aciertos_card}/{total_card}]" if aciertos_card == total_card else (f"🟡 [{aciertos_card}/{total_card}]" if aciertos_card >= 1 else f"🔴 [{aciertos_card}/{total_card}]")
             else:
-                sem_titulo = f"<span class='badge-programado'>{txt_minuto_f}</span>"
-
-            if opciones_f:
-                op1 = opciones_f[0]
-                c_mostrar = min(1.28, float(op1.get("cuota", 1.24)))
-                filas_html += f"<div style='margin-top:8px; color:#e8fff0;'>• <span class='badge-abierta'>🟢 ABIERTA GRATIS</span> &nbsp; <b>{op1['mercado']}</b> ({op1['prob']}%) ➔ Cuota > <b>{c_mostrar:.2f}</b></div>"
-            if len(opciones_f) > 1:
-                filas_html += f"<div style='margin-top:8px; color:#ffcd00;'>• <span class='badge-candado'>📲 2ª JUGADA GRATIS</span> &nbsp; <i>Disponible sin costo dentro de nuestro <a href='{LINK_TELEGRAM_FREE}' target='_blank' style='color:#00ff64; font-weight:700;'>Canal FREE de Telegram (Entrar aquí)</a></i></div>"
-
-        html_bloques += (
-            f"<div class='{clase_caja}'>"
-            f"<div style='font-size:1.18rem; font-weight:800; color:#ffffff;'>🏟️ {tf['partido']}{marc_f} &nbsp;<span style='float:right;'>{sem_titulo}</span></div>"
-            f"<div class='horario-multizona'>{etiqueta_horario_f}</div>"
-            f"{filas_html}"
-            f"</div>"
-        )
-
-    html_bloques += f"<h3 style='margin-top:28px;'>💎 4 Tarjetas Oficiales del Canal VIP ({jornada_elegida})</h3>"
-
-    for tv in lista_vip:
-        opciones_v = _completar_dos_selecciones(tv.get("selecciones", []), "VIP")
-        id_pv = tv.get("id_partido", "")
-        hora_pv = tv.get("hora", "20:00")
-        etiqueta_horario_v = formatear_horario_multizona(jornada_elegida, hora_pv)
-        marc_v = ""
-        aciertos_v = 0
-        total_v = len(opciones_v)
-        filas_v_html = ""
-
-        marc_pv, gano_pv = evaluar_pick_tarjeta(
-            mapa_ft_global, df_historial, jornada_elegida, id_pv, tv["partido"],
-            opciones_v[0]["mercado"] if opciones_v else "Over 1.5", hora_pv
-        )
-        dt_fin_v = calcular_dt_fin_real(jornada_elegida, hora_pv)
-        partido_vip_finalizado = (gano_pv is not None) or (ya_termino and dt_fin_v <= obtener_hora_espana())
-
-        if partido_vip_finalizado:
-            for op in opciones_v:
-                marc_v, gano_v = evaluar_pick_tarjeta(
-                    mapa_ft_global, df_historial, jornada_elegida, id_pv, tv["partido"], op["mercado"], hora_pv
-                )
-                if gano_v is None:
-                    gano_v = True
-                c_vip_mostrar = max(1.38, float(op.get("cuota", 1.45)))
-                if gano_v:
-                    aciertos_v += 1
-                    badge_v = "<span class='badge-ganada'>🟢 ✅ GANADA</span>"
-                    color_v = "#e8fff0"
+                clase_caja = "card-verde"
+                en_juego_f, txt_minuto_f = obtener_estado_minuto_en_vivo(mapa_ft_live, jornada_elegida, hora_p, id_p, tf["partido"])
+                if en_juego_f:
+                    sem_titulo = f"<span class='badge-live-blink'><span class='dot-blink'></span> {txt_minuto_f}</span>"
                 else:
-                    badge_v = "<span class='badge-perdida'>🔴 ❌ PERDIDA</span>"
-                    color_v = "#ffd6d6"
-                filas_v_html += f"<div style='margin-top:8px; color:{color_v};'>• {badge_v} &nbsp; <b>[VIP] {op['mercado']}</b> ({op['prob']}%) ➔ Cuota Alta > <b>{c_vip_mostrar:.2f}</b></div>"
+                    sem_titulo = f"<span class='badge-programado'>{txt_minuto_f}</span>"
 
-            clase_v = "card-verde" if aciertos_v == total_v else ("card-amarilla" if aciertos_v >= 1 else "card-roja")
-            sem_v = f"🟢 [{aciertos_v}/{total_v}]" if aciertos_v == total_v else (f"🟡 [{aciertos_v}/{total_v}]" if aciertos_v >= 1 else f"🔴 [{aciertos_v}/{total_v}]")
-            titulo_pref = "🔓 VIP AUDITADO:"
-        else:
-            clase_v = "card-amarilla"
-            en_juego_v, txt_minuto_v = obtener_estado_minuto_en_vivo(mapa_ft_global, jornada_elegida, hora_pv, id_pv, tv["partido"])
-            if en_juego_v:
-                sem_v = f"<span class='badge-live-blink'><span class='dot-blink'></span> {txt_minuto_v}</span> &nbsp;<span class='badge-candado'>🔒 EXCLUSIVO VIP</span>"
-                titulo_pref = "⚡ PARTIDO VIP EN JUEGO:"
+                if opciones_f:
+                    op1 = opciones_f[0]
+                    c_mostrar = min(1.28, float(op1.get("cuota", 1.24)))
+                    filas_html += f"<div style='margin-top:8px; color:#e8fff0;'>• <span class='badge-abierta'>🟢 ABIERTA GRATIS</span> &nbsp; <b>{op1['mercado']}</b> ({op1['prob']}%) ➔ Cuota > <b>{c_mostrar:.2f}</b></div>"
+                if len(opciones_f) > 1:
+                    filas_html += f"<div style='margin-top:8px; color:#ffcd00;'>• <span class='badge-candado'>📲 2ª JUGADA GRATIS</span> &nbsp; <i>Disponible sin costo dentro de nuestro <a href='{LINK_TELEGRAM_FREE}' target='_blank' style='color:#00ff64; font-weight:700;'>Canal FREE de Telegram (Entrar aquí)</a></i></div>"
+
+            html_bloques += (
+                f"<div class='{clase_caja}'>"
+                f"<div style='font-size:1.18rem; font-weight:800; color:#ffffff;'>🏟️ {tf['partido']}{marc_f} &nbsp;<span style='float:right;'>{sem_titulo}</span></div>"
+                f"<div class='horario-multizona'>{etiqueta_horario_f}</div>"
+                f"{filas_html}"
+                f"</div>"
+            )
+
+        html_bloques += f"<h3 style='margin-top:28px;'>💎 4 Tarjetas Oficiales del Canal VIP ({jornada_elegida})</h3>"
+
+        for tv in lista_vip:
+            opciones_v = _completar_dos_selecciones(tv.get("selecciones", []), "VIP")
+            id_pv = tv.get("id_partido", "")
+            hora_pv = tv.get("hora", "20:00")
+            etiqueta_horario_v = formatear_horario_multizona(jornada_elegida, hora_pv)
+            marc_v = ""
+            aciertos_v = 0
+            total_v = len(opciones_v)
+            filas_v_html = ""
+
+            marc_pv, gano_pv = evaluar_pick_tarjeta(
+                mapa_ft_live, df_hist_live, jornada_elegida, id_pv, tv["partido"],
+                opciones_v[0]["mercado"] if opciones_v else "Over 1.5", hora_pv
+            )
+            dt_fin_v = calcular_dt_fin_real(jornada_elegida, hora_pv)
+            partido_vip_finalizado = (gano_pv is not None) or (ya_termino and dt_fin_v <= obtener_hora_espana())
+
+            if partido_vip_finalizado:
+                for op in opciones_v:
+                    marc_v, gano_v = evaluar_pick_tarjeta(
+                        mapa_ft_live, df_hist_live, jornada_elegida, id_pv, tv["partido"], op["mercado"], hora_pv
+                    )
+                    if gano_v is None:
+                        gano_v = True
+                    c_vip_mostrar = max(1.38, float(op.get("cuota", 1.45)))
+                    if gano_v:
+                        aciertos_v += 1
+                        badge_v = "<span class='badge-ganada'>🟢 ✅ GANADA</span>"
+                        color_v = "#e8fff0"
+                    else:
+                        badge_v = "<span class='badge-perdida'>🔴 ❌ PERDIDA</span>"
+                        color_v = "#ffd6d6"
+                    filas_v_html += f"<div style='margin-top:8px; color:{color_v};'>• {badge_v} &nbsp; <b>[VIP] {op['mercado']}</b> ({op['prob']}%) ➔ Cuota Alta > <b>{c_vip_mostrar:.2f}</b></div>"
+
+                clase_v = "card-verde" if aciertos_v == total_v else ("card-amarilla" if aciertos_v >= 1 else "card-roja")
+                sem_v = f"🟢 [{aciertos_v}/{total_v}]" if aciertos_v == total_v else (f"🟡 [{aciertos_v}/{total_v}]" if aciertos_v >= 1 else f"🔴 [{aciertos_v}/{total_v}]")
+                titulo_pref = "🔓 VIP AUDITADO:"
             else:
-                sem_v = f"<span class='badge-programado'>{txt_minuto_v}</span> &nbsp;<span class='badge-candado'>🔒 EXCLUSIVO VIP</span>"
-                titulo_pref = "🔒 PARTIDO VIP ACTIVO:"
+                clase_v = "card-amarilla"
+                en_juego_v, txt_minuto_v = obtener_estado_minuto_en_vivo(mapa_ft_live, jornada_elegida, hora_pv, id_pv, tv["partido"])
+                if en_juego_v:
+                    sem_v = f"<span class='badge-live-blink'><span class='dot-blink'></span> {txt_minuto_v}</span> &nbsp;<span class='badge-candado'>🔒 EXCLUSIVO VIP</span>"
+                    titulo_pref = "⚡ PARTIDO VIP EN JUEGO:"
+                else:
+                    sem_v = f"<span class='badge-programado'>{txt_minuto_v}</span> &nbsp;<span class='badge-candado'>🔒 EXCLUSIVO VIP</span>"
+                    titulo_pref = "🔒 PARTIDO VIP ACTIVO:"
 
-            for idx_op, op in enumerate(opciones_v, start=1):
-                c_vip_mostrar = max(1.38, float(op.get("cuota", 1.48)))
-                filas_v_html += (
-                    f"<div style='margin-top:10px; color:#f5f5f5; font-size:1.02rem;'>"
-                    f"• <span class='badge-candado'>🔒 SELECCIÓN VIP #{idx_op}</span> &nbsp; "
-                    f"Probabilidad Modelo: <b>{op.get('prob', 78.0)}%</b> ➔ Cuota VIP > <b>{c_vip_mostrar:.2f}</b> "
-                    f"<a href='{LINK_WHOP_VIP}' target='_blank' class='btn-vip-inline'>"
-                    f"🔥 PROBAR 10 DÍAS VIP POR 7.99 USD"
-                    f"</a>"
-                    f"</div>"
-                )
+                for idx_op, op in enumerate(opciones_v, start=1):
+                    c_vip_mostrar = max(1.38, float(op.get("cuota", 1.48)))
+                    filas_v_html += (
+                        f"<div style='margin-top:10px; color:#f5f5f5; font-size:1.02rem;'>"
+                        f"• <span class='badge-candado'>🔒 SELECCIÓN VIP #{idx_op}</span> &nbsp; "
+                        f"Probabilidad Modelo: <b>{op.get('prob', 78.0)}%</b> ➔ Cuota VIP > <b>{c_vip_mostrar:.2f}</b> "
+                        f"<a href='{LINK_WHOP_VIP}' target='_blank' class='btn-vip-inline'>"
+                        f"🔥 PROBAR 10 DÍAS VIP POR 7.99 USD"
+                        f"</a>"
+                        f"</div>"
+                    )
 
-        html_bloques += (
-            f"<div class='{clase_v}'>"
-            f"<div style='font-size:1.18rem; font-weight:800; color:#ffcd00;'>{titulo_pref} {tv['partido']}{marc_v} &nbsp;<span style='float:right;'>{sem_v}</span></div>"
-            f"<div class='horario-multizona'>{etiqueta_horario_v}</div>"
-            f"{filas_v_html}"
-            f"</div>"
-        )
+            html_bloques += (
+                f"<div class='{clase_v}'>"
+                f"<div style='font-size:1.18rem; font-weight:800; color:#ffcd00;'>{titulo_pref} {tv['partido']}{marc_v} &nbsp;<span style='float:right;'>{sem_v}</span></div>"
+                f"<div class='horario-multizona'>{etiqueta_horario_v}</div>"
+                f"{filas_v_html}"
+                f"</div>"
+            )
 
-    html_bloques += "</div>"
-    st.markdown(html_bloques, unsafe_allow_html=True)
+        html_bloques += "</div>"
+        st.markdown(html_bloques, unsafe_allow_html=True)
 
-    col_v1, col_v2 = st.columns(2)
-    with col_v1:
-        st.markdown(f"<a href='{LINK_WHOP_VIP}' target='_blank' class='btn-cta-bar-gold'>🔥 PROBAR PASE VIP 10 DÍAS (7.99 USD) | MENSUAL (24.99 USD)</a>", unsafe_allow_html=True)
-    with col_v2:
-        st.markdown(f"<a href='{LINK_WHOP_PRO}' target='_blank' class='btn-cta-bar'>👑 ACCESO TOTAL PRO + MATRIZ COMPLETA (74.99 USD)</a>", unsafe_allow_html=True)
+        col_v1, col_v2 = st.columns(2)
+        with col_v1:
+            st.markdown(f"<a href='{LINK_WHOP_VIP}' target='_blank' class='btn-cta-bar-gold'>🔥 PROBAR PASE VIP 10 DÍAS (7.99 USD) | MENSUAL (24.99 USD)</a>", unsafe_allow_html=True)
+        with col_v2:
+            st.markdown(f"<a href='{LINK_WHOP_PRO}' target='_blank' class='btn-cta-bar'>👑 ACCESO TOTAL PRO + MATRIZ COMPLETA (74.99 USD)</a>", unsafe_allow_html=True)
 
-st.divider()
+    st.divider()
 
-# ==============================================================================
-# CALCULADORA INTERACTIVA DE VALOR ESPERADO (EV+) Y KELLY
-# ==============================================================================
-st.subheader("🧮 Calculadora Interactiva: ¿Tiene valor la cuota de tu casa?")
-st.caption("Comprueba gratis si la cuota que te paga tu casa de apuestas es rentable según nuestro modelo matemático:")
+    st.subheader("🧮 Calculadora Interactiva: ¿Tiene valor la cuota de tu casa?")
+    st.caption("Comprueba gratis si la cuota que te paga tu casa de apuestas es rentable según nuestro modelo matemático:")
 
-col_p, col_c, col_k = st.columns(3)
-with col_p:
-    p_mod = st.number_input("Probabilidad Modelo (%)", min_value=30.0, max_value=95.0, value=76.0, step=1.0)
-with col_c:
-    c_casa = st.number_input("Cuota en tu Casa", min_value=1.05, max_value=10.0, value=1.45, step=0.05)
-with col_k:
-    cap_usr = st.number_input("Tu Capital ($)", min_value=10.0, max_value=10000000.0, value=100.0, step=10.0)
+    col_p, col_c, col_k = st.columns(3)
+    with col_p:
+        p_mod = st.number_input("Probabilidad Modelo (%)", min_value=30.0, max_value=95.0, value=76.0, step=1.0)
+    with col_c:
+        c_casa = st.number_input("Cuota en tu Casa", min_value=1.05, max_value=10.0, value=1.45, step=0.05)
+    with col_k:
+        cap_usr = st.number_input("Tu Capital ($)", min_value=10.0, max_value=10000000.0, value=100.0, step=10.0)
 
-c_min_justa = round(100.0 / p_mod, 2)
-ventaja_ev = round(((p_mod / 100.0) * c_casa - 1.0) * 100.0, 1)
+    c_min_justa = round(100.0 / p_mod, 2)
+    ventaja_ev = round(((p_mod / 100.0) * c_casa - 1.0) * 100.0, 1)
 
-if ventaja_ev > 0:
-    b_neto = c_casa - 1.0
-    fraccion_k = max(0.0, (((b_neto * (p_mod / 100.0)) - (1.0 - (p_mod / 100.0))) / b_neto) * 0.25)
-    monto_sugerido = round(min(cap_usr * 0.05, cap_usr * fraccion_k), 2)
-    st.success(f"🟢 ¡CUOTA CON VALOR POSITIVO (EV: +{ventaja_ev}%)! Cuota mínima justa: {c_min_justa} | Inversión sugerida (Kelly): {monto_sugerido} USD")
-else:
-    st.error(f"🔴 CUOTA SIN VALOR ({ventaja_ev}%): La casa paga {c_casa} pero el riesgo exige mínimo {c_min_justa}. ¡No operar!")
+    if ventaja_ev > 0:
+        b_neto = c_casa - 1.0
+        fraccion_k = max(0.0, (((b_neto * (p_mod / 100.0)) - (1.0 - (p_mod / 100.0))) / b_neto) * 0.25)
+        monto_sugerido = round(min(cap_usr * 0.05, cap_usr * fraccion_k), 2)
+        st.success(f"🟢 ¡CUOTA CON VALOR POSITIVO (EV: +{ventaja_ev}%)! Cuota mínima justa: {c_min_justa} | Inversión sugerida (Kelly): {monto_sugerido} USD")
+    else:
+        st.error(f"🔴 CUOTA SIN VALOR ({ventaja_ev}%): La casa paga {c_casa} pero el riesgo exige mínimo {c_min_justa}. ¡No operar!")
 
-st.divider()
+    st.divider()
 
-# ==============================================================================
-# CAJÓN DESLIZABLE DE AUDITORÍA (100% DE LOS PARTIDOS: VIP, FREE Y DESCARTES EN FT)
-# ==============================================================================
-st.subheader("📋 Últimos Resultados Auditados en Tiempo Real (FT)")
-st.caption("Cajón deslizable verificable: muestra todas las selecciones del día (VIP, FREE y DESCARTES) apenas suena el pitazo final (FT).")
+    st.subheader("📋 Últimos Resultados Auditados en Tiempo Real (FT)")
+    st.caption("Cajón deslizable verificable: se actualiza internamente en segundo plano cada 60s sin mover tu pantalla.")
 
-if not df_historial.empty:
-    mapa_horas_fin = mapa_ft_global.get("_horas_fin", {})
-    ahora_esp_tabla = obtener_hora_espana()
+    if not df_hist_live.empty:
+        mapa_horas_fin = mapa_ft_live.get("_horas_fin", {})
+        ahora_esp_tabla = obtener_hora_espana()
 
-    def _calcular_orden_y_etiqueta(r):
-        dia_s = str(r.get("Dia", "2026-10-23")).strip()
-        id_s = str(r.get("ID_Partido", "")).strip()
-        part_s = str(r.get("Partido", "")).strip().lower()
-        hora_f = mapa_horas_fin.get(id_s) or mapa_horas_fin.get(part_s)
-        if not hora_f:
-            h_reg = str(r.get("Hora_Reg", "")).strip()
-            hora_f = h_reg if (len(h_reg) == 5 and ":" in h_reg and h_reg != "00:03") else "22:55"
-        try:
-            dt_b = datetime.strptime(f"{dia_s} {hora_f}", "%Y-%m-%d %H:%M")
-            if dt_b.hour < 8:
-                dt_b += timedelta(days=1)
-        except Exception:
-            dt_b = ahora_esp_tabla
-        return pd.Series([dt_b, f"{dia_s} | 🏁 {hora_f}h (FT)"])
+        def _calcular_orden_y_etiqueta(r):
+            dia_s = str(r.get("Dia", "2026-10-23")).strip()
+            id_s = str(r.get("ID_Partido", "")).strip()
+            part_s = str(r.get("Partido", "")).strip().lower()
+            hora_f = mapa_horas_fin.get(id_s) or mapa_horas_fin.get(part_s)
+            if not hora_f:
+                h_reg = str(r.get("Hora_Reg", "")).strip()
+                hora_f = h_reg if (len(h_reg) == 5 and ":" in h_reg and h_reg != "00:03") else "22:55"
+            try:
+                dt_b = datetime.strptime(f"{dia_s} {hora_f}", "%Y-%m-%d %H:%M")
+                if dt_b.hour < 8:
+                    dt_b += timedelta(days=1)
+            except Exception:
+                dt_b = ahora_esp_tabla
+            return pd.Series([dt_b, f"{dia_s} | 🏁 {hora_f}h (FT)"])
 
-    df_cajon = df_historial.copy()
-    df_cajon[["Orden_Real", "Fecha y Hora Fin"]] = df_cajon.apply(_calcular_orden_y_etiqueta, axis=1)
+        df_cajon = df_hist_live.copy()
+        df_cajon[["Orden_Real", "Fecha y Hora Fin"]] = df_cajon.apply(_calcular_orden_y_etiqueta, axis=1)
+        df_cajon = df_cajon[df_cajon["Orden_Real"] <= ahora_esp_tabla].copy()
+        df_cajon["Semáforo"] = df_cajon["Estado"].apply(lambda x: "🟢 ✅ GANADA" if str(x) in ["Ganada", "Mitad Devuelta"] else "🔴 ❌ PERDIDA")
+        df_cajon["Marcador"] = df_cajon["CLV_Status"].astype(str).str.replace("AUDITADA ", "", regex=False)
+        df_cajon["Cuota"] = df_cajon["Cuota_Compra"]
+        df_cajon = df_cajon.sort_values(by=["Orden_Real", "Partido", "Mercado"], ascending=[False, True, True])
 
-    df_cajon = df_cajon[df_cajon["Orden_Real"] <= ahora_esp_tabla].copy()
+        vista_cajon = df_cajon[["Semáforo", "Fecha y Hora Fin", "Partido", "Mercado", "Cuota", "Marcador"]]
+        st.dataframe(vista_cajon, hide_index=True, height=450)
 
-    df_cajon["Semáforo"] = df_cajon["Estado"].apply(lambda x: "🟢 ✅ GANADA" if str(x) in ["Ganada", "Mitad Devuelta"] else "🔴 ❌ PERDIDA")
-    df_cajon["Marcador"] = df_cajon["CLV_Status"].astype(str).str.replace("AUDITADA ", "", regex=False)
-    df_cajon["Cuota"] = df_cajon["Cuota_Compra"]
 
-    df_cajon = df_cajon.sort_values(by=["Orden_Real", "Partido", "Mercado"], ascending=[False, True, True])
-
-    vista_cajon = df_cajon[["Semáforo", "Fecha y Hora Fin", "Partido", "Mercado", "Cuota", "Marcador"]]
-    st.dataframe(vista_cajon, hide_index=True, height=450)
+renderizar_panel_en_vivo_silencioso()
