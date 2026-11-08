@@ -886,12 +886,7 @@ def renderizar_panel_en_vivo_silencioso():
         "📅 Selecciona la Jornada (Cada partido muestra su minuto en vivo y se abre automáticamente apenas suena el pitazo final):",
         lista_fechas,
         index=0,
-        jornada_elegida = st.selectbox(
-        "📅 Selecciona la Jornada (Cada partido muestra su minuto en vivo y se abre automáticamente apenas suena el pitazo final):",
-        lista_fechas,
-        index=0,
         key=f"selector_jornada_{lista_fechas[0]}"
-    )
     )
 
     ya_termino = jornada_elegida < fecha_actual
@@ -900,7 +895,7 @@ def renderizar_panel_en_vivo_silencioso():
     if ya_termino:
         st.success(f"🔓 Jornada Auditada ({jornada_elegida}): Mostrando las 3 Tarjetas FREE y las 4 Tarjetas VIP desbloqueadas con su marcador y semáforo real.")
     else:
-        st.info(f"⚡ Jornada en Tiempo Real ({jornada_elegida}): Los partidos en curso se actualizan en segundo plano sin recargar tu pantalla.")
+        st.info(f"⚡ Jornada en Tiempo Real ({jornada_elegida}): Los partidos en curso muestran el minuto en vivo parpadeando y se abren solos al finalizar (FT).")
 
     if os.path.exists(ruta_json_dia):
         with open(ruta_json_dia, "r", encoding="utf-8") as f:
