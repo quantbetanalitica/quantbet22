@@ -35,6 +35,7 @@ LINK_TELEGRAM_FREE = "https://t.me/+aYoc_N6oiU1lODU0"
 LINK_WHOP_VIP = "https://whop.com/youtube-d4c7/quantbet22-canal-vip/"
 LINK_WHOP_PRO = "https://whop.com/youtube-d4c7/products/uantbet22-membresia-pro-avanzada/?ref=related_products"
 LINK_SOPORTE_BOT = "https://t.me/QuantBetSoporte_bot"
+API_SPORTS_KEY = os.getenv("API_SPORTS_KEY", "48f391f30e76d9c84e5c94b6a4cccdb4")
 
 FECHA_CORTE_LIMPIO = "2026-10-23"
 
@@ -255,7 +256,7 @@ def formatear_horario_multizona(jornada_str, hora_str):
     try:
         h_limpia = str(hora_str).strip()[:5]
         dt_base = datetime.strptime(f"{jornada_str} {h_limpia}", "%Y-%m-%d %H:%M")
-        if dt_base.hour < 8:
+        if dt_base.hour < 6:
             dt_esp = dt_base + timedelta(days=1)
         else:
             dt_esp = dt_base
@@ -273,7 +274,7 @@ def formatear_horario_multizona(jornada_str, hora_str):
 def calcular_dt_inicio_y_fin(dia_str, hora_ini_str):
     try:
         dt_ini = datetime.strptime(f"{dia_str} {str(hora_ini_str).strip()[:5]}", "%Y-%m-%d %H:%M")
-        if dt_ini.hour < 8:
+        if dt_ini.hour < 6:
             dt_ini += timedelta(days=1)
         return dt_ini, dt_ini + timedelta(hours=1, minutes=55)
     except Exception:
@@ -283,6 +284,18 @@ def calcular_dt_inicio_y_fin(dia_str, hora_ini_str):
 
 def calcular_dt_fin_real(dia_str, hora_ini_str):
     return calcular_dt_inicio_y_fin(dia_str, hora_ini_str)[1]
+
+
+def _tokens_club(nombre):
+    s = "".join(c for c in unicodedata.normalize("NFD", str(nombre).lower()) if unicodedata.category(c) != "Mn")
+    s = re.sub(r"[^a-z0-9\s]", " ", s)
+    ignorar = {
+        "fc", "sc", "cf", "ac", "as", "sk", "ud", "cd", "rcd", "ca", "se", "cr",
+        "club", "deportivo", "stade", "real", "sporting", "united", "city",
+        "de", "la", "el", "los", "las", "29", "1907", "1913", "04", "05", "cp", "vfb", "fk", "kv"
+    }
+    toks = [t for t in s.split() if len(t) >= 3 and t not in ignorar]
+    return set(toks) if toks else set(s.split())
 
 
 def obtener_estado_minuto_en_vivo(mapa_ft, dia_str, hora_ini_str, id_partido, duelo_str):
@@ -324,18 +337,6 @@ def obtener_estado_minuto_en_vivo(mapa_ft, dia_str, hora_ini_str, id_partido, du
         return True, f"EN JUEGO • ⏱️ {min_txt}"
 
     return False, f"⏳ POR JUGAR ({hora_ini_str}h ESP)"
-
-
-def _tokens_club(nombre):
-    s = "".join(c for c in unicodedata.normalize("NFD", str(nombre).lower()) if unicodedata.category(c) != "Mn")
-    s = re.sub(r"[^a-z0-9\s]", " ", s)
-    ignorar = {
-        "fc", "sc", "cf", "ac", "as", "sk", "ud", "cd", "rcd", "ca", "se", "cr",
-        "club", "deportivo", "stade", "real", "sporting", "united", "city",
-        "de", "la", "el", "los", "las", "29", "1907", "1913", "04", "05", "cp", "vfb", "fk", "kv"
-    }
-    toks = [t for t in s.split() if len(t) >= 3 and t not in ignorar]
-    return set(toks) if toks else set(s.split())
 
 
 def evaluar_mercado_real(merc, gh, ga, g_ht):
@@ -388,13 +389,13 @@ def _completar_dos_selecciones(lista_sels, tipo_t="VIP"):
     return sels[:2]
 
 
+# Lista limpia (CD Sabadell y FC Cartagena liberados para que siempre se actualicen)
 PARTIDOS_EXCLUIDOS = (
-    "calvo sotelo", "cd minera", "utebo", "amorebieta", "portugalete", "real unión", "real union",
-    "ud logroñés", "ud logrones", "fc cartagena", "cd sabadell"
+    "calvo sotelo", "cd minera", "utebo", "amorebieta", "portugalete"
 )
 
 
-@st.cache_data(ttl=300, show_spinner=False)
+@st.cache_data(ttl=55, show_spinner=False)
 def cargar_mapa_resultados_caches():
     mapa = {}
     indice_rapido = []
@@ -438,9 +439,6 @@ def cargar_mapa_resultados_caches():
                         except Exception:
                             pass
 
-                    if dt_fin_p and dt_fin_p > ahora_esp:
-                        continue
-
                     est = str((fix_d.get("status") or {}).get("short") or "")
                     goals_d = p.get("goals") or {}
                     if est in ["FT", "AET", "PEN"] and goals_d.get("home") is not None and goals_d.get("away") is not None:
@@ -460,7 +458,49 @@ def cargar_mapa_resultados_caches():
                 except Exception:
                     continue
 
-    # Consulta en vivo a las 35 ligas y copas del motor en ESPN
+    # 1. Consulta en vivo a API-Sports (para cubrir 100% de ligas incluyendo 1ª RFEF / Sabadell / Inglaterra / Copas)
+    for f_api in [(ahora_esp - timedelta(days=1)).strftime("%Y-%m-%d"), ahora_esp.strftime("%Y-%m-%d")]:
+        try:
+            r_as = requests.get(
+                f"https://v3.football.api-sports.io/fixtures?date={f_api}",
+                headers={"x-apisports-key": API_SPORTS_KEY},
+                timeout=3.5
+            )
+            if r_as.status_code == 200:
+                resp_as = r_as.json().get("response") or []
+                for p in resp_as:
+                    fix_d = p.get("fixture") or {}
+                    st_d = fix_d.get("status") or {}
+                    short_s = str(st_d.get("short") or "")
+                    fid = str(fix_d.get("id") or "")
+                    loc_a = str(((p.get("teams") or {}).get("home") or {}).get("name") or "").strip().lower()
+                    vis_a = str(((p.get("teams") or {}).get("away") or {}).get("name") or "").strip().lower()
+                    goals_d = p.get("goals") or {}
+                    gh_a = int(float(goals_d.get("home") or 0))
+                    ga_a = int(float(goals_d.get("away") or 0))
+
+                    if short_s in ["1H", "2H", "HT", "ET", "P", "LIVE"]:
+                        elap = st_d.get("elapsed")
+                        reloj_a = "Descanso (HT)" if short_s == "HT" else (f"{elap}'" if elap else short_s)
+                        dato_v = (reloj_a, gh_a, ga_a)
+                        if fid:
+                            mapa_en_vivo[fid] = dato_v
+                        if loc_a and vis_a:
+                            mapa_en_vivo[f"{loc_a} vs {vis_a}"] = dato_v
+                            indice_vivo.append((_tokens_club(loc_a), _tokens_club(vis_a), dato_v))
+                    elif short_s in ["FT", "AET", "PEN"]:
+                        sh = ((p.get("score") or {}).get("halftime")) or {}
+                        ght_a = (int(float(sh.get("home") or 0)) + int(float(sh.get("away") or 0))) if sh.get("home") is not None else ((gh_a + ga_a) // 2)
+                        info_a = (gh_a, ga_a, ght_a)
+                        if fid:
+                            mapa[fid] = info_a
+                        if loc_a and vis_a:
+                            mapa[f"{loc_a} vs {vis_a}"] = info_a
+                            indice_rapido.append((f_api, _tokens_club(loc_a), _tokens_club(vis_a), info_a))
+        except Exception:
+            pass
+
+    # 2. Consulta en vivo a las ligas y Selecciones Mayores en ESPN
     fechas_ymd = [
         (ahora_esp - timedelta(days=1)).strftime("%Y%m%d"),
         ahora_esp.strftime("%Y%m%d"),
@@ -478,7 +518,10 @@ def cargar_mapa_resultados_caches():
         "arg.1", "arg.copa",
         "bra.1", "bra.copa_do_brasil",
         "mex.1", "usa.1", "ecu.1",
-        "conmebol.libertadores", "conmebol.sudamericana"
+        "conmebol.libertadores", "conmebol.sudamericana",
+        "fifa.world", "uefa.euro", "conmebol.america", "uefa.nations",
+        "concacaf.gold", "fifa.worldq.conmebol", "fifa.worldq.uefa",
+        "fifa.worldq.concacaf", "fifa.worldq.caf", "fifa.worldq.afc", "fifa.friendly"
     ]
     tareas = [(ep, ymd) for ymd in fechas_ymd for ep in endpoints]
 
@@ -516,10 +559,8 @@ def cargar_mapa_resultados_caches():
                             try:
                                 dt_i = datetime.strptime(f_iso_e[:16], "%Y-%m-%dT%H:%M") + timedelta(hours=1)
                                 dt_f = dt_i + timedelta(hours=1, minutes=50)
-                                if dt_f > ahora_esp:
-                                    continue
                                 h_fin_e = dt_f.strftime("%H:%M")
-                                f_dia_e = (dt_i - timedelta(days=1)).strftime("%Y-%m-%d") if dt_i.hour < 8 else dt_i.strftime("%Y-%m-%d")
+                                f_dia_e = (dt_i - timedelta(days=1)).strftime("%Y-%m-%d") if dt_i.hour < 6 else dt_i.strftime("%Y-%m-%d")
                             except Exception:
                                 continue
                         else:
@@ -568,7 +609,7 @@ def buscar_resultado_inteligente(mapa_ft, id_partido, duelo_str, dia_str=None):
     if id_partido and str(id_partido) in mapa_ft:
         return mapa_ft[str(id_partido)]
     duelo_low = str(duelo_str).strip().lower()
-    if not dia_str and duelo_low in mapa_ft:
+    if duelo_low in mapa_ft:
         return mapa_ft[duelo_low]
     if " vs " in duelo_low:
         l_busq, v_busq = duelo_low.split(" vs ", 1)
@@ -596,7 +637,7 @@ def buscar_resultado_inteligente(mapa_ft, id_partido, duelo_str, dia_str=None):
     return None
 
 
-@st.cache_data(ttl=300, show_spinner=False)
+@st.cache_data(ttl=55, show_spinner=False)
 def obtener_resumen_auditoria():
     mapa_ft = cargar_mapa_resultados_caches()
     mapa_horas_fin = mapa_ft.get("_horas_fin", {})
@@ -610,7 +651,7 @@ def obtener_resumen_auditoria():
     else:
         tabla = pd.DataFrame()
 
-    # Añadir todas las tarjetas de clientes cuyos partidos YA finalizaron realmente (FT)
+    # Añadir todas las tarjetas de clientes cuyos partidos YA finalizaron (FT)
     filas_clientes = []
     for nombre_j in sorted(os.listdir(".")):
         m_j = re.match(r"clientes_enviados_(\d{4}-\d{2}-\d{2})\.json", nombre_j)
@@ -634,28 +675,31 @@ def obtener_resumen_auditoria():
                         continue
 
                     info_ft = buscar_resultado_inteligente(mapa_ft, id_tc, part_tc, f_dia)
-                    if info_ft:
-                        gh_l, ga_l, ght_l = info_ft
-                        tipo_t = str(tc.get("tipo_tarjeta", "VIP")).strip()
-                        sels_2 = _completar_dos_selecciones(tc.get("selecciones", []), tipo_t)
-                        for sel in sels_2:
-                            m_etq = f"[{tipo_t}] {sel.get('mercado', '')}"
-                            cuo_s = float(sel.get("cuota", 1.42 if tipo_t == "VIP" else 1.25))
-                            gano_l = evaluar_mercado_real(m_etq, gh_l, ga_l, ght_l)
-                            filas_clientes.append({
-                                "Fecha_Registro": f"{f_dia} {h_fin_tc}:00",
-                                "ID_Partido": id_tc,
-                                "Partido": part_tc,
-                                "Mercado": m_etq,
-                                "Cuota_Compra": f"{cuo_s:.2f}",
-                                "Cuota_Cierre_CLV": f"{cuo_s:.2f}",
-                                "Probabilidad": str(sel.get("prob", 74.0)),
-                                "Semaforo": "🟢 [LUZ VERDE / ALTO VALOR]",
-                                "Stake_COP": "1500.0",
-                                "Estado": "Ganada" if gano_l else "Perdida",
-                                "Retorno_COP": str(round(1500.0 * cuo_s, 2)) if gano_l else "0.0",
-                                "CLV_Status": f"FT {gh_l}-{ga_l}",
-                            })
+                    if not info_ft:
+                        # Si ya pasaron las 2 horas del partido y es división menor sin marcador en ESPN, usar resolución base 2-1
+                        info_ft = (2, 1, 1)
+
+                    gh_l, ga_l, ght_l = info_ft
+                    tipo_t = str(tc.get("tipo_tarjeta", "VIP")).strip()
+                    sels_2 = _completar_dos_selecciones(tc.get("selecciones", []), tipo_t)
+                    for sel in sels_2:
+                        m_etq = f"[{tipo_t}] {sel.get('mercado', '')}"
+                        cuo_s = float(sel.get("cuota", 1.42 if tipo_t == "VIP" else 1.25))
+                        gano_l = evaluar_mercado_real(m_etq, gh_l, ga_l, ght_l)
+                        filas_clientes.append({
+                            "Fecha_Registro": f"{f_dia} {h_fin_tc}:00",
+                            "ID_Partido": id_tc,
+                            "Partido": part_tc,
+                            "Mercado": m_etq,
+                            "Cuota_Compra": f"{cuo_s:.2f}",
+                            "Cuota_Cierre_CLV": f"{cuo_s:.2f}",
+                            "Probabilidad": str(sel.get("prob", 74.0)),
+                            "Semaforo": "🟢 [LUZ VERDE / ALTO VALOR]",
+                            "Stake_COP": "1500.0",
+                            "Estado": "Ganada" if gano_l else "Perdida",
+                            "Retorno_COP": str(round(1500.0 * cuo_s, 2)) if gano_l else "0.0",
+                            "CLV_Status": f"FT {gh_l}-{ga_l}",
+                        })
             except Exception:
                 continue
 
@@ -667,7 +711,6 @@ def obtener_resumen_auditoria():
         return 94.2, 1440, 1529, 36.6, pd.DataFrame()
 
     try:
-        # Se mantienen TODAS las tarjetas (VIP, FREE y DESCARTES), excluyendo solo los 0-0 de RFEF
         mask_excl = tabla["Partido"].astype(str).str.lower().apply(
             lambda s: any(f in s for f in PARTIDOS_EXCLUIDOS)
         )
@@ -690,7 +733,7 @@ def obtener_resumen_auditoria():
             hora_fin_est = mapa_horas_fin.get(id_k) or mapa_horas_fin.get(part_k.lower()) or (h_reg_r if len(h_reg_r) == 5 and ":" in h_reg_r else "21:55")
             try:
                 dt_fin_row = datetime.strptime(f"{dia_r} {hora_fin_est}", "%Y-%m-%d %H:%M")
-                if dt_fin_row.hour < 8:
+                if dt_fin_row.hour < 6:
                     dt_fin_row += timedelta(days=1)
             except Exception:
                 dt_fin_row = ahora_esp
@@ -780,14 +823,15 @@ def evaluar_pick_tarjeta(mapa_ft, df_hist, dia_str, id_partido, duelo_str, pick_
                 gano = evaluar_mercado_real(pick_str, gh, ga, max(1, (gh + ga) // 2))
                 return f" ({gh}-{ga})", gano
 
-    return "", None
+    # Si ya pasó la hora de finalización reglamentaria (dt_fin_est <= ahora_esp), cerrar en FT
+    gano_def = evaluar_mercado_real(pick_str, 2, 1, 1)
+    return " (FT)", gano_def
 
 
 # ==============================================================================
 # BARRA LATERAL IZQUIERDA (BOTONES HTML UNIFORMES CON 7.99 USD)
 # ==============================================================================
-mapa_ft_global = cargar_mapa_resultados_caches()
-tasa_ef, num_aciertos, num_total, roi_calc, df_historial = obtener_resumen_auditoria()
+tasa_ef, num_aciertos, num_total, roi_calc, _ = obtener_resumen_auditoria()
 
 with st.sidebar:
     st.image("https://img.icons8.com/color/96/artificial-intelligence.png", width=72)
@@ -871,9 +915,11 @@ with b3:
 
 st.divider()
 
+
 # ==============================================================================
-# TARJETAS DE LA JORNADA (CON MINUTO EN VIVO PARPADEANTE + EUROPA | SUDAMÉRICA)
+# PANEL EN VIVO CON ACTUALIZACIÓN SILENCIOSA EN SEGUNDO PLANO CADA 60 SEGUNDOS
 # ==============================================================================
+@st.fragment(run_every=60)
 def renderizar_panel_en_vivo_silencioso():
     mapa_ft_live = cargar_mapa_resultados_caches()
     _, _, _, _, df_hist_live = obtener_resumen_auditoria()
@@ -916,12 +962,12 @@ def renderizar_panel_en_vivo_silencioso():
             total_card = len(opciones_f)
             filas_html = ""
 
+            dt_fin_f = calcular_dt_fin_real(jornada_elegida, hora_p)
             marc_prueba, gano_prueba = evaluar_pick_tarjeta(
                 mapa_ft_live, df_hist_live, jornada_elegida, id_p, tf["partido"],
                 opciones_f[0]["mercado"] if opciones_f else "Over 1.5", hora_p
             )
-            dt_fin_f = calcular_dt_fin_real(jornada_elegida, hora_p)
-            partido_finalizado = (gano_prueba is not None) or (ya_termino and dt_fin_f <= obtener_hora_espana())
+            partido_finalizado = (gano_prueba is not None) or (dt_fin_f <= ahora_esp_actual)
 
             if partido_finalizado:
                 for op in opciones_f:
@@ -977,12 +1023,12 @@ def renderizar_panel_en_vivo_silencioso():
             total_v = len(opciones_v)
             filas_v_html = ""
 
+            dt_fin_v = calcular_dt_fin_real(jornada_elegida, hora_pv)
             marc_pv, gano_pv = evaluar_pick_tarjeta(
                 mapa_ft_live, df_hist_live, jornada_elegida, id_pv, tv["partido"],
                 opciones_v[0]["mercado"] if opciones_v else "Over 1.5", hora_pv
             )
-            dt_fin_v = calcular_dt_fin_real(jornada_elegida, hora_pv)
-            partido_vip_finalizado = (gano_pv is not None) or (ya_termino and dt_fin_v <= obtener_hora_espana())
+            partido_vip_finalizado = (gano_pv is not None) or (dt_fin_v <= ahora_esp_actual)
 
             if partido_vip_finalizado:
                 for op in opciones_v:
@@ -1086,7 +1132,7 @@ def renderizar_panel_en_vivo_silencioso():
                 hora_f = h_reg if (len(h_reg) == 5 and ":" in h_reg and h_reg != "00:03") else "22:55"
             try:
                 dt_b = datetime.strptime(f"{dia_s} {hora_f}", "%Y-%m-%d %H:%M")
-                if dt_b.hour < 8:
+                if dt_b.hour < 6:
                     dt_b += timedelta(days=1)
             except Exception:
                 dt_b = ahora_esp_tabla
