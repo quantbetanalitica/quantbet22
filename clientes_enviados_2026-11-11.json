@@ -1,0 +1,41 @@
+{
+  "fecha": "2026-11-11",
+  "tarjetas_clientes": [
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "401930244",
+      "hora": "13:00",
+      "partido": "Vietnam vs Chinese Taipei",
+      "selecciones": [
+        {
+          "mercado": "Remates Puerta > 6.5",
+          "prob": 79.7,
+          "cuota": 1.42
+        },
+        {
+          "mercado": "Ambos Marcan (BTTS)",
+          "prob": 70.0,
+          "cuota": 1.5
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "FREE",
+      "id_partido": "401930244",
+      "hora": "13:00",
+      "partido": "Vietnam vs Chinese Taipei",
+      "selecciones": [
+        {
+          "mercado": "Gol en 2do Tiempo",
+          "prob": 82.8,
+          "cuota": 1.18
+        },
+        {
+          "mercado": "Over 1.5 Goles",
+          "prob": 80.5,
+          "cuota": 1.18
+        }
+      ]
+    }
+  ]
+}
