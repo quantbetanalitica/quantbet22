@@ -1,0 +1,131 @@
+{
+  "fecha": "2026-11-12",
+  "tarjetas_clientes": [
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "401928551",
+      "hora": "19:00",
+      "partido": "CD Artistico Navalcarnero vs Real Betis",
+      "selecciones": [
+        {
+          "mercado": "Over 1.5 Goles",
+          "prob": 75.9,
+          "cuota": 1.38
+        },
+        {
+          "mercado": "Córners Real Betis > 4.5",
+          "prob": 68.4,
+          "cuota": 1.49
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "401861146",
+      "hora": "18:00",
+      "partido": "Armenia vs Cyprus",
+      "selecciones": [
+        {
+          "mercado": "Doble Oport. 1X",
+          "prob": 81.7,
+          "cuota": 1.38
+        },
+        {
+          "mercado": "Over 1.5 Goles",
+          "prob": 81.5,
+          "cuota": 1.38
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "401861149",
+      "hora": "20:45",
+      "partido": "San Marino vs Belarus",
+      "selecciones": [
+        {
+          "mercado": "Doble Oport. 1X",
+          "prob": 74.1,
+          "cuota": 1.38
+        },
+        {
+          "mercado": "Córners San Marino > 4.5",
+          "prob": 73.6,
+          "cuota": 1.39
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "401929797",
+      "hora": "20:00",
+      "partido": "Cayman Islands vs Guyana",
+      "selecciones": [
+        {
+          "mercado": "Over 1.5 Goles",
+          "prob": 81.7,
+          "cuota": 1.38
+        },
+        {
+          "mercado": "Ambos Marcan (BTTS)",
+          "prob": 71.9,
+          "cuota": 1.5
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "FREE",
+      "id_partido": "401861151",
+      "hora": "20:45",
+      "partido": "Italy vs France",
+      "selecciones": [
+        {
+          "mercado": "Remates Puerta > 6.5",
+          "prob": 84.3,
+          "cuota": 1.18
+        },
+        {
+          "mercado": "Gol en 2do Tiempo",
+          "prob": 86.5,
+          "cuota": 1.18
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "FREE",
+      "id_partido": "401861150",
+      "hora": "20:45",
+      "partido": "England vs Croatia",
+      "selecciones": [
+        {
+          "mercado": "Gol en 2do Tiempo",
+          "prob": 86.5,
+          "cuota": 1.18
+        },
+        {
+          "mercado": "Over 1.5 Goles",
+          "prob": 83.1,
+          "cuota": 1.18
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "FREE",
+      "id_partido": "401861148",
+      "hora": "20:45",
+      "partido": "Czechia vs Spain",
+      "selecciones": [
+        {
+          "mercado": "Over 1.5 Goles",
+          "prob": 81.3,
+          "cuota": 1.18
+        },
+        {
+          "mercado": "Gol en 2do Tiempo",
+          "prob": 85.3,
+          "cuota": 1.18
+        }
+      ]
+    }
+  ]
+}
