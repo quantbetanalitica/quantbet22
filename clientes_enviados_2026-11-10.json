@@ -1,0 +1,131 @@
+{
+  "fecha": "2026-11-10",
+  "tarjetas_clientes": [
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "401933182",
+      "hora": "00:30",
+      "partido": "Internacional de Bogotá vs América de Cali",
+      "selecciones": [
+        {
+          "mercado": "Faltas Totales > 22.5",
+          "prob": 71.8,
+          "cuota": 1.42
+        },
+        {
+          "mercado": "Tarjetas > 4.5",
+          "prob": 67.5,
+          "cuota": 1.51
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "401933181",
+      "hora": "02:30",
+      "partido": "Once Caldas vs Atlético Nacional",
+      "selecciones": [
+        {
+          "mercado": "Victoria Once Caldas",
+          "prob": 66.5,
+          "cuota": 1.56
+        },
+        {
+          "mercado": "Tarjetas > 5.5",
+          "prob": 66.5,
+          "cuota": 1.7
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "401928504",
+      "hora": "21:00",
+      "partido": "Tavernes de la Valldigna vs Valencia",
+      "selecciones": [
+        {
+          "mercado": "Faltas Totales > 22.5",
+          "prob": 74.4,
+          "cuota": 1.42
+        },
+        {
+          "mercado": "Córners > 8.5",
+          "prob": 66.5,
+          "cuota": 1.78
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "401928514",
+      "hora": "19:00",
+      "partido": "Anaitasuna vs Alavés",
+      "selecciones": [
+        {
+          "mercado": "Gol en 2do Tiempo",
+          "prob": 85.1,
+          "cuota": 1.38
+        },
+        {
+          "mercado": "Over 1.5 Goles",
+          "prob": 78.8,
+          "cuota": 1.38
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "FREE",
+      "id_partido": "401928514",
+      "hora": "19:00",
+      "partido": "Anaitasuna vs Alavés",
+      "selecciones": [
+        {
+          "mercado": "Doble Oport. X2",
+          "prob": 84.8,
+          "cuota": 1.18
+        },
+        {
+          "mercado": "Faltas Totales > 22.5",
+          "prob": 86.5,
+          "cuota": 1.18
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "FREE",
+      "id_partido": "401928528",
+      "hora": "20:00",
+      "partido": "Mijas Las Lagunas vs Real Jaen CF",
+      "selecciones": [
+        {
+          "mercado": "Gol en 2do Tiempo",
+          "prob": 85.3,
+          "cuota": 1.18
+        },
+        {
+          "mercado": "Córners Real Jaen CF > 4.5",
+          "prob": 83.6,
+          "cuota": 1.18
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "FREE",
+      "id_partido": "401928550",
+      "hora": "20:00",
+      "partido": "Trival Valderas vs Leganés",
+      "selecciones": [
+        {
+          "mercado": "Total Menos de 3.5 (Under)",
+          "prob": 81.8,
+          "cuota": 1.18
+        },
+        {
+          "mercado": "Faltas Totales > 22.5",
+          "prob": 81.0,
+          "cuota": 1.18
+        }
+      ]
+    }
+  ]
+}
