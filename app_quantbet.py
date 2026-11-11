@@ -1044,10 +1044,10 @@ st.markdown(
     f"🔥 PROMOCIÓN EXCLUSIVA NUEVOS MIEMBROS: PRUEBA VIP 24H + PASE 10 DÍAS 🔥"
     f"</div>"
     f"<a href='{LINK_WHOP_TRIAL_099}' target='_blank' class='precio-badge-gigante'>"
-    f"💎 PROBAR 24H VIP (1.00 USD) + 10 DÍAS POR 7.99 USD — ¡ACTIVAR EN 1 CLIC!"
+    f"💎 PROBAR 24H VIP (0.00 USD) + 10 DÍAS POR 7.99 USD — ¡ACTIVAR EN 1 CLIC!"
     f"</a>"
     f"<div style='color:#e6edf3; font-size:0.98rem; font-weight:500; margin-top:4px;'>"
-    f"🎁 <b>¿Tienes código de un Creador Aliado (ej. DARMANI) o vienes de Telegram?</b> Obtén <b>25% de descuento</b> al pagar o entra al Canal FREE 👇"
+    f"🎁 <b>¿Tienes código de un Creador Aliado (ej. DARMANY) o vienes de Telegram?</b> Obtén <b>25% de descuento</b> al pagar o entra al Canal FREE 👇"
     f"</div>"
     f"</div>",
     unsafe_allow_html=True
@@ -1099,7 +1099,7 @@ with o4:
         f"<div class='oferta-card-animada notranslate' translate='no'>"
         f"<div><span class='oferta-tag-top'>🇨🇴 🇪🇸 PAGO LOCAL + CUPÓN</span>"
         f"<div class='oferta-precio-limpio'>Nequi / Bizum</div>"
-        f"<div class='oferta-subtexto'>Bancolombia, USDT y Código DARMANI (-25%)</div></div>"
+        f"<div class='oferta-subtexto'>Bancolombia, USDT y Código DARMANY (-25%)</div></div>"
         f"<a href='{LINK_SOPORTE_BOT}' target='_blank' class='oferta-btn-clic'>Pedir Acceso en Bot ➔</a>"
         f"</div>",
         unsafe_allow_html=True
