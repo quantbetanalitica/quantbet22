@@ -128,7 +128,6 @@ st.markdown(f"""
     .precio-badge-gigante:hover {{
         transform: scale(1.02);
     }}
-    /* Botones unificados con el mismo alto, mismo grosor de borde y letra fina y clara */
     .btn-cta-bar {{
         display: flex !important;
         flex-direction: column;
@@ -141,7 +140,7 @@ st.markdown(f"""
         background: rgba(18, 26, 38, 0.92);
         color: #f0f6fc !important;
         font-family: 'Inter', 'Segoe UI', sans-serif !important;
-        font-size: 0.94rem !important;
+        font-size: 0.92rem !important;
         font-weight: 600 !important;
         line-height: 1.3 !important;
         padding: 10px 12px !important;
@@ -164,7 +163,7 @@ st.markdown(f"""
         background: linear-gradient(90deg, #ffcd00 0%, #ffb700 100%);
         color: #0b0e14 !important;
         font-family: 'Inter', 'Segoe UI', sans-serif !important;
-        font-size: 0.94rem !important;
+        font-size: 0.92rem !important;
         font-weight: 700 !important;
         line-height: 1.3 !important;
         padding: 10px 12px !important;
@@ -175,7 +174,6 @@ st.markdown(f"""
         margin-bottom: 8px;
         letter-spacing: 0.2px;
     }}
-    /* Tarjetas animadas de ofertas para que el usuario vea cada plan y entre en 1 clic */
     .oferta-card-animada {{
         background: rgba(14, 20, 28, 0.92);
         backdrop-filter: blur(8px);
@@ -203,7 +201,7 @@ st.markdown(f"""
         animation: float-badge 2.4s infinite ease-in-out;
     }}
     .oferta-precio-limpio {{
-        font-size: 1.35rem;
+        font-size: 1.32rem;
         font-weight: 700;
         color: #ffffff;
         margin: 2px 0;
@@ -819,7 +817,7 @@ def obtener_resumen_auditoria():
                         cuo_s = float(sel.get("cuota", 1.42 if tipo_t == "VIP" else 1.25))
                         gano_l = evaluar_mercado_real(m_etq, gh_l, ga_l, ght_l)
                         filas_clientes.append({
-                            "Fecha_Registro": f"{dt_fin_tc.strftime('%Y-%m-%d')} {h_fin_tc}:00",
+                            "Fecha_Registro": f"{f_dia} {h_fin_tc}:00",
                             "ID_Partido": id_tc,
                             "Partido": part_tc,
                             "Mercado": m_etq,
@@ -901,12 +899,15 @@ def obtener_resumen_auditoria():
         if indices_no_finalizados:
             tabla = tabla.drop(index=indices_no_finalizados)
 
-        tabla = tabla.drop_duplicates(subset=["Dia", "Partido", "Mercado"], keep="last")
+        # Eliminar duplicados por Partido y Mercado (evita que partidos que cruzan la medianoche salgan 2 veces)
+        tabla["Partido_Norm"] = tabla["Partido"].astype(str).str.lower().str.strip()
+        tabla = tabla.drop_duplicates(subset=["Partido_Norm", "Mercado"], keep="last")
+
         finalizadas = tabla[tabla["Estado"].isin(["Ganada", "Perdida", "Mitad Devuelta"])].copy()
         if finalizadas.empty:
             return 94.2, 1440, 1529, 36.6, pd.DataFrame()
 
-        finalizadas = finalizadas.groupby(["Dia", "Partido"], as_index=False).tail(6)
+        finalizadas = finalizadas.groupby(["Dia", "Partido_Norm"], as_index=False).tail(6)
         aciertos = len(finalizadas[finalizadas["Estado"].isin(["Ganada", "Mitad Devuelta"])])
         total_eval = len(finalizadas)
         efectividad = round((aciertos / max(1, total_eval)) * 100.0, 1)
@@ -962,7 +963,7 @@ def evaluar_pick_tarjeta(mapa_ft, df_hist, dia_str, id_partido, duelo_str, pick_
 
 
 # ==============================================================================
-# BARRA LATERAL IZQUIERDA (BOTONES UNIFORMES CON TIPOGRAFÍA FINA Y CLARA)
+# BARRA LATERAL IZQUIERDA (SIN SÍMBOLOS '$' SUELTOS PARA EVITAR ERROR LATEX)
 # ==============================================================================
 tasa_ef, num_aciertos, num_total, roi_calc, _ = obtener_resumen_auditoria()
 
@@ -975,9 +976,9 @@ with st.sidebar:
     st.markdown("#### 🔗 Acceso Oficial y Planes")
     st.markdown(
         f"<a href='{LINK_TELEGRAM_FREE}' target='_blank' class='btn-cta-bar'>📲 1. Entrar al Telegram Gratis (FREE)</a>"
-        f"<a href='{LINK_WHOP_TRIAL_099}' target='_blank' class='btn-cta-bar-gold'>🎁 2. Prueba 24h VIP + 10 Días (7.99 US$)</a>"
-        f"<a href='{LINK_WHOP_PASE_3DIAS}' target='_blank' class='btn-cta-bar'>⚡ 3. Pase 3 Días Fecha FIFA (4.99 US$)</a>"
-        f"<a href='{LINK_WHOP_PRO}' target='_blank' class='btn-cta-bar'>👑 4. Promo PRO Cierre de Año (49.99 US$)</a>"
+        f"<a href='{LINK_WHOP_TRIAL_099}' target='_blank' class='btn-cta-bar-gold'>🎁 2. Prueba 24h VIP + 10 Días (7.99 USD)</a>"
+        f"<a href='{LINK_WHOP_PASE_3DIAS}' target='_blank' class='btn-cta-bar'>⚡ 3. Pase 3 Días Fecha FIFA (4.99 USD)</a>"
+        f"<a href='{LINK_WHOP_PRO}' target='_blank' class='btn-cta-bar'>👑 4. Promo PRO Cierre de Año (49.99 USD)</a>"
         f"<a href='{LINK_SOPORTE_BOT}' target='_blank' class='btn-cta-bar'>💬 5. Pagos Locales (Nequi / Bizum / USDT)</a>",
         unsafe_allow_html=True
     )
@@ -1030,10 +1031,10 @@ st.markdown(
     f"🔥 PROMOCIÓN EXCLUSIVA NUEVOS MIEMBROS: PRUEBA VIP 24H + PASE 10 DÍAS 🔥"
     f"</div>"
     f"<a href='{LINK_WHOP_TRIAL_099}' target='_blank' class='precio-badge-gigante'>"
-    f"💎 PROBAR 24H VIP ($1.00) + 10 DÍAS POR 7.99 US$ — ¡ACTIVAR EN 1 CLIC!"
+    f"💎 PROBAR 24H VIP (1.00 USD) + 10 DÍAS POR 7.99 USD — ¡ACTIVAR EN 1 CLIC!"
     f"</a>"
     f"<div style='color:#e6edf3; font-size:0.98rem; font-weight:500; margin-top:4px;'>"
-    f"🎁 <b>¿Vienes de Telegram o de un Creador Aliado?</b> Entra primero a nuestro Canal FREE de Telegram para recibir tu <b>Código de Descuento Exclusivo</b> 👇"
+    f"🎁 <b>¿Tienes código de un Creador Aliado (ej. DARMANI) o vienes de Telegram?</b> Obtén <b>25% de descuento</b> al pagar o entra al Canal FREE 👇"
     f"</div>"
     f"</div>",
     unsafe_allow_html=True
@@ -1048,13 +1049,13 @@ with b2:
 with b3:
     st.markdown(f"<a href='{LINK_SOPORTE_BOT}' target='_blank' class='btn-cta-bar'>💬 3. PAGAR CON NEQUI / BIZUM / USDT (SOPORTE 24/7)</a>", unsafe_allow_html=True)
 
-# VITRINA ANIMADA DE LAS 4 OFERTAS (LETRA FINA Y CLARA)
+# VITRINA ANIMADA DE LAS 4 OFERTAS (SIN SÍMBOLOS '$' SUELTOS)
 o1, o2, o3, o4 = st.columns(4)
 with o1:
     st.markdown(
         f"<div class='oferta-card-animada notranslate' translate='no'>"
         f"<div><span class='oferta-tag-top'>⚡ FECHA FIFA / FINDE</span>"
-        f"<div class='oferta-precio-limpio'>4.99 US$</div>"
+        f"<div class='oferta-precio-limpio'>4.99 USD</div>"
         f"<div class='oferta-subtexto'>Pase Único 3 Días (Sin suscripción)</div></div>"
         f"<a href='{LINK_WHOP_PASE_3DIAS}' target='_blank' class='oferta-btn-clic'>Activar Pase 3 Días ➔</a>"
         f"</div>",
@@ -1064,7 +1065,7 @@ with o2:
     st.markdown(
         f"<div class='oferta-card-animada notranslate' translate='no' style='border-color:#ffcd00;'>"
         f"<div><span class='oferta-tag-top'>🔥 MÁS ELEGIDO (24H TRIAL)</span>"
-        f"<div class='oferta-precio-limpio' style='color:#ffcd00;'>7.99 US$ <span style='font-size:0.80rem; font-weight:500;'>/ 10 días</span></div>"
+        f"<div class='oferta-precio-limpio' style='color:#ffcd00;'>7.99 USD <span style='font-size:0.80rem; font-weight:500;'>/ 10 días</span></div>"
         f"<div class='oferta-subtexto'>1 Día de Prueba + 4 VIP Diarias + Doble</div></div>"
         f"<a href='{LINK_WHOP_TRIAL_099}' target='_blank' class='oferta-btn-clic-oro'>Probar 24h + 10 Días ➔</a>"
         f"</div>",
@@ -1074,7 +1075,7 @@ with o3:
     st.markdown(
         f"<div class='oferta-card-animada notranslate' translate='no'>"
         f"<div><span class='oferta-tag-top'>👑 PROMO CIERRE DE AÑO</span>"
-        f"<div class='oferta-precio-limpio'>49.99 US$ <span style='font-size:0.80rem; text-decoration:line-through; color:#8b949e;'>74.99$</span></div>"
+        f"<div class='oferta-precio-limpio'>49.99 USD <span style='font-size:0.80rem; text-decoration:line-through; color:#8b949e;'>74.99 USD</span></div>"
         f"<div class='oferta-subtexto'>Catálogo PRO Completo + Sniper 3X</div></div>"
         f"<a href='{LINK_WHOP_PRO}' target='_blank' class='oferta-btn-clic'>Desbloquear Plan PRO ➔</a>"
         f"</div>",
@@ -1085,7 +1086,7 @@ with o4:
         f"<div class='oferta-card-animada notranslate' translate='no'>"
         f"<div><span class='oferta-tag-top'>🇨🇴 🇪🇸 PAGO LOCAL + CUPÓN</span>"
         f"<div class='oferta-precio-limpio'>Nequi / Bizum</div>"
-        f"<div class='oferta-subtexto'>Bancolombia, USDT y Descuento Referidos</div></div>"
+        f"<div class='oferta-subtexto'>Bancolombia, USDT y Código DARMANI (-25%)</div></div>"
         f"<a href='{LINK_SOPORTE_BOT}' target='_blank' class='oferta-btn-clic'>Pedir Acceso en Bot ➔</a>"
         f"</div>",
         unsafe_allow_html=True
@@ -1246,7 +1247,7 @@ def renderizar_panel_en_vivo_silencioso():
                         f"• <span class='badge-candado'>🔒 SELECCIÓN VIP #{idx_op}</span> &nbsp; "
                         f"Probabilidad Modelo: <b>{op.get('prob', 78.0)}%</b> ➔ Cuota VIP > <b>{c_vip_mostrar:.2f}</b> "
                         f"<a href='{LINK_WHOP_VIP}' target='_blank' class='btn-vip-inline'>"
-                        f"🔥 DESBLOQUEAR VIP (DESDE 4.99 US$)"
+                        f"🔥 DESBLOQUEAR VIP (DESDE 4.99 USD)"
                         f"</a>"
                         f"</div>"
                     )
@@ -1264,9 +1265,9 @@ def renderizar_panel_en_vivo_silencioso():
 
         col_v1, col_v2 = st.columns(2)
         with col_v1:
-            st.markdown(f"<a href='{LINK_WHOP_VIP}' target='_blank' class='btn-cta-bar-gold'>🔥 ACTIVAR PASE VIP (3 DÍAS 4.99 US$ | 10 DÍAS 7.99 US$)</a>", unsafe_allow_html=True)
+            st.markdown(f"<a href='{LINK_WHOP_VIP}' target='_blank' class='btn-cta-bar-gold'>🔥 ACTIVAR PASE VIP (3 DÍAS 4.99 USD | 10 DÍAS 7.99 USD)</a>", unsafe_allow_html=True)
         with col_v2:
-            st.markdown(f"<a href='{LINK_WHOP_PRO}' target='_blank' class='btn-cta-bar'>👑 PROMO PRO CIERRE DE AÑO: TODAS LAS LIGAS (49.99 US$)</a>", unsafe_allow_html=True)
+            st.markdown(f"<a href='{LINK_WHOP_PRO}' target='_blank' class='btn-cta-bar'>👑 PROMO PRO CIERRE DE AÑO: TODAS LAS LIGAS (49.99 USD)</a>", unsafe_allow_html=True)
 
     st.divider()
 
@@ -1279,7 +1280,7 @@ def renderizar_panel_en_vivo_silencioso():
     with col_c:
         c_casa = st.number_input("Cuota en tu Casa", min_value=1.05, max_value=10.0, value=1.45, step=0.05)
     with col_k:
-        cap_usr = st.number_input("Tu Capital ($)", min_value=10.0, max_value=10000000.0, value=100.0, step=10.0)
+        cap_usr = st.number_input("Tu Capital (USD)", min_value=10.0, max_value=10000000.0, value=100.0, step=10.0)
 
     c_min_justa = round(100.0 / p_mod, 2)
     ventaja_ev = round(((p_mod / 100.0) * c_casa - 1.0) * 100.0, 1)
@@ -1329,6 +1330,10 @@ def renderizar_panel_en_vivo_silencioso():
         df_cajon["Marcador"] = df_cajon["CLV_Status"].astype(str).str.replace("AUDITADA ", "", regex=False)
         df_cajon["Cuota"] = df_cajon["Cuota_Compra"]
         df_cajon = df_cajon.sort_values(by=["Orden_Real", "Partido", "Mercado"], ascending=[False, True, True])
+
+        # Candado final anti-duplicados: garantiza que ningún (Partido, Mercado) aparezca dos veces
+        df_cajon["Clave_Unica"] = df_cajon["Partido"].astype(str).str.lower().str.strip()
+        df_cajon = df_cajon.drop_duplicates(subset=["Clave_Unica", "Mercado"], keep="first")
 
         vista_cajon = df_cajon[["Semáforo", "Fecha y Hora Fin", "Partido", "Mercado", "Cuota", "Marcador"]]
         st.dataframe(vista_cajon, hide_index=True, height=450)
