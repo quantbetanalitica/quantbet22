@@ -2,6 +2,7 @@ import os
 import re
 import sys
 import json
+import base64
 import subprocess
 import unicodedata
 from concurrent.futures import ThreadPoolExecutor
@@ -29,221 +30,334 @@ st.set_page_config(
 )
 
 # ==============================================================================
-# ENLACES OFICIALES DE CONVERSIÓN Y PAGO
+# ENLACES OFICIALES DE CONVERSIÓN Y PAGO (TODOS DEFINIDOS SIN ERRORES)
 # ==============================================================================
 LINK_TELEGRAM_FREE = "https://t.me/+aYoc_N6oiU1lODU0"
 LINK_WHOP_VIP = "https://whop.com/youtube-d4c7/quantbet22-canal-vip/"
+LINK_WHOP_TRIAL_099 = "https://whop.com/youtube-d4c7/quantbet22-canal-vip/"
+LINK_WHOP_PASE_3DIAS = "https://whop.com/youtube-d4c7/quantbet22-canal-vip/"
 LINK_WHOP_PRO = "https://whop.com/youtube-d4c7/products/uantbet22-membresia-pro-avanzada/?ref=related_products"
 LINK_SOPORTE_BOT = "https://t.me/QuantBetSoporte_bot"
 API_SPORTS_KEY = os.getenv("API_SPORTS_KEY", "48f391f30e76d9c84e5c94b6a4cccdb4")
 
 FECHA_CORTE_LIMPIO = "2026-10-23"
 
-st.markdown("""
+
+@st.cache_data(show_spinner=False)
+def obtener_css_fondo_quantbet():
+    ruta_img = "fondo de quant bet.jpg"
+    if os.path.exists(ruta_img):
+        try:
+            with open(ruta_img, "rb") as f:
+                b64 = base64.b64encode(f.read()).decode("utf-8")
+            return (
+                f"background-image: linear-gradient(180deg, rgba(8, 11, 16, 0.88) 0%, rgba(10, 14, 20, 0.93) 100%), "
+                f"url('data:image/jpeg;base64,{b64}'); "
+                f"background-size: cover; background-position: center; background-attachment: fixed;"
+            )
+        except Exception:
+            pass
+    return "background: radial-gradient(circle at 50% 0%, #102419 0%, #0b0e14 70%);"
+
+
+css_fondo_app = obtener_css_fondo_quantbet()
+
+st.markdown(f"""
 <meta name="google" content="notranslate">
 <style>
-    @keyframes pulse-green {
-        0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(0, 255, 100, 0.85); opacity: 1; }
-        50% { transform: scale(1.15); box-shadow: 0 0 12px 5px rgba(0, 255, 100, 0.35); opacity: 0.45; }
-        100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(0, 255, 100, 0); opacity: 1; }
-    }
-    @keyframes border-glow {
-        0% { border-color: #00ff64; box-shadow: 0 0 8px rgba(0, 255, 100, 0.35); }
-        50% { border-color: #ffffff; box-shadow: 0 0 16px rgba(0, 255, 100, 0.75); }
-        100% { border-color: #00ff64; box-shadow: 0 0 8px rgba(0, 255, 100, 0.35); }
-    }
-    .stApp {
-        background-color: #0b0e14;
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+    @keyframes pulse-green {{
+        0% {{ transform: scale(0.95); box-shadow: 0 0 0 0 rgba(0, 255, 100, 0.85); opacity: 1; }}
+        50% {{ transform: scale(1.15); box-shadow: 0 0 12px 5px rgba(0, 255, 100, 0.35); opacity: 0.45; }}
+        100% {{ transform: scale(0.95); box-shadow: 0 0 0 0 rgba(0, 255, 100, 0); opacity: 1; }}
+    }}
+    @keyframes border-glow {{
+        0% {{ border-color: #00ff64; box-shadow: 0 0 8px rgba(0, 255, 100, 0.25); }}
+        50% {{ border-color: #ffcd00; box-shadow: 0 0 16px rgba(255, 205, 0, 0.55); }}
+        100% {{ border-color: #00ff64; box-shadow: 0 0 8px rgba(0, 255, 100, 0.25); }}
+    }}
+    @keyframes float-badge {{
+        0% {{ transform: translateY(0px); }}
+        50% {{ transform: translateY(-3px); }}
+        100% {{ transform: translateY(0px); }}
+    }}
+    .stApp {{
+        {css_fondo_app}
         color: #f5f5f5;
-        font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif !important;
-    }
-    .box-kpi {
-        background: linear-gradient(145deg, #131824, #0d111a);
-        border: 1px solid #00ff64;
+        font-family: 'Inter', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif !important;
+        -webkit-font-smoothing: antialiased;
+    }}
+    .box-kpi {{
+        background: rgba(16, 22, 32, 0.88);
+        backdrop-filter: blur(8px);
+        border: 1.5px solid rgba(0, 255, 100, 0.65);
         border-radius: 12px;
-        padding: 18px 12px;
+        padding: 16px 12px;
         text-align: center;
-        box-shadow: 0 4px 16px rgba(0, 255, 100, 0.08);
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
         margin-bottom: 10px;
-    }
-    .banner-promo-gigante {
-        background: linear-gradient(135deg, #241b03 0%, #0d2b18 50%, #241b03 100%);
-        border: 3px solid #ffcd00;
-        border-radius: 16px;
-        padding: 24px 20px;
+    }}
+    .banner-promo-gigante {{
+        background: linear-gradient(135deg, rgba(28, 22, 6, 0.92) 0%, rgba(11, 34, 20, 0.92) 50%, rgba(28, 22, 6, 0.92) 100%);
+        backdrop-filter: blur(10px);
+        border: 2px solid #ffcd00;
+        border-radius: 14px;
+        padding: 20px 18px;
         text-align: center;
-        margin-top: 10px;
-        margin-bottom: 18px;
-        box-shadow: 0 8px 28px rgba(255, 205, 0, 0.25);
-    }
-    .precio-badge-gigante {
+        margin-top: 8px;
+        margin-bottom: 14px;
+        box-shadow: 0 6px 24px rgba(0, 0, 0, 0.45);
+    }}
+    .precio-badge-gigante {{
         display: inline-block;
-        background: #00ff64;
-        color: #06140b !important;
-        font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif !important;
-        font-size: 1.50rem;
-        font-weight: 900;
-        padding: 10px 26px;
+        background: linear-gradient(90deg, #00e65c 0%, #00ff64 100%);
+        color: #05140a !important;
+        font-family: 'Inter', 'Segoe UI', sans-serif !important;
+        font-size: 1.22rem;
+        font-weight: 700;
+        padding: 10px 24px;
         border-radius: 10px;
-        margin: 12px 0;
+        margin: 10px 0;
         text-decoration: none !important;
-        box-shadow: 0 4px 18px rgba(0, 255, 100, 0.45);
-        border: 2px solid #ffffff;
-        letter-spacing: 0.4px;
-    }
-    .btn-cta-bar {
-        display: block;
+        box-shadow: 0 4px 15px rgba(0, 255, 100, 0.35);
+        border: 1.5px solid #ffffff;
+        letter-spacing: 0.2px;
+        transition: transform 0.2s ease;
+    }}
+    .precio-badge-gigante:hover {{
+        transform: scale(1.02);
+    }}
+    /* Botones unificados con el mismo alto, mismo grosor de borde y letra fina y clara */
+    .btn-cta-bar {{
+        display: flex !important;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
         width: 100%;
+        min-height: 64px;
+        box-sizing: border-box;
         text-align: center;
-        background: linear-gradient(180deg, #182232 0%, #101722 100%);
-        color: #ffffff !important;
-        font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif !important;
-        font-size: 1.02rem !important;
-        font-weight: 800 !important;
-        padding: 13px 12px !important;
+        background: rgba(18, 26, 38, 0.92);
+        color: #f0f6fc !important;
+        font-family: 'Inter', 'Segoe UI', sans-serif !important;
+        font-size: 0.94rem !important;
+        font-weight: 600 !important;
+        line-height: 1.3 !important;
+        padding: 10px 12px !important;
         border-radius: 10px !important;
-        border: 2px solid #00ff64 !important;
+        border: 1.5px solid #00ff64 !important;
         text-decoration: none !important;
-        box-shadow: 0 3px 12px rgba(0, 255, 100, 0.12);
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
         margin-bottom: 8px;
-    }
-    .btn-cta-bar-gold {
-        display: block;
+        letter-spacing: 0.2px;
+    }}
+    .btn-cta-bar-gold {{
+        display: flex !important;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
         width: 100%;
+        min-height: 64px;
+        box-sizing: border-box;
         text-align: center;
-        background: linear-gradient(90deg, #ffcd00 0%, #ffaa00 100%);
+        background: linear-gradient(90deg, #ffcd00 0%, #ffb700 100%);
         color: #0b0e14 !important;
-        font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif !important;
-        font-size: 1.05rem !important;
-        font-weight: 900 !important;
-        padding: 13px 12px !important;
+        font-family: 'Inter', 'Segoe UI', sans-serif !important;
+        font-size: 0.94rem !important;
+        font-weight: 700 !important;
+        line-height: 1.3 !important;
+        padding: 10px 12px !important;
         border-radius: 10px !important;
-        border: 2px solid #ffffff !important;
+        border: 1.5px solid #00ff64 !important;
         text-decoration: none !important;
-        box-shadow: 0 4px 16px rgba(255, 205, 0, 0.35);
+        box-shadow: 0 3px 12px rgba(255, 205, 0, 0.25);
         margin-bottom: 8px;
-    }
-    .btn-vip-inline {
+        letter-spacing: 0.2px;
+    }}
+    /* Tarjetas animadas de ofertas para que el usuario vea cada plan y entre en 1 clic */
+    .oferta-card-animada {{
+        background: rgba(14, 20, 28, 0.92);
+        backdrop-filter: blur(8px);
+        border: 1.5px solid #00ff64;
+        border-radius: 12px;
+        padding: 14px 12px;
+        text-align: center;
+        min-height: 148px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        animation: border-glow 3s infinite ease-in-out;
+        margin-bottom: 10px;
+    }}
+    .oferta-tag-top {{
         display: inline-block;
-        background: linear-gradient(90deg, #ffcd00, #ffaa00);
+        background: rgba(255, 205, 0, 0.16);
+        border: 1px solid #ffcd00;
+        color: #ffcd00;
+        font-size: 0.75rem;
+        font-weight: 600;
+        padding: 2px 8px;
+        border-radius: 12px;
+        margin-bottom: 6px;
+        animation: float-badge 2.4s infinite ease-in-out;
+    }}
+    .oferta-precio-limpio {{
+        font-size: 1.35rem;
+        font-weight: 700;
+        color: #ffffff;
+        margin: 2px 0;
+        letter-spacing: 0.2px;
+    }}
+    .oferta-subtexto {{
+        font-size: 0.80rem;
+        font-weight: 400;
+        color: #b8c4d0;
+        margin-bottom: 8px;
+    }}
+    .oferta-btn-clic {{
+        display: block;
+        background: #00ff64;
+        color: #06150b !important;
+        font-size: 0.84rem;
+        font-weight: 600;
+        padding: 7px 10px;
+        border-radius: 7px;
+        text-decoration: none !important;
+    }}
+    .oferta-btn-clic-oro {{
+        display: block;
+        background: #ffcd00;
         color: #0b0e14 !important;
-        font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif !important;
-        font-weight: 900;
-        font-size: 0.95rem;
-        padding: 4px 14px;
+        font-size: 0.84rem;
+        font-weight: 600;
+        padding: 7px 10px;
+        border-radius: 7px;
+        text-decoration: none !important;
+    }}
+    .btn-vip-inline {{
+        display: inline-block;
+        background: linear-gradient(90deg, #ffcd00, #ffb700);
+        color: #0b0e14 !important;
+        font-family: 'Inter', 'Segoe UI', sans-serif !important;
+        font-weight: 600;
+        font-size: 0.88rem;
+        padding: 4px 12px;
         border-radius: 6px;
         text-decoration: none !important;
         margin-left: 10px;
-        box-shadow: 0 2px 10px rgba(255, 205, 0, 0.35);
-    }
-    .badge-live-blink {
+    }}
+    .badge-live-blink {{
         display: inline-flex;
         align-items: center;
         gap: 7px;
         background: rgba(0, 255, 100, 0.18);
-        border: 2px solid #00ff64;
+        border: 1.5px solid #00ff64;
         color: #00ff64;
-        font-weight: 900;
-        font-size: 0.92rem;
+        font-weight: 600;
+        font-size: 0.88rem;
         padding: 3px 12px;
         border-radius: 20px;
         animation: border-glow 1.4s infinite ease-in-out;
-    }
-    .dot-blink {
-        width: 10px;
-        height: 10px;
+    }}
+    .dot-blink {{
+        width: 9px;
+        height: 9px;
         background-color: #00ff64;
         border-radius: 50%;
         display: inline-block;
         animation: pulse-green 1.1s infinite ease-in-out;
-    }
-    .badge-programado {
+    }}
+    .badge-programado {{
         display: inline-block;
         background: rgba(255, 255, 255, 0.08);
         border: 1px solid #8b949e;
         color: #d0d7de;
-        font-weight: 700;
-        font-size: 0.86rem;
+        font-weight: 600;
+        font-size: 0.84rem;
         padding: 3px 10px;
         border-radius: 16px;
-    }
-    .card-verde {
-        background: #0d1a14;
-        border-left: 6px solid #00ff64;
+    }}
+    .card-verde {{
+        background: rgba(13, 26, 20, 0.90);
+        backdrop-filter: blur(6px);
+        border-left: 5px solid #00ff64;
         border-top: 1px solid #1f3d2d;
         border-right: 1px solid #1f3d2d;
         border-bottom: 1px solid #1f3d2d;
         border-radius: 10px;
         padding: 16px;
         margin-bottom: 14px;
-    }
-    .card-amarilla {
-        background: #19170e;
-        border-left: 6px solid #ffcd00;
+    }}
+    .card-amarilla {{
+        background: rgba(25, 23, 14, 0.90);
+        backdrop-filter: blur(6px);
+        border-left: 5px solid #ffcd00;
         border-top: 1px solid #3d3514;
         border-right: 1px solid #3d3514;
         border-bottom: 1px solid #3d3514;
         border-radius: 10px;
         padding: 16px;
         margin-bottom: 14px;
-    }
-    .card-roja {
-        background: #1c1012;
-        border-left: 6px solid #ff4d4d;
+    }}
+    .card-roja {{
+        background: rgba(28, 16, 18, 0.90);
+        backdrop-filter: blur(6px);
+        border-left: 5px solid #ff4d4d;
         border-top: 1px solid #4a1c22;
         border-right: 1px solid #4a1c22;
         border-bottom: 1px solid #4a1c22;
         border-radius: 10px;
         padding: 16px;
         margin-bottom: 14px;
-    }
-    .badge-ganada {
+    }}
+    .badge-ganada {{
         background: rgba(0, 255, 100, 0.15);
         border: 1px solid #00ff64;
         color: #00ff64;
-        font-weight: 800;
+        font-weight: 600;
         padding: 2px 8px;
         border-radius: 5px;
-        font-size: 0.85rem;
-    }
-    .badge-perdida {
+        font-size: 0.83rem;
+    }}
+    .badge-perdida {{
         background: rgba(255, 77, 77, 0.18);
         border: 1px solid #ff4d4d;
         color: #ff4d4d;
-        font-weight: 800;
+        font-weight: 600;
         padding: 2px 8px;
         border-radius: 5px;
-        font-size: 0.85rem;
-    }
-    .badge-abierta {
+        font-size: 0.83rem;
+    }}
+    .badge-abierta {{
         background: rgba(0, 255, 100, 0.12);
         border: 1px solid #00ff64;
         color: #00ff64;
-        font-weight: 700;
+        font-weight: 600;
         padding: 2px 8px;
         border-radius: 5px;
-        font-size: 0.85rem;
-    }
-    .badge-candado {
+        font-size: 0.83rem;
+    }}
+    .badge-candado {{
         background: rgba(255, 205, 0, 0.15);
         border: 1px solid #ffcd00;
         color: #ffcd00;
-        font-weight: 700;
+        font-weight: 600;
         padding: 2px 8px;
         border-radius: 5px;
-        font-size: 0.85rem;
-    }
-    .horario-multizona {
+        font-size: 0.83rem;
+    }}
+    .horario-multizona {{
         display: inline-block;
         background: rgba(255, 255, 255, 0.06);
         border: 1px solid rgba(0, 255, 100, 0.35);
         border-radius: 6px;
         padding: 3px 10px;
         margin-top: 5px;
-        font-size: 0.88rem;
-        font-weight: 700;
+        font-size: 0.85rem;
+        font-weight: 500;
         color: #e8fff0;
-    }
+    }}
 </style>
 """, unsafe_allow_html=True)
 
@@ -459,7 +573,6 @@ def cargar_mapa_resultados_caches():
                 except Exception:
                     continue
 
-    # 1. Consulta en vivo a API-Sports (últimos 3 días + hoy para cubrir madrugadas de América y Europa)
     fechas_api = [(ahora_esp - timedelta(days=d)).strftime("%Y-%m-%d") for d in range(3, -1, -1)]
     for f_api in fechas_api:
         try:
@@ -515,10 +628,9 @@ def cargar_mapa_resultados_caches():
         except Exception:
             pass
 
-    # 2. Consulta en vivo a las ligas y Selecciones Mayores en ESPN (últimos 3 días + hoy)
     fechas_ymd = [(ahora_esp - timedelta(days=d)).strftime("%Y%m%d") for d in range(3, -1, -1)]
     endpoints = [
-        "uefa.champions", "uefa.europa", "uefa.europa.conf",
+        "uefa.champions", "uefa.europa", "uefa.europa.conf", "uefa.wchampions",
         "esp.1", "esp.2", "esp.copa_del_rey",
         "eng.1", "eng.fa", "eng.league_cup",
         "ita.1", "ita.coppa_italia",
@@ -531,9 +643,10 @@ def cargar_mapa_resultados_caches():
         "bra.1", "bra.copa_do_brasil",
         "mex.1", "usa.1", "ecu.1",
         "conmebol.libertadores", "conmebol.sudamericana",
-        "fifa.world", "uefa.euro", "conmebol.america", "uefa.nations",
-        "concacaf.gold", "fifa.worldq.conmebol", "fifa.worldq.uefa",
-        "fifa.worldq.concacaf", "fifa.worldq.caf", "fifa.worldq.afc", "fifa.friendly"
+        "fifa.world", "uefa.euro", "uefa.euroq", "conmebol.america", "uefa.nations",
+        "concacaf.gold", "concacaf.nations.league", "fifa.worldq.conmebol", "fifa.worldq.uefa",
+        "fifa.worldq.concacaf", "fifa.worldq.caf", "fifa.worldq.afc",
+        "caf.nations", "caf.nations_qual", "afc.cup", "afc.cupq", "fifa.friendly"
     ]
     tareas = [(ep, ymd) for ymd in fechas_ymd for ep in endpoints]
 
@@ -671,7 +784,6 @@ def obtener_resumen_auditoria():
     else:
         tabla = pd.DataFrame()
 
-    # Añadir todas las tarjetas de clientes cuyos partidos YA finalizaron (FT)
     filas_clientes = []
     for nombre_j in sorted(os.listdir(".")):
         m_j = re.match(r"clientes_enviados_(\d{4}-\d{2}-\d{2})\.json", nombre_j)
@@ -759,7 +871,6 @@ def obtener_resumen_auditoria():
             except Exception:
                 pass
 
-            # 1. Buscar primero el marcador real en API-Sports / ESPN / Cachés
             info_m = buscar_resultado_inteligente(mapa_ft, id_k, part_k, dia_r)
             if not info_m:
                 m_sc = re.search(r"(\d+)-(\d+)", clv_txt)
@@ -774,7 +885,6 @@ def obtener_resumen_auditoria():
                 tabla.at[idx, "CLV_Status"] = f"FT {gh}-{ga}"
                 continue
 
-            # 2. Si aún no tiene marcador FT confirmado, verificar su hora real de finalización sin empujar madrugadas al futuro
             dt_fin_exacto = mapa_dt_fin.get(id_k) or mapa_dt_fin.get(part_k.lower())
             if not dt_fin_exacto:
                 hora_fin_est = mapa_horas_fin.get(id_k) or mapa_horas_fin.get(part_k.lower()) or (h_reg_r if len(h_reg_r) == 5 and ":" in h_reg_r else "21:55")
@@ -852,12 +962,12 @@ def evaluar_pick_tarjeta(mapa_ft, df_hist, dia_str, id_partido, duelo_str, pick_
 
 
 # ==============================================================================
-# BARRA LATERAL IZQUIERDA (CONVERSIÓN Y ACCESO DIRECTO)
+# BARRA LATERAL IZQUIERDA (BOTONES UNIFORMES CON TIPOGRAFÍA FINA Y CLARA)
 # ==============================================================================
 tasa_ef, num_aciertos, num_total, roi_calc, _ = obtener_resumen_auditoria()
 
 with st.sidebar:
-    st.image("https://img.icons8.com/color/96/artificial-intelligence.png", width=72)
+    st.image("https://img.icons8.com/color/96/artificial-intelligence.png", width=68)
     st.markdown("### 🧬 Laboratorio de Datos QuantBet")
     st.markdown("Plataforma cuantitativa de proyecciones y auditoría deportiva en tiempo real.")
     st.divider()
@@ -865,9 +975,10 @@ with st.sidebar:
     st.markdown("#### 🔗 Acceso Oficial y Planes")
     st.markdown(
         f"<a href='{LINK_TELEGRAM_FREE}' target='_blank' class='btn-cta-bar'>📲 1. Entrar al Telegram Gratis (FREE)</a>"
-        f"<a href='{LINK_WHOP_VIP}' target='_blank' class='btn-cta-bar-gold'>🔥 2. ACTIVAR PASE 10 DÍAS VIP (7.99 USD)</a>"
-        f"<a href='{LINK_WHOP_PRO}' target='_blank' class='btn-cta-bar'>👑 3. Membresía PRO Catálogo Total (74.99 USD)</a>"
-        f"<a href='{LINK_SOPORTE_BOT}' target='_blank' class='btn-cta-bar'>💬 4. Pagos Locales (Nequi / Bizum / USDT)</a>",
+        f"<a href='{LINK_WHOP_TRIAL_099}' target='_blank' class='btn-cta-bar-gold'>🎁 2. Prueba 24h VIP + 10 Días (7.99 US$)</a>"
+        f"<a href='{LINK_WHOP_PASE_3DIAS}' target='_blank' class='btn-cta-bar'>⚡ 3. Pase 3 Días Fecha FIFA (4.99 US$)</a>"
+        f"<a href='{LINK_WHOP_PRO}' target='_blank' class='btn-cta-bar'>👑 4. Promo PRO Cierre de Año (49.99 US$)</a>"
+        f"<a href='{LINK_SOPORTE_BOT}' target='_blank' class='btn-cta-bar'>💬 5. Pagos Locales (Nequi / Bizum / USDT)</a>",
         unsafe_allow_html=True
     )
     st.divider()
@@ -879,62 +990,106 @@ with st.sidebar:
 
 
 # ==============================================================================
-# CABECERA, 3 INDICADORES Y BANNER DE CONVERSIÓN DIRECTA
+# CABECERA, 3 INDICADORES Y VITRINA ANIMADA DE OFERTAS EN 1 CLIC
 # ==============================================================================
-st.markdown("<h1 class='notranslate' translate='no' style='text-align: center; color: #00ff64; margin-bottom: 0;'>🧬 ESCÁNER CUANTITATIVO</h1>", unsafe_allow_html=True)
-st.markdown("<p style='text-align: center; color: #b5b5b5;'>Modelos Matemáticos de Valor (EV+) Aplicados al Fútbol Profesional y Selecciones</p>", unsafe_allow_html=True)
+st.markdown("<h1 class='notranslate' translate='no' style='text-align: center; color: #00ff64; font-weight: 700; margin-bottom: 0;'>🧬 ESCÁNER CUANTITATIVO</h1>", unsafe_allow_html=True)
+st.markdown("<p style='text-align: center; color: #c4cdd5;'>Modelos Matemáticos de Valor (EV+) Aplicados al Fútbol Profesional y Selecciones</p>", unsafe_allow_html=True)
 
 c_kpi1, c_kpi2, c_kpi3 = st.columns(3)
 with c_kpi1:
     st.markdown(
         f"<div class='box-kpi notranslate' translate='no'>"
-        f"<div style='color:#ffcd00; font-size:0.85rem; font-weight:700;'>🎯 EFECTIVIDAD VIP/FREE/PRO</div>"
-        f"<div style='color:#00ff64; font-size:2.1rem; font-weight:800;'>{tasa_ef}%</div>"
-        f"<div style='color:#9e9e9e; font-size:0.8rem;'>Verificada con FT oficial</div>"
+        f"<div style='color:#ffcd00; font-size:0.82rem; font-weight:600;'>🎯 EFECTIVIDAD VIP / FREE / PRO</div>"
+        f"<div style='color:#00ff64; font-size:2.0rem; font-weight:700;'>{tasa_ef}%</div>"
+        f"<div style='color:#9e9e9e; font-size:0.78rem;'>Verificada con FT oficial</div>"
         f"</div>",
         unsafe_allow_html=True
     )
 with c_kpi2:
     st.markdown(
         f"<div class='box-kpi notranslate' translate='no'>"
-        f"<div style='color:#ffcd00; font-size:0.85rem; font-weight:700;'>✅ ACIERTOS REALES</div>"
-        f"<div style='color:#ffffff; font-size:2.1rem; font-weight:800;'>{num_aciertos}/{num_total}</div>"
-        f"<div style='color:#9e9e9e; font-size:0.8rem;'>Ganadas y Perdidas públicas</div>"
+        f"<div style='color:#ffcd00; font-size:0.82rem; font-weight:600;'>✅ ACIERTOS REALES</div>"
+        f"<div style='color:#ffffff; font-size:2.0rem; font-weight:700;'>{num_aciertos}/{num_total}</div>"
+        f"<div style='color:#9e9e9e; font-size:0.78rem;'>Ganadas y Perdidas públicas</div>"
         f"</div>",
         unsafe_allow_html=True
     )
 with c_kpi3:
     st.markdown(
         f"<div class='box-kpi notranslate' translate='no'>"
-        f"<div style='color:#ffcd00; font-size:0.85rem; font-weight:700;'>📈 RENDIMIENTO / ROI</div>"
-        f"<div style='color:#00ff64; font-size:2.1rem; font-weight:800;'>+{roi_calc}%</div>"
-        f"<div style='color:#9e9e9e; font-size:0.8rem;'>Rentabilidad matemática</div>"
+        f"<div style='color:#ffcd00; font-size:0.82rem; font-weight:600;'>📈 RENDIMIENTO / ROI</div>"
+        f"<div style='color:#00ff64; font-size:2.0rem; font-weight:700;'>+{roi_calc}%</div>"
+        f"<div style='color:#9e9e9e; font-size:0.78rem;'>Rentabilidad matemática</div>"
         f"</div>",
         unsafe_allow_html=True
     )
 
 st.markdown(
     f"<div class='banner-promo-gigante notranslate' translate='no'>"
-    f"<div style='color:#ffcd00; font-size:1.75rem; font-weight:900; letter-spacing:0.5px;'>"
-    f"🔥 PROMOCIÓN EXCLUSIVA NUEVOS MIEMBROS: PASE VIP 10 DÍAS 🔥"
+    f"<div style='color:#ffcd00; font-size:1.45rem; font-weight:700; letter-spacing:0.3px;'>"
+    f"🔥 PROMOCIÓN EXCLUSIVA NUEVOS MIEMBROS: PRUEBA VIP 24H + PASE 10 DÍAS 🔥"
     f"</div>"
-    f"<a href='{LINK_WHOP_VIP}' target='_blank' class='precio-badge-gigante'>"
-    f"💎 DESBLOQUEAR 10 DÍAS VIP POR SOLO 7.99 USD — ¡ACTIVAR AHORA!"
+    f"<a href='{LINK_WHOP_TRIAL_099}' target='_blank' class='precio-badge-gigante'>"
+    f"💎 PROBAR 24H VIP ($1.00) + 10 DÍAS POR 7.99 US$ — ¡ACTIVAR EN 1 CLIC!"
     f"</a>"
-    f"<div style='color:#ffffff; font-size:1.12rem; font-weight:700; margin-top:6px;'>"
-    f"Incluye: 4 Tarjetas VIP Diarias + Combinada Doble VIP + Soporte 24/7 | ¿Pagas con Nequi, Bancolombia, Bizum o USDT? Toca Soporte abajo 👇"
+    f"<div style='color:#e6edf3; font-size:0.98rem; font-weight:500; margin-top:4px;'>"
+    f"🎁 <b>¿Vienes de Telegram o de un Creador Aliado?</b> Entra primero a nuestro Canal FREE de Telegram para recibir tu <b>Código de Descuento Exclusivo</b> 👇"
     f"</div>"
     f"</div>",
     unsafe_allow_html=True
 )
 
+# 3 BOTONES PRINCIPALES CON EL MISMO ALTO, ANCHO Y BORDES EXACTOS
 b1, b2, b3 = st.columns(3)
 with b1:
-    st.markdown(f"<a href='{LINK_TELEGRAM_FREE}' target='_blank' class='btn-cta-bar'>📲 1. UNIRME AL TELEGRAM GRATIS (3 REGALOS DIARIOS)</a>", unsafe_allow_html=True)
+    st.markdown(f"<a href='{LINK_TELEGRAM_FREE}' target='_blank' class='btn-cta-bar'>📲 1. UNIRME AL TELEGRAM GRATIS (3 REGALOS + CUPÓN)</a>", unsafe_allow_html=True)
 with b2:
-    st.markdown(f"<a href='{LINK_WHOP_VIP}' target='_blank' class='btn-cta-bar-gold'>🔥 2. PASE 10 DÍAS VIP: 7.99 USD (MES 24.99 USD)</a>", unsafe_allow_html=True)
+    st.markdown(f"<a href='{LINK_WHOP_VIP}' target='_blank' class='btn-cta-bar-gold'>🔥 2. VER PLANES VIP EN WHOP (3 DÍAS / 10 DÍAS / MES)</a>", unsafe_allow_html=True)
 with b3:
     st.markdown(f"<a href='{LINK_SOPORTE_BOT}' target='_blank' class='btn-cta-bar'>💬 3. PAGAR CON NEQUI / BIZUM / USDT (SOPORTE 24/7)</a>", unsafe_allow_html=True)
+
+# VITRINA ANIMADA DE LAS 4 OFERTAS (LETRA FINA Y CLARA)
+o1, o2, o3, o4 = st.columns(4)
+with o1:
+    st.markdown(
+        f"<div class='oferta-card-animada notranslate' translate='no'>"
+        f"<div><span class='oferta-tag-top'>⚡ FECHA FIFA / FINDE</span>"
+        f"<div class='oferta-precio-limpio'>4.99 US$</div>"
+        f"<div class='oferta-subtexto'>Pase Único 3 Días (Sin suscripción)</div></div>"
+        f"<a href='{LINK_WHOP_PASE_3DIAS}' target='_blank' class='oferta-btn-clic'>Activar Pase 3 Días ➔</a>"
+        f"</div>",
+        unsafe_allow_html=True
+    )
+with o2:
+    st.markdown(
+        f"<div class='oferta-card-animada notranslate' translate='no' style='border-color:#ffcd00;'>"
+        f"<div><span class='oferta-tag-top'>🔥 MÁS ELEGIDO (24H TRIAL)</span>"
+        f"<div class='oferta-precio-limpio' style='color:#ffcd00;'>7.99 US$ <span style='font-size:0.80rem; font-weight:500;'>/ 10 días</span></div>"
+        f"<div class='oferta-subtexto'>1 Día de Prueba + 4 VIP Diarias + Doble</div></div>"
+        f"<a href='{LINK_WHOP_TRIAL_099}' target='_blank' class='oferta-btn-clic-oro'>Probar 24h + 10 Días ➔</a>"
+        f"</div>",
+        unsafe_allow_html=True
+    )
+with o3:
+    st.markdown(
+        f"<div class='oferta-card-animada notranslate' translate='no'>"
+        f"<div><span class='oferta-tag-top'>👑 PROMO CIERRE DE AÑO</span>"
+        f"<div class='oferta-precio-limpio'>49.99 US$ <span style='font-size:0.80rem; text-decoration:line-through; color:#8b949e;'>74.99$</span></div>"
+        f"<div class='oferta-subtexto'>Catálogo PRO Completo + Sniper 3X</div></div>"
+        f"<a href='{LINK_WHOP_PRO}' target='_blank' class='oferta-btn-clic'>Desbloquear Plan PRO ➔</a>"
+        f"</div>",
+        unsafe_allow_html=True
+    )
+with o4:
+    st.markdown(
+        f"<div class='oferta-card-animada notranslate' translate='no'>"
+        f"<div><span class='oferta-tag-top'>🇨🇴 🇪🇸 PAGO LOCAL + CUPÓN</span>"
+        f"<div class='oferta-precio-limpio'>Nequi / Bizum</div>"
+        f"<div class='oferta-subtexto'>Bancolombia, USDT y Descuento Referidos</div></div>"
+        f"<a href='{LINK_SOPORTE_BOT}' target='_blank' class='oferta-btn-clic'>Pedir Acceso en Bot ➔</a>"
+        f"</div>",
+        unsafe_allow_html=True
+    )
 
 st.divider()
 
@@ -1025,11 +1180,11 @@ def renderizar_panel_en_vivo_silencioso():
                     c_mostrar = min(1.28, float(op1.get("cuota", 1.24)))
                     filas_html += f"<div style='margin-top:8px; color:#e8fff0;'>• <span class='badge-abierta'>🟢 ABIERTA GRATIS</span> &nbsp; <b>{op1['mercado']}</b> ({op1['prob']}%) ➔ Cuota > <b>{c_mostrar:.2f}</b></div>"
                 if len(opciones_f) > 1:
-                    filas_html += f"<div style='margin-top:8px; color:#ffcd00;'>• <span class='badge-candado'>📲 2ª JUGADA GRATIS</span> &nbsp; <i>Disponible sin costo dentro de nuestro <a href='{LINK_TELEGRAM_FREE}' target='_blank' style='color:#00ff64; font-weight:700;'>Canal FREE de Telegram (Entrar aquí)</a></i></div>"
+                    filas_html += f"<div style='margin-top:8px; color:#ffcd00;'>• <span class='badge-candado'>📲 2ª JUGADA GRATIS</span> &nbsp; <i>Disponible sin costo dentro de nuestro <a href='{LINK_TELEGRAM_FREE}' target='_blank' style='color:#00ff64; font-weight:600;'>Canal FREE de Telegram (Entrar aquí)</a></i></div>"
 
             html_bloques += (
                 f"<div class='{clase_caja}'>"
-                f"<div style='font-size:1.18rem; font-weight:800; color:#ffffff;'>🏟️ {tf['partido']}{marc_f} &nbsp;<span style='float:right;'>{sem_titulo}</span></div>"
+                f"<div style='font-size:1.14rem; font-weight:700; color:#ffffff;'>🏟️ {tf['partido']}{marc_f} &nbsp;<span style='float:right;'>{sem_titulo}</span></div>"
                 f"<div class='horario-multizona'>{etiqueta_horario_f}</div>"
                 f"{filas_html}"
                 f"</div>"
@@ -1087,18 +1242,18 @@ def renderizar_panel_en_vivo_silencioso():
                 for idx_op, op in enumerate(opciones_v, start=1):
                     c_vip_mostrar = max(1.38, float(op.get("cuota", 1.48)))
                     filas_v_html += (
-                        f"<div style='margin-top:10px; color:#f5f5f5; font-size:1.02rem;'>"
+                        f"<div style='margin-top:10px; color:#f5f5f5; font-size:0.98rem;'>"
                         f"• <span class='badge-candado'>🔒 SELECCIÓN VIP #{idx_op}</span> &nbsp; "
                         f"Probabilidad Modelo: <b>{op.get('prob', 78.0)}%</b> ➔ Cuota VIP > <b>{c_vip_mostrar:.2f}</b> "
                         f"<a href='{LINK_WHOP_VIP}' target='_blank' class='btn-vip-inline'>"
-                        f"🔥 DESBLOQUEAR 10 DÍAS VIP POR 7.99 USD"
+                        f"🔥 DESBLOQUEAR VIP (DESDE 4.99 US$)"
                         f"</a>"
                         f"</div>"
                     )
 
             html_bloques += (
                 f"<div class='{clase_v}'>"
-                f"<div style='font-size:1.18rem; font-weight:800; color:#ffcd00;'>{titulo_pref} {tv['partido']}{marc_v} &nbsp;<span style='float:right;'>{sem_v}</span></div>"
+                f"<div style='font-size:1.14rem; font-weight:700; color:#ffcd00;'>{titulo_pref} {tv['partido']}{marc_v} &nbsp;<span style='float:right;'>{sem_v}</span></div>"
                 f"<div class='horario-multizona'>{etiqueta_horario_v}</div>"
                 f"{filas_v_html}"
                 f"</div>"
@@ -1109,9 +1264,9 @@ def renderizar_panel_en_vivo_silencioso():
 
         col_v1, col_v2 = st.columns(2)
         with col_v1:
-            st.markdown(f"<a href='{LINK_WHOP_VIP}' target='_blank' class='btn-cta-bar-gold'>🔥 ACTIVAR PASE VIP 10 DÍAS (7.99 USD) | MENSUAL (24.99 USD)</a>", unsafe_allow_html=True)
+            st.markdown(f"<a href='{LINK_WHOP_VIP}' target='_blank' class='btn-cta-bar-gold'>🔥 ACTIVAR PASE VIP (3 DÍAS 4.99 US$ | 10 DÍAS 7.99 US$)</a>", unsafe_allow_html=True)
         with col_v2:
-            st.markdown(f"<a href='{LINK_WHOP_PRO}' target='_blank' class='btn-cta-bar'>👑 ACCESO TOTAL PRO: TODOS LOS PARTIDOS Y LIGAS (74.99 USD)</a>", unsafe_allow_html=True)
+            st.markdown(f"<a href='{LINK_WHOP_PRO}' target='_blank' class='btn-cta-bar'>👑 PROMO PRO CIERRE DE AÑO: TODAS LAS LIGAS (49.99 US$)</a>", unsafe_allow_html=True)
 
     st.divider()
 
