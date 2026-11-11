@@ -41,6 +41,19 @@ LINK_SOPORTE_BOT = "https://t.me/QuantBetSoporte_bot"
 API_SPORTS_KEY = os.getenv("API_SPORTS_KEY", "48f391f30e76d9c84e5c94b6a4cccdb4")
 
 FECHA_CORTE_LIMPIO = "2026-10-23"
+@st.cache_resource(show_spinner=False)
+def iniciar_bot_soporte_24_7_en_nube():
+    """Mantiene @QuantBetSoporte_bot activo 24/7 en el servidor de la nube aunque el PC esté apagado."""
+    import threading
+    try:
+        from bot_soporte import ejecutar_centro_operaciones
+        hilo_bot = threading.Thread(target=ejecutar_centro_operaciones, daemon=True)
+        hilo_bot.start()
+        return True
+    except Exception:
+        return False
+
+iniciar_bot_soporte_24_7_en_nube()
 
 
 @st.cache_data(show_spinner=False)
