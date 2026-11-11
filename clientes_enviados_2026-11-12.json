@@ -21,55 +21,55 @@
     },
     {
       "tipo_tarjeta": "VIP",
-      "id_partido": "401861146",
-      "hora": "18:00",
-      "partido": "Armenia vs Cyprus",
-      "selecciones": [
-        {
-          "mercado": "Doble Oport. 1X",
-          "prob": 81.7,
-          "cuota": 1.38
-        },
-        {
-          "mercado": "Over 1.5 Goles",
-          "prob": 81.5,
-          "cuota": 1.38
-        }
-      ]
-    },
-    {
-      "tipo_tarjeta": "VIP",
-      "id_partido": "401861149",
-      "hora": "20:45",
-      "partido": "San Marino vs Belarus",
-      "selecciones": [
-        {
-          "mercado": "Doble Oport. 1X",
-          "prob": 74.1,
-          "cuota": 1.38
-        },
-        {
-          "mercado": "Córners San Marino > 4.5",
-          "prob": 73.6,
-          "cuota": 1.39
-        }
-      ]
-    },
-    {
-      "tipo_tarjeta": "VIP",
       "id_partido": "401929797",
       "hora": "20:00",
       "partido": "Cayman Islands vs Guyana",
       "selecciones": [
         {
           "mercado": "Over 1.5 Goles",
-          "prob": 81.7,
+          "prob": 83.0,
           "cuota": 1.38
         },
         {
           "mercado": "Ambos Marcan (BTTS)",
-          "prob": 71.9,
+          "prob": 73.8,
           "cuota": 1.5
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "401861146",
+      "hora": "18:00",
+      "partido": "Armenia vs Chipre",
+      "selecciones": [
+        {
+          "mercado": "Over 1.5 Goles",
+          "prob": 79.7,
+          "cuota": 1.38
+        },
+        {
+          "mercado": "Faltas Totales > 22.5",
+          "prob": 78.2,
+          "cuota": 1.42
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "401878034",
+      "hora": "23:00",
+      "partido": "Deportivo Pasto vs Atlético Junior",
+      "selecciones": [
+        {
+          "mercado": "Tarjetas > 4.5",
+          "prob": 66.5,
+          "cuota": 1.56
+        },
+        {
+          "mercado": "Córners > 8.5",
+          "prob": 66.5,
+          "cuota": 1.59
         }
       ]
     },
@@ -77,7 +77,7 @@
       "tipo_tarjeta": "FREE",
       "id_partido": "401861151",
       "hora": "20:45",
-      "partido": "Italy vs France",
+      "partido": "Italia vs Francia",
       "selecciones": [
         {
           "mercado": "Remates Puerta > 6.5",
@@ -85,8 +85,8 @@
           "cuota": 1.18
         },
         {
-          "mercado": "Gol en 2do Tiempo",
-          "prob": 86.5,
+          "mercado": "Over 1.5 Goles",
+          "prob": 82.6,
           "cuota": 1.18
         }
       ]
@@ -95,35 +95,35 @@
       "tipo_tarjeta": "FREE",
       "id_partido": "401861150",
       "hora": "20:45",
-      "partido": "England vs Croatia",
+      "partido": "Inglaterra vs Croacia",
       "selecciones": [
         {
-          "mercado": "Gol en 2do Tiempo",
-          "prob": 86.5,
+          "mercado": "Doble Oport. 1X",
+          "prob": 84.6,
           "cuota": 1.18
         },
         {
-          "mercado": "Over 1.5 Goles",
-          "prob": 83.1,
+          "mercado": "Gol en 2do Tiempo",
+          "prob": 84.6,
           "cuota": 1.18
         }
       ]
     },
     {
       "tipo_tarjeta": "FREE",
-      "id_partido": "401861148",
-      "hora": "20:45",
-      "partido": "Czechia vs Spain",
+      "id_partido": "401861145",
+      "hora": "18:00",
+      "partido": "Turquía vs Bélgica",
       "selecciones": [
         {
-          "mercado": "Over 1.5 Goles",
-          "prob": 81.3,
+          "mercado": "Total Menos de 3.5 (Under)",
+          "prob": 82.4,
           "cuota": 1.18
         },
         {
-          "mercado": "Gol en 2do Tiempo",
-          "prob": 85.3,
-          "cuota": 1.18
+          "mercado": "Doble Oport. X2",
+          "prob": 77.2,
+          "cuota": 1.23
         }
       ]
     }
