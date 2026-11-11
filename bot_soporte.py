@@ -265,7 +265,7 @@ def menu_principal():
         "inline_keyboard": [
             [{"text": "🎁 Prueba 24h ($1) + Pase 10 Días ($7.99) | Pase 3 Días ($4.99)", "callback_data": "info_planes"}],
             [{"text": "🇨🇴 🇪🇸 Pagar por Nequi / Bancolombia / Bizum / USDT", "callback_data": "pago_local"}],
-            [{"text": "🎟️ Tengo un Código de Descuento (Ej: DARMANI)", "callback_data": "codigo_descuento"}],
+            [{"text": "🎟️ Tengo un Código de Descuento (Ej: DARMANY)", "callback_data": "codigo_descuento"}],
             [{"text": "✅ Ya realicé el pago / Enviar Comprobante", "callback_data": "ya_pague"}],
             [{"text": "💬 Hablar con un Analista de Soporte", "callback_data": "hablar_humano"}],
         ]
@@ -280,8 +280,8 @@ def verificar_seguimientos_10_minutos():
             msg_auto = (
                 f"👋 ¡Hola de nuevo, <b>{nombre}</b>! 😊\n\n"
                 f"Vi que estuviste revisando nuestras opciones en <b>QuantBet22</b>. "
-                f"Recuerda que puedes probar <b>24 horas VIP por solo 1.00 USD</b> (o el Pase de 3 Días por 4.99 USD), "
-                f"y si tienes un código de referido (como <b>DARMANI</b>) recibes un descuento especial en tu primer acceso.\n\n"
+                f"Recuerda que puedes probar <b>24 horas VIP por solo 0.00 USD</b> (o el Pase de 3 Días por 4.99 USD), "
+                f"y si tienes un código de referido (como <b>DARMANY</b>) recibes un descuento especial en tu primer acceso.\n\n"
                 f"🤝 <i>Escríbeme por aquí cualquier duda que tengas y te ayudo enseguida.</i>"
             )
             enviar_mensaje_soporte(cid, msg_auto, reply_markup=menu_principal())
@@ -336,7 +336,7 @@ def ejecutar_centro_operaciones():
                             "━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n"
                             "⚡ <b>1. PASE 3 DÍAS FECHA FIFA / FIN DE SEMANA (4.99 USD)</b>\n"
                             "• Pago único sin suscripción recurrente (72 horas de acceso VIP total).\n\n"
-                            "🔥 <b>2. PRUEBA 24H (1.00 USD) + PASE 10 DÍAS VIP (7.99 USD)</b>\n"
+                            "🔥 <b>2. PRUEBA 24H (0.00 USD) + PASE 10 DÍAS VIP (7.99 USD)</b>\n"
                             "• 4 Tarjetas VIP diarias + Combinada Doble VIP + Soporte 24/7.\n"
                             f"👉 <a href='{LINK_PASARELA_VIP}'><b>HAZ CLIC AQUÍ PARA ELEGIR TU PLAN VIP EN WHOP</b></a>\n\n"
                             "👑 <b>3. PROMO PRO CIERRE DE AÑO (49.99 USD en vez de 74.99 USD)</b>\n"
@@ -364,7 +364,7 @@ def ejecutar_centro_operaciones():
                         txt = (
                             "🎟️ <b>CÓDIGO DE DESCUENTO EN TU PRIMERA COMPRA</b>\n"
                             "━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n"
-                            "• Si pagas con tarjeta en <b>Whop</b>, solo introduce tu código (por ejemplo: <b>DARMANI</b>) en la casilla <i>'Add promo code'</i> antes de pagar y se te descontará automáticamente.\n\n"
+                            "• Si pagas con tarjeta en <b>Whop</b>, solo introduce tu código (por ejemplo: <b>DARMANY</b>) en la casilla <i>'Add promo code'</i> antes de pagar y se te descontará automáticamente.\n\n"
                             "• Si vas a pagar por <b>Nequi, Bancolombia, Bizum o USDT</b>, escribe aquí abajo el código del creador de parte de quien vienes para aplicarte el descuento en tu primer acceso:"
                         )
                         enviar_mensaje_soporte(chat_id, txt)
