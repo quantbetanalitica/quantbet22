@@ -464,42 +464,63 @@ def obtener_estado_minuto_en_vivo(mapa_ft, dia_str, hora_ini_str, id_partido, du
     return False, f"⏳ POR JUGAR ({hora_ini_str}h ESP)"
 
 
-def evaluar_mercado_real(merc, gh, ga, g_ht):
+def evaluar_mercado_real(merc, gh, ga, g_ht, duelo_str=""):
     tot = gh + ga
     g_2t = max(0, tot - g_ht)
-    m = str(merc)
-    if "Over 1.5" in m:
+    m = str(merc).strip()
+    m_low = m.lower()
+    m_norm = "".join(c for c in unicodedata.normalize("NFD", m_low) if unicodedata.category(c) != "Mn")
+    duelo_norm = "".join(c for c in unicodedata.normalize("NFD", str(duelo_str).lower()) if unicodedata.category(c) != "Mn")
+    loc_n, vis_n = (duelo_norm.split(" vs ") + ["", ""])[:2]
+
+    if "over 1.5" in m_low or "mas de 1.5" in m_norm:
         return tot >= 2
-    elif "Under 2.5" in m or "Menos de 2.5" in m:
+    elif "under 2.5" in m_low or "menos de 2.5" in m_low:
         return tot <= 2
-    elif "Under 3.5" in m or "Menos de 3.5" in m:
+    elif "under 3.5" in m_low or "menos de 3.5" in m_low:
         return tot <= 3
-    elif "Over 2.5" in m:
+    elif "over 2.5" in m_low:
         return tot >= 3
-    elif "Asiático > 2.25" in m:
-        return (tot >= 2) or (abs(gh - ga) == 0)
-    elif "Asiático > 2.75" in m:
+    elif "over 3.5" in m_low:
+        return tot >= 4
+    elif "asiatico > 2.25" in m_norm:
+        return tot >= 2
+    elif "asiatico > 2.75" in m_norm:
         return tot >= 3
-    elif "BTTS" in m or "Ambos Marcan" in m:
+    elif "btts" in m_low or "ambos marcan" in m_low:
         return gh > 0 and ga > 0
-    elif "Combo 1X + O1.5" in m:
+    elif "combo 1x + o1.5" in m_low:
         return gh >= ga and tot >= 2
-    elif "Combo X2 + O1.5" in m:
+    elif "combo x2 + o1.5" in m_low:
         return ga >= gh and tot >= 2
-    elif "1X" in m:
+    elif "1x" in m_low:
         return gh >= ga
-    elif "X2" in m:
+    elif "x2" in m_low:
         return ga >= gh
-    elif "Gol en 1T" in m:
+    elif "gol en 1t" in m_low or "gol 1t" in m_low:
         return g_ht >= 1
-    elif "Gol en 2" in m:
+    elif "gol en 2" in m_low or "gol 2t" in m_low:
         return g_2t >= 1
-    elif "Tarjetas" in m or "Faltas" in m:
-        return (abs(gh - ga) <= 1) or (tot >= 1)
-    elif "Córners" in m:
+    elif "goles " in m_low and "> 1.5" in m_low:
+        if loc_n and loc_n[:5] in m_norm:
+            return gh >= 2
+        elif vis_n and vis_n[:5] in m_norm:
+            return ga >= 2
+        return False
+    elif "vict." in m_low or "victoria" in m_low:
+        if "local" in m_low or (loc_n and loc_n[:5] in m_norm):
+            return gh > ga
+        elif "visita" in m_low or (vis_n and vis_n[:5] in m_norm):
+            return ga > gh
+        return False
+    elif "empate" in m_low:
+        return gh == ga
+    elif "tarjetas" in m_low or "faltas" in m_low:
+        return (abs(gh - ga) <= 1) or (tot >= 2)
+    elif "corners" in m_norm:
         return (tot >= 1) or (abs(gh - ga) == 0)
-    elif "Remates" in m:
-        return (tot >= 1) or (abs(gh - ga) <= 1)
+    elif "remates" in m_low:
+        return tot >= 2
     return tot >= 2
 
 
@@ -826,7 +847,7 @@ def obtener_resumen_auditoria():
                     for sel in sels_2:
                         m_etq = f"[{tipo_t}] {sel.get('mercado', '')}"
                         cuo_s = float(sel.get("cuota", 1.42 if tipo_t == "VIP" else 1.25))
-                        gano_l = evaluar_mercado_real(m_etq, gh_l, ga_l, ght_l)
+                        gano_l = evaluar_mercado_real(m_etq, gh_l, ga_l, ght_l, part_tc)
                         filas_clientes.append({
                             "Fecha_Registro": f"{f_dia} {h_fin_tc}:00",
                             "ID_Partido": id_tc,
@@ -860,7 +881,6 @@ def obtener_resumen_auditoria():
         tabla["Dia"] = tabla["Fecha_Registro"].astype(str).str[:10]
         tabla["Hora_Reg"] = tabla["Fecha_Registro"].astype(str).str[11:16]
         tabla = tabla[tabla["Dia"] >= FECHA_CORTE_LIMPIO]
-        tabla = tabla[~(tabla["Mercado"].astype(str).str.contains("Menos de 2.5", case=False, na=False) & tabla["Mercado"].astype(str).str.contains("VIP", case=False, na=False))]
 
         indices_no_finalizados = []
         for idx, r in tabla.iterrows():
@@ -889,7 +909,7 @@ def obtener_resumen_auditoria():
 
             if info_m:
                 gh, ga, ght = info_m
-                gano_real = evaluar_mercado_real(merc_k, gh, ga, ght)
+                gano_real = evaluar_mercado_real(merc_k, gh, ga, ght, part_k)
                 tabla.at[idx, "Estado"] = "Ganada" if gano_real else "Perdida"
                 tabla.at[idx, "CLV_Status"] = f"FT {gh}-{ga}"
                 continue
@@ -918,7 +938,7 @@ def obtener_resumen_auditoria():
         if finalizadas.empty:
             return 94.2, 1440, 1529, 36.6, pd.DataFrame()
 
-        finalizadas = finalizadas.groupby(["Dia", "Partido_Norm"], as_index=False).tail(6)
+        finalizadas = finalizadas.groupby(["Dia", "Partido_Norm"], as_index=False).tail(4)
         aciertos = len(finalizadas[finalizadas["Estado"].isin(["Ganada", "Mitad Devuelta"])])
         total_eval = len(finalizadas)
         efectividad = round((aciertos / max(1, total_eval)) * 100.0, 1)
@@ -953,7 +973,7 @@ def evaluar_pick_tarjeta(mapa_ft, df_hist, dia_str, id_partido, duelo_str, pick_
     info_m = buscar_resultado_inteligente(mapa_ft, id_partido, duelo_str, dia_str)
     if info_m:
         gh, ga, ght = info_m
-        gano = evaluar_mercado_real(pick_str, gh, ga, ght)
+        gano = evaluar_mercado_real(pick_str, gh, ga, ght, duelo_str)
         return f" ({gh}-{ga})", gano
 
     if dt_fin_est > ahora_esp:
@@ -1044,7 +1064,7 @@ st.markdown(
     f"💎 PROBAR 24H VIP (0.00 USD) + 10 DÍAS POR 7.99 USD — ¡ACTIVAR EN 1 CLIC!"
     f"</a>"
     f"<div style='color:#e6edf3; font-size:0.98rem; font-weight:500; margin-top:4px;'>"
-    f"🎁 <b>¿Tienes código de un Creador Aliado (ej. DARMANY) o vienes de Telegram?</b> Obtén <b>25% de descuento</b> al pagar o entra al Canal FREE 👇"
+    f"🎁 <b>¿Tienes un Código Promocional de Creador Aliado o vienes de Telegram?</b> Aplícalo al activar tu pase o entra a nuestro Canal FREE 👇"
     f"</div>"
     f"</div>",
     unsafe_allow_html=True
@@ -1096,7 +1116,7 @@ with o4:
         f"<div class='oferta-card-animada notranslate' translate='no'>"
         f"<div><span class='oferta-tag-top'>🇨🇴 🇪🇸 PAGO LOCAL + CUPÓN</span>"
         f"<div class='oferta-precio-limpio'>Nequi / Bizum</div>"
-        f"<div class='oferta-subtexto'>Bancolombia, USDT y Código DARMANY (-25%)</div></div>"
+        f"<div class='oferta-subtexto'>Bancolombia, USDT y Códigos de Descuento</div></div>"
         f"<a href='{LINK_SOPORTE_BOT}' target='_blank' class='oferta-btn-clic'>Pedir Acceso en Bot ➔</a>"
         f"</div>",
         unsafe_allow_html=True
