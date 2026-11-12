@@ -265,7 +265,7 @@ def menu_principal():
         "inline_keyboard": [
             [{"text": "🎁 Prueba 24h ($1) + Pase 10 Días ($7.99) | Pase 3 Días ($4.99)", "callback_data": "info_planes"}],
             [{"text": "🇨🇴 🇪🇸 Pagar por Nequi / Bancolombia / Bizum / USDT", "callback_data": "pago_local"}],
-            [{"text": "🎟️ Tengo un Código de Descuento (Ej: DARMANY)", "callback_data": "codigo_descuento"}],
+            [{"text": "🎟️ Tengo un Código Promocional de Descuento", "callback_data": "codigo_descuento"}],
             [{"text": "✅ Ya realicé el pago / Enviar Comprobante", "callback_data": "ya_pague"}],
             [{"text": "💬 Hablar con un Analista de Soporte", "callback_data": "hablar_humano"}],
         ]
