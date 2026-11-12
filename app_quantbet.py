@@ -817,10 +817,8 @@ def obtener_resumen_auditoria():
                         mapa_dt_fin[id_tc] = dt_fin_tc
 
                     info_ft = buscar_resultado_inteligente(mapa_ft, id_tc, part_tc, f_dia)
-                    if not info_ft and dt_fin_tc > ahora_esp:
-                        continue
                     if not info_ft:
-                        info_ft = (2, 1, 1)
+                     continue
 
                     gh_l, ga_l, ght_l = info_ft
                     tipo_t = str(tc.get("tipo_tarjeta", "VIP")).strip()
@@ -858,7 +856,7 @@ def obtener_resumen_auditoria():
             lambda s: any(f in s for f in PARTIDOS_EXCLUIDOS)
         )
         tabla = tabla[~mask_excl].copy()
-
+        tabla = tabla[~tabla["Mercado"].astype(str).str.contains("DESCARTE", case=False, na=False)].copy()
         tabla["Dia"] = tabla["Fecha_Registro"].astype(str).str[:10]
         tabla["Hora_Reg"] = tabla["Fecha_Registro"].astype(str).str[11:16]
         tabla = tabla[tabla["Dia"] >= FECHA_CORTE_LIMPIO]
@@ -971,8 +969,7 @@ def evaluar_pick_tarjeta(mapa_ft, df_hist, dia_str, id_partido, duelo_str, pick_
                 gano = evaluar_mercado_real(pick_str, gh, ga, max(1, (gh + ga) // 2))
                 return f" ({gh}-{ga})", gano
 
-    gano_def = evaluar_mercado_real(pick_str, 2, 1, 1)
-    return " (FT)", gano_def
+    return "", None
 
 
 # ==============================================================================
