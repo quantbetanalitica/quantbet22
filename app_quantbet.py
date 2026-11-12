@@ -1382,10 +1382,14 @@ def renderizar_panel_en_vivo_silencioso():
         df_cajon["Semáforo"] = df_cajon["Estado"].apply(lambda x: "🟢 ✅ GANADA" if str(x) in ["Ganada", "Mitad Devuelta"] else "🔴 ❌ PERDIDA")
         df_cajon["Marcador"] = df_cajon["CLV_Status"].astype(str).str.replace("AUDITADA ", "", regex=False)
         df_cajon["Cuota"] = df_cajon["Cuota_Compra"]
-        df_cajon = df_cajon.sort_values(by=["Orden_Real", "Partido", "Mercado"], ascending=[False, True, True])
-
         df_cajon["Clave_Unica"] = df_cajon["Partido"].astype(str).str.lower().str.strip()
+        mapa_orden_p = df_cajon.groupby("Clave_Unica")["Orden_Real"].max().to_dict()
+        mapa_etq_p = df_cajon.sort_values("Orden_Real", ascending=False).groupby("Clave_Unica")["Fecha y Hora Fin"].first().to_dict()
+        df_cajon["Orden_Real"] = df_cajon["Clave_Unica"].map(mapa_orden_p)
+        df_cajon["Fecha y Hora Fin"] = df_cajon["Clave_Unica"].map(mapa_etq_p)
+
         df_cajon = df_cajon.drop_duplicates(subset=["Clave_Unica", "Mercado"], keep="first")
+        df_cajon = df_cajon.sort_values(by=["Orden_Real", "Clave_Unica", "Mercado"], ascending=[False, True, True])
 
         vista_cajon = df_cajon[["Semáforo", "Fecha y Hora Fin", "Partido", "Mercado", "Cuota", "Marcador"]]
         st.dataframe(vista_cajon, hide_index=True, height=450)
