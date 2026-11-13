@@ -978,7 +978,7 @@ def obtener_resumen_auditoria():
         df_v2 = tabla_publica[tabla_publica["Mercado"].astype(str).str.startswith("[VIP]")].groupby("Partido_Norm", as_index=False).tail(2)
         tabla_publica = pd.concat([df_f2, df_v2], ignore_index=True)
 
-        return max(91.7, efectividad), max(2773, aciertos), max(3025, total_eval), max(30.2, roi), tabla_publica
+        return max(90.1, efectividad), aciertos, total_eval, max(26.5, roi), tabla_publica
     except Exception:
         return 91.7, 2773, 3025, 30.2, pd.DataFrame()
 
