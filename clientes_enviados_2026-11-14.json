@@ -1,0 +1,131 @@
+{
+  "fecha": "2026-11-14",
+  "tarjetas_clientes": [
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "401861168",
+      "hora": "20:45",
+      "partido": "Romania vs Polonia",
+      "selecciones": [
+        {
+          "mercado": "Remates Puerta > 6.5",
+          "prob": 74.2,
+          "cuota": 1.42
+        },
+        {
+          "mercado": "Córners Polonia > 4.5",
+          "prob": 71.7,
+          "cuota": 1.42
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "401929772",
+      "hora": "02:00",
+      "partido": "Jamaica vs México",
+      "selecciones": [
+        {
+          "mercado": "Remates Puerta > 6.5",
+          "prob": 73.5,
+          "cuota": 1.42
+        },
+        {
+          "mercado": "Over 1.5 Goles",
+          "prob": 77.9,
+          "cuota": 1.38
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "401861163",
+      "hora": "15:00",
+      "partido": "Kosovo vs Israel",
+      "selecciones": [
+        {
+          "mercado": "Doble Oport. X2",
+          "prob": 74.0,
+          "cuota": 1.38
+        },
+        {
+          "mercado": "Faltas Totales > 22.5",
+          "prob": 66.5,
+          "cuota": 1.61
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "401841175",
+      "hora": "00:30",
+      "partido": "Chapecoense vs Vasco da Gama",
+      "selecciones": [
+        {
+          "mercado": "Doble Oport. X2",
+          "prob": 81.4,
+          "cuota": 1.38
+        },
+        {
+          "mercado": "Over 1.5 Goles",
+          "prob": 80.0,
+          "cuota": 1.38
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "FREE",
+      "id_partido": "401883134",
+      "hora": "16:15",
+      "partido": "Real Sociedad II vs Sporting Gijón",
+      "selecciones": [
+        {
+          "mercado": "Faltas Totales > 22.5",
+          "prob": 85.8,
+          "cuota": 1.18
+        },
+        {
+          "mercado": "Doble Oport. X2",
+          "prob": 76.1,
+          "cuota": 1.25
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "FREE",
+      "id_partido": "401916337",
+      "hora": "11:15",
+      "partido": "Japón vs Brasil",
+      "selecciones": [
+        {
+          "mercado": "Doble Oport. X2",
+          "prob": 75.2,
+          "cuota": 1.26
+        },
+        {
+          "mercado": "Gol en 1T",
+          "prob": 71.7,
+          "cuota": 1.28
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "FREE",
+      "id_partido": "401861167",
+      "hora": "20:45",
+      "partido": "Portugal vs Dinamarca",
+      "selecciones": [
+        {
+          "mercado": "Doble Oport. 1X",
+          "prob": 81.9,
+          "cuota": 1.18
+        },
+        {
+          "mercado": "Faltas Totales > 22.5",
+          "prob": 77.0,
+          "cuota": 1.23
+        }
+      ]
+    }
+  ]
+}
