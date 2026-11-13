@@ -858,7 +858,8 @@ def obtener_resumen_auditoria():
                     info_ft = buscar_resultado_inteligente(mapa_ft, id_tc, part_tc, f_dia)
                     if not info_ft:
                         continue
-
+                    if not tabla.empty and part_tc.lower() in set(tabla["Partido"].astype(str).str.lower().str.strip()):
+                        continue
                     gh_l, ga_l, ght_l = info_ft
                     tipo_t = str(tc.get("tipo_tarjeta", "VIP")).strip()
                     ya_usados = usados_por_partido.setdefault(part_tc.lower(), set())
@@ -972,9 +973,10 @@ def obtener_resumen_auditoria():
 
         # 2. Tabla inferior limpia: oculta [DESCARTES] y asegura 4 mercados únicos (2 FREE + 2 VIP) por partido
         tabla_publica = finalizadas[~finalizadas["Mercado"].astype(str).str.contains("DESCARTE", case=False, na=False)].copy()
-        tabla_publica["Mercado_Sin_Tag"] = tabla_publica["Mercado"].astype(str).str.replace(r"^\[.*?\]\s*", "", regex=True).str.lower().str.strip()
-        tabla_publica = tabla_publica.drop_duplicates(subset=["Partido_Norm", "Mercado_Sin_Tag"], keep="first")
-        tabla_publica = tabla_publica.groupby(["Dia", "Partido_Norm"], as_index=False).tail(4)
+        tabla_publica = tabla_publica.drop_duplicates(subset=["Partido_Norm", "Mercado"], keep="last")
+        df_f2 = tabla_publica[tabla_publica["Mercado"].astype(str).str.startswith("[FREE]")].groupby("Partido_Norm", as_index=False).tail(2)
+        df_v2 = tabla_publica[tabla_publica["Mercado"].astype(str).str.startswith("[VIP]")].groupby("Partido_Norm", as_index=False).tail(2)
+        tabla_publica = pd.concat([df_f2, df_v2], ignore_index=True)
 
         return max(91.7, efectividad), max(2773, aciertos), max(3025, total_eval), max(30.2, roi), tabla_publica
     except Exception:
