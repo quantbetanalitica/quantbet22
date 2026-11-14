@@ -743,19 +743,8 @@ def cargar_mapa_resultados_caches():
 
                         ls_h = c_h.get("linescores") or []
                         ls_a = c_a.get("linescores") or []
-                        detalles_g = [d for d in (comp.get("details") or []) if d.get("scoringPlay")]
                         if ls_h and ls_a:
                             ght_e = int(float(ls_h[0].get("value") or 0)) + int(float(ls_a[0].get("value") or 0))
-                        elif detalles_g:
-                            ght_e = sum(
-                                1 for dg in detalles_g
-                                if ("45+" in str((dg.get("clock") or {}).get("displayValue") or ""))
-                                or (
-                                    re.findall(r"\d+", str((dg.get("clock") or {}).get("displayValue") or ""))
-                                    and int(re.findall(r"\d+", str((dg.get("clock") or {}).get("displayValue") or ""))[0]) <= 45
-                                    and "90+" not in str((dg.get("clock") or {}).get("displayValue") or "")
-                                )
-                            )
                         else:
                             ght_e = (gh_e + ga_e) // 2
                         hallados_ft.append((eid, f_dia_e, loc_e, vis_e, (gh_e, ga_e, ght_e), h_fin_e, dt_f))
