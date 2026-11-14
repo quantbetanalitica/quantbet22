@@ -932,7 +932,9 @@ def obtener_resumen_auditoria():
                     tabla.at[idx, "Cuota_Compra"] = "1.26"
             except Exception:
                 pass
-
+            if str(r.get("Estado", "")).strip() in ["Ganada", "Perdida", "Mitad Devuelta"] and "FT" in clv_txt:
+                tabla.at[idx, "CLV_Status"] = clv_txt.replace("AUDITADA ", "")
+                continue
             info_m = buscar_resultado_inteligente(mapa_ft, id_k, part_k, dia_r)
             if not info_m:
                 m_sc = re.search(r"(\d+)-(\d+)", clv_txt)
@@ -984,9 +986,9 @@ def obtener_resumen_auditoria():
 
         # 2. Tabla inferior limpia: oculta [DESCARTES] y asegura 4 mercados únicos (2 FREE + 2 VIP) por partido
         tabla_publica = finalizadas[~finalizadas["Mercado"].astype(str).str.contains("DESCARTE", case=False, na=False)].copy()
-        tabla_publica = tabla_publica.drop_duplicates(subset=["Partido_Norm", "Mercado"], keep="last")
-        df_f2 = tabla_publica[tabla_publica["Mercado"].astype(str).str.startswith("[FREE]")].groupby("Partido_Norm", as_index=False).tail(2)
-        df_v2 = tabla_publica[tabla_publica["Mercado"].astype(str).str.startswith("[VIP]")].groupby("Partido_Norm", as_index=False).tail(2)
+        tabla_publica = tabla_publica.drop_duplicates(subset=["Partido_Norm", "Mercado"], keep="first")
+        df_f2 = tabla_publica[tabla_publica["Mercado"].astype(str).str.startswith("[FREE]")].groupby("Partido_Norm", as_index=False).head(2)
+        df_v2 = tabla_publica[tabla_publica["Mercado"].astype(str).str.startswith("[VIP]")].groupby("Partido_Norm", as_index=False).head(2)
         tabla_publica = pd.concat([df_f2, df_v2], ignore_index=True)
 
         return max(90.1, efectividad), aciertos, total_eval, max(26.5, roi), tabla_publica
