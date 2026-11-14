@@ -1,0 +1,131 @@
+{
+  "fecha": "2026-11-15",
+  "tarjetas_clientes": [
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "401861178",
+      "hora": "20:45",
+      "partido": "Croacia vs República Checa",
+      "selecciones": [
+        {
+          "mercado": "Córners Croacia > 4.5",
+          "prob": 66.5,
+          "cuota": 1.54
+        },
+        {
+          "mercado": "Tarjetas > 4.5",
+          "prob": 66.5,
+          "cuota": 1.53
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "401861171",
+      "hora": "15:00",
+      "partido": "Letonia vs Armenia",
+      "selecciones": [
+        {
+          "mercado": "Doble Oport. X2",
+          "prob": 78.7,
+          "cuota": 1.38
+        },
+        {
+          "mercado": "Remates Puerta > 6.5",
+          "prob": 75.7,
+          "cuota": 1.42
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "401861172",
+      "hora": "15:00",
+      "partido": "Chipre vs Montenegro",
+      "selecciones": [
+        {
+          "mercado": "Over 1.5 Goles",
+          "prob": 80.6,
+          "cuota": 1.38
+        },
+        {
+          "mercado": "Córners Montenegro > 4.5",
+          "prob": 79.2,
+          "cuota": 1.38
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "401861173",
+      "hora": "18:00",
+      "partido": "Belarus vs Albania",
+      "selecciones": [
+        {
+          "mercado": "Faltas Totales > 22.5",
+          "prob": 66.5,
+          "cuota": 1.62
+        },
+        {
+          "mercado": "Doble Oport. X2",
+          "prob": 68.8,
+          "cuota": 1.48
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "FREE",
+      "id_partido": "401861176",
+      "hora": "20:45",
+      "partido": "Bélgica vs Italia",
+      "selecciones": [
+        {
+          "mercado": "Gol en 1T",
+          "prob": 84.0,
+          "cuota": 1.18
+        },
+        {
+          "mercado": "Over 1.5 Goles",
+          "prob": 81.7,
+          "cuota": 1.18
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "FREE",
+      "id_partido": "401861175",
+      "hora": "20:45",
+      "partido": "España vs Inglaterra",
+      "selecciones": [
+        {
+          "mercado": "Gol en 2do Tiempo",
+          "prob": 81.5,
+          "cuota": 1.18
+        },
+        {
+          "mercado": "Over 1.5 Goles",
+          "prob": 77.4,
+          "cuota": 1.23
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "FREE",
+      "id_partido": "401861177",
+      "hora": "20:45",
+      "partido": "Francia vs Turquía",
+      "selecciones": [
+        {
+          "mercado": "Doble Oport. 1X",
+          "prob": 78.6,
+          "cuota": 1.18
+        },
+        {
+          "mercado": "Faltas Totales > 22.5",
+          "prob": 78.4,
+          "cuota": 1.18
+        }
+      ]
+    }
+  ]
+}
