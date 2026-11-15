@@ -28,6 +28,18 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded",
 )
+@st.cache_resource
+def mantener_bot_soporte_24_7_en_nube():
+    import threading
+    try:
+        from bot_soporte import ejecutar_centro_operaciones
+        hilo_bot = threading.Thread(target=ejecutar_centro_operaciones, daemon=True)
+        hilo_bot.start()
+        return True
+    except Exception:
+        return False
+
+mantener_bot_soporte_24_7_en_nube()
 
 # ==============================================================================
 # ENLACES OFICIALES DE CONVERSIÓN Y PAGO
