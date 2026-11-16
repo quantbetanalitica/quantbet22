@@ -1,0 +1,131 @@
+{
+  "fecha": "2026-11-17",
+  "tarjetas_clientes": [
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "401861189",
+      "hora": "20:45",
+      "partido": "Gales vs Portugal (Uefa Nations League)",
+      "selecciones": [
+        {
+          "mercado": "Remates Puerta > 6.5",
+          "prob": 78.5,
+          "cuota": 1.42
+        },
+        {
+          "mercado": "Faltas Totales > 22.5",
+          "prob": 66.5,
+          "cuota": 1.73
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "401930895",
+      "hora": "00:00",
+      "partido": "Argentina vs Costa Rica (Amistoso Internacional)",
+      "selecciones": [
+        {
+          "mercado": "Córners Argentina > 4.5",
+          "prob": 71.5,
+          "cuota": 1.43
+        },
+        {
+          "mercado": "Gol en 2do Tiempo",
+          "prob": 76.5,
+          "cuota": 1.42
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "401932215",
+      "hora": "00:30",
+      "partido": "Uruguay vs Dominican Republic (Amistoso Internacional)",
+      "selecciones": [
+        {
+          "mercado": "Córners > 8.5",
+          "prob": 66.5,
+          "cuota": 1.54
+        },
+        {
+          "mercado": "Gol en 2do Tiempo",
+          "prob": 76.5,
+          "cuota": 1.42
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "401933121",
+      "hora": "02:30",
+      "partido": "América de Cali vs Internacional de Bogotá (Colombia (Copa Betplay))",
+      "selecciones": [
+        {
+          "mercado": "Tarjetas > 5.5",
+          "prob": 76.8,
+          "cuota": 1.38
+        },
+        {
+          "mercado": "Remates Puerta > 6.5",
+          "prob": 68.9,
+          "cuota": 1.48
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "FREE",
+      "id_partido": "401921304",
+      "hora": "00:00",
+      "partido": "Chile vs Colombia (Amistoso Internacional)",
+      "selecciones": [
+        {
+          "mercado": "Doble Oport. X2",
+          "prob": 84.5,
+          "cuota": 1.18
+        },
+        {
+          "mercado": "Over 1.5 Goles",
+          "prob": 78.5,
+          "cuota": 1.24
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "FREE",
+      "id_partido": "401916335",
+      "hora": "11:00",
+      "partido": "Singapore vs Brasil (Amistoso Internacional)",
+      "selecciones": [
+        {
+          "mercado": "Gol en 1T",
+          "prob": 82.4,
+          "cuota": 1.18
+        },
+        {
+          "mercado": "Over 1.5 Goles",
+          "prob": 80.0,
+          "cuota": 1.18
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "FREE",
+      "id_partido": "401933183",
+      "hora": "00:30",
+      "partido": "Atlético Nacional vs Once Caldas (Colombia (Copa Betplay))",
+      "selecciones": [
+        {
+          "mercado": "Faltas Totales > 22.5",
+          "prob": 81.2,
+          "cuota": 1.18
+        },
+        {
+          "mercado": "Tarjetas > 5.5",
+          "prob": 80.8,
+          "cuota": 1.18
+        }
+      ]
+    }
+  ]
+}
