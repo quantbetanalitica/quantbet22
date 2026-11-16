@@ -383,6 +383,8 @@ st.markdown(f"""
         font-weight: 500;
         color: #e8fff0;
     }}
+[data-testid=stToolbarActions], [data-testid=stHeaderActionElements], .stAppDeployButton, [data-testid=stToolbar] a, header[data-testid=stHeader], #MainMenu, footer { display: none !important; visibility: hidden !important; }
+header, [data-testid=stHeader], [data-testid=stToolbar], [data-testid=stToolbarActions], [data-testid=stHeaderActionElements], .stAppDeployButton, #MainMenu, footer { display: none !important; visibility: hidden !important; height: 0px !important; }
 </style>
 """, unsafe_allow_html=True)
 
