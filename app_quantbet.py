@@ -20,6 +20,19 @@ if __name__ == "__main__":
 
 import pandas as pd
 import requests
+import streamlit as _st_w
+_orig_df_w = _st_w.dataframe
+def _df_limpio_w(data, *a, **kw):
+    if isinstance(data, pd.DataFrame) and "Partido" in data.columns:
+        d = data.copy()
+        mp = dict([(str(p).split(" (")[0].strip().lower(), str(p)) for p in d["Partido"] if "(" in str(p)])
+        d["Partido"] = d["Partido"].apply(lambda x: mp.get(str(x).strip().lower(), str(x)) if "(" not in str(x) else str(x))
+        sub = [c for c in ["Partido", "Mercado"] if c in d.columns]
+        d = d.drop_duplicates(subset=sub, keep="last")
+        return _orig_df_w(d, *a, **kw)
+    return _orig_df_w(data, *a, **kw)
+_st_w.dataframe = _df_limpio_w
+
 import streamlit as st
 
 st.set_page_config(
@@ -383,7 +396,7 @@ st.markdown(f"""
         font-weight: 500;
         color: #e8fff0;
     }}
-[data-testid=stToolbarActions], [data-testid=stHeaderActionElements], .stAppDeployButton, [data-testid=stToolbar] a, #MainMenu, footer {{ display: none !important; visibility: hidden !important; }}
+<style>[data-testid=stToolbarActions], [data-testid=stHeaderActionElements], .stAppDeployButton, [data-testid=stToolbar] a, #MainMenu, footer {{ display: none !important; visibility: hidden !important; }}
 </style>
 """, unsafe_allow_html=True)
 
