@@ -111,18 +111,18 @@
     },
     {
       "tipo_tarjeta": "FREE",
-      "id_partido": "401933183",
-      "hora": "00:30",
-      "partido": "Atlético Nacional vs Once Caldas (Colombia (Copa Betplay))",
+      "id_partido": "401861190",
+      "hora": "20:45",
+      "partido": "Montenegro vs Turquía (UEFA Nations League)",
       "selecciones": [
         {
-          "mercado": "Faltas Totales > 22.5",
-          "prob": 81.2,
+          "mercado": "Doble Oport. X2",
+          "prob": 84.2,
           "cuota": 1.18
         },
         {
-          "mercado": "Tarjetas > 5.5",
-          "prob": 80.8,
+          "mercado": "Over 1.5 Goles",
+          "prob": 81.5,
           "cuota": 1.18
         }
       ]
