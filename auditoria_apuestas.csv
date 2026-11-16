@@ -5,16 +5,16 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-10-19 11:38:34,1493187,Deportivo Riestra vs Union Santa Fe,[FREE] Faltas Totales > 21.5,1.14,PENDIENTE_CLV,82.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,0.0,AUDITADA FT 1-1
 2026-10-19 11:38:36,1549827,Deportivo Pasto vs Alianza Valledupar,[VIP] Tarjetas > 3.5,1.42,PENDIENTE_CLV,83.5,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,0.0,AUDITADA FT 0-1
 2026-10-19 11:38:36,1549827,Deportivo Pasto vs Alianza Valledupar,[VIP] Total Menos de 2.5 (Under),1.48,PENDIENTE_CLV,83.5,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,0.0,AUDITADA FT 0-1
-2026-10-19 11:38:41,1549827,Deportivo Pasto vs Alianza Valledupar,[FREE] Remates Puerta > 5.5,1.23,PENDIENTE_CLV,76.9,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 0-1
+2026-10-19 11:38:41,1549827,Deportivo Pasto vs Alianza Valledupar,[FREE] Remates Puerta > 5.5,1.23,PENDIENTE_CLV,76.9,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,615.0,AUDITADA FT 0-1
 2026-10-19 11:38:41,1549827,Deportivo Pasto vs Alianza Valledupar,[FREE] Gol en 2do Tiempo,1.26,PENDIENTE_CLV,70.8,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 0-1
-2026-10-20 11:20:45,1603054,Al Diriyah vs Al Riyadh,[VIP] Remates Puerta > 6.5,1.32,PENDIENTE_CLV,88.7,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Perdida,0.0,AUDITADA FT 1-0
+2026-10-20 11:20:45,1603054,Al Diriyah vs Al Riyadh,[VIP] Remates Puerta > 6.5,1.32,PENDIENTE_CLV,88.7,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,6600.0,AUDITADA FT 1-0
 2026-10-20 11:20:45,1603054,Al Diriyah vs Al Riyadh,[VIP] Gol en 2do Tiempo,1.32,PENDIENTE_CLV,83.5,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Perdida,0.0,AUDITADA FT 1-0
-2026-10-20 11:20:50,1603054,Al Diriyah vs Al Riyadh,[FREE] Remates Puerta > 5.5,1.12,PENDIENTE_CLV,82.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 1-0
+2026-10-20 11:20:50,1603054,Al Diriyah vs Al Riyadh,[FREE] Remates Puerta > 5.5,1.12,PENDIENTE_CLV,82.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,560.0,AUDITADA FT 1-0
 2026-10-20 11:20:50,1603054,Al Diriyah vs Al Riyadh,[FREE] Córners > 7.5,1.23,PENDIENTE_CLV,76.6,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,0.0,AUDITADA FT 1-0
-2026-10-20 11:20:51,1603061,Al Taawon vs Al-Qadisiyah FC,[VIP] Faltas Totales > 22.5,1.32,PENDIENTE_CLV,91.5,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Perdida,0.0,AUDITADA FT 0-1
+2026-10-20 11:20:51,1603061,Al Taawon vs Al-Qadisiyah FC,[VIP] Faltas Totales > 22.5,1.32,PENDIENTE_CLV,91.5,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,6600.0,AUDITADA FT 0-1
 2026-10-20 11:20:51,1603061,Al Taawon vs Al-Qadisiyah FC,[VIP] Gol en 2do Tiempo,1.33,PENDIENTE_CLV,83.5,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,0.0,AUDITADA FT 0-1
-2026-10-20 11:20:57,1603061,Al Taawon vs Al-Qadisiyah FC,[FREE] Faltas Totales > 21.5,1.12,PENDIENTE_CLV,82.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 0-1
-2026-10-20 11:20:57,1603061,Al Taawon vs Al-Qadisiyah FC,[FREE] Remates Puerta > 5.5,1.25,PENDIENTE_CLV,75.4,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 0-1
+2026-10-20 11:20:57,1603061,Al Taawon vs Al-Qadisiyah FC,[FREE] Faltas Totales > 21.5,1.12,PENDIENTE_CLV,82.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,560.0,AUDITADA FT 0-1
+2026-10-20 11:20:57,1603061,Al Taawon vs Al-Qadisiyah FC,[FREE] Remates Puerta > 5.5,1.25,PENDIENTE_CLV,75.4,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,625.0,AUDITADA FT 0-1
 2026-10-20 11:20:58,1635661,Fenerbahçe vs Slavia Praha,[VIP] Faltas Totales > 22.5,1.32,PENDIENTE_CLV,91.1,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,0.0,AUDITADA FT 2-2
 2026-10-20 11:20:58,1635661,Fenerbahçe vs Slavia Praha,[VIP] Gol en 2do Tiempo,1.32,PENDIENTE_CLV,83.5,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,0.0,AUDITADA FT 2-2
 2026-10-20 11:21:03,1635661,Fenerbahçe vs Slavia Praha,[FREE] Faltas Totales > 21.5,1.12,PENDIENTE_CLV,82.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,0.0,AUDITADA FT 2-2
@@ -28,16 +28,16 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-10-20 11:21:15,1603055,Al-Ettifaq vs Al-Ittihad FC,[FREE] Remates Puerta > 5.5,1.12,PENDIENTE_CLV,82.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,0.0,AUDITADA FT 1-4
 2026-10-20 11:21:15,1603055,Al-Ettifaq vs Al-Ittihad FC,[FREE] Gol en 2do Tiempo,1.26,PENDIENTE_CLV,72.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,0.0,AUDITADA FT 1-4
 2026-10-20 11:21:16,1603059,Al-Nassr vs NEOM,[VIP] Gol en 2do Tiempo,1.33,PENDIENTE_CLV,83.5,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,0.0,AUDITADA FT 1-0
-2026-10-20 11:21:16,1603059,Al-Nassr vs NEOM,[VIP] Faltas Totales > 22.5,1.38,PENDIENTE_CLV,83.5,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Perdida,0.0,AUDITADA FT 1-0
-2026-10-20 11:21:22,1603059,Al-Nassr vs NEOM,[FREE] Remates Puerta > 5.5,1.16,PENDIENTE_CLV,81.4,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 1-0
-2026-10-20 11:21:22,1603059,Al-Nassr vs NEOM,[FREE] Faltas Totales > 21.5,1.22,PENDIENTE_CLV,77.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 1-0
+2026-10-20 11:21:16,1603059,Al-Nassr vs NEOM,[VIP] Faltas Totales > 22.5,1.38,PENDIENTE_CLV,83.5,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,6900.0,AUDITADA FT 1-0
+2026-10-20 11:21:22,1603059,Al-Nassr vs NEOM,[FREE] Remates Puerta > 5.5,1.16,PENDIENTE_CLV,81.4,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,580.0,AUDITADA FT 1-0
+2026-10-20 11:21:22,1603059,Al-Nassr vs NEOM,[FREE] Faltas Totales > 21.5,1.22,PENDIENTE_CLV,77.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,610.0,AUDITADA FT 1-0
 2026-10-20 11:21:23,1635617,AS Roma vs Slovan Bratislava,[VIP] Over 1.5 Goles,1.34,PENDIENTE_CLV,83.5,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,0.0,AUDITADA FT 4-0
 2026-10-20 11:21:23,1635617,AS Roma vs Slovan Bratislava,[VIP] Remates Puerta > 6.5,1.39,PENDIENTE_CLV,83.5,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,0.0,AUDITADA FT 4-0
 2026-10-20 11:21:28,1635617,AS Roma vs Slovan Bratislava,[FREE] Remates Puerta > 5.5,1.15,PENDIENTE_CLV,82.3,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,0.0,AUDITADA FT 4-0
 2026-10-20 11:21:28,1635617,AS Roma vs Slovan Bratislava,[FREE] Gol en 2do Tiempo,1.25,PENDIENTE_CLV,75.3,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,0.0,AUDITADA FT 4-0
 2026-10-20 11:21:29,1635655,FC Porto vs PSV Eindhoven,[VIP] Over 1.5 Goles,1.33,PENDIENTE_CLV,83.5,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Perdida,0.0,AUDITADA FT 0-1
-2026-10-20 11:21:29,1635655,FC Porto vs PSV Eindhoven,[VIP] Remates Puerta > 6.5,1.43,PENDIENTE_CLV,83.5,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Perdida,0.0,AUDITADA FT 0-1
-2026-10-20 11:21:34,1635655,FC Porto vs PSV Eindhoven,[FREE] Remates Puerta > 5.5,1.17,PENDIENTE_CLV,80.7,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 0-1
+2026-10-20 11:21:29,1635655,FC Porto vs PSV Eindhoven,[VIP] Remates Puerta > 6.5,1.43,PENDIENTE_CLV,83.5,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,7150.0,AUDITADA FT 0-1
+2026-10-20 11:21:34,1635655,FC Porto vs PSV Eindhoven,[FREE] Remates Puerta > 5.5,1.17,PENDIENTE_CLV,80.7,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,585.0,AUDITADA FT 0-1
 2026-10-20 11:21:34,1635655,FC Porto vs PSV Eindhoven,[FREE] Gol en 2do Tiempo,1.25,PENDIENTE_CLV,75.9,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,0.0,AUDITADA FT 0-1
 2026-10-20 11:21:36,1635693,Manchester City vs AEK Athens FC,[VIP] Gol en 2do Tiempo,1.32,PENDIENTE_CLV,83.5,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,0.0,AUDITADA FT 5-1
 2026-10-20 11:21:36,1635693,Manchester City vs AEK Athens FC,[VIP] Remates Puerta > 6.5,1.32,PENDIENTE_CLV,83.5,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,0.0,AUDITADA FT 5-1
@@ -57,7 +57,7 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-10-20 11:22:02,1549829,Internacional de Bogota vs Fortaleza FC,[FREE] Gol en 2do Tiempo,1.26,PENDIENTE_CLV,70.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,0.0,AUDITADA FT 2-1
 2026-10-20 11:22:03,1549825,Cucuta vs Atletico Nacional,[VIP] Over 1.5 Goles,1.47,PENDIENTE_CLV,83.5,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Perdida,0.0,AUDITADA FT 1-0
 2026-10-20 11:22:03,1549825,Cucuta vs Atletico Nacional,[VIP] Tarjetas > 3.5,1.49,PENDIENTE_CLV,83.5,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,0.0,AUDITADA FT 1-0
-2026-10-20 11:22:08,1549825,Cucuta vs Atletico Nacional,[FREE] Remates Puerta > 5.5,1.26,PENDIENTE_CLV,72.3,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 1-0
+2026-10-20 11:22:08,1549825,Cucuta vs Atletico Nacional,[FREE] Remates Puerta > 5.5,1.26,PENDIENTE_CLV,72.3,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,630.0,AUDITADA FT 1-0
 2026-10-20 11:22:08,1549825,Cucuta vs Atletico Nacional,[FREE] Gol en 2do Tiempo,1.26,PENDIENTE_CLV,70.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 1-0
 2026-10-20 11:22:09,1639864,Vasco DA Gama vs Boca Juniors,[VIP] Over 1.5 Goles,1.36,PENDIENTE_CLV,83.5,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,6800.0,AUDITADA FT 1-3
 2026-10-20 11:22:09,1639864,Vasco DA Gama vs Boca Juniors,[VIP] Tarjetas > 4.5,1.55,PENDIENTE_CLV,83.5,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,7750.0,AUDITADA FT 1-3
@@ -83,18 +83,18 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-10-21 06:54:46,1635630,Bayern München vs Arsenal,[VIP] Gol en 2do Tiempo,1.32,1.32,89.0,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,6600.0,AUDITADA FT 2-2
 2026-10-21 06:54:51,1635630,Bayern München vs Arsenal,[FREE] Remates Puerta > 5.5,1.12,1.12,82.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,560.0,AUDITADA FT 2-2
 2026-10-21 06:54:51,1635630,Bayern München vs Arsenal,[FREE] Córners > 7.5,1.12,1.12,82.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,560.0,AUDITADA FT 2-2
-2026-10-21 06:54:52,1635636,Real Betis vs Feyenoord,[VIP] Remates Puerta > 6.5,1.32,1.32,88.7,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Perdida,0.0,AUDITADA FT 1-0
+2026-10-21 06:54:52,1635636,Real Betis vs Feyenoord,[VIP] Remates Puerta > 6.5,1.32,1.32,88.7,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,6600.0,AUDITADA FT 1-0
 2026-10-21 06:54:52,1635636,Real Betis vs Feyenoord,[VIP] Gol en 2do Tiempo,1.32,1.32,87.8,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,6600.0,AUDITADA FT 1-0
-2026-10-21 06:54:57,1635636,Real Betis vs Feyenoord,[FREE] Remates Puerta > 5.5,1.12,1.12,82.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 1-0
+2026-10-21 06:54:57,1635636,Real Betis vs Feyenoord,[FREE] Remates Puerta > 5.5,1.12,1.12,82.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,560.0,AUDITADA FT 1-0
 2026-10-21 06:54:57,1635636,Real Betis vs Feyenoord,[FREE] Córners > 7.5,1.13,1.13,82.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,565.0,AUDITADA FT 1-0
 2026-10-21 06:54:58,1635645,Club Brugge KV vs Lens,[VIP] Remates Puerta > 6.5,1.32,1.32,88.7,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,6600.0,AUDITADA FT 3-0
 2026-10-21 06:54:58,1635645,Club Brugge KV vs Lens,[VIP] Over 1.5 Goles,1.32,1.32,86.3,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,6600.0,AUDITADA FT 3-0
 2026-10-21 06:55:04,1635645,Club Brugge KV vs Lens,[FREE] Remates Puerta > 5.5,1.12,1.12,82.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,560.0,AUDITADA FT 3-0
 2026-10-21 06:55:04,1635645,Club Brugge KV vs Lens,[FREE] Gol en 2do Tiempo,1.16,1.16,81.6,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,580.0,AUDITADA FT 3-0
 2026-10-21 06:55:05,1635672,Inter vs Shakhtar Donetsk,[VIP] Gol en 2do Tiempo,1.32,1.32,83.5,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,6600.0,AUDITADA FT 1-0
-2026-10-21 06:55:05,1635672,Inter vs Shakhtar Donetsk,[VIP] Remates Puerta > 6.5,1.32,1.32,83.5,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Perdida,0.0,AUDITADA FT 1-0
-2026-10-21 06:55:10,1635672,Inter vs Shakhtar Donetsk,[FREE] Remates Puerta > 5.5,1.12,1.12,82.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 1-0
-2026-10-21 06:55:10,1635672,Inter vs Shakhtar Donetsk,[FREE] Faltas Totales > 21.5,1.17,1.17,80.8,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 1-0
+2026-10-21 06:55:05,1635672,Inter vs Shakhtar Donetsk,[VIP] Remates Puerta > 6.5,1.32,1.32,83.5,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,6600.0,AUDITADA FT 1-0
+2026-10-21 06:55:10,1635672,Inter vs Shakhtar Donetsk,[FREE] Remates Puerta > 5.5,1.12,1.12,82.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,560.0,AUDITADA FT 1-0
+2026-10-21 06:55:10,1635672,Inter vs Shakhtar Donetsk,[FREE] Faltas Totales > 21.5,1.17,1.17,80.8,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,585.0,AUDITADA FT 1-0
 2026-10-21 06:55:11,1635716,Real Madrid vs RB Leipzig,[VIP] Gol en 2do Tiempo,1.32,1.32,89.3,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,6600.0,AUDITADA FT 4-1
 2026-10-21 06:55:11,1635716,Real Madrid vs RB Leipzig,[VIP] Remates Puerta > 6.5,1.32,1.32,88.7,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,6600.0,AUDITADA FT 4-1
 2026-10-21 06:55:16,1635716,Real Madrid vs RB Leipzig,[FREE] Remates Puerta > 5.5,1.12,1.12,82.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,560.0,AUDITADA FT 4-1
@@ -127,7 +127,7 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-10-21 10:11:01,1635630,Bayern München vs Arsenal,[FREE] Córners Bayern Münch > 4.5,1.16,1.16,84.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,580.0,AUDITADA FT 2-2
 2026-10-21 10:11:02,1635636,Real Betis vs Feyenoord,[VIP] Córners > 8.5,1.48,1.48,74.5,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,7400.0,AUDITADA FT 1-0
 2026-10-21 10:11:08,1635645,Club Brugge KV vs Lens,[VIP] Combo 1X + O1.5,1.52,1.52,76.7,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,7600.0,AUDITADA FT 3-0
-2026-10-21 10:11:14,1635672,Inter vs Shakhtar Donetsk,[VIP] Faltas Totales > 22.5,1.42,1.42,74.6,🟢 [LUZ VERDE / ALTO VALOR],3600.0,Perdida,0.0,AUDITADA FT 1-0
+2026-10-21 10:11:14,1635672,Inter vs Shakhtar Donetsk,[VIP] Faltas Totales > 22.5,1.42,1.42,74.6,🟢 [LUZ VERDE / ALTO VALOR],3600.0,Ganada,5112.0,AUDITADA FT 1-0
 2026-10-21 10:11:21,1635716,Real Madrid vs RB Leipzig,[VIP] Córners > 8.5,1.48,1.48,79.4,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,7400.0,AUDITADA FT 4-1
 2026-10-21 10:11:26,1635716,Real Madrid vs RB Leipzig,[FREE] Córners Real Madrid > 4.5,1.16,1.16,84.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,580.0,AUDITADA FT 4-1
 2026-10-21 10:11:27,1635737,Sporting CP vs Lask Linz,[VIP] Over 1.5 Goles,1.4,1.40,72.9,🟢 [LUZ VERDE / ALTO VALOR],1300.0,Ganada,1820.0,AUDITADA FT 2-3
@@ -147,7 +147,7 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-10-22 09:22:31,1636311,Omonia Nicosia vs Benfica,[VIP] Gol en 1T,1.42,1.42,71.8,🟢 [LUZ VERDE / ALTO VALOR],1100.0,Ganada,1562.0,AUDITADA FT 1-4
 2026-10-22 09:22:31,1636311,Omonia Nicosia vs Benfica,[VIP] Córners > 8.5,1.48,1.48,68.7,🟢 [LUZ VERDE / ALTO VALOR],900.0,Ganada,1332.0,AUDITADA FT 1-4
 2026-10-22 09:22:32,1640556,Flamengo vs Estudiantes L.P.,[VIP] Over 1.5 Goles,1.43,1.43,71.4,🟢 [LUZ VERDE / ALTO VALOR],1300.0,Perdida,0.0,AUDITADA FT 0-0
-2026-10-22 09:22:32,1640556,Flamengo vs Estudiantes L.P.,[VIP] Córners > 8.5,1.64,1.64,68.0,🟢 [LUZ VERDE / ALTO VALOR],4500.0,Perdida,0.0,AUDITADA FT 0-0
+2026-10-22 09:22:32,1640556,Flamengo vs Estudiantes L.P.,[VIP] Córners > 8.5,1.64,1.64,68.0,🟢 [LUZ VERDE / ALTO VALOR],4500.0,Ganada,7380.0,AUDITADA FT 0-0
 2026-10-22 11:18:47,1636276,Juventus vs Rennes,[FREE] Faltas Totales > 21.5,1.16,1.16,84.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,580.0,AUDITADA FT 2-2
 2026-10-22 11:18:47,1636235,Bournemouth vs AC Milan,[FREE] Faltas Totales > 21.5,1.16,1.16,84.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,580.0,AUDITADA FT 3-0
 2026-10-22 11:18:47,1636276,Juventus vs Rennes,[VIP] Faltas Totales > 22.5,1.42,1.42,80.2,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,7100.0,AUDITADA FT 2-2
@@ -200,7 +200,7 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-10-24 09:07:04,1557439,Chelsea vs Tottenham,[FREE] Córners > 7.5,1.16,1.16,84.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,580.0,AUDITADA FT 0-2
 2026-10-24 09:07:04,1557439,Chelsea vs Tottenham,[FREE] Gol en 2do Tiempo,1.16,1.16,81.9,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,580.0,AUDITADA FT 0-2
 2026-10-24 09:07:04,1575194,Borussia Dortmund vs Eintracht Frankfurt,[FREE] Gol en 2do Tiempo,1.16,1.16,81.9,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,580.0,AUDITADA FT 1-0
-2026-10-24 09:07:04,1575194,Borussia Dortmund vs Eintracht Frankfurt,[FREE] Remates Puerta > 5.5,1.16,1.16,79.1,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 1-0
+2026-10-24 09:07:04,1575194,Borussia Dortmund vs Eintracht Frankfurt,[FREE] Remates Puerta > 5.5,1.16,1.16,79.1,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,580.0,AUDITADA FT 1-0
 2026-10-24 09:07:04,1570428,Racing Santander vs Espanyol,[VIP] Faltas Totales > 22.5,1.42,1.42,87.2,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,7100.0,AUDITADA FT 2-1
 2026-10-24 09:07:04,1570428,Racing Santander vs Espanyol,[VIP] Total Asiático > 2.25,1.54,1.54,68.0,🟢 [LUZ VERDE / ALTO VALOR],2200.0,Ganada,3388.0,AUDITADA FT 2-1
 2026-10-24 09:07:04,1557439,Chelsea vs Tottenham,[VIP] Córners > 8.5,1.48,1.48,75.2,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,7400.0,AUDITADA FT 0-2
@@ -218,7 +218,7 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-10-24 09:07:05,1570432,Valencia vs Villarreal,[DESCARTES] Total Menos de 3.5 (Under),1.16,1.16,89.3,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,5800.0,AUDITADA FT 1-2
 2026-10-24 09:07:05,1570432,Valencia vs Villarreal,[DESCARTES] Faltas Totales > 21.5,1.16,1.16,79.1,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,580.0,AUDITADA FT 1-2
 2026-10-24 09:07:05,1575521,GIL Vicente vs FC Porto,[DESCARTES] Total Menos de 3.5 (Under),1.16,1.16,89.9,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,5800.0,AUDITADA FT 0-1
-2026-10-24 09:07:05,1575521,GIL Vicente vs FC Porto,[DESCARTES] Faltas Totales > 21.5,1.16,1.16,88.2,🟢 [LUZ VERDE / ALTO VALOR],3600.0,Perdida,0.0,AUDITADA FT 0-1
+2026-10-24 09:07:05,1575521,GIL Vicente vs FC Porto,[DESCARTES] Faltas Totales > 21.5,1.16,1.16,88.2,🟢 [LUZ VERDE / ALTO VALOR],3600.0,Ganada,4176.0,AUDITADA FT 0-1
 2026-10-24 09:07:05,1549841,Once Caldas vs Deportivo Pereira,[DESCARTES] Total Menos de 3.5 (Under),1.16,1.16,88.5,🟢 [LUZ VERDE / ALTO VALOR],4100.0,Ganada,4756.0,AUDITADA FT 1-1
 2026-10-24 09:07:05,1549841,Once Caldas vs Deportivo Pereira,[DESCARTES] Faltas Totales > 21.5,1.28,1.28,65.5,🟢 [VALOR ALTO / OPERABLE],500.0,Ganada,640.0,AUDITADA FT 1-1
 2026-10-24 09:07:05,1550159,Como vs Sassuolo,[DESCARTES] Total Menos de 3.5 (Under),1.16,1.16,85.4,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,580.0,AUDITADA FT 2-0
@@ -256,7 +256,7 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-10-24 09:07:07,1593341,Iraklis 1908 vs Kifisia,[DESCARTES] Faltas Totales > 21.5,1.16,1.16,91.0,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,5800.0,AUDITADA FT 2-3
 2026-10-24 09:07:07,1593341,Iraklis 1908 vs Kifisia,[DESCARTES] Total Menos de 3.5 (Under),1.16,1.16,90.0,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Perdida,0.0,AUDITADA FT 2-3
 2026-10-24 09:07:07,1569989,Las Palmas vs Real Sociedad II,[DESCARTES] Total Menos de 3.5 (Under),1.16,1.16,83.3,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,580.0,AUDITADA FT 1-0
-2026-10-24 09:07:07,1569989,Las Palmas vs Real Sociedad II,[DESCARTES] Faltas Totales > 21.5,1.28,1.28,70.8,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 1-0
+2026-10-24 09:07:07,1569989,Las Palmas vs Real Sociedad II,[DESCARTES] Faltas Totales > 21.5,1.28,1.28,70.8,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,640.0,AUDITADA FT 1-0
 2026-10-24 09:07:07,1593338,AEK Athens FC vs Panetolikos,[DESCARTES] Faltas Totales > 21.5,1.16,1.16,91.0,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,5800.0,AUDITADA FT 5-0
 2026-10-24 09:07:07,1593338,AEK Athens FC vs Panetolikos,[DESCARTES] Total Menos de 3.5 (Under),1.16,1.16,89.9,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Perdida,0.0,AUDITADA FT 5-0
 2026-10-24 09:07:07,1603069,Al Riyadh vs Al Taawon,[DESCARTES] Total Menos de 3.5 (Under),1.16,1.16,85.2,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,580.0,AUDITADA FT 2-1
@@ -264,9 +264,9 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-10-24 09:07:08,1569982,Almeria vs Oviedo,[DESCARTES] Faltas Totales > 21.5,1.16,1.16,91.0,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,5800.0,AUDITADA FT 2-2
 2026-10-24 09:07:08,1569982,Almeria vs Oviedo,[DESCARTES] Total Menos de 3.5 (Under),1.16,1.16,90.0,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Perdida,0.0,AUDITADA FT 2-2
 2026-10-24 09:22:15,1584441,Eyüpspor vs Kasımpaşa,[VIP] Total Asiático > 2.25,1.52,1.52,69.0,🟢 [LUZ VERDE / ALTO VALOR],2400.0,Perdida,0.0,AUDITADA FT 0-1
-2026-10-24 09:22:15,1584441,Eyüpspor vs Kasımpaşa,[VIP] Remates Puerta > 6.5,1.48,1.48,68.9,🟢 [LUZ VERDE / ALTO VALOR],1000.0,Perdida,0.0,AUDITADA FT 0-1
+2026-10-24 09:22:15,1584441,Eyüpspor vs Kasımpaşa,[VIP] Remates Puerta > 6.5,1.48,1.48,68.9,🟢 [LUZ VERDE / ALTO VALOR],1000.0,Ganada,1480.0,AUDITADA FT 0-1
 2026-10-24 09:22:15,1584441,Eyüpspor vs Kasımpaşa,[FREE] Over 1.5 Goles,1.16,1.16,84.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 0-1
-2026-10-24 09:22:15,1584441,Eyüpspor vs Kasımpaşa,[FREE] Remates Puerta > 5.5,1.16,1.16,81.1,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 0-1
+2026-10-24 09:22:15,1584441,Eyüpspor vs Kasımpaşa,[FREE] Remates Puerta > 5.5,1.16,1.16,81.1,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,580.0,AUDITADA FT 0-1
 2026-10-24 09:22:23,1570429,Rayo Vallecano vs Elche,[VIP] Faltas Totales > 22.5,1.42,1.42,75.7,🟢 [LUZ VERDE / ALTO VALOR],4500.0,Ganada,6390.0,AUDITADA FT 0-3
 2026-10-24 09:22:23,1570429,Rayo Vallecano vs Elche,[VIP] Over 1.5 Goles,1.46,1.46,70.0,🟢 [LUZ VERDE / ALTO VALOR],1200.0,Ganada,1752.0,AUDITADA FT 0-3
 2026-10-24 09:22:23,1570429,Rayo Vallecano vs Elche,[FREE] Faltas Totales > 21.5,1.16,1.16,81.7,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,580.0,AUDITADA FT 0-3
@@ -288,11 +288,11 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-10-24 09:22:51,1575200,FSV Mainz 05 vs Werder Bremen,[FREE] Gol en 2do Tiempo,1.16,1.16,81.8,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,580.0,AUDITADA FT 2-3
 2026-10-24 09:22:51,1575200,FSV Mainz 05 vs Werder Bremen,[FREE] Córners > 7.5,1.16,1.16,79.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,580.0,AUDITADA FT 2-3
 2026-10-24 09:22:57,1575201,1. FC Köln vs FC Schalke 04,[VIP] Gol en 1T,1.43,1.43,71.5,🟢 [LUZ VERDE / ALTO VALOR],1300.0,Perdida,0.0,AUDITADA FT 0-0
-2026-10-24 09:22:57,1575201,1. FC Köln vs FC Schalke 04,[VIP] Córners > 8.5,1.54,1.54,68.0,🟢 [LUZ VERDE / ALTO VALOR],2200.0,Perdida,0.0,AUDITADA FT 0-0
+2026-10-24 09:22:57,1575201,1. FC Köln vs FC Schalke 04,[VIP] Córners > 8.5,1.54,1.54,68.0,🟢 [LUZ VERDE / ALTO VALOR],2200.0,Ganada,3388.0,AUDITADA FT 0-0
 2026-10-24 09:22:57,1575201,1. FC Köln vs FC Schalke 04,[FREE] Gol en 2do Tiempo,1.16,1.16,80.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 0-0
-2026-10-24 09:22:57,1575201,1. FC Köln vs FC Schalke 04,[FREE] Córners > 7.5,1.21,1.21,77.6,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 0-0
+2026-10-24 09:22:57,1575201,1. FC Köln vs FC Schalke 04,[FREE] Córners > 7.5,1.21,1.21,77.6,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,605.0,AUDITADA FT 0-0
 2026-10-24 09:23:03,1575202,SC Paderborn 07 vs Hamburger SV,[VIP] Over 1.5 Goles,1.45,1.45,70.4,🟢 [LUZ VERDE / ALTO VALOR],1200.0,Perdida,0.0,AUDITADA FT 1-0
-2026-10-24 09:23:03,1575202,SC Paderborn 07 vs Hamburger SV,[VIP] Tarjetas > 3.5,1.49,1.49,68.5,🟢 [LUZ VERDE / ALTO VALOR],1000.0,Perdida,0.0,AUDITADA FT 1-0
+2026-10-24 09:23:03,1575202,SC Paderborn 07 vs Hamburger SV,[VIP] Tarjetas > 3.5,1.49,1.49,68.5,🟢 [LUZ VERDE / ALTO VALOR],1000.0,Ganada,1490.0,AUDITADA FT 1-0
 2026-10-24 09:23:03,1575202,SC Paderborn 07 vs Hamburger SV,[FREE] Gol en 2do Tiempo,1.28,1.28,73.6,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,640.0,AUDITADA FT 1-0
 2026-10-24 09:23:03,1575202,SC Paderborn 07 vs Hamburger SV,[FREE] Córners > 7.5,1.28,1.28,71.1,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,640.0,AUDITADA FT 1-0
 2026-10-24 09:23:10,1556682,Dundee Utd vs Aberdeen,[VIP] Over 1.5 Goles,1.5,1.50,68.0,🟢 [LUZ VERDE / ALTO VALOR],1000.0,Ganada,1500.0,AUDITADA FT 3-2
@@ -314,7 +314,7 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-10-24 09:23:35,1557440,Coventry vs Fulham,[VIP] Total Asiático > 2.25,1.55,1.55,68.0,🟢 [LUZ VERDE / ALTO VALOR],2500.0,Perdida,0.0,AUDITADA FT 0-1
 2026-10-24 09:23:35,1557440,Coventry vs Fulham,[VIP] Córners > 8.5,1.57,1.57,68.0,🟢 [LUZ VERDE / ALTO VALOR],3000.0,Ganada,4710.0,AUDITADA FT 0-1
 2026-10-24 09:23:35,1557440,Coventry vs Fulham,[FREE] Gol en 2do Tiempo,1.16,1.16,82.7,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,580.0,AUDITADA FT 0-1
-2026-10-24 09:23:35,1557440,Coventry vs Fulham,[FREE] Remates Puerta > 5.5,1.17,1.17,78.1,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 0-1
+2026-10-24 09:23:35,1557440,Coventry vs Fulham,[FREE] Remates Puerta > 5.5,1.17,1.17,78.1,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,585.0,AUDITADA FT 0-1
 2026-10-24 09:23:42,1558653,Antwerp vs Charleroi,[VIP] Córners > 8.5,1.53,1.53,68.0,🟢 [LUZ VERDE / ALTO VALOR],1900.0,Ganada,2907.0,AUDITADA FT 3-0
 2026-10-24 09:23:42,1558653,Antwerp vs Charleroi,[VIP] Gol en 1T,1.57,1.57,68.0,🟢 [LUZ VERDE / ALTO VALOR],3000.0,Ganada,4710.0,AUDITADA FT 3-0
 2026-10-24 09:23:42,1558653,Antwerp vs Charleroi,[FREE] Gol en 2do Tiempo,1.16,1.16,81.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,580.0,AUDITADA FT 3-0
@@ -339,17 +339,17 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-10-24 09:24:31,1569987,Girona vs Celta de Vigo II,[VIP] Tarjetas > 3.5,1.61,1.61,68.0,🟢 [LUZ VERDE / ALTO VALOR],3900.0,Ganada,6279.0,AUDITADA FT 5-1
 2026-10-24 09:24:31,1569987,Girona vs Celta de Vigo II,[FREE] Gol en 2do Tiempo,1.27,1.27,73.9,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,635.0,AUDITADA FT 5-1
 2026-10-24 09:24:31,1569987,Girona vs Celta de Vigo II,[FREE] Doble Oport. 1X,1.16,1.16,84.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,580.0,AUDITADA FT 5-1
-2026-10-24 09:24:45,1593340,Asteras Tripolis vs Levadiakos,[VIP] Faltas Totales > 22.5,1.42,1.42,83.2,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Perdida,0.0,AUDITADA FT 0-0
+2026-10-24 09:24:45,1593340,Asteras Tripolis vs Levadiakos,[VIP] Faltas Totales > 22.5,1.42,1.42,83.2,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,7100.0,AUDITADA FT 0-0
 2026-10-24 09:24:45,1593340,Asteras Tripolis vs Levadiakos,[VIP] Combo X2 + O1.5,1.52,1.52,69.4,🟢 [LUZ VERDE / ALTO VALOR],2600.0,Perdida,0.0,AUDITADA FT 0-0
-2026-10-24 09:24:45,1593340,Asteras Tripolis vs Levadiakos,[FREE] Faltas Totales > 21.5,1.16,1.16,84.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 0-0
+2026-10-24 09:24:45,1593340,Asteras Tripolis vs Levadiakos,[FREE] Faltas Totales > 21.5,1.16,1.16,84.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,580.0,AUDITADA FT 0-0
 2026-10-24 09:24:45,1593340,Asteras Tripolis vs Levadiakos,[FREE] Gol en 2do Tiempo,1.23,1.23,76.6,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 0-0
 2026-10-24 09:24:51,1552200,Willem II vs Cambuur,[VIP] Tarjetas > 3.5,1.58,1.58,68.0,🟢 [LUZ VERDE / ALTO VALOR],3200.0,Ganada,5056.0,AUDITADA FT 1-6
 2026-10-24 09:24:51,1552200,Willem II vs Cambuur,[VIP] Gol en 1T,1.64,1.64,68.0,🟢 [LUZ VERDE / ALTO VALOR],4500.0,Ganada,7380.0,AUDITADA FT 1-6
 2026-10-24 09:24:51,1552200,Willem II vs Cambuur,[FREE] Gol en 2do Tiempo,1.22,1.22,77.2,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,610.0,AUDITADA FT 1-6
 2026-10-24 09:24:51,1552200,Willem II vs Cambuur,[FREE] Córners > 7.5,1.28,1.28,69.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,640.0,AUDITADA FT 1-6
-2026-10-24 09:24:57,1575518,Alverca vs Arouca,[VIP] Faltas Totales > 22.5,1.42,1.42,80.0,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Perdida,0.0,AUDITADA FT 0-1
+2026-10-24 09:24:57,1575518,Alverca vs Arouca,[VIP] Faltas Totales > 22.5,1.42,1.42,80.0,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,7100.0,AUDITADA FT 0-1
 2026-10-24 09:24:57,1575518,Alverca vs Arouca,[VIP] Gol en 1T,1.47,1.47,69.5,🟢 [LUZ VERDE / ALTO VALOR],1100.0,Ganada,1617.0,AUDITADA FT 0-1
-2026-10-24 09:24:57,1575518,Alverca vs Arouca,[FREE] Faltas Totales > 21.5,1.16,1.16,84.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 0-1
+2026-10-24 09:24:57,1575518,Alverca vs Arouca,[FREE] Faltas Totales > 21.5,1.16,1.16,84.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,580.0,AUDITADA FT 0-1
 2026-10-24 09:24:57,1575518,Alverca vs Arouca,[FREE] Gol en 2do Tiempo,1.16,1.16,78.3,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 0-1
 2026-10-24 09:25:06,1550162,Lazio vs Parma,[VIP] Córners > 8.5,1.59,1.59,68.0,🟢 [LUZ VERDE / ALTO VALOR],3400.0,Ganada,5406.0,AUDITADA FT 2-1
 2026-10-24 09:25:06,1550162,Lazio vs Parma,[VIP] Gol en 1T,1.68,1.68,68.0,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Perdida,0.0,AUDITADA FT 2-1
@@ -425,8 +425,8 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-10-24 09:26:58,1593338,AEK Athens FC vs Panetolikos,[DESCARTES] Total Menos de 2.5 (Under),1.26,1.26,74.4,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 5-0
 2026-10-24 09:26:58,1603069,Al Riyadh vs Al Taawon,[DESCARTES] Total Menos de 2.5 (Under),1.28,1.28,65.2,🟢 [VALOR ALTO / OPERABLE],500.0,Perdida,0.0,AUDITADA FT 2-1
 2026-10-24 09:26:58,1569982,Almeria vs Oviedo,[DESCARTES] Total Menos de 2.5 (Under),1.26,1.26,74.4,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 2-2
-2026-10-24 11:39:57,1584441,Eyüpspor vs Kasımpaşa,[VIP] Faltas Totales > 22.5,1.42,1.42,79.4,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Perdida,0.0,AUDITADA FT 0-1
-2026-10-24 11:39:57,1584441,Eyüpspor vs Kasımpaşa,[FREE] Faltas Totales > 21.5,1.16,1.16,84.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 0-1
+2026-10-24 11:39:57,1584441,Eyüpspor vs Kasımpaşa,[VIP] Faltas Totales > 22.5,1.42,1.42,79.4,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,7100.0,AUDITADA FT 0-1
+2026-10-24 11:39:57,1584441,Eyüpspor vs Kasımpaşa,[FREE] Faltas Totales > 21.5,1.16,1.16,84.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,580.0,AUDITADA FT 0-1
 2026-10-24 11:39:57,1584441,Eyüpspor vs Kasımpaşa,[FREE] Gol en 2do Tiempo,1.16,1.16,78.9,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 0-1
 2026-10-24 11:40:04,1557438,Aston Villa vs Manchester City,[VIP] Remates Puerta > 6.5,1.42,1.42,84.2,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,7100.0,AUDITADA FT 2-1
 2026-10-24 11:40:04,1557438,Aston Villa vs Manchester City,[VIP] Córners > 8.5,1.48,1.48,72.2,🟢 [LUZ VERDE / ALTO VALOR],3500.0,Ganada,5180.0,AUDITADA FT 2-1
@@ -450,8 +450,8 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-10-24 11:40:46,1575200,FSV Mainz 05 vs Werder Bremen,[VIP] Remates Puerta > 6.5,1.42,1.42,76.5,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,7100.0,AUDITADA FT 2-3
 2026-10-24 11:40:46,1575200,FSV Mainz 05 vs Werder Bremen,[VIP] Gol en 1T,1.5,1.50,68.1,🟢 [LUZ VERDE / ALTO VALOR],1100.0,Ganada,1650.0,AUDITADA FT 2-3
 2026-10-24 11:40:46,1575200,FSV Mainz 05 vs Werder Bremen,[FREE] Remates Puerta > 5.5,1.16,1.16,84.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,580.0,AUDITADA FT 2-3
-2026-10-24 11:40:52,1575201,1. FC Köln vs FC Schalke 04,[VIP] Remates Puerta > 6.5,1.42,1.42,85.7,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Perdida,0.0,AUDITADA FT 0-0
-2026-10-24 11:40:52,1575201,1. FC Köln vs FC Schalke 04,[FREE] Remates Puerta > 5.5,1.16,1.16,84.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 0-0
+2026-10-24 11:40:52,1575201,1. FC Köln vs FC Schalke 04,[VIP] Remates Puerta > 6.5,1.42,1.42,85.7,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,7100.0,AUDITADA FT 0-0
+2026-10-24 11:40:52,1575201,1. FC Köln vs FC Schalke 04,[FREE] Remates Puerta > 5.5,1.16,1.16,84.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,580.0,AUDITADA FT 0-0
 2026-10-24 11:41:05,1556683,Falkirk vs Kilmarnock,[VIP] Remates Puerta > 6.5,1.42,1.42,72.7,🟢 [LUZ VERDE / ALTO VALOR],2000.0,Ganada,2840.0,AUDITADA FT 3-0
 2026-10-24 11:41:05,1556683,Falkirk vs Kilmarnock,[FREE] Remates Puerta > 5.5,1.16,1.16,83.9,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,580.0,AUDITADA FT 3-0
 2026-10-24 11:41:05,1556683,Falkirk vs Kilmarnock,[FREE] Gol en 1T,1.16,1.16,83.8,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,580.0,AUDITADA FT 3-0
@@ -466,7 +466,7 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-10-24 11:41:25,1557437,Arsenal vs Everton,[FREE] Remates Puerta > 5.5,1.16,1.16,84.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,580.0,AUDITADA FT 2-0
 2026-10-24 11:41:25,1557437,Arsenal vs Everton,[FREE] Gol en 2do Tiempo,1.16,1.16,78.4,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,580.0,AUDITADA FT 2-0
 2026-10-24 11:41:31,1557440,Coventry vs Fulham,[VIP] Over 1.5 Goles,1.4,1.40,72.7,🟢 [LUZ VERDE / ALTO VALOR],1100.0,Perdida,0.0,AUDITADA FT 0-1
-2026-10-24 11:41:31,1557440,Coventry vs Fulham,[VIP] Remates Puerta > 6.5,1.42,1.42,72.2,🟢 [LUZ VERDE / ALTO VALOR],1500.0,Perdida,0.0,AUDITADA FT 0-1
+2026-10-24 11:41:31,1557440,Coventry vs Fulham,[VIP] Remates Puerta > 6.5,1.42,1.42,72.2,🟢 [LUZ VERDE / ALTO VALOR],1500.0,Ganada,2130.0,AUDITADA FT 0-1
 2026-10-24 11:41:37,1558653,Antwerp vs Charleroi,[VIP] Remates Puerta > 6.5,1.42,1.42,79.5,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,7100.0,AUDITADA FT 3-0
 2026-10-24 11:41:37,1558653,Antwerp vs Charleroi,[VIP] Combo X2 + O1.5,1.52,1.52,73.9,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Perdida,0.0,AUDITADA FT 3-0
 2026-10-24 11:41:37,1558653,Antwerp vs Charleroi,[FREE] Remates Puerta > 5.5,1.16,1.16,84.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,580.0,AUDITADA FT 3-0
@@ -487,9 +487,9 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-10-24 11:42:41,1570432,Valencia vs Villarreal,[VIP] Tarjetas > 3.5,1.63,1.63,68.0,🟢 [LUZ VERDE / ALTO VALOR],4300.0,Ganada,7009.0,AUDITADA FT 1-2
 2026-10-24 11:42:41,1570432,Valencia vs Villarreal,[FREE] Remates Puerta > 5.5,1.26,1.26,74.9,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,630.0,AUDITADA FT 1-2
 2026-10-24 11:42:41,1570432,Valencia vs Villarreal,[FREE] Gol en 2do Tiempo,1.28,1.28,73.6,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,640.0,AUDITADA FT 1-2
-2026-10-24 11:42:48,1575194,Borussia Dortmund vs Eintracht Frankfurt,[VIP] Remates Puerta > 6.5,1.42,1.42,85.7,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Perdida,0.0,AUDITADA FT 1-0
+2026-10-24 11:42:48,1575194,Borussia Dortmund vs Eintracht Frankfurt,[VIP] Remates Puerta > 6.5,1.42,1.42,85.7,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,7100.0,AUDITADA FT 1-0
 2026-10-24 11:42:54,1593340,Asteras Tripolis vs Levadiakos,[VIP] Gol en 2do Tiempo,1.4,1.40,72.7,🟢 [LUZ VERDE / ALTO VALOR],1100.0,Perdida,0.0,AUDITADA FT 0-0
-2026-10-24 11:42:54,1593340,Asteras Tripolis vs Levadiakos,[FREE] Remates Puerta > 5.5,1.28,1.28,72.8,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 0-0
+2026-10-24 11:42:54,1593340,Asteras Tripolis vs Levadiakos,[FREE] Remates Puerta > 5.5,1.28,1.28,72.8,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,640.0,AUDITADA FT 0-0
 2026-10-24 11:43:00,1552200,Willem II vs Cambuur,[VIP] Combo X2 + O1.5,1.52,1.52,72.5,🟢 [LUZ VERDE / ALTO VALOR],4900.0,Ganada,7448.0,AUDITADA FT 1-6
 2026-10-24 11:43:00,1552200,Willem II vs Cambuur,[VIP] Remates Puerta > 6.5,1.43,1.43,71.5,🟢 [LUZ VERDE / ALTO VALOR],1300.0,Ganada,1859.0,AUDITADA FT 1-6
 2026-10-24 11:43:00,1552200,Willem II vs Cambuur,[FREE] Remates Puerta > 5.5,1.16,1.16,83.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,580.0,AUDITADA FT 1-6
@@ -514,17 +514,17 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-10-24 11:43:54,1569982,Almeria vs Oviedo,[VIP] Remates Puerta > 6.5,1.42,1.42,83.5,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,7100.0,AUDITADA FT 2-2
 2026-10-24 11:43:54,1569982,Almeria vs Oviedo,[FREE] Remates Puerta > 5.5,1.16,1.16,84.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,580.0,AUDITADA FT 2-2
 2026-10-24 11:43:54,1569982,Almeria vs Oviedo,[FREE] Faltas Totales > 21.5,1.16,1.16,84.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,580.0,AUDITADA FT 2-2
-2026-10-24 11:44:00,1570425,Atletico Madrid vs Deportivo La Coruna,[VIP] Remates Puerta > 6.5,1.42,1.42,85.7,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Perdida,0.0,AUDITADA FT 1-0
-2026-10-24 11:44:00,1570425,Atletico Madrid vs Deportivo La Coruna,[FREE] Remates Puerta > 5.5,1.16,1.16,84.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 1-0
+2026-10-24 11:44:00,1570425,Atletico Madrid vs Deportivo La Coruna,[VIP] Remates Puerta > 6.5,1.42,1.42,85.7,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,7100.0,AUDITADA FT 1-0
+2026-10-24 11:44:00,1570425,Atletico Madrid vs Deportivo La Coruna,[FREE] Remates Puerta > 5.5,1.16,1.16,84.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,580.0,AUDITADA FT 1-0
 2026-10-24 11:44:06,1492424,Internacional vs Botafogo,[FREE] Remates Puerta > 5.5,1.22,1.22,76.8,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,610.0,AUDITADA FT 3-0
 2026-10-24 11:44:15,1492425,Mirassol vs Sao Paulo,[VIP] Gol en 2do Tiempo,1.42,1.42,71.8,🟢 [LUZ VERDE / ALTO VALOR],1200.0,Perdida,0.0,AUDITADA FT 1-1
 2026-10-24 11:44:15,1492425,Mirassol vs Sao Paulo,[FREE] Remates Puerta > 5.5,1.26,1.26,74.6,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,630.0,AUDITADA FT 1-1
 2026-10-24 11:44:21,1492429,Vitoria vs Atletico Paranaense,[VIP] Gol en 2do Tiempo,1.45,1.45,70.5,🟢 [LUZ VERDE / ALTO VALOR],1200.0,Perdida,0.0,AUDITADA FT 1-1
 2026-10-24 11:44:21,1492429,Vitoria vs Atletico Paranaense,[FREE] Remates Puerta > 5.5,1.28,1.28,73.6,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,640.0,AUDITADA FT 1-1
-2026-10-24 11:44:27,1575521,GIL Vicente vs FC Porto,[VIP] Remates Puerta > 6.5,1.42,1.42,85.3,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Perdida,0.0,AUDITADA FT 0-1
-2026-10-24 11:44:27,1575521,GIL Vicente vs FC Porto,[VIP] Faltas Totales > 22.5,1.42,1.42,79.7,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Perdida,0.0,AUDITADA FT 0-1
-2026-10-24 11:44:27,1575521,GIL Vicente vs FC Porto,[FREE] Remates Puerta > 5.5,1.16,1.16,84.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 0-1
-2026-10-24 11:44:27,1575521,GIL Vicente vs FC Porto,[FREE] Faltas Totales > 21.5,1.16,1.16,84.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 0-1
+2026-10-24 11:44:27,1575521,GIL Vicente vs FC Porto,[VIP] Remates Puerta > 6.5,1.42,1.42,85.3,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,7100.0,AUDITADA FT 0-1
+2026-10-24 11:44:27,1575521,GIL Vicente vs FC Porto,[VIP] Faltas Totales > 22.5,1.42,1.42,79.7,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,7100.0,AUDITADA FT 0-1
+2026-10-24 11:44:27,1575521,GIL Vicente vs FC Porto,[FREE] Remates Puerta > 5.5,1.16,1.16,84.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,580.0,AUDITADA FT 0-1
+2026-10-24 11:44:27,1575521,GIL Vicente vs FC Porto,[FREE] Faltas Totales > 21.5,1.16,1.16,84.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,580.0,AUDITADA FT 0-1
 2026-10-24 11:44:44,1492426,Palmeiras vs RB Bragantino,[VIP] Gol en 2do Tiempo,1.42,1.42,72.0,🟢 [LUZ VERDE / ALTO VALOR],1300.0,Ganada,1846.0,AUDITADA FT 2-0
 2026-10-24 11:44:44,1492426,Palmeiras vs RB Bragantino,[FREE] Remates Puerta > 5.5,1.26,1.26,74.9,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,630.0,AUDITADA FT 2-0
 2026-10-24 11:44:51,1492428,Vasco DA Gama vs Corinthians,[FREE] Remates Puerta > 5.5,1.22,1.22,76.8,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,610.0,AUDITADA FT 3-2
@@ -541,25 +541,25 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-10-24 11:45:29,1493209,Talleres Cordoba vs Defensa Y Justicia,[DESCARTES] Remates Puerta > 5.5,1.28,1.28,67.7,🟢 [VALOR ALTO / OPERABLE],500.0,Ganada,640.0,AUDITADA FT 1-2
 2026-10-24 11:45:29,1549677,Bogota FC vs Real Santander,[DESCARTES] Remates Puerta > 5.5,1.28,1.28,66.2,🟢 [VALOR ALTO / OPERABLE],500.0,Ganada,640.0,AUDITADA FT 1-1
 2026-10-24 11:45:29,1549678,Leones FC vs Orsomarso,[DESCARTES] Remates Puerta > 5.5,1.28,1.28,66.2,🟢 [VALOR ALTO / OPERABLE],500.0,Ganada,640.0,AUDITADA FT 1-2
-2026-10-24 11:45:29,1549679,Union Magdalena vs Depor FC,[DESCARTES] Remates Puerta > 5.5,1.28,1.28,66.2,🟢 [VALOR ALTO / OPERABLE],500.0,Perdida,0.0,AUDITADA FT 1-0
+2026-10-24 11:45:29,1549679,Union Magdalena vs Depor FC,[DESCARTES] Remates Puerta > 5.5,1.28,1.28,66.2,🟢 [VALOR ALTO / OPERABLE],500.0,Ganada,640.0,AUDITADA FT 1-0
 2026-10-24 11:45:29,1549680,Patriotas vs Envigado,[DESCARTES] Remates Puerta > 5.5,1.28,1.28,66.3,🟢 [VALOR ALTO / OPERABLE],500.0,Ganada,640.0,AUDITADA FT 0-2
 2026-10-24 11:45:30,1549681,Quindio vs Tigres FC,[DESCARTES] Remates Puerta > 5.5,1.28,1.28,66.2,🟢 [VALOR ALTO / OPERABLE],500.0,Ganada,640.0,AUDITADA FT 2-0
-2026-10-24 11:45:30,1549682,Real Cundinamarca vs Ind. Yumbo,[DESCARTES] Remates Puerta > 5.5,1.28,1.28,66.2,🟢 [VALOR ALTO / OPERABLE],500.0,Perdida,0.0,AUDITADA FT 1-0
-2026-10-24 11:45:30,1493208,San Lorenzo vs Newells Old Boys,[DESCARTES] Remates Puerta > 5.5,1.28,1.28,65.7,🟢 [VALOR ALTO / OPERABLE],500.0,Perdida,0.0,AUDITADA FT 0-0
+2026-10-24 11:45:30,1549682,Real Cundinamarca vs Ind. Yumbo,[DESCARTES] Remates Puerta > 5.5,1.28,1.28,66.2,🟢 [VALOR ALTO / OPERABLE],500.0,Ganada,640.0,AUDITADA FT 1-0
+2026-10-24 11:45:30,1493208,San Lorenzo vs Newells Old Boys,[DESCARTES] Remates Puerta > 5.5,1.28,1.28,65.7,🟢 [VALOR ALTO / OPERABLE],500.0,Ganada,640.0,AUDITADA FT 0-0
 2026-10-24 11:45:30,1493207,Rosario Central vs Huracan,[DESCARTES] Remates Puerta > 5.5,1.28,1.28,64.8,🟢 [VALOR ALTO / OPERABLE],500.0,Ganada,640.0,AUDITADA FT 2-0
 2026-10-24 11:45:30,1584443,Gaziantep FK vs Erzurumspor FK,[DESCARTES] Faltas Totales > 21.5,1.23,1.23,76.7,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,615.0,AUDITADA FT 1-3
 2026-10-24 11:45:30,1584443,Gaziantep FK vs Erzurumspor FK,[DESCARTES] Total Menos de 2.5 (Under),1.26,1.26,74.4,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 1-3
 2026-10-24 11:45:31,1593341,Iraklis 1908 vs Kifisia,[DESCARTES] Remates Puerta > 5.5,1.28,1.28,68.1,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,640.0,AUDITADA FT 2-3
 2026-10-24 14:27:01,1575202,SC Paderborn 07 vs Hamburger SV,[VIP] Gol en 1T,1.54,1.54,68.0,🟢 [LUZ VERDE / ALTO VALOR],2200.0,Perdida,0.0,AUDITADA FT 1-0
-2026-10-24 14:27:01,1575202,SC Paderborn 07 vs Hamburger SV,[FREE] Remates Puerta > 5.5,1.28,1.28,73.6,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 1-0
+2026-10-24 14:27:01,1575202,SC Paderborn 07 vs Hamburger SV,[FREE] Remates Puerta > 5.5,1.28,1.28,73.6,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,640.0,AUDITADA FT 1-0
 2026-10-24 14:28:02,1603067,Al Kholood vs Al-Ettifaq,[VIP] Gol en 1T,1.49,1.49,68.7,🟢 [LUZ VERDE / ALTO VALOR],1200.0,Ganada,1788.0,AUDITADA FT 0-3
 2026-10-24 14:28:02,1603067,Al Kholood vs Al-Ettifaq,[FREE] Remates Puerta > 5.5,1.25,1.25,75.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,625.0,AUDITADA FT 0-3
 2026-10-24 14:28:08,1550164,Napoli vs AS Roma,[FREE] Total Menos de 3.5 (Under),1.16,1.16,80.6,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 3-3
 2026-10-24 14:28:37,1569987,Girona vs Celta de Vigo II,[FREE] Total Menos de 3.5 (Under),1.23,1.23,76.8,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 5-1
-2026-10-24 14:28:45,1569989,Las Palmas vs Real Sociedad II,[VIP] Tarjetas > 3.5,1.55,1.55,68.0,🟢 [LUZ VERDE / ALTO VALOR],2500.0,Perdida,0.0,AUDITADA FT 1-0
+2026-10-24 14:28:45,1569989,Las Palmas vs Real Sociedad II,[VIP] Tarjetas > 3.5,1.55,1.55,68.0,🟢 [LUZ VERDE / ALTO VALOR],2500.0,Ganada,3875.0,AUDITADA FT 1-0
 2026-10-24 14:28:45,1569989,Las Palmas vs Real Sociedad II,[VIP] Total Menos de 2.5 (Under),1.62,1.62,68.0,🟢 [LUZ VERDE / ALTO VALOR],4100.0,Ganada,6642.0,AUDITADA FT 1-0
 2026-10-24 14:28:45,1569989,Las Palmas vs Real Sociedad II,[FREE] Total Menos de 3.5 (Under),1.16,1.16,82.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,580.0,AUDITADA FT 1-0
-2026-10-24 14:28:45,1569989,Las Palmas vs Real Sociedad II,[FREE] Remates Puerta > 5.5,1.28,1.28,68.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 1-0
+2026-10-24 14:28:45,1569989,Las Palmas vs Real Sociedad II,[FREE] Remates Puerta > 5.5,1.28,1.28,68.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,640.0,AUDITADA FT 1-0
 2026-10-24 14:29:36,1603069,Al Riyadh vs Al Taawon,[VIP] Córners > 7.5,1.45,1.45,70.3,🟢 [LUZ VERDE / ALTO VALOR],1100.0,Ganada,1595.0,AUDITADA FT 2-1
 2026-10-24 14:29:36,1603069,Al Riyadh vs Al Taawon,[VIP] Remates Puerta > 5.5,1.54,1.54,68.0,🟢 [LUZ VERDE / ALTO VALOR],2200.0,Ganada,3388.0,AUDITADA FT 2-1
 2026-10-24 14:29:36,1603069,Al Riyadh vs Al Taawon,[FREE] Córners > 7.5,1.28,1.28,70.3,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,640.0,AUDITADA FT 2-1
@@ -589,7 +589,7 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-10-24 20:12:44,1575202,SC Paderborn 07 vs Hamburger SV,[VIP] Gol en 2do Tiempo,1.41,1.41,72.3,🟢 [LUZ VERDE / ALTO VALOR],1200.0,Ganada,1692.0,AUDITADA FT 1-0
 2026-10-24 20:12:44,1575202,SC Paderborn 07 vs Hamburger SV,[FREE] Total Menos de 3.5 (Under),1.16,1.16,80.2,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,580.0,AUDITADA FT 1-0
 2026-10-24 20:12:44,1575202,SC Paderborn 07 vs Hamburger SV,[FREE] Doble Oport. 1X,1.16,1.16,82.7,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,580.0,AUDITADA FT 1-0
-2026-10-25 09:04:20,1552202,Fortuna Sittard vs Excelsior,[VIP] Remates Puerta > 6.5,1.42,1.42,78.3,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Perdida,0.0,AUDITADA FT 1-0
+2026-10-25 09:04:20,1552202,Fortuna Sittard vs Excelsior,[VIP] Remates Puerta > 6.5,1.42,1.42,78.3,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,7100.0,AUDITADA FT 1-0
 2026-10-25 09:04:20,1552202,Fortuna Sittard vs Excelsior,[VIP] Total Asiático > 2.25,1.52,1.52,68.0,🟢 [LUZ VERDE / ALTO VALOR],1600.0,Perdida,0.0,AUDITADA FT 1-0
 2026-10-25 09:04:20,1552202,Fortuna Sittard vs Excelsior,[FREE] Remates Puerta > 5.5,1.16,1.16,84.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,580.0,AUDITADA FT 1-0
 2026-10-25 09:04:20,1552202,Fortuna Sittard vs Excelsior,[FREE] Gol en 2do Tiempo,1.16,1.16,83.6,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,580.0,AUDITADA FT 1-0
@@ -651,7 +651,7 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-10-25 09:06:06,1569981,Albacete vs Eldense,[VIP] Tarjetas > 3.5,1.57,1.57,68.0,🟢 [LUZ VERDE / ALTO VALOR],3000.0,Ganada,4710.0,AUDITADA FT 2-0
 2026-10-25 09:06:06,1569981,Albacete vs Eldense,[FREE] Remates Puerta > 5.5,1.22,1.22,77.2,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,610.0,AUDITADA FT 2-0
 2026-10-25 09:06:06,1569981,Albacete vs Eldense,[FREE] Gol en 2do Tiempo,1.25,1.25,75.1,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 2-0
-2026-10-25 09:06:14,1570427,Celta Vigo vs Real Betis,[VIP] Remates Puerta > 6.5,1.42,1.42,81.6,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Perdida,0.0,AUDITADA FT 0-0
+2026-10-25 09:06:14,1570427,Celta Vigo vs Real Betis,[VIP] Remates Puerta > 6.5,1.42,1.42,81.6,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,7100.0,AUDITADA FT 0-0
 2026-10-25 09:06:14,1570427,Celta Vigo vs Real Betis,[VIP] Total Asiático > 2.25,1.57,1.57,68.0,🟢 [LUZ VERDE / ALTO VALOR],3000.0,Perdida,0.0,AUDITADA FT 0-0
 2026-10-25 09:06:14,1570427,Celta Vigo vs Real Betis,[FREE] Remates Puerta > 5.5,1.16,1.16,84.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,580.0,AUDITADA FT 0-0
 2026-10-25 09:06:14,1570427,Celta Vigo vs Real Betis,[FREE] Gol en 2do Tiempo,1.16,1.16,82.2,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 0-0
@@ -668,7 +668,7 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-10-25 09:06:32,1584444,Göztepe vs Çorum FK,[FREE] Faltas Totales > 21.5,1.16,1.16,84.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,580.0,AUDITADA FT 2-0
 2026-10-25 09:06:32,1584444,Göztepe vs Çorum FK,[FREE] Remates Puerta > 5.5,1.16,1.16,84.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,580.0,AUDITADA FT 2-0
 2026-10-25 09:06:40,1552792,Angers vs Lorient,[VIP] Over 1.5 Goles,1.45,1.45,70.2,🟢 [LUZ VERDE / ALTO VALOR],1000.0,Perdida,0.0,AUDITADA FT 0-0
-2026-10-25 09:06:40,1552792,Angers vs Lorient,[VIP] Remates Puerta > 6.5,1.71,1.71,68.0,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Perdida,0.0,AUDITADA FT 0-0
+2026-10-25 09:06:40,1552792,Angers vs Lorient,[VIP] Remates Puerta > 6.5,1.71,1.71,68.0,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,8550.0,AUDITADA FT 0-0
 2026-10-25 09:06:40,1552792,Angers vs Lorient,[FREE] Gol en 2do Tiempo,1.27,1.27,73.8,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 0-0
 2026-10-25 09:06:40,1552792,Angers vs Lorient,[FREE] Remates Puerta > 5.5,1.28,1.28,73.7,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,640.0,AUDITADA FT 0-0
 2026-10-25 09:06:46,1552793,Auxerre vs Le Mans,[VIP] Faltas Totales > 22.5,1.42,1.42,84.9,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,7100.0,AUDITADA FT 1-1
@@ -684,7 +684,7 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-10-25 09:06:59,1552798,Rennes vs Strasbourg,[FREE] Remates Puerta > 5.5,1.16,1.16,84.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,580.0,AUDITADA FT 3-0
 2026-10-25 09:06:59,1552798,Rennes vs Strasbourg,[FREE] Gol en 2do Tiempo,1.16,1.16,82.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,580.0,AUDITADA FT 3-0
 2026-10-25 09:07:05,1552799,Toulouse vs Estac Troyes,[VIP] Faltas Totales > 22.5,1.42,1.42,73.8,🟢 [LUZ VERDE / ALTO VALOR],2800.0,Ganada,3976.0,AUDITADA FT 0-0
-2026-10-25 09:07:05,1552799,Toulouse vs Estac Troyes,[VIP] Remates Puerta > 6.5,1.42,1.42,73.3,🟢 [LUZ VERDE / ALTO VALOR],2400.0,Perdida,0.0,AUDITADA FT 0-0
+2026-10-25 09:07:05,1552799,Toulouse vs Estac Troyes,[VIP] Remates Puerta > 6.5,1.42,1.42,73.3,🟢 [LUZ VERDE / ALTO VALOR],2400.0,Ganada,3408.0,AUDITADA FT 0-0
 2026-10-25 09:07:05,1552799,Toulouse vs Estac Troyes,[FREE] Remates Puerta > 5.5,1.16,1.16,84.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,580.0,AUDITADA FT 0-0
 2026-10-25 09:07:05,1552799,Toulouse vs Estac Troyes,[FREE] Faltas Totales > 21.5,1.16,1.16,80.1,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,580.0,AUDITADA FT 0-0
 2026-10-25 09:07:13,1575198,SC Freiburg vs Bayern München,[VIP] Remates Puerta > 6.5,1.42,1.42,85.7,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,7100.0,AUDITADA FT 1-3
@@ -705,7 +705,7 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-10-25 09:07:39,1593339,Aris Thessalonikis vs Atromitos,[VIP] Over 1.5 Goles,1.52,1.52,68.0,🟢 [LUZ VERDE / ALTO VALOR],1600.0,Ganada,2432.0,AUDITADA FT 3-1
 2026-10-25 09:07:39,1593339,Aris Thessalonikis vs Atromitos,[FREE] Faltas Totales > 21.5,1.16,1.16,84.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,580.0,AUDITADA FT 3-1
 2026-10-25 09:07:39,1593339,Aris Thessalonikis vs Atromitos,[FREE] Gol en 2do Tiempo,1.28,1.28,71.3,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 3-1
-2026-10-25 09:07:46,1575522,Nacional vs SC Braga,[VIP] Remates Puerta > 6.5,1.42,1.42,80.2,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Perdida,0.0,AUDITADA FT 1-0
+2026-10-25 09:07:46,1575522,Nacional vs SC Braga,[VIP] Remates Puerta > 6.5,1.42,1.42,80.2,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,7100.0,AUDITADA FT 1-0
 2026-10-25 09:07:46,1575522,Nacional vs SC Braga,[VIP] Faltas Totales > 22.5,1.42,1.42,74.8,🟢 [LUZ VERDE / ALTO VALOR],3700.0,Ganada,5254.0,AUDITADA FT 1-0
 2026-10-25 09:07:46,1575522,Nacional vs SC Braga,[FREE] Remates Puerta > 5.5,1.16,1.16,84.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,580.0,AUDITADA FT 1-0
 2026-10-25 09:07:46,1575522,Nacional vs SC Braga,[FREE] Gol en 2do Tiempo,1.16,1.16,83.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 1-0
@@ -755,7 +755,7 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-10-25 09:09:21,1550161,Inter vs Fiorentina,[FREE] Gol en 2do Tiempo,1.16,1.16,83.9,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,580.0,AUDITADA FT 2-1
 2026-10-25 09:09:21,1549838,Fortaleza FC vs Deportivo Cali,[VIP] Tarjetas > 3.5,1.6,1.60,68.0,🟢 [LUZ VERDE / ALTO VALOR],3700.0,Ganada,5920.0,AUDITADA FT 1-1
 2026-10-25 09:09:21,1549838,Fortaleza FC vs Deportivo Cali,[VIP] Doble Oport. 1X,1.38,1.38,80.1,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,6900.0,AUDITADA FT 1-1
-2026-10-25 09:09:21,1493204,Independiente vs Boca Juniors,[VIP] Remates Puerta > 6.5,1.42,1.42,83.5,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Perdida,0.0,AUDITADA FT 0-1
+2026-10-25 09:09:21,1493204,Independiente vs Boca Juniors,[VIP] Remates Puerta > 6.5,1.42,1.42,83.5,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,7100.0,AUDITADA FT 0-1
 2026-10-25 09:09:21,1493204,Independiente vs Boca Juniors,[VIP] Faltas Totales > 22.5,1.42,1.42,73.1,🟢 [LUZ VERDE / ALTO VALOR],2300.0,Ganada,3266.0,AUDITADA FT 0-1
 2026-10-25 09:09:21,1557444,Liverpool vs Brighton,[VIP] Remates Puerta > 6.5,1.42,1.42,82.5,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,7100.0,AUDITADA FT 2-0
 2026-10-25 09:09:21,1557444,Liverpool vs Brighton,[VIP] Córners > 8.5,1.48,1.48,72.0,🟢 [LUZ VERDE / ALTO VALOR],3400.0,Ganada,5032.0,AUDITADA FT 2-0
@@ -829,8 +829,6 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-10-26 16:54:12,1549839,Jaguares vs Llaneros,[DESCARTES] Gol en 2do Tiempo,1.32,1.32,69.1,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,660.0,AUDITADA FT 1-0
 2026-10-26 16:54:12,1493205,Instituto Cordoba vs Deportivo Riestra,[DESCARTES] Total Menos de 3.5 (Under),1.18,1.18,85.5,🟢 [LUZ VERDE / ALTO VALOR],1300.0,Ganada,1534.0,AUDITADA FT 1-0
 2026-10-26 16:54:12,1493205,Instituto Cordoba vs Deportivo Riestra,[DESCARTES] Remates Puerta > 5.5,1.32,1.32,70.6,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,660.0,AUDITADA FT 1-0
-2026-10-26 16:54:12,1569983,FC Andorra vs Burgos,[DESCARTES] Faltas Totales > 21.5,1.18,1.18,88.5,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,5900.0,AUDITADA FT 2-3
-2026-10-26 16:54:12,1569983,FC Andorra vs Burgos,[DESCARTES] Remates Puerta > 5.5,1.32,1.32,71.8,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,660.0,AUDITADA FT 2-3
 2026-10-27 10:38:52,1645417,Ağrı 1970 vs İstanbulspor,[VIP] Over 1.5 Goles,1.4,1.40,72.7,🟢 [LUZ VERDE / ALTO VALOR],1100.0,Ganada,1540.0,AUDITADA FT 1-2
 2026-10-27 10:38:52,1645417,Ağrı 1970 vs İstanbulspor,[VIP] Faltas Totales > 22.5,1.64,1.64,68.0,🟢 [LUZ VERDE / ALTO VALOR],4500.0,Ganada,7380.0,AUDITADA FT 1-2
 2026-10-27 10:38:52,1645417,Ağrı 1970 vs İstanbulspor,[FREE] Over 1.5 Goles,1.31,1.31,72.7,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,655.0,AUDITADA FT 1-2
@@ -1238,7 +1236,7 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-10-28 18:46:22,1638569,SSV Jeddeloh vs Hertha BSC,[FREE] Gol en 2do Tiempo,1.18,1.18,83.8,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 0-2
 2026-10-28 18:46:24,1638570,SC Paderborn 07 vs VfB Stuttgart,[VIP] Gol en 2do Tiempo,1.38,1.38,83.9,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,6900.0,AUDITADA FT 0-1
 2026-10-28 18:46:24,1638570,SC Paderborn 07 vs VfB Stuttgart,[VIP] Tarjetas > 3.5,1.57,1.57,68.0,🟢 [LUZ VERDE / ALTO VALOR],3000.0,Ganada,4710.0,AUDITADA FT 0-1
-2026-10-28 18:46:24,1638570,SC Paderborn 07 vs VfB Stuttgart,[FREE] Remates Puerta > 6.5,1.18,1.18,84.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 0-1
+2026-10-28 18:46:24,1638570,SC Paderborn 07 vs VfB Stuttgart,[FREE] Remates Puerta > 6.5,1.18,1.18,84.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 0-1
 2026-10-28 18:46:24,1638570,SC Paderborn 07 vs VfB Stuttgart,[FREE] Gol en 2do Tiempo,1.18,1.18,83.9,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 0-1
 2026-10-28 18:46:25,1638572,Dynamo Dresden vs FC Schalke 04,[VIP] Gol en 2do Tiempo,1.38,1.38,82.0,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,6900.0,AUDITADA FT 2-0
 2026-10-28 18:46:25,1638572,Dynamo Dresden vs FC Schalke 04,[VIP] Ambos Marcan (BTTS),1.7,1.70,68.0,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Perdida,0.0,AUDITADA FT 2-0
@@ -1253,14 +1251,14 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-10-28 18:46:38,1644365,Pamplona vs Eibar,[FREE] Gol en 2do Tiempo,1.31,1.31,72.7,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 0-0
 2026-10-28 18:46:42,1644369,Portugalete vs Real Unión,[VIP] Gol en 2do Tiempo,1.38,1.38,79.4,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Perdida,0.0,AUDITADA FT 0-0
 2026-10-28 18:46:42,1644369,Portugalete vs Real Unión,[FREE] Gol en 2do Tiempo,1.18,1.18,79.4,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 0-0
-2026-10-28 18:46:42,1644369,Portugalete vs Real Unión,[FREE] Remates Puerta > 6.5,1.32,1.32,71.3,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 0-0
+2026-10-28 18:46:42,1644369,Portugalete vs Real Unión,[FREE] Remates Puerta > 6.5,1.32,1.32,71.3,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,660.0,AUDITADA FT 0-0
 2026-10-28 18:46:43,1644379,Tarancón vs Levante,[VIP] Tarjetas > 3.5,1.61,1.61,68.0,🟢 [LUZ VERDE / ALTO VALOR],3900.0,Ganada,6279.0,AUDITADA FT 0-0
 2026-10-28 18:46:43,1644379,Tarancón vs Levante,[FREE] Gol en 2do Tiempo,1.28,1.28,74.1,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 0-0
 2026-10-28 18:46:43,1644379,Tarancón vs Levante,[FREE] Córners > 7.5,1.32,1.32,68.2,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,660.0,AUDITADA FT 0-0
 2026-10-28 18:46:57,1644334,Alcoyano vs Mallorca,[VIP] Gol en 2do Tiempo,1.38,1.38,76.2,🟢 [LUZ VERDE / ALTO VALOR],3400.0,Perdida,0.0,AUDITADA FT 0-0
 2026-10-28 18:46:57,1644334,Alcoyano vs Mallorca,[VIP] Tarjetas > 3.5,1.47,1.47,69.2,🟢 [LUZ VERDE / ALTO VALOR],900.0,Ganada,1323.0,AUDITADA FT 0-0
 2026-10-28 18:46:57,1644334,Alcoyano vs Mallorca,[FREE] Gol en 2do Tiempo,1.25,1.25,76.2,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 0-0
-2026-10-28 18:46:57,1644334,Alcoyano vs Mallorca,[FREE] Remates Puerta > 6.5,1.18,1.18,80.1,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 0-0
+2026-10-28 18:46:57,1644334,Alcoyano vs Mallorca,[FREE] Remates Puerta > 6.5,1.18,1.18,80.1,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 0-0
 2026-10-28 18:47:36,1644380,Tavernes vs Valencia,[VIP] Tarjetas > 3.5,1.55,PENDIENTE_CLV,68.0,🟢 [LUZ VERDE / ALTO VALOR],2500.0,Pendiente,0.0,AUDITANDO
 2026-10-28 18:47:36,1644380,Tavernes vs Valencia,[FREE] Gol en 2do Tiempo,1.31,PENDIENTE_CLV,72.7,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
 2026-10-28 18:47:36,1644380,Tavernes vs Valencia,[FREE] Tarjetas > 3.5,1.32,PENDIENTE_CLV,65.9,🟢 [VALOR ALTO / OPERABLE],500.0,Pendiente,0.0,AUDITANDO
@@ -1486,13 +1484,13 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-10-29 15:46:13,1550170,Frosinone vs Lecce,[VIP] Remates Puerta > 6.5,1.42,1.42,78.7,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,7100.0,AUDITADA FT 5-1
 2026-10-29 15:46:14,1550170,Frosinone vs Lecce,[FREE] Faltas Totales > 21.5,1.18,1.18,84.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 5-1
 2026-10-29 15:46:14,1550170,Frosinone vs Lecce,[FREE] Doble Oport. 1X,1.18,1.18,78.8,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 5-1
-2026-10-29 15:46:15,1645427,Eskişehirspor vs Iğdır FK,[VIP] Remates Puerta > 6.5,1.42,1.42,79.6,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Perdida,0.0,AUDITADA FT 1-0
+2026-10-29 15:46:15,1645427,Eskişehirspor vs Iğdır FK,[VIP] Remates Puerta > 6.5,1.42,1.42,79.6,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,7100.0,AUDITADA FT 1-0
 2026-10-29 15:46:15,1645427,Eskişehirspor vs Iğdır FK,[VIP] Gol en 2do Tiempo,1.38,1.38,75.4,🟢 [LUZ VERDE / ALTO VALOR],2600.0,Ganada,3588.0,AUDITADA FT 1-0
-2026-10-29 15:46:15,1645427,Eskişehirspor vs Iğdır FK,[FREE] Remates Puerta > 6.5,1.18,1.18,79.6,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 1-0
+2026-10-29 15:46:15,1645427,Eskişehirspor vs Iğdır FK,[FREE] Remates Puerta > 6.5,1.18,1.18,79.6,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 1-0
 2026-10-29 15:46:15,1645427,Eskişehirspor vs Iğdır FK,[FREE] Over 1.5 Goles,1.18,1.18,80.3,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 1-0
 2026-10-29 15:46:18,1641978,Kozakken Boys vs Utrecht,[VIP] Over 1.5 Goles,1.38,1.38,77.3,🟢 [LUZ VERDE / ALTO VALOR],4400.0,Perdida,0.0,AUDITADA FT 0-1
-2026-10-29 15:46:18,1641978,Kozakken Boys vs Utrecht,[VIP] Remates Puerta > 7.5,1.48,1.48,76.1,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Perdida,0.0,AUDITADA FT 0-1
-2026-10-29 15:46:18,1641978,Kozakken Boys vs Utrecht,[FREE] Remates Puerta > 6.5,1.18,1.18,84.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 0-1
+2026-10-29 15:46:18,1641978,Kozakken Boys vs Utrecht,[VIP] Remates Puerta > 7.5,1.48,1.48,76.1,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,7400.0,AUDITADA FT 0-1
+2026-10-29 15:46:18,1641978,Kozakken Boys vs Utrecht,[FREE] Remates Puerta > 6.5,1.18,1.18,84.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 0-1
 2026-10-29 15:46:18,1641978,Kozakken Boys vs Utrecht,[FREE] Over 1.5 Goles,1.23,1.23,77.3,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 0-1
 2026-10-29 15:46:22,1644339,Atletico Calatayud vs Osasuna,[VIP] Over 1.5 Goles,1.38,1.38,80.5,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,6900.0,AUDITADA FT 0-6
 2026-10-29 15:46:22,1644339,Atletico Calatayud vs Osasuna,[VIP] Faltas Totales > 22.5,1.42,1.42,73.8,🟢 [LUZ VERDE / ALTO VALOR],2900.0,Ganada,4118.0,AUDITADA FT 0-6
@@ -1543,8 +1541,8 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-10-29 15:46:43,1644349,Conquense vs Castellón,[FREE] Gol en 2do Tiempo,1.31,1.31,72.7,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,655.0,AUDITADA FT 0-3
 2026-10-29 15:46:43,1644349,Conquense vs Castellón,[FREE] Faltas Totales > 21.5,1.32,1.32,70.4,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,660.0,AUDITADA FT 0-3
 2026-10-29 15:46:45,1644351,Covadonga vs Valladolid,[VIP] Gol en 1T,1.38,1.38,76.2,🟢 [LUZ VERDE / ALTO VALOR],3300.0,Ganada,4554.0,AUDITADA FT 0-1
-2026-10-29 15:46:45,1644351,Covadonga vs Valladolid,[VIP] Remates Puerta > 7.5,1.48,1.48,76.1,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Perdida,0.0,AUDITADA FT 0-1
-2026-10-29 15:46:45,1644351,Covadonga vs Valladolid,[FREE] Remates Puerta > 6.5,1.18,1.18,84.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 0-1
+2026-10-29 15:46:45,1644351,Covadonga vs Valladolid,[VIP] Remates Puerta > 7.5,1.48,1.48,76.1,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,7400.0,AUDITADA FT 0-1
+2026-10-29 15:46:45,1644351,Covadonga vs Valladolid,[FREE] Remates Puerta > 6.5,1.18,1.18,84.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 0-1
 2026-10-29 15:46:45,1644351,Covadonga vs Valladolid,[FREE] Gol en 2do Tiempo,1.18,1.18,81.9,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 0-1
 2026-10-29 15:46:46,1644356,Guijuelo vs Sporting Gijon,[VIP] Gol en 2do Tiempo,1.47,1.47,69.3,🟢 [LUZ VERDE / ALTO VALOR],1000.0,Ganada,1470.0,AUDITADA FT 1-3
 2026-10-29 15:46:46,1644356,Guijuelo vs Sporting Gijon,[VIP] Tarjetas > 3.5,1.55,1.55,68.0,🟢 [LUZ VERDE / ALTO VALOR],2500.0,Ganada,3875.0,AUDITADA FT 1-3
@@ -1558,10 +1556,6 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-10-29 15:46:49,1644362,Mijas Las Lagunas vs Real Jaén,[VIP] Gol en 2do Tiempo,1.4,PENDIENTE_CLV,72.7,🟢 [LUZ VERDE / ALTO VALOR],1100.0,Pendiente,0.0,AUDITANDO
 2026-10-29 15:46:49,1644362,Mijas Las Lagunas vs Real Jaén,[FREE] Gol en 2do Tiempo,1.31,PENDIENTE_CLV,72.7,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
 2026-10-29 15:46:49,1644362,Mijas Las Lagunas vs Real Jaén,[FREE] Faltas Totales > 21.5,1.32,PENDIENTE_CLV,70.4,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
-2026-10-29 15:46:52,1644385,Varea vs FC Andorra,[VIP] Gol en 1T,1.38,1.38,76.5,🟢 [LUZ VERDE / ALTO VALOR],3700.0,Ganada,5106.0,AUDITADA FT 0-3
-2026-10-29 15:46:52,1644385,Varea vs FC Andorra,[VIP] Remates Puerta > 7.5,1.48,1.48,74.8,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,7400.0,AUDITADA FT 0-3
-2026-10-29 15:46:52,1644385,Varea vs FC Andorra,[FREE] Remates Puerta > 6.5,1.18,1.18,84.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 0-3
-2026-10-29 15:46:52,1644385,Varea vs FC Andorra,[FREE] Córners > 7.5,1.23,1.23,77.4,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,615.0,AUDITADA FT 0-3
 2026-10-29 15:46:54,1647443,Popayan vs Union Magdalena,[VIP] Faltas Totales > 22.5,1.42,1.42,84.1,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,7100.0,AUDITADA FT 1-1
 2026-10-29 15:46:54,1647443,Popayan vs Union Magdalena,[VIP] Tarjetas > 3.5,1.48,1.48,68.9,🟢 [LUZ VERDE / ALTO VALOR],1000.0,Ganada,1480.0,AUDITADA FT 1-1
 2026-10-29 15:46:55,1647443,Popayan vs Union Magdalena,[FREE] Faltas Totales > 22.5,1.18,1.18,84.1,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 1-1
@@ -1768,7 +1762,7 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-10-31 11:18:06,1557452,Hull City vs Ipswich,[FREE] Remates Puerta > 6.5,1.29,1.29,73.6,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,645.0,AUDITADA FT 2-2
 2026-10-31 11:18:06,1557452,Hull City vs Ipswich,[FREE] Córners > 7.5,1.24,1.24,76.8,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,620.0,AUDITADA FT 2-2
 2026-10-31 11:18:08,1557454,Manchester City vs Brighton,[VIP] Gol en 1T,1.38,1.38,79.8,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,6900.0,AUDITADA FT 0-1
-2026-10-31 11:18:08,1557454,Manchester City vs Brighton,[VIP] Remates Puerta > 7.5,1.48,1.48,76.1,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Perdida,0.0,AUDITADA FT 0-1
+2026-10-31 11:18:08,1557454,Manchester City vs Brighton,[VIP] Remates Puerta > 7.5,1.48,1.48,76.1,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,7400.0,AUDITADA FT 0-1
 2026-10-31 11:18:10,1569996,Eibar vs Almeria,[VIP] Gol en 1T,1.38,1.38,74.0,🟢 [LUZ VERDE / ALTO VALOR],1400.0,Ganada,1932.0,AUDITADA FT 1-1
 2026-10-31 11:18:10,1569996,Eibar vs Almeria,[VIP] Remates Puerta > 7.5,1.48,1.48,71.1,🟢 [LUZ VERDE / ALTO VALOR],2700.0,Ganada,3996.0,AUDITADA FT 1-1
 2026-10-31 11:18:10,1569996,Eibar vs Almeria,[FREE] Remates Puerta > 6.5,1.18,1.18,82.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 1-1
@@ -1810,8 +1804,8 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-10-31 11:18:26,1575203,Bayern München vs Borussia Dortmund,[VIP] Gol en 2do Tiempo,1.38,1.38,77.7,🟢 [LUZ VERDE / ALTO VALOR],4800.0,Ganada,6624.0,AUDITADA FT 2-2
 2026-10-31 11:18:26,1575203,Bayern München vs Borussia Dortmund,[VIP] Remates Puerta > 7.5,1.48,1.48,76.1,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,7400.0,AUDITADA FT 2-2
 2026-10-31 11:18:28,1552208,Heerenveen vs NEC Nijmegen,[VIP] Doble Oport. 1X,1.38,1.38,75.6,🟢 [LUZ VERDE / ALTO VALOR],2900.0,Ganada,4002.0,AUDITADA FT 1-0
-2026-10-31 11:18:28,1552208,Heerenveen vs NEC Nijmegen,[VIP] Remates Puerta > 7.5,1.48,1.48,76.1,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Perdida,0.0,AUDITADA FT 1-0
-2026-10-31 11:18:28,1552208,Heerenveen vs NEC Nijmegen,[FREE] Remates Puerta > 6.5,1.18,1.18,84.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 1-0
+2026-10-31 11:18:28,1552208,Heerenveen vs NEC Nijmegen,[VIP] Remates Puerta > 7.5,1.48,1.48,76.1,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,7400.0,AUDITADA FT 1-0
+2026-10-31 11:18:28,1552208,Heerenveen vs NEC Nijmegen,[FREE] Remates Puerta > 6.5,1.18,1.18,84.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 1-0
 2026-10-31 11:18:28,1552208,Heerenveen vs NEC Nijmegen,[FREE] Córners > 7.5,1.18,1.18,80.3,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 1-0
 2026-10-31 11:18:29,1552209,PSV Eindhoven vs Willem II,[VIP] Córners > 8.5,1.51,1.51,68.0,🟢 [LUZ VERDE / ALTO VALOR],1300.0,Ganada,1963.0,AUDITADA FT 7-0
 2026-10-31 11:18:29,1552209,PSV Eindhoven vs Willem II,[VIP] Over 1.5 Goles,1.53,1.53,68.0,🟢 [LUZ VERDE / ALTO VALOR],1900.0,Ganada,2907.0,AUDITADA FT 7-0
@@ -1837,9 +1831,9 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-10-31 11:18:38,1490594,Sporting Kansas City vs FC Dallas,[VIP] Tarjetas > 3.5,1.54,1.54,68.0,🟢 [LUZ VERDE / ALTO VALOR],2200.0,Ganada,3388.0,AUDITADA FT 1-1
 2026-10-31 11:18:38,1490594,Sporting Kansas City vs FC Dallas,[FREE] Córners > 7.5,1.24,1.24,76.7,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,620.0,AUDITADA FT 1-1
 2026-10-31 11:18:38,1490594,Sporting Kansas City vs FC Dallas,[FREE] Over 1.5 Goles,1.18,1.18,79.3,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 1-1
-2026-10-31 11:18:40,1490595,St. Louis City vs San Diego,[VIP] Remates Puerta > 7.5,1.48,1.48,76.1,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Perdida,0.0,AUDITADA FT 0-1
+2026-10-31 11:18:40,1490595,St. Louis City vs San Diego,[VIP] Remates Puerta > 7.5,1.48,1.48,76.1,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,7400.0,AUDITADA FT 0-1
 2026-10-31 11:18:40,1490595,St. Louis City vs San Diego,[VIP] Gol en 1T,1.38,1.38,74.1,🟢 [LUZ VERDE / ALTO VALOR],1500.0,Ganada,2070.0,AUDITADA FT 0-1
-2026-10-31 11:18:40,1490595,St. Louis City vs San Diego,[FREE] Remates Puerta > 6.5,1.18,1.18,84.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 0-1
+2026-10-31 11:18:40,1490595,St. Louis City vs San Diego,[FREE] Remates Puerta > 6.5,1.18,1.18,84.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 0-1
 2026-10-31 11:18:40,1490595,St. Louis City vs San Diego,[FREE] Córners > 7.5,1.18,1.18,79.2,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 0-1
 2026-10-31 11:18:42,1550177,AC Milan vs Inter,[FREE] Remates Puerta > 6.5,1.18,1.18,84.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 3-1
 2026-10-31 11:18:42,1550177,AC Milan vs Inter,[FREE] Over 1.5 Goles,1.18,1.18,81.7,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 3-1
@@ -1847,9 +1841,9 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-10-31 11:18:44,1552809,Estac Troyes vs Le Mans,[VIP] Córners > 8.5,1.64,1.64,68.0,🟢 [LUZ VERDE / ALTO VALOR],4500.0,Ganada,7380.0,AUDITADA FT 2-0
 2026-10-31 11:18:44,1552809,Estac Troyes vs Le Mans,[FREE] Over 1.5 Goles,1.28,1.28,74.2,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,640.0,AUDITADA FT 2-0
 2026-10-31 11:18:44,1552809,Estac Troyes vs Le Mans,[FREE] Remates Puerta > 6.5,1.25,1.25,75.7,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,625.0,AUDITADA FT 2-0
-2026-10-31 11:18:47,1552210,Ajax vs AZ Alkmaar,[VIP] Remates Puerta > 6.5,1.42,1.42,85.7,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Perdida,0.0,AUDITADA FT 1-0
+2026-10-31 11:18:47,1552210,Ajax vs AZ Alkmaar,[VIP] Remates Puerta > 6.5,1.42,1.42,85.7,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,7100.0,AUDITADA FT 1-0
 2026-10-31 11:18:47,1552210,Ajax vs AZ Alkmaar,[VIP] Over 1.5 Goles,1.38,1.38,82.2,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Perdida,0.0,AUDITADA FT 1-0
-2026-10-31 11:18:47,1552210,Ajax vs AZ Alkmaar,[FREE] Remates Puerta > 6.5,1.18,1.18,84.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 1-0
+2026-10-31 11:18:47,1552210,Ajax vs AZ Alkmaar,[FREE] Remates Puerta > 6.5,1.18,1.18,84.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 1-0
 2026-10-31 11:18:47,1552210,Ajax vs AZ Alkmaar,[FREE] Over 1.5 Goles,1.18,1.18,82.2,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 1-0
 2026-10-31 11:18:48,1552211,Cambuur vs GO Ahead Eagles,[VIP] Over 1.5 Goles,1.38,1.38,86.7,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,6900.0,AUDITADA FT 4-0
 2026-10-31 11:18:48,1552211,Cambuur vs GO Ahead Eagles,[VIP] Remates Puerta > 7.5,1.48,1.48,71.2,🟢 [LUZ VERDE / ALTO VALOR],2800.0,Ganada,4144.0,AUDITADA FT 4-0
@@ -1907,7 +1901,7 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-10-31 11:19:10,1551026,Club America vs Toluca,[FREE] Córners > 7.5,1.18,1.18,80.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 2-2
 2026-10-31 11:19:30,1557450,Chelsea vs Manchester United,[FREE] Remates Puerta > 6.5,1.18,1.18,80.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 2-0
 2026-10-31 11:19:30,1557450,Chelsea vs Manchester United,[FREE] Córners > 7.5,1.18,1.18,82.1,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 2-0
-2026-10-31 11:19:30,1557454,Manchester City vs Brighton,[FREE] Remates Puerta > 6.5,1.18,1.18,84.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 0-1
+2026-10-31 11:19:30,1557454,Manchester City vs Brighton,[FREE] Remates Puerta > 6.5,1.18,1.18,84.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 0-1
 2026-10-31 11:19:30,1575203,Bayern München vs Borussia Dortmund,[FREE] Córners > 7.5,1.18,1.18,80.4,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 2-2
 2026-10-31 11:19:30,1575203,Bayern München vs Borussia Dortmund,[FREE] Remates Puerta > 6.5,1.18,1.18,84.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 2-2
 2026-10-31 11:19:30,1550177,AC Milan vs Inter,[VIP] Gol en 2do Tiempo,1.38,1.38,77.3,🟢 [LUZ VERDE / ALTO VALOR],4400.0,Perdida,0.0,AUDITADA FT 3-1
@@ -1985,7 +1979,7 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-11-01 09:25:18,1575528,Arouca vs Nacional,[VIP] Over 1.5 Goles,1.74,1.74,68.0,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Perdida,0.0,AUDITADA FT 1-0
 2026-11-01 09:25:18,1575528,Arouca vs Nacional,[VIP] Tarjetas > 3.5,1.46,1.46,70.0,🟢 [LUZ VERDE / ALTO VALOR],1200.0,Ganada,1752.0,AUDITADA FT 1-0
 2026-11-01 09:25:18,1575528,Arouca vs Nacional,[FREE] Tarjetas > 3.5,1.32,1.32,70.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,660.0,AUDITADA FT 1-0
-2026-11-01 09:25:18,1575528,Arouca vs Nacional,[FREE] Remates Puerta > 6.5,1.32,1.32,66.7,🟢 [VALOR ALTO / OPERABLE],500.0,Perdida,0.0,AUDITADA FT 1-0
+2026-11-01 09:25:18,1575528,Arouca vs Nacional,[FREE] Remates Puerta > 6.5,1.32,1.32,66.7,🟢 [VALOR ALTO / OPERABLE],500.0,Ganada,660.0,AUDITADA FT 1-0
 2026-11-01 09:25:20,1552215,Groningen vs Sparta Rotterdam,[VIP] Remates Puerta > 6.5,1.42,1.42,83.9,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,7100.0,AUDITADA FT 2-3
 2026-11-01 09:25:20,1552215,Groningen vs Sparta Rotterdam,[VIP] Gol en 2do Tiempo,1.38,1.38,78.0,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,6900.0,AUDITADA FT 2-3
 2026-11-01 09:25:20,1552215,Groningen vs Sparta Rotterdam,[FREE] Remates Puerta > 6.5,1.18,1.18,83.9,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 2-3
@@ -2004,7 +1998,7 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-11-01 09:25:29,1575205,Eintracht Frankfurt vs Hamburger SV,[VIP] Total Asiático > 2.25,1.65,1.65,68.0,🟢 [LUZ VERDE / ALTO VALOR],4700.0,Ganada,7755.0,AUDITADA FT 3-1
 2026-11-01 09:25:29,1575205,Eintracht Frankfurt vs Hamburger SV,[FREE] Córners > 7.5,1.23,1.23,77.1,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,615.0,AUDITADA FT 3-1
 2026-11-01 09:25:29,1575205,Eintracht Frankfurt vs Hamburger SV,[FREE] Doble Oport. 1X,1.18,1.18,81.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 3-1
-2026-11-01 09:25:34,1570437,Elche vs Valencia,[VIP] Remates Puerta > 6.5,1.75,1.75,68.0,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Perdida,0.0,AUDITADA FT 0-1
+2026-11-01 09:25:34,1570437,Elche vs Valencia,[VIP] Remates Puerta > 6.5,1.75,1.75,68.0,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,8750.0,AUDITADA FT 0-1
 2026-11-01 09:25:34,1570437,Elche vs Valencia,[VIP] Tarjetas > 3.5,1.58,1.58,68.0,🟢 [LUZ VERDE / ALTO VALOR],3200.0,Ganada,5056.0,AUDITADA FT 0-1
 2026-11-01 09:25:34,1570437,Elche vs Valencia,[FREE] Córners > 7.5,1.32,1.32,63.4,🟢 [VALOR ALTO / OPERABLE],500.0,Ganada,660.0,AUDITADA FT 0-1
 2026-11-01 09:25:34,1570437,Elche vs Valencia,[FREE] Tarjetas > 3.5,1.32,1.32,64.4,🟢 [VALOR ALTO / OPERABLE],500.0,Ganada,660.0,AUDITADA FT 0-1
@@ -2125,8 +2119,6 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-11-01 21:39:14,1493213,Belgrano Cordoba vs Barracas Central,[DESCARTES] Tarjetas > 3.5,1.32,1.32,70.2,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,660.0,AUDITADA FT 2-2
 2026-11-01 21:39:14,1493221,Lanus vs Gimnasia M.,[DESCARTES] Total Menos de 3.5 (Under),1.18,1.18,90.7,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,5900.0,AUDITADA FT 1-1
 2026-11-01 21:39:14,1493221,Lanus vs Gimnasia M.,[DESCARTES] Doble Oport. 1X,1.18,1.18,73.3,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 1-1
-2026-11-01 21:39:14,1570001,Tenerife vs FC Andorra,[DESCARTES] Tarjetas > 3.5,1.28,1.28,78.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,640.0,AUDITADA FT 2-2
-2026-11-01 21:39:14,1570001,Tenerife vs FC Andorra,[DESCARTES] Córners > 7.5,1.25,1.25,76.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,625.0,AUDITADA FT 2-2
 2026-11-02 00:03:16,1569999,Oviedo vs Las Palmas,[VIP] Tarjetas > 3.5,1.28,1.28,78.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,640.0,AUDITADA FT 2-3
 2026-11-02 00:03:16,1569999,Oviedo vs Las Palmas,[VIP] Córners > 7.5,1.25,1.25,76.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,625.0,AUDITADA FT 2-3
 2026-11-02 00:03:16,1569999,Oviedo vs Las Palmas,[FREE] Córners > 7.5,1.32,1.32,66.8,🟢 [VALOR ALTO / OPERABLE],500.0,Ganada,660.0,AUDITADA FT 2-3
@@ -2144,9 +2136,9 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-11-02 00:03:27,1569998,Mallorca vs Cadiz,[VIP] Córners > 7.5,1.25,1.25,76.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,625.0,AUDITADA FT 2-1
 2026-11-02 00:03:27,1569998,Mallorca vs Cadiz,[FREE] Doble Oport. 1X,1.18,1.18,83.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 2-1
 2026-11-02 00:03:27,1569998,Mallorca vs Cadiz,[FREE] Tarjetas > 3.5,1.32,1.32,65.6,🟢 [VALOR ALTO / OPERABLE],500.0,Ganada,660.0,AUDITADA FT 2-1
-2026-11-02 00:03:30,1575529,Benfica vs Alverca,[FREE] Remates Puerta > 6.5,1.18,1.18,83.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 1-0
+2026-11-02 00:03:30,1575529,Benfica vs Alverca,[FREE] Remates Puerta > 6.5,1.18,1.18,83.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 1-0
 2026-11-02 00:03:30,1575529,Benfica vs Alverca,[FREE] Doble Oport. 1X,1.18,1.18,83.2,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 1-0
-2026-11-02 00:03:31,1575533,GIL Vicente vs Vitória SC,[FREE] Remates Puerta > 6.5,1.18,1.18,83.7,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 0-0
+2026-11-02 00:03:31,1575533,GIL Vicente vs Vitória SC,[FREE] Remates Puerta > 6.5,1.18,1.18,83.7,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 0-0
 2026-11-02 00:03:31,1575533,GIL Vicente vs Vitória SC,[FREE] Gol en 1T,1.27,1.27,74.8,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 0-0
 2026-11-02 00:03:58,1557455,Newcastle vs Everton,[FREE] Córners > 8.5,1.32,1.32,66.8,🟢 [VALOR ALTO / OPERABLE],500.0,Ganada,660.0,AUDITADA FT 1-3
 2026-11-02 00:03:58,1557455,Newcastle vs Everton,[FREE] Over 1.5 Goles,1.32,1.32,61.8,🟢 [VALOR ALTO / OPERABLE],500.0,Perdida,0.0,AUDITADA FT 0-1
@@ -2155,7 +2147,7 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-11-02 00:03:58,1550178,Atalanta vs Parma,[FREE] Doble Oport. 1X,1.18,1.18,83.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 0-3
 2026-11-02 00:03:58,1550178,Atalanta vs Parma,[FREE] Remates Puerta > 5.5,1.32,1.32,63.5,🟢 [VALOR ALTO / OPERABLE],500.0,Ganada,660.0,AUDITADA FT 0-3
 2026-11-02 00:03:58,1575529,Benfica vs Alverca,[VIP] Córners > 8.5,1.48,1.48,73.3,🟢 [LUZ VERDE / ALTO VALOR],4400.0,Ganada,6512.0,AUDITADA FT 1-0
-2026-11-02 00:03:58,1575529,Benfica vs Alverca,[VIP] Remates Puerta > 7.5,1.48,1.48,70.6,🟢 [LUZ VERDE / ALTO VALOR],2300.0,Perdida,0.0,AUDITADA FT 1-0
+2026-11-02 00:03:58,1575529,Benfica vs Alverca,[VIP] Remates Puerta > 7.5,1.48,1.48,70.6,🟢 [LUZ VERDE / ALTO VALOR],2300.0,Ganada,3404.0,AUDITADA FT 1-0
 2026-11-02 00:03:58,1575533,GIL Vicente vs Vitória SC,[VIP] Doble Oport. X2,1.38,1.38,73.8,🟢 [LUZ VERDE / ALTO VALOR],1200.0,Ganada,1656.0,AUDITADA FT 0-0
 2026-11-02 00:03:58,1575533,GIL Vicente vs Vitória SC,[VIP] Over 1.5 Goles,1.46,1.46,69.8,🟢 [LUZ VERDE / ALTO VALOR],1100.0,Perdida,0.0,AUDITADA FT 0-0
 2026-11-02 00:03:58,1552803,Lorient vs Stade Brestois 29,[VIP] Tarjetas > 3.5,1.28,1.28,78.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,640.0,AUDITADA FT 0-2
@@ -2188,7 +2180,7 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-11-02 04:10:00,401877914,Atlético Bucaramanga vs Atlético Nacional,[VIP] Córners > 7.5,1.25,1.25,76.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,625.0,AUDITADA FT 1-1
 2026-11-02 04:10:00,401877914,Atlético Bucaramanga vs Atlético Nacional,[FREE] Total Menos de 3.5 (Under),1.28,1.28,63.0,🟢 [VALOR ALTO / OPERABLE],500.0,Ganada,640.0,AUDITADA FT 1-1
 2026-11-02 04:10:00,401877914,Atlético Bucaramanga vs Atlético Nacional,[FREE] Tarjetas > 3.5,1.28,1.28,62.7,🟢 [VALOR ALTO / OPERABLE],500.0,Ganada,640.0,AUDITADA FT 1-1
-2026-11-02 23:10:00,1575529,Benfica vs Alverca,[VIP] Remates Puerta > 8.5,1.59,1.59,68.0,🟢 [LUZ VERDE / ALTO VALOR],3400.0,Perdida,0.0,AUDITADA FT 1-0
+2026-11-02 23:10:00,1575529,Benfica vs Alverca,[VIP] Remates Puerta > 8.5,1.59,1.59,68.0,🟢 [LUZ VERDE / ALTO VALOR],3400.0,Ganada,5406.0,AUDITADA FT 1-0
 2026-11-02 03:10:00,401841644,Atlético Tucumán vs Argentinos Juniors,[VIP] Córners > 8.5,1.7,1.70,68.0,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,8500.0,AUDITADA FT 1-2
 2026-11-02 03:10:00,401841644,Atlético Tucumán vs Argentinos Juniors,[VIP] Tarjetas > 3.5,1.57,1.57,68.0,🟢 [LUZ VERDE / ALTO VALOR],3000.0,Ganada,4710.0,AUDITADA FT 1-2
 2026-11-02 23:10:00,1575533,GIL Vicente vs Vitória SC,[VIP] Total Asiático > 2.25,1.59,1.59,68.0,🟢 [LUZ VERDE / ALTO VALOR],3400.0,Perdida,0.0,AUDITADA FT 0-0
@@ -2287,16 +2279,16 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-11-04 01:25:00,401841307,Flamengo vs Grêmio,[VIP] Tarjetas > 3.5,1.46,1.46,73.0,🟢 [LUZ VERDE / ALTO VALOR],3600.0,Ganada,5256.0,AUDITADA FT 3-1
 2026-11-04 01:25:00,401841307,Flamengo vs Grêmio,[FREE] Córners > 7.5,1.28,1.28,59.6,🟢 [VALOR ALTO / OPERABLE],500.0,Ganada,640.0,AUDITADA FT 3-1
 2026-11-04 01:25:00,401841307,Flamengo vs Grêmio,[FREE] Tarjetas > 3.5,1.28,1.28,70.3,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,640.0,AUDITADA FT 3-1
-2026-11-04 02:25:00,401877959,Cúcuta Deportivo vs Independiente Santa Fe,[VIP] Remates Puerta > 7.5,1.48,1.48,69.2,🟢 [LUZ VERDE / ALTO VALOR],1200.0,Perdida,0.0,AUDITADA FT 1-0
+2026-11-04 02:25:00,401877959,Cúcuta Deportivo vs Independiente Santa Fe,[VIP] Remates Puerta > 7.5,1.48,1.48,69.2,🟢 [LUZ VERDE / ALTO VALOR],1200.0,Ganada,1776.0,AUDITADA FT 1-0
 2026-11-04 02:25:00,401877959,Cúcuta Deportivo vs Independiente Santa Fe,[VIP] Total Asiático > 2.25,1.76,1.76,68.0,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Perdida,0.0,AUDITADA FT 1-0
-2026-11-04 02:25:00,401877959,Cúcuta Deportivo vs Independiente Santa Fe,[FREE] Remates Puerta > 6.5,1.18,1.18,82.6,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 1-0
+2026-11-04 02:25:00,401877959,Cúcuta Deportivo vs Independiente Santa Fe,[FREE] Remates Puerta > 6.5,1.18,1.18,82.6,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 1-0
 2026-11-04 02:25:00,401877959,Cúcuta Deportivo vs Independiente Santa Fe,[FREE] Over 1.5 Goles,1.24,1.24,76.9,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 1-0
 2026-11-04 03:25:00,401841305,Botafogo vs Atlético-MG,[VIP] Tarjetas > 4.5,1.57,1.57,68.0,🟢 [LUZ VERDE / ALTO VALOR],3000.0,Ganada,4710.0,AUDITADA FT 1-0
 2026-11-04 03:25:00,401841305,Botafogo vs Atlético-MG,[VIP] Córners > 8.5,1.48,1.48,74.5,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,7400.0,AUDITADA FT 1-0
 2026-11-04 03:25:00,401841305,Botafogo vs Atlético-MG,[FREE] Over 1.5 Goles,1.28,1.28,68.3,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 1-0
 2026-11-04 03:25:00,401841305,Botafogo vs Atlético-MG,[FREE] Córners > 8.5,1.28,1.28,67.8,🟢 [VALOR ALTO / OPERABLE],500.0,Ganada,640.0,AUDITADA FT 1-0
 2026-11-04 03:25:00,401841298,São Paulo vs Corinthians,[FREE] Gol en 1T,1.18,1.18,79.7,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 0-0
-2026-11-04 03:25:00,401841298,São Paulo vs Corinthians,[FREE] Remates Puerta > 6.5,1.27,1.27,74.6,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 0-0
+2026-11-04 03:25:00,401841298,São Paulo vs Corinthians,[FREE] Remates Puerta > 6.5,1.27,1.27,74.6,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,635.0,AUDITADA FT 0-0
 2026-11-04 04:25:00,401877910,Millonarios vs América de Cali,[VIP] Córners > 8.5,1.48,1.48,74.5,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,7400.0,AUDITADA FT 0-0
 2026-11-04 04:25:00,401877910,Millonarios vs América de Cali,[VIP] Tarjetas > 4.5,1.46,1.46,73.0,🟢 [LUZ VERDE / ALTO VALOR],3600.0,Ganada,5256.0,AUDITADA FT 0-0
 2026-11-04 04:25:00,401877910,Millonarios vs América de Cali,[FREE] Córners > 7.5,1.28,1.28,69.6,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,640.0,AUDITADA FT 0-0
@@ -2464,7 +2456,7 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-11-05 03:25:00,401841303,Cruzeiro vs Bahia,[FREE] Remates Puerta > 6.5,1.18,1.18,81.9,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 3-2
 2026-11-05 03:25:00,401841303,Cruzeiro vs Bahia,[FREE] Over 1.5 Goles,1.18,1.18,78.6,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 3-2
 2026-11-05 22:55:00,401915533,Bayer Leverkusen vs Marseille,[FREE] Córners > 8.5,1.23,1.23,77.3,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,615.0,AUDITADA FT 0-1
-2026-11-05 22:55:00,401915533,Bayer Leverkusen vs Marseille,[FREE] Remates Puerta > 6.5,1.28,1.28,71.6,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 0-1
+2026-11-05 22:55:00,401915533,Bayer Leverkusen vs Marseille,[FREE] Remates Puerta > 6.5,1.28,1.28,71.6,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,640.0,AUDITADA FT 0-1
 2026-11-05 20:40:00,401915537,Real Sociedad vs Lyon,[FREE] Córners > 8.5,1.28,1.28,73.9,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,640.0,AUDITADA FT 1-1
 2026-11-05 20:40:00,401915537,Real Sociedad vs Lyon,[FREE] Over 1.5 Goles,1.28,1.28,68.4,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,640.0,AUDITADA FT 1-1
 2026-11-05 20:40:00,401915534,AC Milan vs Ferencvaros,[FREE] Córners > 8.5,1.27,1.27,74.8,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,635.0,AUDITADA FT 0-2
@@ -2483,20 +2475,20 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-11-05 01:10:00,401841667,Gimnasia La Plata vs Belgrano (Córdoba),[DESCARTES] Córners > 7.5,1.28,1.28,65.3,🟢 [VALOR ALTO / OPERABLE],500.0,Ganada,640.0,AUDITADA FT 0-1
 2026-11-05 20:40:00,401915831,AGF vs Braga,[DESCARTES] Córners > 7.5,1.28,1.28,58.5,🟢 [VALOR ALTO / OPERABLE],500.0,Ganada,640.0,AUDITADA FT 0-0
 2026-11-05 20:40:00,401915831,AGF vs Braga,[DESCARTES] Tarjetas > 5.5,1.26,1.26,78.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,630.0,AUDITADA FT 0-0
-2026-11-05 20:40:00,401915826,KuPS Kuopio vs KAA Gent,[DESCARTES] Córners > 8.5,1.28,1.28,69.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 0-0
+2026-11-05 20:40:00,401915826,KuPS Kuopio vs KAA Gent,[DESCARTES] Córners > 8.5,1.28,1.28,69.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,640.0,AUDITADA FT 0-0
 2026-11-05 20:40:00,401915826,KuPS Kuopio vs KAA Gent,[DESCARTES] Tarjetas > 4.5,1.26,1.26,78.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,630.0,AUDITADA FT 0-0
 2026-11-06 22:55:00,401900874,Al Fateh vs Al Riyadh,[VIP] Over 1.5 Goles,1.57,1.57,68.0,🟢 [LUZ VERDE / ALTO VALOR],3000.0,Perdida,0.0,AUDITADA FT 0-0
 2026-11-06 22:55:00,401900874,Al Fateh vs Al Riyadh,[VIP] Tarjetas > 3.5,1.74,1.74,68.0,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,8700.0,AUDITADA FT 0-0
 2026-11-06 22:55:00,401900874,Al Fateh vs Al Riyadh,[FREE] Doble Oport. 1X,1.18,1.18,73.6,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 0-0
-2026-11-06 22:55:00,401900874,Al Fateh vs Al Riyadh,[FREE] Córners > 8.5,1.28,1.28,67.2,🟢 [VALOR ALTO / OPERABLE],500.0,Perdida,0.0,AUDITADA FT 0-0
-2026-11-06 22:55:00,401900442,Al Hazem vs Al Nassr,[VIP] Córners > 8.5,1.48,1.48,74.5,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Perdida,0.0,AUDITADA FT 0-0
+2026-11-06 22:55:00,401900874,Al Fateh vs Al Riyadh,[FREE] Córners > 8.5,1.28,1.28,67.2,🟢 [VALOR ALTO / OPERABLE],500.0,Ganada,640.0,AUDITADA FT 0-0
+2026-11-06 22:55:00,401900442,Al Hazem vs Al Nassr,[VIP] Córners > 8.5,1.48,1.48,74.5,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,7400.0,AUDITADA FT 0-0
 2026-11-06 22:55:00,401900442,Al Hazem vs Al Nassr,[VIP] Tarjetas > 3.5,1.46,1.46,73.0,🟢 [LUZ VERDE / ALTO VALOR],3600.0,Ganada,5256.0,AUDITADA FT 0-0
-2026-11-06 22:55:00,401900442,Al Hazem vs Al Nassr,[FREE] Córners > 8.5,1.28,1.28,63.4,🟢 [VALOR ALTO / OPERABLE],500.0,Perdida,0.0,AUDITADA FT 0-0
+2026-11-06 22:55:00,401900442,Al Hazem vs Al Nassr,[FREE] Córners > 8.5,1.28,1.28,63.4,🟢 [VALOR ALTO / OPERABLE],500.0,Ganada,640.0,AUDITADA FT 0-0
 2026-11-06 22:55:00,401900442,Al Hazem vs Al Nassr,[FREE] Tarjetas > 3.5,1.28,1.28,62.3,🟢 [VALOR ALTO / OPERABLE],500.0,Ganada,640.0,AUDITADA FT 0-0
-2026-11-06 22:55:00,401900873,Al Ittihad vs Neom SC,[VIP] Córners > 8.5,1.48,1.48,74.5,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Perdida,0.0,AUDITADA FT 0-0
+2026-11-06 22:55:00,401900873,Al Ittihad vs Neom SC,[VIP] Córners > 8.5,1.48,1.48,74.5,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,7400.0,AUDITADA FT 0-0
 2026-11-06 22:55:00,401900873,Al Ittihad vs Neom SC,[VIP] Tarjetas > 3.5,1.46,1.46,73.0,🟢 [LUZ VERDE / ALTO VALOR],3600.0,Ganada,5256.0,AUDITADA FT 0-0
 2026-11-06 22:55:00,401900873,Al Ittihad vs Neom SC,[FREE] Tarjetas > 3.5,1.28,1.28,64.7,🟢 [VALOR ALTO / OPERABLE],500.0,Ganada,640.0,AUDITADA FT 0-0
-2026-11-06 22:55:00,401900873,Al Ittihad vs Neom SC,[FREE] Córners > 8.5,1.28,1.28,63.0,🟢 [VALOR ALTO / OPERABLE],500.0,Perdida,0.0,AUDITADA FT 0-0
+2026-11-06 22:55:00,401900873,Al Ittihad vs Neom SC,[FREE] Córners > 8.5,1.28,1.28,63.0,🟢 [VALOR ALTO / OPERABLE],500.0,Ganada,640.0,AUDITADA FT 0-0
 2026-11-06 19:55:00,401888256,Gaziantep FK vs Kasimpasa,[VIP] Over 1.5 Goles,1.45,1.45,70.2,🟢 [LUZ VERDE / ALTO VALOR],1000.0,Ganada,1450.0,AUDITADA FT 0-2
 2026-11-06 19:55:00,401888256,Gaziantep FK vs Kasimpasa,[VIP] Tarjetas > 4.5,1.56,1.56,66.5,🟢 [VALOR ALTO / OPERABLE],1700.0,Ganada,2652.0,AUDITADA FT 0-2
 2026-11-06 19:55:00,401888256,Gaziantep FK vs Kasimpasa,[FREE] Faltas Totales > 22.5,1.18,1.18,86.5,🟢 [LUZ VERDE / ALTO VALOR],2900.0,Ganada,3422.0,AUDITADA FT 0-2
@@ -2534,7 +2526,7 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-11-06 22:55:00,401879242,Everton vs Coventry City,[VIP] Gol en 2do Tiempo,1.42,1.42,75.2,🟢 [LUZ VERDE / ALTO VALOR],4000.0,Ganada,5680.0,AUDITADA FT 3-1
 2026-11-06 22:55:00,401879242,Everton vs Coventry City,[VIP] Remates Puerta > 6.5,1.44,1.44,74.0,🟢 [LUZ VERDE / ALTO VALOR],3700.0,Ganada,5328.0,AUDITADA FT 3-1
 2026-11-06 22:55:00,401900874,Al Fateh vs Al Riyadh,[VIP] Gol en 2do Tiempo,1.47,1.47,69.4,🟢 [LUZ VERDE / ALTO VALOR],1100.0,Perdida,0.0,AUDITADA FT 0-0
-2026-11-06 22:55:00,401900874,Al Fateh vs Al Riyadh,[FREE] Córners Al Fateh > 4.5,1.26,1.26,75.4,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 0-0
+2026-11-06 22:55:00,401900874,Al Fateh vs Al Riyadh,[FREE] Córners Al Fateh > 4.5,1.26,1.26,75.4,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,630.0,AUDITADA FT 0-0
 2026-11-06 22:55:00,401900442,Al Hazem vs Al Nassr,[VIP] Gol en 2do Tiempo,1.42,1.42,75.2,🟢 [LUZ VERDE / ALTO VALOR],4000.0,Perdida,0.0,AUDITADA FT 0-0
 2026-11-06 22:55:00,401900442,Al Hazem vs Al Nassr,[FREE] Over 1.5 Goles,1.28,1.28,70.6,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 0-0
 2026-11-06 22:55:00,401900873,Al Ittihad vs Neom SC,[FREE] Doble Oport. 1X,1.28,1.28,70.6,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,640.0,AUDITADA FT 0-0
@@ -2590,12 +2582,12 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-11-06 22:25:00,401883120,Castellón vs Eibar,[DESCARTES] Faltas Totales > 22.5,1.18,1.18,87.2,🟢 [LUZ VERDE / ALTO VALOR],4000.0,Ganada,4720.0,AUDITADA FT 0-0
 2026-11-06 22:25:00,401883120,Castellón vs Eibar,[DESCARTES] Total Menos de 3.5 (Under),1.18,1.18,85.2,🟢 [LUZ VERDE / ALTO VALOR],700.0,Ganada,826.0,AUDITADA FT 0-0
 2026-11-07 22:55:00,401883142,Granada vs Tenerife,[VIP] Over 1.5 Goles,1.41,1.41,72.4,🟢 [LUZ VERDE / ALTO VALOR],1300.0,Perdida,0.0,AUDITADA FT 0-0
-2026-11-07 22:55:00,401883142,Granada vs Tenerife,[VIP] Córners > 8.5,1.58,1.58,66.5,🟢 [VALOR ALTO / OPERABLE],2200.0,Perdida,0.0,AUDITADA FT 0-0
+2026-11-07 22:55:00,401883142,Granada vs Tenerife,[VIP] Córners > 8.5,1.58,1.58,66.5,🟢 [VALOR ALTO / OPERABLE],2200.0,Ganada,3476.0,AUDITADA FT 0-0
 2026-11-07 22:55:00,401883142,Granada vs Tenerife,[FREE] Doble Oport. 1X,1.18,1.18,82.6,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 0-0
 2026-11-07 22:55:00,401883142,Granada vs Tenerife,[FREE] Faltas Totales > 22.5,1.18,1.18,81.2,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 0-0
 2026-11-07 22:55:00,401900875,Al Ettifaq vs Al Hilal,[VIP] Tarjetas > 3.5,1.64,1.64,66.5,🟢 [VALOR ALTO / OPERABLE],3500.0,Ganada,5740.0,AUDITADA FT 0-0
 2026-11-07 22:55:00,401900875,Al Ettifaq vs Al Hilal,[VIP] Gol en 2do Tiempo,1.42,1.42,75.2,🟢 [LUZ VERDE / ALTO VALOR],4000.0,Perdida,0.0,AUDITADA FT 0-0
-2026-11-07 22:55:00,401900875,Al Ettifaq vs Al Hilal,[FREE] Córners > 8.5,1.28,1.28,63.4,🟢 [VALOR ALTO / OPERABLE],500.0,Perdida,0.0,AUDITADA FT 0-0
+2026-11-07 22:55:00,401900875,Al Ettifaq vs Al Hilal,[FREE] Córners > 8.5,1.28,1.28,63.4,🟢 [VALOR ALTO / OPERABLE],500.0,Ganada,640.0,AUDITADA FT 0-0
 2026-11-07 22:55:00,401900875,Al Ettifaq vs Al Hilal,[FREE] Over 1.5 Goles,1.28,1.28,70.6,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 0-0
 2026-11-07 22:55:00,401900876,Al Ahli vs Al Taawoun,[DESCARTES] Total Menos de 3.5 (Under),1.28,1.28,64.7,🟢 [VALOR ALTO / OPERABLE],500.0,Ganada,640.0,AUDITADA FT 0-0
 2026-11-07 22:55:00,401900876,Al Ahli vs Al Taawoun,[DESCARTES] Tarjetas > 3.5,1.28,1.28,65.3,🟢 [VALOR ALTO / OPERABLE],500.0,Ganada,640.0,AUDITADA FT 0-0
@@ -2677,7 +2669,7 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-11-07 17:55:00,401931082,Burton Albion vs AFC Rushden & Diamonds,[FREE] Faltas Totales > 22.5,1.28,1.28,72.3,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,640.0,AUDITADA FT 4-0
 2026-11-07 17:55:00,401931090,Carlisle United vs Salford City,[VIP] Over 1.5 Goles,1.38,1.38,81.9,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Perdida,0.0,AUDITADA FT 1-0
 2026-11-07 17:55:00,401931090,Carlisle United vs Salford City,[VIP] Córners Salford City > 4.5,1.38,1.38,76.8,🟢 [LUZ VERDE / ALTO VALOR],3900.0,Ganada,5382.0,AUDITADA FT 1-0
-2026-11-07 17:55:00,401931090,Carlisle United vs Salford City,[FREE] Remates Puerta > 6.5,1.18,1.18,81.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 1-0
+2026-11-07 17:55:00,401931090,Carlisle United vs Salford City,[FREE] Remates Puerta > 6.5,1.18,1.18,81.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 1-0
 2026-11-07 17:55:00,401931090,Carlisle United vs Salford City,[FREE] Doble Oport. X2,1.18,1.18,79.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 1-0
 2026-11-07 17:55:00,401931088,Cheltenham Town vs FC Halifax Town,[VIP] Faltas Totales > 22.5,1.42,1.42,71.7,🟢 [LUZ VERDE / ALTO VALOR],1000.0,Ganada,1420.0,AUDITADA FT 2-0
 2026-11-07 17:55:00,401931088,Cheltenham Town vs FC Halifax Town,[VIP] Remates Puerta > 6.5,1.62,1.62,66.5,🟢 [VALOR ALTO / OPERABLE],3100.0,Ganada,5022.0,AUDITADA FT 2-0
@@ -2744,7 +2736,7 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-11-07 17:55:00,401931121,Oxford United vs Stevenage,[VIP] Córners > 8.5,1.45,1.45,70.9,🟢 [LUZ VERDE / ALTO VALOR],1600.0,Ganada,2320.0,AUDITADA FT 0-1
 2026-11-07 17:55:00,401931121,Oxford United vs Stevenage,[VIP] Faltas Totales > 22.5,1.68,1.68,66.5,🟢 [VALOR ALTO / OPERABLE],4300.0,Ganada,7224.0,AUDITADA FT 0-1
 2026-11-07 17:55:00,401931121,Oxford United vs Stevenage,[FREE] Gol en 1T,1.18,1.18,78.9,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 0-1
-2026-11-07 17:55:00,401931121,Oxford United vs Stevenage,[FREE] Remates Puerta > 6.5,1.23,1.23,77.4,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 0-1
+2026-11-07 17:55:00,401931121,Oxford United vs Stevenage,[FREE] Remates Puerta > 6.5,1.23,1.23,77.4,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,615.0,AUDITADA FT 0-1
 2026-11-07 17:55:00,401931275,Plymouth Argyle vs Alvechurch,[VIP] Córners Plymouth Arg > 4.5,1.38,1.38,87.9,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,6900.0,AUDITADA FT 4-0
 2026-11-07 17:55:00,401931275,Plymouth Argyle vs Alvechurch,[VIP] Over 1.5 Goles,1.38,1.38,83.2,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,6900.0,AUDITADA FT 4-0
 2026-11-07 17:55:00,401931275,Plymouth Argyle vs Alvechurch,[FREE] Doble Oport. 1X,1.18,1.18,84.8,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 4-0
@@ -2758,7 +2750,7 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-11-07 17:55:00,401931087,Salisbury FC vs Sholing,[FREE] Over 1.5 Goles,1.28,1.28,74.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,640.0,AUDITADA FT 6-0
 2026-11-07 17:55:00,401931087,Salisbury FC vs Sholing,[FREE] Córners > 8.5,1.28,1.28,71.3,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,640.0,AUDITADA FT 6-0
 2026-11-07 18:10:00,401882813,Espanyol vs Deportivo,[VIP] Over 1.5 Goles,1.38,1.38,81.2,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Perdida,0.0,AUDITADA FT 0-0
-2026-11-07 18:10:00,401882813,Espanyol vs Deportivo,[VIP] Córners Deportivo > 4.5,1.38,1.38,83.1,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Perdida,0.0,AUDITADA FT 0-0
+2026-11-07 18:10:00,401882813,Espanyol vs Deportivo,[VIP] Córners Deportivo > 4.5,1.38,1.38,83.1,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,6900.0,AUDITADA FT 0-0
 2026-11-07 18:10:00,401882813,Espanyol vs Deportivo,[FREE] Doble Oport. X2,1.18,1.18,84.8,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 0-0
 2026-11-07 18:10:00,401882813,Espanyol vs Deportivo,[FREE] Faltas Totales > 22.5,1.18,1.18,80.4,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 0-0
 2026-11-07 18:25:00,401885398,C.D. Nacional vs Académico de Viseu,[VIP] Victoria Académico de,1.41,1.41,72.2,🟢 [LUZ VERDE / ALTO VALOR],1100.0,Perdida,0.0,AUDITADA FT 0-0
@@ -2797,7 +2789,7 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-11-07 20:25:00,401931097,Altrincham vs Notts County,[VIP] Córners > 8.5,1.5,1.50,67.8,🟢 [VALOR ALTO / OPERABLE],900.0,Ganada,1350.0,AUDITADA FT 2-2
 2026-11-07 20:25:00,401931097,Altrincham vs Notts County,[FREE] Doble Oport. 1X,1.28,1.28,72.7,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,640.0,AUDITADA FT 2-2
 2026-11-07 20:25:00,401931097,Altrincham vs Notts County,[FREE] Faltas Totales > 22.5,1.28,1.28,73.1,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,640.0,AUDITADA FT 2-2
-2026-11-07 20:25:00,401884743,VfB Stuttgart vs Werder Bremen,[VIP] Remates Puerta > 6.5,1.7,1.70,66.5,🟢 [VALOR ALTO / OPERABLE],4700.0,Perdida,0.0,AUDITADA FT 1-0
+2026-11-07 20:25:00,401884743,VfB Stuttgart vs Werder Bremen,[VIP] Remates Puerta > 6.5,1.7,1.70,66.5,🟢 [VALOR ALTO / OPERABLE],4700.0,Ganada,7990.0,AUDITADA FT 1-0
 2026-11-07 20:25:00,401884743,VfB Stuttgart vs Werder Bremen,[VIP] Over 1.5 Goles,1.5,1.50,67.9,🟢 [VALOR ALTO / OPERABLE],900.0,Perdida,0.0,AUDITADA FT 1-0
 2026-11-07 20:25:00,401884743,VfB Stuttgart vs Werder Bremen,[FREE] Doble Oport. 1X,1.18,1.18,85.1,🟢 [LUZ VERDE / ALTO VALOR],600.0,Ganada,708.0,AUDITADA FT 1-0
 2026-11-07 20:25:00,401884743,VfB Stuttgart vs Werder Bremen,[FREE] Córners VfB Stuttgar > 4.5,1.25,1.25,75.9,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,625.0,AUDITADA FT 1-0
@@ -2823,7 +2815,7 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-11-07 22:55:00,401931104,Peterborough United vs Reading,[FREE] Faltas Totales > 22.5,1.18,1.18,86.0,🟢 [LUZ VERDE / ALTO VALOR],2000.0,Ganada,2360.0,AUDITADA FT 0-5
 2026-11-07 22:55:00,401875554,Excelsior vs Go Ahead Eagles,[VIP] Ambos Marcan (BTTS),1.63,1.63,66.5,🟢 [VALOR ALTO / OPERABLE],3300.0,Perdida,0.0,AUDITADA FT 0-1
 2026-11-07 22:55:00,401875554,Excelsior vs Go Ahead Eagles,[VIP] Over 1.5 Goles,1.38,1.38,83.1,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Perdida,0.0,AUDITADA FT 0-1
-2026-11-07 22:55:00,401875554,Excelsior vs Go Ahead Eagles,[FREE] Remates Puerta > 6.5,1.23,1.23,77.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 0-1
+2026-11-07 22:55:00,401875554,Excelsior vs Go Ahead Eagles,[FREE] Remates Puerta > 6.5,1.23,1.23,77.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,615.0,AUDITADA FT 0-1
 2026-11-07 22:55:00,401875554,Excelsior vs Go Ahead Eagles,[FREE] Córners > 7.5,1.28,1.28,69.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,640.0,AUDITADA FT 0-1
 2026-11-07 23:00:00,401876407,Paris Saint-Germain vs Troyes,[VIP] Córners Paris Saint- > 4.5,1.38,1.38,85.2,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,6900.0,AUDITADA FT 1-0
 2026-11-07 23:00:00,401876407,Paris Saint-Germain vs Troyes,[VIP] Gol en 1T,1.38,1.38,78.1,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Perdida,0.0,AUDITADA FT 1-0
@@ -2835,7 +2827,7 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-11-07 23:25:00,401841672,Argentinos Juniors vs Huracán,[FREE] Doble Oport. 1X,1.18,1.18,84.6,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 0-2
 2026-11-07 23:25:00,401841669,Boca Juniors vs Defensa y Justicia,[VIP] Doble Oport. 1X,1.38,1.38,77.5,🟢 [LUZ VERDE / ALTO VALOR],4600.0,Ganada,6348.0,AUDITADA FT 1-0
 2026-11-07 23:25:00,401841669,Boca Juniors vs Defensa y Justicia,[VIP] Over 1.5 Goles,1.38,1.38,76.9,🟢 [LUZ VERDE / ALTO VALOR],4000.0,Perdida,0.0,AUDITADA FT 1-0
-2026-11-07 23:25:00,401841669,Boca Juniors vs Defensa y Justicia,[FREE] Remates Puerta > 6.5,1.18,1.18,82.6,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 1-0
+2026-11-07 23:25:00,401841669,Boca Juniors vs Defensa y Justicia,[FREE] Remates Puerta > 6.5,1.18,1.18,82.6,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 1-0
 2026-11-07 23:25:00,401841669,Boca Juniors vs Defensa y Justicia,[FREE] Faltas Totales > 22.5,1.18,1.18,86.5,🟢 [LUZ VERDE / ALTO VALOR],2900.0,Ganada,3422.0,AUDITADA FT 1-0
 2026-11-07 23:25:00,401841663,Rosario Central vs Estudiantes de Río Cuarto,[VIP] Córners Rosario Cent > 4.5,1.53,1.53,66.8,🟢 [VALOR ALTO / OPERABLE],1000.0,Ganada,1530.0,AUDITADA FT 2-0
 2026-11-07 23:25:00,401841663,Rosario Central vs Estudiantes de Río Cuarto,[VIP] Gol en 2do Tiempo,1.42,1.42,75.2,🟢 [LUZ VERDE / ALTO VALOR],4000.0,Ganada,5680.0,AUDITADA FT 2-0
@@ -2867,7 +2859,7 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-11-07 23:55:00,761938,Inter Miami CF vs Charlotte FC,[FREE] Over 1.5 Goles,1.28,1.28,73.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,640.0,AUDITADA FT 3-3
 2026-11-07 23:55:00,761940,Orlando City SC vs New England Revolution,[VIP] Córners Orlando City > 4.5,1.49,1.49,68.4,🟢 [LUZ VERDE / ALTO VALOR],1000.0,Ganada,1490.0,AUDITADA FT 1-0
 2026-11-07 23:55:00,761940,Orlando City SC vs New England Revolution,[VIP] Ambos Marcan (BTTS),1.77,1.77,66.5,🟢 [VALOR ALTO / OPERABLE],5000.0,Perdida,0.0,AUDITADA FT 1-0
-2026-11-07 23:55:00,761940,Orlando City SC vs New England Revolution,[FREE] Remates Puerta > 6.5,1.18,1.18,83.9,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 1-0
+2026-11-07 23:55:00,761940,Orlando City SC vs New England Revolution,[FREE] Remates Puerta > 6.5,1.18,1.18,83.9,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 1-0
 2026-11-07 23:55:00,761940,Orlando City SC vs New England Revolution,[FREE] Gol en 1T,1.25,1.25,76.2,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 1-0
 2026-11-07 23:55:00,761941,Philadelphia Union vs Toronto FC,[VIP] Remates Puerta > 6.5,1.78,1.78,66.5,🟢 [VALOR ALTO / OPERABLE],5000.0,Ganada,8900.0,AUDITADA FT 4-1
 2026-11-07 23:55:00,761941,Philadelphia Union vs Toronto FC,[VIP] Tarjetas > 3.5,1.65,1.65,66.5,🟢 [VALOR ALTO / OPERABLE],3700.0,Ganada,6105.0,AUDITADA FT 4-1
@@ -2919,7 +2911,7 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-11-07 03:55:00,401876905,Toluca vs Monterrey,[FREE] Over 1.5 Goles,1.18,1.18,83.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 4-0
 2026-11-07 04:10:00,401877908,América de Cali vs Deportivo Cali,[VIP] Tarjetas > 3.5,1.72,1.72,66.5,🟢 [VALOR ALTO / OPERABLE],5000.0,Ganada,8600.0,AUDITADA FT 0-0
 2026-11-07 04:10:00,401877908,América de Cali vs Deportivo Cali,[VIP] Gol en 1T,1.43,1.43,71.2,🟢 [LUZ VERDE / ALTO VALOR],1100.0,Perdida,0.0,AUDITADA FT 0-0
-2026-11-07 04:10:00,401877908,América de Cali vs Deportivo Cali,[FREE] Remates Puerta > 6.5,1.18,1.18,82.6,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 0-0
+2026-11-07 04:10:00,401877908,América de Cali vs Deportivo Cali,[FREE] Remates Puerta > 6.5,1.18,1.18,82.6,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 0-0
 2026-11-07 04:10:00,401877908,América de Cali vs Deportivo Cali,[FREE] Over 1.5 Goles,1.23,1.23,77.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 0-0
 2026-11-07 06:05:00,401876904,Pumas UNAM vs América,[VIP] Ambos Marcan (BTTS),1.71,1.71,66.5,🟢 [VALOR ALTO / OPERABLE],4800.0,Ganada,8208.0,AUDITADA FT 2-2
 2026-11-07 06:05:00,401876904,Pumas UNAM vs América,[VIP] Córners > 8.5,1.51,1.51,67.7,🟢 [VALOR ALTO / OPERABLE],1100.0,Ganada,1661.0,AUDITADA FT 2-2
@@ -2961,10 +2953,6 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-11-07 20:25:00,401883141,Leganés vs Albacete,[DESCARTES] Faltas Totales > 22.5,1.18,1.18,87.2,🟢 [LUZ VERDE / ALTO VALOR],4000.0,Ganada,4720.0,AUDITADA FT 1-3
 2026-11-07 02:55:00,761943,FC Dallas vs Colorado Rapids,[DESCARTES] Total Menos de 3.5 (Under),1.18,1.18,89.9,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Perdida,0.0,AUDITADA FT 3-1
 2026-11-07 02:55:00,761943,FC Dallas vs Colorado Rapids,[DESCARTES] Faltas Totales > 22.5,1.18,1.18,81.2,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 3-1
-2026-11-08 15:55:00,401883122,FC Andorra vs Mallorca,[VIP] Tarjetas > 4.5,1.54,1.54,66.5,🟢 [VALOR ALTO / OPERABLE],1100.0,Ganada,1694.0,AUDITADA FT 0-0
-2026-11-08 15:55:00,401883122,FC Andorra vs Mallorca,[VIP] Córners > 8.5,1.59,1.59,66.5,🟢 [VALOR ALTO / OPERABLE],2400.0,Perdida,0.0,AUDITADA FT 0-0
-2026-11-08 15:55:00,401883122,FC Andorra vs Mallorca,[FREE] Total Menos de 3.5 (Under),1.18,1.18,86.5,🟢 [LUZ VERDE / ALTO VALOR],2900.0,Ganada,3422.0,AUDITADA FT 0-0
-2026-11-08 15:55:00,401883122,FC Andorra vs Mallorca,[FREE] Faltas Totales > 22.5,1.18,1.18,86.5,🟢 [LUZ VERDE / ALTO VALOR],2900.0,Ganada,3422.0,AUDITADA FT 0-0
 2026-11-08 16:55:00,401878759,Ipswich Town vs AFC Bournemouth,[VIP] Doble Oport. X2,1.38,1.38,77.2,🟢 [LUZ VERDE / ALTO VALOR],4300.0,Ganada,5934.0,AUDITADA FT 1-4
 2026-11-08 16:55:00,401878759,Ipswich Town vs AFC Bournemouth,[VIP] Combo X2 + O1.5,1.54,1.54,66.5,🟢 [VALOR ALTO / OPERABLE],1100.0,Ganada,1694.0,AUDITADA FT 1-4
 2026-11-08 16:55:00,401878759,Ipswich Town vs AFC Bournemouth,[FREE] Over 1.5 Goles,1.18,1.18,81.2,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 1-4
@@ -2986,8 +2974,6 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-11-08 02:05:00,401878070,Deportes Tolima vs Millonarios,[FREE] Doble Oport. 1X,1.28,PENDIENTE_CLV,69.7,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
 2026-11-08 02:05:00,401878070,Deportes Tolima vs Millonarios,[FREE] Over 1.5 Goles,1.28,PENDIENTE_CLV,65.4,🟢 [VALOR ALTO / OPERABLE],500.0,Pendiente,0.0,AUDITANDO
 2026-11-08 16:55:00,401878759,Ipswich Town vs AFC Bournemouth,[FREE] Gol en 2do Tiempo,1.18,1.18,84.2,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 1-4
-2026-11-08 15:55:00,401883122,FC Andorra vs Mallorca,[DESCARTES] Total Menos de 3.5 (Under),1.18,1.18,89.9,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,5900.0,AUDITADA FT 0-0
-2026-11-08 15:55:00,401883122,FC Andorra vs Mallorca,[DESCARTES] Faltas Totales > 22.5,1.18,1.18,87.2,🟢 [LUZ VERDE / ALTO VALOR],4000.0,Ganada,4720.0,AUDITADA FT 0-0
 2026-11-08 18:25:00,401885400,Estoril vs Maritimo,[VIP] Doble Oport. X2,1.47,1.47,69.3,🟢 [LUZ VERDE / ALTO VALOR],1000.0,Ganada,1470.0,AUDITADA FT 0-0
 2026-11-08 18:25:00,401885400,Estoril vs Maritimo,[VIP] Tarjetas > 3.5,1.5,1.50,67.8,🟢 [VALOR ALTO / OPERABLE],800.0,Ganada,1200.0,AUDITADA FT 0-0
 2026-11-08 18:25:00,401885400,Estoril vs Maritimo,[FREE] Gol en 2do Tiempo,1.24,1.24,76.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 0-0
@@ -3010,7 +2996,7 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-11-08 13:25:00,401888253,Caykur Rizespor vs Erzurum BB,[FREE] Remates Puerta > 6.5,1.25,1.25,76.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,625.0,AUDITADA FT 2-1
 2026-11-08 16:55:00,401878759,Ipswich Town vs AFC Bournemouth,[VIP] Ambos Marcan (BTTS),1.55,1.55,66.5,🟢 [VALOR ALTO / OPERABLE],1400.0,Ganada,2170.0,AUDITADA FT 1-4
 2026-11-08 16:55:00,401878759,Ipswich Town vs AFC Bournemouth,[FREE] Gol en 1T,1.18,1.18,81.4,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 1-4
-2026-11-08 18:25:00,401885400,Estoril vs Maritimo,[VIP] Remates Puerta > 6.5,1.75,1.75,66.5,🟢 [VALOR ALTO / OPERABLE],5000.0,Perdida,0.0,AUDITADA FT 0-0
+2026-11-08 18:25:00,401885400,Estoril vs Maritimo,[VIP] Remates Puerta > 6.5,1.75,1.75,66.5,🟢 [VALOR ALTO / OPERABLE],5000.0,Ganada,8750.0,AUDITADA FT 0-0
 2026-11-08 13:25:00,401888253,Caykur Rizespor vs Erzurum BB,[VIP] Remates Puerta > 6.5,1.42,1.42,81.5,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,7100.0,AUDITADA FT 2-1
 2026-11-08 13:25:00,401888253,Caykur Rizespor vs Erzurum BB,[FREE] Over 1.5 Goles,1.18,1.18,81.7,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 2-1
 2026-11-08 14:10:00,401875551,Heerenveen vs Feyenoord Rotterdam,[VIP] Gol en 2do Tiempo,1.38,1.38,76.6,🟢 [LUZ VERDE / ALTO VALOR],3700.0,Ganada,5106.0,AUDITADA FT 5-3
@@ -3205,7 +3191,7 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-11-09 02:55:00,401877901,Atlético Junior vs Cúcuta Deportivo,[FREE] Total Menos de 3.5 (Under),1.27,1.27,74.8,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,635.0,AUDITADA FT 2-0
 2026-11-09 22:25:00,401931098,Plymouth Parkway vs Berkhamsted,[FREE] Gol en 2do Tiempo,1.18,1.18,83.2,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 2-1
 2026-11-09 22:25:00,401931098,Plymouth Parkway vs Berkhamsted,[FREE] Remates Puerta > 6.5,1.18,1.18,81.9,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 2-1
-2026-11-09 22:25:00,401883139,CD Sabadell vs Real Sociedad II,[VIP] Córners CD Sabadell > 4.5,1.5,1.50,68.0,🟢 [VALOR ALTO / OPERABLE],1000.0,Perdida,0.0,AUDITADA FT 0-0
+2026-11-09 22:25:00,401883139,CD Sabadell vs Real Sociedad II,[VIP] Córners CD Sabadell > 4.5,1.5,1.50,68.0,🟢 [VALOR ALTO / OPERABLE],1000.0,Ganada,1500.0,AUDITADA FT 0-0
 2026-11-09 22:25:00,401883139,CD Sabadell vs Real Sociedad II,[VIP] Tarjetas > 4.5,1.65,1.65,66.5,🟢 [VALOR ALTO / OPERABLE],3700.0,Ganada,6105.0,AUDITADA FT 0-0
 2026-11-09 02:55:00,401877901,Atlético Junior vs Cúcuta Deportivo,[VIP] Tarjetas > 4.5,1.52,1.52,67.1,🟢 [VALOR ALTO / OPERABLE],900.0,Ganada,1368.0,AUDITADA FT 2-0
 2026-11-09 02:55:00,401877901,Atlético Junior vs Cúcuta Deportivo,[VIP] Total Menos de 2.5 (Under),1.62,1.62,66.5,🟢 [VALOR ALTO / OPERABLE],3100.0,Ganada,5022.0,AUDITADA FT 2-0
@@ -3219,7 +3205,7 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-11-12 09:05:00,401906458,New Zealand vs India,[VIP] Total Menos de 2.5 (Under),1.46,1.46,75.5,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Perdida,0.0,AUDITADA FT 5-0
 2026-11-12 09:05:00,401906458,New Zealand vs India,[FREE] Total Menos de 3.5 (Under),1.18,1.18,80.6,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 5-0
 2026-11-12 09:05:00,401906458,New Zealand vs India,[FREE] Córners > 7.5,1.28,1.28,74.3,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,640.0,AUDITADA FT 5-0
-2026-11-12 20:25:00,401928506,Calvo Sotelo vs Albacete,[VIP] Córners Albacete > 4.5,1.38,1.38,79.2,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Perdida,0.0,AUDITADA FT 0-0
+2026-11-12 20:25:00,401928506,Calvo Sotelo vs Albacete,[VIP] Córners Albacete > 4.5,1.38,1.38,79.2,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,6900.0,AUDITADA FT 0-0
 2026-11-12 20:25:00,401928506,Calvo Sotelo vs Albacete,[VIP] Faltas Totales > 22.5,1.42,1.42,76.6,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,7100.0,AUDITADA FT 0-0
 2026-11-12 20:25:00,401928506,Calvo Sotelo vs Albacete,[FREE] Doble Oport. X2,1.18,1.18,85.1,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 0-0
 2026-11-12 20:25:00,401928506,Calvo Sotelo vs Albacete,[FREE] Gol en 2do Tiempo,1.18,1.18,82.9,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 0-0
@@ -3232,14 +3218,14 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-11-12 22:40:00,401861147,Albania vs Finland,[FREE] Tarjetas > 4.5,1.28,1.28,65.9,🟢 [VALOR ALTO / OPERABLE],500.0,Ganada,640.0,AUDITADA FT 2-0
 2026-11-12 22:40:00,401861147,Albania vs Finland,[FREE] Faltas Totales > 22.5,1.28,1.28,65.4,🟢 [VALOR ALTO / OPERABLE],500.0,Ganada,640.0,AUDITADA FT 2-0
 2026-11-12 00:55:00,401929779,Aruba vs Martinique,[VIP] Faltas Totales > 22.5,1.56,1.56,66.5,🟢 [VALOR ALTO / OPERABLE],1700.0,Ganada,2652.0,AUDITADA FT 0-0
-2026-11-12 00:55:00,401929779,Aruba vs Martinique,[VIP] Córners > 8.5,1.59,1.59,66.5,🟢 [VALOR ALTO / OPERABLE],2400.0,Perdida,0.0,AUDITADA FT 0-0
+2026-11-12 00:55:00,401929779,Aruba vs Martinique,[VIP] Córners > 8.5,1.59,1.59,66.5,🟢 [VALOR ALTO / OPERABLE],2400.0,Ganada,3816.0,AUDITADA FT 0-0
 2026-11-12 00:55:00,401929779,Aruba vs Martinique,[FREE] Doble Oport. X2,1.26,1.26,75.7,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,630.0,AUDITADA FT 0-0
 2026-11-12 00:55:00,401929779,Aruba vs Martinique,[FREE] Tarjetas > 4.5,1.28,1.28,65.9,🟢 [VALOR ALTO / OPERABLE],500.0,Ganada,640.0,AUDITADA FT 0-0
 2026-11-12 01:55:00,401929796,Antigua and Barbuda vs Trinidad and Tobago,[VIP] Tarjetas > 4.5,1.55,1.55,66.5,🟢 [VALOR ALTO / OPERABLE],1400.0,Ganada,2170.0,AUDITADA FT 2-3
 2026-11-12 01:55:00,401929796,Antigua and Barbuda vs Trinidad and Tobago,[VIP] Total Menos de 2.5 (Under),1.46,1.46,75.5,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Perdida,0.0,AUDITADA FT 2-3
 2026-11-12 01:55:00,401929796,Antigua and Barbuda vs Trinidad and Tobago,[FREE] Faltas Totales > 22.5,1.28,1.28,65.4,🟢 [VALOR ALTO / OPERABLE],500.0,Ganada,640.0,AUDITADA FT 2-3
 2026-11-12 01:55:00,401929796,Antigua and Barbuda vs Trinidad and Tobago,[FREE] Córners > 8.5,1.28,1.28,62.2,🟢 [VALOR ALTO / OPERABLE],500.0,Ganada,640.0,AUDITADA FT 2-3
-2026-11-12 03:25:00,401929776,Curaçao vs Panama,[VIP] Córners > 8.5,1.64,1.64,66.5,🟢 [VALOR ALTO / OPERABLE],3500.0,Perdida,0.0,AUDITADA FT 0-0
+2026-11-12 03:25:00,401929776,Curaçao vs Panama,[VIP] Córners > 8.5,1.64,1.64,66.5,🟢 [VALOR ALTO / OPERABLE],3500.0,Ganada,5740.0,AUDITADA FT 0-0
 2026-11-12 03:25:00,401929776,Curaçao vs Panama,[VIP] Total Menos de 2.5 (Under),1.46,1.46,75.5,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,7300.0,AUDITADA FT 0-0
 2026-11-12 03:25:00,401929776,Curaçao vs Panama,[FREE] Faltas Totales > 22.5,1.28,1.28,65.4,🟢 [VALOR ALTO / OPERABLE],500.0,Ganada,640.0,AUDITADA FT 0-0
 2026-11-12 03:25:00,401929776,Curaçao vs Panama,[FREE] Tarjetas > 4.5,1.28,1.28,65.9,🟢 [VALOR ALTO / OPERABLE],500.0,Ganada,640.0,AUDITADA FT 0-0
@@ -3280,24 +3266,8 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-11-12 20:25:00,401928506,Calvo Sotelo vs Albacete,[VIP] Over 1.5 Goles,1.38,1.38,75.2,🟢 [LUZ VERDE / ALTO VALOR],2500.0,Perdida,0.0,AUDITADA FT 0-0
 2026-11-12 09:05:00,401906458,New Zealand vs India,[DESCARTES] Total Menos de 3.5 (Under),1.18,1.18,89.8,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Perdida,0.0,AUDITADA FT 5-0
 2026-11-12 09:05:00,401906458,New Zealand vs India,[DESCARTES] Doble Oport. 1X,1.28,1.28,74.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,640.0,AUDITADA FT 5-0
-2026-11-12 19:55:00,401861146,Armenia vs Chipre,[DESCARTES] Total Menos de 3.5 (Under),1.18,1.18,84.3,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 1-1
-2026-11-12 19:55:00,401861146,Armenia vs Chipre,[DESCARTES] Córners > 7.5,1.28,1.28,74.2,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,640.0,AUDITADA FT 1-1
-2026-11-12 19:55:00,401933115,Lituania vs Suriname,[DESCARTES] Total Menos de 3.5 (Under),1.18,1.18,89.9,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,5900.0,AUDITADA FT 0-0
-2026-11-12 19:55:00,401933115,Lituania vs Suriname,[DESCARTES] Doble Oport. 1X,1.28,1.28,70.2,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,640.0,AUDITADA FT 0-0
-2026-11-12 20:25:00,401931296,Malta vs Eswatini,[DESCARTES] Total Menos de 3.5 (Under),1.18,1.18,89.9,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,5900.0,AUDITADA FT 1-1
-2026-11-12 20:25:00,401931296,Malta vs Eswatini,[DESCARTES] Faltas Totales > 22.5,1.24,1.24,75.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,620.0,AUDITADA FT 1-1
 2026-11-12 22:40:00,401861148,República Checa vs España,[DESCARTES] Total Menos de 3.5 (Under),1.18,1.18,84.3,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 0-2
 2026-11-12 22:40:00,401861148,República Checa vs España,[DESCARTES] Córners > 7.5,1.28,1.28,74.1,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,640.0,AUDITADA FT 0-2
-2026-11-12 22:40:00,401861152,Montenegro vs Letonia,[DESCARTES] Total Menos de 3.5 (Under),1.18,1.18,89.9,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,5900.0,AUDITADA FT 2-1
-2026-11-12 22:40:00,401861152,Montenegro vs Letonia,[DESCARTES] Doble Oport. 1X,1.18,1.18,78.7,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 2-1
-2026-11-12 22:40:00,401861149,San Marino vs Belarus,[DESCARTES] Total Menos de 3.5 (Under),1.18,1.18,89.9,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,5900.0,AUDITADA FT 0-2
-2026-11-12 22:40:00,401861149,San Marino vs Belarus,[DESCARTES] Faltas Totales > 22.5,1.18,1.18,81.8,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 0-2
-2026-11-12 21:55:00,401929797,Cayman Islands vs Guyana,[DESCARTES] Total Menos de 3.5 (Under),1.18,1.18,89.9,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Perdida,0.0,AUDITADA FT 0-6
-2026-11-12 21:55:00,401929797,Cayman Islands vs Guyana,[DESCARTES] Faltas Totales > 22.5,1.18,1.18,86.2,🟢 [LUZ VERDE / ALTO VALOR],2400.0,Ganada,2832.0,AUDITADA FT 0-6
-2026-11-12 22:55:00,401929777,Bonaire vs Cuba,[DESCARTES] Total Menos de 3.5 (Under),1.18,1.18,84.3,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 1-7
-2026-11-12 22:55:00,401929777,Bonaire vs Cuba,[DESCARTES] Doble Oport. 1X,1.18,1.18,82.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 1-7
-2026-11-12 19:55:00,401861146,Armenia vs Chipre,[FREE] Doble Oport. 1X,1.18,1.18,84.7,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 1-1
-2026-11-12 19:55:00,401861146,Armenia vs Chipre,[FREE] Córners Armenia > 4.5,1.18,1.18,85.5,🟢 [LUZ VERDE / ALTO VALOR],1200.0,Ganada,1416.0,AUDITADA FT 1-1
 2026-11-12 19:55:00,401861145,Turquía vs Bélgica,[VIP] Tarjetas > 4.5,1.54,1.54,66.5,🟢 [VALOR ALTO / OPERABLE],1100.0,Ganada,1694.0,AUDITADA FT 1-2
 2026-11-12 19:55:00,401861145,Turquía vs Bélgica,[VIP] Faltas Totales > 22.5,1.54,1.54,66.5,🟢 [VALOR ALTO / OPERABLE],1100.0,Ganada,1694.0,AUDITADA FT 1-2
 2026-11-12 20:55:00,401928551,CD Artistico Navalcarnero vs Real Betis,[FREE] Gol en 2do Tiempo,1.18,1.18,83.2,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 2-3
@@ -3306,8 +3276,6 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-11-12 20:55:00,401932846,Chambéry Savoie vs Grenoble,[VIP] Remates Puerta > 6.5,1.75,1.75,66.5,🟢 [VALOR ALTO / OPERABLE],5000.0,Ganada,8750.0,AUDITADA FT 0-2
 2026-11-12 20:55:00,401932846,Chambéry Savoie vs Grenoble,[FREE] Gol en 1T,1.24,1.24,76.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,620.0,AUDITADA FT 0-2
 2026-11-12 20:55:00,401932846,Chambéry Savoie vs Grenoble,[FREE] Over 1.5 Goles,1.28,1.28,73.7,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,640.0,AUDITADA FT 0-2
-2026-11-12 21:55:00,401929797,Cayman Islands vs Guyana,[FREE] Gol en 2do Tiempo,1.18,1.18,85.4,🟢 [LUZ VERDE / ALTO VALOR],1000.0,Ganada,1180.0,AUDITADA FT 0-6
-2026-11-12 21:55:00,401929797,Cayman Islands vs Guyana,[FREE] Remates Puerta > 6.5,1.18,1.18,80.6,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 0-6
 2026-11-12 22:40:00,401861148,República Checa vs España,[VIP] Córners > 8.5,1.53,1.53,66.5,🟢 [VALOR ALTO / OPERABLE],800.0,Ganada,1224.0,AUDITADA FT 0-2
 2026-11-12 22:40:00,401861148,República Checa vs España,[VIP] Remates Puerta > 6.5,1.66,1.66,66.5,🟢 [VALOR ALTO / OPERABLE],3900.0,Ganada,6474.0,AUDITADA FT 0-2
 2026-11-12 22:40:00,401861148,República Checa vs España,[FREE] Gol en 2do Tiempo,1.18,1.18,78.4,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 0-2
@@ -3316,18 +3284,6 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-11-12 22:40:00,401861150,Inglaterra vs Croacia,[VIP] Over 1.5 Goles,1.38,1.38,78.0,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,6900.0,AUDITADA FT 2-1
 2026-11-12 22:40:00,401861151,Italia vs Francia,[VIP] Gol en 2do Tiempo,1.38,1.38,87.1,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,6900.0,AUDITADA FT 3-1
 2026-11-12 22:40:00,401861151,Italia vs Francia,[VIP] Córners Italia > 4.5,1.38,1.38,76.0,🟢 [LUZ VERDE / ALTO VALOR],3200.0,Ganada,4416.0,AUDITADA FT 3-1
-2026-11-12 22:40:00,401861152,Montenegro vs Letonia,[VIP] Doble Oport. 1X,1.38,1.38,78.0,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,6900.0,AUDITADA FT 2-1
-2026-11-12 22:40:00,401861152,Montenegro vs Letonia,[VIP] Tarjetas > 4.5,1.54,1.54,66.5,🟢 [VALOR ALTO / OPERABLE],1100.0,Ganada,1694.0,AUDITADA FT 2-1
-2026-11-12 22:40:00,401861152,Montenegro vs Letonia,[FREE] Total Menos de 3.5 (Under),1.18,1.18,81.8,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 2-1
-2026-11-12 22:40:00,401861152,Montenegro vs Letonia,[FREE] Faltas Totales > 22.5,1.18,1.18,78.9,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 2-1
-2026-11-12 22:40:00,401861149,San Marino vs Belarus,[VIP] Faltas Totales > 22.5,1.58,1.58,66.5,🟢 [VALOR ALTO / OPERABLE],2200.0,Ganada,3476.0,AUDITADA FT 0-2
-2026-11-12 22:40:00,401861149,San Marino vs Belarus,[VIP] Córners > 8.5,1.55,1.55,66.5,🟢 [VALOR ALTO / OPERABLE],1400.0,Ganada,2170.0,AUDITADA FT 0-2
-2026-11-12 22:40:00,401861149,San Marino vs Belarus,[FREE] Gol en 2do Tiempo,1.25,1.25,75.9,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,625.0,AUDITADA FT 0-2
-2026-11-12 22:40:00,401861149,San Marino vs Belarus,[FREE] Doble Oport. 1X,1.28,1.28,69.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 0-2
-2026-11-12 22:55:00,401929777,Bonaire vs Cuba,[VIP] Over 1.5 Goles,1.38,1.38,75.1,🟢 [LUZ VERDE / ALTO VALOR],2400.0,Ganada,3312.0,AUDITADA FT 1-7
-2026-11-12 22:55:00,401929777,Bonaire vs Cuba,[VIP] Córners Bonaire > 4.5,1.38,1.38,77.2,🟢 [LUZ VERDE / ALTO VALOR],4300.0,Ganada,5934.0,AUDITADA FT 1-7
-2026-11-12 22:55:00,401929777,Bonaire vs Cuba,[FREE] Doble Oport. 1X,1.18,1.18,84.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 1-7
-2026-11-12 22:55:00,401929777,Bonaire vs Cuba,[FREE] Gol en 2do Tiempo,1.18,1.18,82.7,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 1-7
 2026-11-12 00:55:00,401878034,Deportivo Pasto vs Atlético Junior,[FREE] Faltas Totales > 22.5,1.18,1.18,86.5,🟢 [LUZ VERDE / ALTO VALOR],2900.0,Ganada,3422.0,AUDITADA FT 0-1
 2026-11-12 00:55:00,401878034,Deportivo Pasto vs Atlético Junior,[FREE] Gol en 2do Tiempo,1.27,1.27,75.1,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,635.0,AUDITADA FT 0-1
 2026-11-12 22:40:00,401861151,Italia vs Francia,[FREE] Remates Puerta > 6.5,1.18,1.18,84.3,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 3-1
@@ -3338,10 +3294,6 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-11-12 19:55:00,401861145,Turquía vs Bélgica,[FREE] Doble Oport. X2,1.23,1.23,77.2,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,615.0,AUDITADA FT 1-2
 2026-11-12 20:55:00,401928551,CD Artistico Navalcarnero vs Real Betis,[VIP] Over 1.5 Goles,1.38,1.38,75.9,🟢 [LUZ VERDE / ALTO VALOR],3200.0,Ganada,4416.0,AUDITADA FT 2-3
 2026-11-12 20:55:00,401928551,CD Artistico Navalcarnero vs Real Betis,[VIP] Córners Real Betis > 4.5,1.49,1.49,68.4,🟢 [LUZ VERDE / ALTO VALOR],1000.0,Ganada,1490.0,AUDITADA FT 2-3
-2026-11-12 21:55:00,401929797,Cayman Islands vs Guyana,[VIP] Over 1.5 Goles,1.38,1.38,83.0,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,6900.0,AUDITADA FT 0-6
-2026-11-12 21:55:00,401929797,Cayman Islands vs Guyana,[VIP] Ambos Marcan (BTTS),1.5,1.50,73.8,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Perdida,0.0,AUDITADA FT 0-6
-2026-11-12 19:55:00,401861146,Armenia vs Chipre,[VIP] Over 1.5 Goles,1.38,1.38,79.7,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,6900.0,AUDITADA FT 1-1
-2026-11-12 19:55:00,401861146,Armenia vs Chipre,[VIP] Faltas Totales > 22.5,1.42,1.42,78.2,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,7100.0,AUDITADA FT 1-1
 2026-11-12 00:55:00,401878034,Deportivo Pasto vs Atlético Junior,[VIP] Tarjetas > 4.5,1.56,1.56,66.5,🟢 [VALOR ALTO / OPERABLE],1700.0,Ganada,2652.0,AUDITADA FT 0-1
 2026-11-12 00:55:00,401878034,Deportivo Pasto vs Atlético Junior,[VIP] Córners > 8.5,1.59,1.59,66.5,🟢 [VALOR ALTO / OPERABLE],2400.0,Ganada,3816.0,AUDITADA FT 0-1
 2026-11-12 22:40:00,401861147,Albania vs Finlandia,[DESCARTES] Total Menos de 3.5 (Under),1.18,1.18,87.8,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,5900.0,AUDITADA FT 2-0
@@ -3356,14 +3308,8 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-11-12 01:55:00,401929796,Antigua and Barbuda vs Trinidad and Tobago,[DESCARTES] Doble Oport. 1X,1.28,1.28,72.6,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 2-3
 2026-11-12 03:25:00,401929776,Curaçao vs Panama,[DESCARTES] Total Menos de 3.5 (Under),1.18,1.18,87.8,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,5900.0,AUDITADA FT 0-0
 2026-11-12 03:25:00,401929776,Curaçao vs Panama,[DESCARTES] Faltas Totales > 22.5,1.26,1.26,75.2,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,630.0,AUDITADA FT 0-0
-2026-11-13 22:40:00,401861153,Liechtenstein vs Azerbaijan,[VIP] Faltas Totales > 22.5,1.55,1.55,66.5,🟢 [VALOR ALTO / OPERABLE],1400.0,Ganada,2170.0,AUDITADA FT 0-1
-2026-11-13 22:40:00,401861153,Liechtenstein vs Azerbaijan,[VIP] Córners > 8.5,1.77,1.77,66.5,🟢 [VALOR ALTO / OPERABLE],5000.0,Ganada,8850.0,AUDITADA FT 0-1
 2026-11-13 14:55:00,401916338,Singapore vs Paraguay,[FREE] Gol en 2do Tiempo,1.18,1.18,85.1,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 1-4
 2026-11-13 14:55:00,401916338,Singapore vs Paraguay,[FREE] Doble Oport. X2,1.18,1.18,84.7,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 1-4
-2026-11-13 15:55:00,401927206,Comoros vs Congo,[VIP] Remates Puerta > 6.5,1.71,1.71,66.5,🟢 [VALOR ALTO / OPERABLE],4800.0,Perdida,0.0,AUDITADA FT 0-0
-2026-11-13 15:55:00,401927206,Comoros vs Congo,[VIP] Faltas Totales > 22.5,1.42,1.42,74.5,🟢 [LUZ VERDE / ALTO VALOR],3400.0,Ganada,4828.0,AUDITADA FT 0-0
-2026-11-13 15:55:00,401927206,Comoros vs Congo,[FREE] Doble Oport. 1X,1.28,1.28,71.2,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,640.0,AUDITADA FT 0-0
-2026-11-13 15:55:00,401927206,Comoros vs Congo,[FREE] Córners > 7.5,1.28,1.28,62.6,🟢 [VALOR ALTO / OPERABLE],500.0,Ganada,640.0,AUDITADA FT 0-0
 2026-11-13 15:55:00,401927187,Mozambique vs Ethiopia,[VIP] Faltas Totales > 22.5,1.42,1.42,74.5,🟢 [LUZ VERDE / ALTO VALOR],3400.0,Ganada,4828.0,AUDITADA FT 0-1
 2026-11-13 15:55:00,401927187,Mozambique vs Ethiopia,[VIP] Córners > 8.5,1.48,1.48,73.0,🟢 [LUZ VERDE / ALTO VALOR],4200.0,Ganada,6216.0,AUDITADA FT 0-1
 2026-11-13 15:55:00,401927187,Mozambique vs Ethiopia,[FREE] Doble Oport. 1X,1.28,1.28,71.2,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 0-1
@@ -3406,9 +3352,6 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-11-13 18:55:00,401927205,Túnez vs Libya,[FREE] Doble Oport. 1X,1.18,1.18,81.4,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 0-2
 2026-11-13 18:55:00,401927205,Túnez vs Libya,[FREE] Over 1.5 Goles,1.24,1.24,76.6,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,620.0,AUDITADA FT 0-2
 2026-11-13 19:25:00,401931978,Kuwait vs Syria,[FREE] Doble Oport. 1X,1.28,1.28,68.2,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,640.0,AUDITADA FT 3-0
-2026-11-13 19:55:00,401861162,Moldova vs Kazakhstan,[VIP] Tarjetas > 3.5,1.49,1.49,68.5,🟢 [LUZ VERDE / ALTO VALOR],1100.0,Ganada,1639.0,AUDITADA FT 2-1
-2026-11-13 19:55:00,401861162,Moldova vs Kazakhstan,[FREE] Faltas Totales > 22.5,1.18,1.18,86.5,🟢 [LUZ VERDE / ALTO VALOR],2900.0,Ganada,3422.0,AUDITADA FT 2-1
-2026-11-13 19:55:00,401861162,Moldova vs Kazakhstan,[FREE] Doble Oport. X2,1.27,1.27,74.9,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 2-1
 2026-11-13 21:55:00,401932838,Dijon FCO vs Orléans,[VIP] Remates Puerta > 6.5,1.71,1.71,66.5,🟢 [VALOR ALTO / OPERABLE],4800.0,Ganada,8208.0,AUDITADA FT 1-2
 2026-11-13 21:55:00,401932838,Dijon FCO vs Orléans,[VIP] Córners > 8.5,1.63,1.63,66.5,🟢 [VALOR ALTO / OPERABLE],3300.0,Ganada,5379.0,AUDITADA FT 1-2
 2026-11-13 21:55:00,401932838,Dijon FCO vs Orléans,[FREE] Faltas Totales > 22.5,1.18,1.18,86.5,🟢 [LUZ VERDE / ALTO VALOR],2900.0,Ganada,3422.0,AUDITADA FT 1-2
@@ -3421,10 +3364,6 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-11-13 21:55:00,401932845,US Saint-Philbert-de-Grand-Lieu vs La Roche-sur-Yon,[VIP] Faltas Totales > 22.5,1.42,1.42,74.5,🟢 [LUZ VERDE / ALTO VALOR],3400.0,Ganada,4828.0,AUDITADA FT 1-3
 2026-11-13 21:55:00,401932845,US Saint-Philbert-de-Grand-Lieu vs La Roche-sur-Yon,[FREE] Tarjetas > 4.5,1.28,1.28,65.7,🟢 [VALOR ALTO / OPERABLE],500.0,Ganada,640.0,AUDITADA FT 1-3
 2026-11-13 21:55:00,401932845,US Saint-Philbert-de-Grand-Lieu vs La Roche-sur-Yon,[FREE] Faltas Totales > 22.5,1.28,1.28,72.7,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,640.0,AUDITADA FT 1-3
-2026-11-13 21:55:00,401929714,Bermuda vs St. Lucia,[VIP] Over 1.5 Goles,1.38,1.38,74.1,🟢 [LUZ VERDE / ALTO VALOR],1500.0,Ganada,2070.0,AUDITADA FT 1-2
-2026-11-13 21:55:00,401929714,Bermuda vs St. Lucia,[VIP] Remates Puerta > 6.5,1.43,1.43,71.2,🟢 [LUZ VERDE / ALTO VALOR],1100.0,Ganada,1573.0,AUDITADA FT 1-2
-2026-11-13 21:55:00,401929714,Bermuda vs St. Lucia,[FREE] Gol en 2do Tiempo,1.18,1.18,81.7,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 1-2
-2026-11-13 21:55:00,401929714,Bermuda vs St. Lucia,[FREE] Doble Oport. 1X,1.18,1.18,79.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 1-2
 2026-11-13 21:55:00,401929795,Puerto Rico vs Dominica,[VIP] Faltas Totales > 22.5,1.42,1.42,74.5,🟢 [LUZ VERDE / ALTO VALOR],3400.0,Ganada,4828.0,AUDITADA FT 4-2
 2026-11-13 21:55:00,401929795,Puerto Rico vs Dominica,[VIP] Córners > 8.5,1.48,1.48,73.0,🟢 [LUZ VERDE / ALTO VALOR],4200.0,Ganada,6216.0,AUDITADA FT 4-2
 2026-11-13 21:55:00,401929795,Puerto Rico vs Dominica,[FREE] Total Menos de 3.5 (Under),1.18,1.18,80.6,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 4-2
@@ -3440,17 +3379,10 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-11-13 22:25:00,401883136,Leganés vs Burgos,[VIP] Tarjetas > 4.5,1.6,1.60,66.5,🟢 [VALOR ALTO / OPERABLE],2700.0,Ganada,4320.0,AUDITADA FT 3-1
 2026-11-13 22:25:00,401883136,Leganés vs Burgos,[FREE] Faltas Totales > 22.5,1.18,1.18,86.5,🟢 [LUZ VERDE / ALTO VALOR],2900.0,Ganada,3422.0,AUDITADA FT 3-1
 2026-11-13 22:25:00,401883136,Leganés vs Burgos,[FREE] Doble Oport. X2,1.18,1.18,78.8,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 3-1
-2026-11-13 22:40:00,401861155,Andorra vs Gibraltar,[VIP] Faltas Totales > 22.5,1.42,1.42,80.4,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,7100.0,AUDITADA FT 2-0
-2026-11-13 22:40:00,401861155,Andorra vs Gibraltar,[VIP] Doble Oport. 1X,1.38,1.38,78.5,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,6900.0,AUDITADA FT 2-0
-2026-11-13 22:40:00,401861155,Andorra vs Gibraltar,[FREE] Gol en 1T,1.18,1.18,81.2,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 2-0
-2026-11-13 22:40:00,401861155,Andorra vs Gibraltar,[FREE] Over 1.5 Goles,1.18,1.18,78.8,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 2-0
 2026-11-13 22:40:00,401861157,Bulgaria vs Islandia,[VIP] Córners Bulgaria > 4.5,1.38,1.38,85.6,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,6900.0,AUDITADA FT 0-5
 2026-11-13 22:40:00,401861157,Bulgaria vs Islandia,[VIP] Over 1.5 Goles,1.38,1.38,78.5,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,6900.0,AUDITADA FT 0-5
 2026-11-13 22:40:00,401861157,Bulgaria vs Islandia,[FREE] Doble Oport. 1X,1.18,1.18,85.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 0-5
 2026-11-13 22:40:00,401861157,Bulgaria vs Islandia,[FREE] Gol en 2do Tiempo,1.18,1.18,85.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 0-5
-2026-11-13 22:40:00,401861153,Liechtenstein vs Azerbaijan,[FREE] Doble Oport. X2,1.27,1.27,74.8,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,635.0,AUDITADA FT 0-1
-2026-11-13 22:40:00,401861154,Luxemburgo vs Estonia,[FREE] Gol en 2do Tiempo,1.18,1.18,86.5,🟢 [LUZ VERDE / ALTO VALOR],2900.0,Ganada,3422.0,AUDITADA FT 0-1
-2026-11-13 22:40:00,401861154,Luxemburgo vs Estonia,[FREE] Córners Luxemburgo > 4.5,1.18,1.18,84.6,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 0-1
 2026-11-13 22:40:00,401861159,Países Bajos vs Grecia,[VIP] Tarjetas > 3.5,1.48,1.48,69.0,🟢 [LUZ VERDE / ALTO VALOR],1100.0,Ganada,1628.0,AUDITADA FT 7-0
 2026-11-13 22:40:00,401861159,Países Bajos vs Grecia,[VIP] Córners > 8.5,1.65,1.65,66.5,🟢 [VALOR ALTO / OPERABLE],3700.0,Ganada,6105.0,AUDITADA FT 7-0
 2026-11-13 22:40:00,401861159,Países Bajos vs Grecia,[FREE] Faltas Totales > 22.5,1.18,1.18,80.8,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 7-0
@@ -3461,12 +3393,8 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-11-13 22:40:00,401861161,Escocia vs Macedonia del Norte,[FREE] Faltas Totales > 22.5,1.18,1.18,79.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 2-1
 2026-11-13 22:40:00,401861158,Serbia vs Alemania,[VIP] Doble Oport. X2,1.4,1.40,73.0,🟢 [LUZ VERDE / ALTO VALOR],1300.0,Ganada,1820.0,AUDITADA FT 1-3
 2026-11-13 22:40:00,401861158,Serbia vs Alemania,[VIP] Faltas Totales > 22.5,1.63,1.63,66.5,🟢 [VALOR ALTO / OPERABLE],3300.0,Ganada,5379.0,AUDITADA FT 1-3
-2026-11-13 22:40:00,401861160,Slovakia vs Islas Feroe,[VIP] Tarjetas > 4.5,1.59,1.59,66.5,🟢 [VALOR ALTO / OPERABLE],2400.0,Ganada,3816.0,AUDITADA FT 2-2
-2026-11-13 22:40:00,401861160,Slovakia vs Islas Feroe,[VIP] Faltas Totales > 22.5,1.42,1.42,74.5,🟢 [LUZ VERDE / ALTO VALOR],3400.0,Ganada,4828.0,AUDITADA FT 2-2
-2026-11-13 22:40:00,401861160,Slovakia vs Islas Feroe,[FREE] Total Menos de 3.5 (Under),1.18,1.18,81.6,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 2-2
-2026-11-13 22:40:00,401861160,Slovakia vs Islas Feroe,[FREE] Doble Oport. 1X,1.28,1.28,70.6,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,640.0,AUDITADA FT 2-2
 2026-11-13 22:40:00,401861156,Slovenia vs Suiza,[VIP] Faltas Totales > 22.5,1.45,1.45,70.2,🟢 [LUZ VERDE / ALTO VALOR],1000.0,Ganada,1450.0,AUDITADA FT 0-0
-2026-11-13 22:40:00,401861156,Slovenia vs Suiza,[VIP] Córners > 8.5,1.63,1.63,66.5,🟢 [VALOR ALTO / OPERABLE],3300.0,Perdida,0.0,AUDITADA FT 0-0
+2026-11-13 22:40:00,401861156,Slovenia vs Suiza,[VIP] Córners > 8.5,1.63,1.63,66.5,🟢 [VALOR ALTO / OPERABLE],3300.0,Ganada,5379.0,AUDITADA FT 0-0
 2026-11-13 22:40:00,401861156,Slovenia vs Suiza,[FREE] Gol en 2do Tiempo,1.18,1.18,80.2,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 0-0
 2026-11-13 22:40:00,401861156,Slovenia vs Suiza,[FREE] Doble Oport. X2,1.27,1.27,74.6,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,635.0,AUDITADA FT 0-0
 2026-11-13 22:55:00,401928487,Salamanca UDS vs Celta Vigo,[VIP] Tarjetas > 4.5,1.53,1.53,66.6,🟢 [VALOR ALTO / OPERABLE],900.0,Ganada,1377.0,AUDITADA FT 0-5
@@ -3481,14 +3409,13 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-11-13 22:55:00,401927191,Marruecos vs Niger,[FREE] Faltas Totales > 22.5,1.18,1.18,86.5,🟢 [LUZ VERDE / ALTO VALOR],2900.0,Ganada,3422.0,AUDITADA FT 5-1
 2026-11-13 22:55:00,401927191,Marruecos vs Niger,[FREE] Doble Oport. 1X,1.23,1.23,77.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,615.0,AUDITADA FT 5-1
 2026-11-13 22:55:00,401919975,Jordan vs Indonesia,[FREE] Doble Oport. 1X,1.18,1.18,78.4,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 0-0
-2026-11-13 22:55:00,401919975,Jordan vs Indonesia,[FREE] Córners > 8.5,1.28,1.28,63.1,🟢 [VALOR ALTO / OPERABLE],500.0,Perdida,0.0,AUDITADA FT 0-0
+2026-11-13 22:55:00,401919975,Jordan vs Indonesia,[FREE] Córners > 8.5,1.28,1.28,63.1,🟢 [VALOR ALTO / OPERABLE],500.0,Ganada,640.0,AUDITADA FT 0-0
 2026-11-13 01:55:00,401929712,St. Martin vs El Salvador,[VIP] Doble Oport. 1X,1.43,1.43,71.2,🟢 [LUZ VERDE / ALTO VALOR],1000.0,Perdida,0.0,AUDITADA FT 0-2
 2026-11-13 01:55:00,401929712,St. Martin vs El Salvador,[VIP] Córners > 8.5,1.53,1.53,66.5,🟢 [VALOR ALTO / OPERABLE],800.0,Ganada,1224.0,AUDITADA FT 0-2
 2026-11-13 01:55:00,401929712,St. Martin vs El Salvador,[FREE] Faltas Totales > 22.5,1.18,1.18,80.3,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 0-2
 2026-11-13 01:55:00,401929712,St. Martin vs El Salvador,[FREE] Córners St. Martin > 4.5,1.22,1.22,77.6,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,610.0,AUDITADA FT 0-2
 2026-11-13 01:55:00,401930876,Argentina vs Uruguay,[VIP] Córners > 8.5,1.45,1.45,75.5,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,7250.0,AUDITADA FT 1-2
 2026-11-13 01:55:00,401930876,Argentina vs Uruguay,[VIP] Remates Puerta > 6.5,1.59,1.59,66.5,🟢 [VALOR ALTO / OPERABLE],2400.0,Ganada,3816.0,AUDITADA FT 1-2
-2026-11-13 02:55:00,401929775,Montserrat vs Nicaragua,[FREE] Doble Oport. 1X,1.18,1.18,82.7,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 1-2
 2026-11-13 02:55:00,401921325,Colombia vs Chile,[VIP] Over 1.5 Goles,1.38,1.38,75.1,🟢 [LUZ VERDE / ALTO VALOR],2400.0,Perdida,0.0,AUDITADA FT 1-0
 2026-11-13 02:55:00,401921325,Colombia vs Chile,[VIP] Combo 1X + O1.5,1.54,1.54,66.5,🟢 [VALOR ALTO / OPERABLE],1100.0,Perdida,0.0,AUDITADA FT 1-0
 2026-11-13 02:55:00,401930898,Ecuador vs Costa Rica,[FREE] Doble Oport. 1X,1.18,1.18,84.8,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 2-0
@@ -3503,9 +3430,6 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-11-13 04:55:00,401929711,Guatemala vs Canada,[VIP] Tarjetas > 3.5,1.51,1.51,67.6,🟢 [VALOR ALTO / OPERABLE],1000.0,Ganada,1510.0,AUDITADA FT 2-3
 2026-11-13 04:55:00,401929711,Guatemala vs Canada,[FREE] Gol en 2do Tiempo,1.18,1.18,81.6,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 2-3
 2026-11-13 04:55:00,401929711,Guatemala vs Canada,[FREE] Over 1.5 Goles,1.28,1.28,74.4,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,640.0,AUDITADA FT 2-3
-2026-11-13 08:25:00,401933864,Tahiti vs Cook Islands,[VIP] Córners > 8.5,1.7,1.70,66.5,🟢 [VALOR ALTO / OPERABLE],4700.0,Ganada,7990.0,AUDITADA FT 4-0
-2026-11-13 08:25:00,401933864,Tahiti vs Cook Islands,[FREE] Doble Oport. 1X,1.28,1.28,68.2,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,640.0,AUDITADA FT 4-0
-2026-11-13 08:25:00,401933864,Tahiti vs Cook Islands,[FREE] Córners > 7.5,1.28,1.28,72.4,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,640.0,AUDITADA FT 4-0
 2026-11-13 01:55:00,401930876,Argentina vs Uruguay,[FREE] Gol en 1T,1.18,1.18,82.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 1-2
 2026-11-13 01:55:00,401930876,Argentina vs Uruguay,[FREE] Over 1.5 Goles,1.26,1.26,75.7,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,630.0,AUDITADA FT 1-2
 2026-11-13 02:55:00,401921325,Colombia vs Chile,[FREE] Doble Oport. 1X,1.18,1.18,84.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 1-0
@@ -3514,8 +3438,6 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-11-13 22:40:00,401861158,Serbia vs Alemania,[FREE] Over 1.5 Goles,1.28,1.28,74.3,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,640.0,AUDITADA FT 1-3
 2026-11-13 04:25:00,401877838,Internacional de Bogotá vs Independiente Santa Fe,[VIP] Remates Puerta > 6.5,1.72,1.72,66.5,🟢 [VALOR ALTO / OPERABLE],5000.0,Ganada,8600.0,AUDITADA FT 0-2
 2026-11-13 04:25:00,401877838,Internacional de Bogotá vs Independiente Santa Fe,[VIP] Tarjetas > 4.5,1.61,1.61,66.5,🟢 [VALOR ALTO / OPERABLE],2900.0,Ganada,4669.0,AUDITADA FT 0-2
-2026-11-13 22:40:00,401861154,Luxemburgo vs Estonia,[VIP] Doble Oport. 1X,1.38,1.38,84.6,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Perdida,0.0,AUDITADA FT 0-1
-2026-11-13 22:40:00,401861154,Luxemburgo vs Estonia,[VIP] Over 1.5 Goles,1.38,1.38,81.2,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Perdida,0.0,AUDITADA FT 0-1
 2026-11-13 14:55:00,401916338,Singapore vs Paraguay,[VIP] Over 1.5 Goles,1.38,1.38,78.8,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,6900.0,AUDITADA FT 1-4
 2026-11-13 14:55:00,401916338,Singapore vs Paraguay,[VIP] Combo X2 + O1.5,1.5,1.50,70.6,🟢 [LUZ VERDE / ALTO VALOR],2900.0,Ganada,4350.0,AUDITADA FT 1-4
 2026-11-13 17:25:00,401931476,Arabia Saudita vs Corea del Sur,[VIP] Over 1.5 Goles,1.38,1.38,78.7,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,6900.0,AUDITADA FT 3-2
@@ -3528,8 +3450,8 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-11-14 15:55:00,401932857,Le Puy vs Diables Noirs,[VIP] Faltas Totales > 22.5,1.42,1.42,74.5,🟢 [LUZ VERDE / ALTO VALOR],3400.0,Ganada,4828.0,AUDITADA FT 4-0
 2026-11-14 15:55:00,401932857,Le Puy vs Diables Noirs,[FREE] Tarjetas > 4.5,1.28,1.28,65.7,🟢 [VALOR ALTO / OPERABLE],500.0,Ganada,640.0,AUDITADA FT 4-0
 2026-11-14 15:55:00,401932857,Le Puy vs Diables Noirs,[FREE] Faltas Totales > 22.5,1.28,1.28,72.7,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,640.0,AUDITADA FT 4-0
-2026-11-14 15:55:00,401932840,Tourcoing vs Stade de Reims,[VIP] Remates Puerta > 6.5,1.72,1.72,66.5,🟢 [VALOR ALTO / OPERABLE],5000.0,Perdida,0.0,AUDITADA FT 0-0
-2026-11-14 15:55:00,401932840,Tourcoing vs Stade de Reims,[VIP] Córners > 8.5,1.63,1.63,66.5,🟢 [VALOR ALTO / OPERABLE],3300.0,Perdida,0.0,AUDITADA FT 0-0
+2026-11-14 15:55:00,401932840,Tourcoing vs Stade de Reims,[VIP] Remates Puerta > 6.5,1.72,1.72,66.5,🟢 [VALOR ALTO / OPERABLE],5000.0,Ganada,8600.0,AUDITADA FT 0-0
+2026-11-14 15:55:00,401932840,Tourcoing vs Stade de Reims,[VIP] Córners > 8.5,1.63,1.63,66.5,🟢 [VALOR ALTO / OPERABLE],3300.0,Ganada,5379.0,AUDITADA FT 0-0
 2026-11-14 15:55:00,401932840,Tourcoing vs Stade de Reims,[FREE] Faltas Totales > 22.5,1.18,1.18,78.2,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 0-0
 2026-11-14 15:55:00,401932840,Tourcoing vs Stade de Reims,[FREE] Tarjetas > 3.5,1.28,1.28,67.5,🟢 [VALOR ALTO / OPERABLE],500.0,Ganada,640.0,AUDITADA FT 0-0
 2026-11-14 16:25:00,401932843,CA Boulay vs Sochaux,[VIP] Over 1.5 Goles,1.38,1.38,73.7,🟢 [LUZ VERDE / ALTO VALOR],1100.0,Ganada,1518.0,AUDITADA FT 2-2
@@ -3680,18 +3602,12 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-11-15 15:55:00,401883113,Tenerife vs Ceuta,[VIP] Remates Puerta > 6.5,1.44,1.44,74.5,🟢 [LUZ VERDE / ALTO VALOR],4100.0,Ganada,5904.0,AUDITADA FT 2-0
 2026-11-15 15:55:00,401883113,Tenerife vs Ceuta,[FREE] Faltas Totales > 22.5,1.18,1.18,86.5,🟢 [LUZ VERDE / ALTO VALOR],2900.0,Ganada,3422.0,AUDITADA FT 2-0
 2026-11-15 15:55:00,401883113,Tenerife vs Ceuta,[FREE] Doble Oport. 1X,1.18,1.18,84.7,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 2-0
-2026-11-15 16:55:00,401861172,Chipre vs Montenegro,[FREE] Gol en 2do Tiempo,1.18,1.18,86.5,🟢 [LUZ VERDE / ALTO VALOR],2800.0,Ganada,3304.0,AUDITADA FT 1-4
-2026-11-15 16:55:00,401861172,Chipre vs Montenegro,[FREE] Doble Oport. X2,1.18,1.18,84.9,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 1-4
 2026-11-15 18:10:00,401883116,Granada vs Las Palmas,[VIP] Gol en 2do Tiempo,1.39,1.39,73.4,🟢 [LUZ VERDE / ALTO VALOR],1300.0,Ganada,1807.0,AUDITADA FT 1-0
 2026-11-15 18:10:00,401883116,Granada vs Las Palmas,[VIP] Over 1.5 Goles,1.38,1.38,76.6,🟢 [LUZ VERDE / ALTO VALOR],3700.0,Perdida,0.0,AUDITADA FT 1-0
 2026-11-15 18:10:00,401883116,Granada vs Las Palmas,[FREE] Doble Oport. 1X,1.18,1.18,84.1,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 1-0
 2026-11-15 18:10:00,401883116,Granada vs Las Palmas,[FREE] Faltas Totales > 22.5,1.22,1.22,77.8,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,610.0,AUDITADA FT 1-0
 2026-11-15 19:55:00,401861173,Belarus vs Albania,[FREE] Gol en 2do Tiempo,1.18,1.18,83.3,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 0-2
 2026-11-15 19:55:00,401861173,Belarus vs Albania,[FREE] Over 1.5 Goles,1.18,1.18,79.1,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 0-2
-2026-11-15 19:55:00,401861174,Finlandia vs San Marino,[VIP] Gol en 2do Tiempo,1.49,1.49,68.7,🟢 [LUZ VERDE / ALTO VALOR],1200.0,Ganada,1788.0,AUDITADA FT 7-2
-2026-11-15 19:55:00,401861174,Finlandia vs San Marino,[VIP] Tarjetas > 4.5,1.55,1.55,66.5,🟢 [VALOR ALTO / OPERABLE],1400.0,Ganada,2170.0,AUDITADA FT 7-2
-2026-11-15 19:55:00,401861174,Finlandia vs San Marino,[FREE] Doble Oport. 1X,1.18,1.18,78.9,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 7-2
-2026-11-15 19:55:00,401861174,Finlandia vs San Marino,[FREE] Faltas Totales > 22.5,1.18,1.18,78.4,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 7-2
 2026-11-15 20:25:00,401883117,Eibar vs Cádiz,[VIP] Over 1.5 Goles,1.44,1.44,70.8,🟢 [LUZ VERDE / ALTO VALOR],1100.0,Ganada,1584.0,AUDITADA FT 1-1
 2026-11-15 20:25:00,401883117,Eibar vs Cádiz,[VIP] Combo 1X + O1.5,1.53,1.53,66.6,🟢 [VALOR ALTO / OPERABLE],900.0,Ganada,1377.0,AUDITADA FT 1-1
 2026-11-15 20:25:00,401883117,Eibar vs Cádiz,[FREE] Faltas Totales > 22.5,1.18,1.18,86.5,🟢 [LUZ VERDE / ALTO VALOR],2900.0,Ganada,3422.0,AUDITADA FT 1-1
@@ -3708,10 +3624,10 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-11-15 22:40:00,401861177,Francia vs Turquía,[VIP] Córners Francia > 4.5,1.59,1.59,66.5,🟢 [VALOR ALTO / OPERABLE],2400.0,Ganada,3816.0,AUDITADA FT 2-1
 2026-11-15 22:40:00,401861175,España vs Inglaterra,[VIP] Doble Oport. X2,1.4,1.40,73.1,🟢 [LUZ VERDE / ALTO VALOR],1400.0,Ganada,1960.0,AUDITADA FT 2-3
 2026-11-15 22:40:00,401861175,España vs Inglaterra,[VIP] Remates Puerta > 6.5,1.42,1.42,71.6,🟢 [LUZ VERDE / ALTO VALOR],1000.0,Ganada,1420.0,AUDITADA FT 2-3
-2026-11-15 01:55:00,401929709,Panama vs Curaçao,[VIP] Tarjetas > 4.5,1.5,PENDIENTE_CLV,67.9,🟢 [VALOR ALTO / OPERABLE],1000.0,Pendiente,0.0,AUDITANDO
-2026-11-15 01:55:00,401929709,Panama vs Curaçao,[VIP] Gol en 2do Tiempo,1.42,PENDIENTE_CLV,76.5,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Pendiente,0.0,AUDITANDO
-2026-11-15 01:55:00,401929709,Panama vs Curaçao,[FREE] Faltas Totales > 22.5,1.18,PENDIENTE_CLV,81.6,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
-2026-11-15 01:55:00,401929709,Panama vs Curaçao,[FREE] Doble Oport. 1X,1.18,PENDIENTE_CLV,79.4,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
+2026-11-15 01:55:00,401929709,Panama vs Curaçao,[VIP] Tarjetas > 4.5,1.5,1.50,67.9,🟢 [VALOR ALTO / OPERABLE],1000.0,Ganada,1500.0,AUDITADA FT 2-0
+2026-11-15 01:55:00,401929709,Panama vs Curaçao,[VIP] Gol en 2do Tiempo,1.42,1.42,76.5,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,7100.0,AUDITADA FT 2-0
+2026-11-15 01:55:00,401929709,Panama vs Curaçao,[FREE] Faltas Totales > 22.5,1.18,1.18,81.6,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 2-0
+2026-11-15 01:55:00,401929709,Panama vs Curaçao,[FREE] Doble Oport. 1X,1.18,1.18,79.4,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 2-0
 2026-11-15 22:40:00,401861176,Bélgica vs Italia,[FREE] Gol en 1T,1.18,1.18,84.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 4-1
 2026-11-15 22:40:00,401861176,Bélgica vs Italia,[FREE] Over 1.5 Goles,1.18,1.18,81.7,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 4-1
 2026-11-15 22:40:00,401861175,España vs Inglaterra,[FREE] Gol en 2do Tiempo,1.18,1.18,81.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 2-3
@@ -3720,8 +3636,6 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-11-15 22:40:00,401861177,Francia vs Turquía,[FREE] Faltas Totales > 22.5,1.18,1.18,78.4,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 2-1
 2026-11-15 22:40:00,401861178,Croacia vs República Checa,[VIP] Córners Croacia > 4.5,1.54,1.54,66.5,🟢 [VALOR ALTO / OPERABLE],1100.0,Ganada,1694.0,AUDITADA FT 2-1
 2026-11-15 22:40:00,401861178,Croacia vs República Checa,[VIP] Tarjetas > 4.5,1.53,1.53,66.5,🟢 [VALOR ALTO / OPERABLE],800.0,Ganada,1224.0,AUDITADA FT 2-1
-2026-11-15 16:55:00,401861172,Chipre vs Montenegro,[VIP] Over 1.5 Goles,1.38,1.38,80.6,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,6900.0,AUDITADA FT 1-4
-2026-11-15 16:55:00,401861172,Chipre vs Montenegro,[VIP] Córners Montenegro > 4.5,1.38,1.38,79.2,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,6900.0,AUDITADA FT 1-4
 2026-11-15 19:55:00,401861173,Belarus vs Albania,[VIP] Faltas Totales > 22.5,1.62,1.62,66.5,🟢 [VALOR ALTO / OPERABLE],3100.0,Ganada,5022.0,AUDITADA FT 0-2
 2026-11-15 19:55:00,401861173,Belarus vs Albania,[VIP] Doble Oport. X2,1.48,1.48,68.8,🟢 [LUZ VERDE / ALTO VALOR],900.0,Ganada,1332.0,AUDITADA FT 0-2
 2026-11-14 08:55:00,401930879,Bahrain vs Yemen,[VIP] Gol en 2do Tiempo,1.38,1.38,74.5,🟢 [LUZ VERDE / ALTO VALOR],1900.0,Ganada,2622.0,AUDITADA FT 3-1
@@ -3731,7 +3645,7 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-11-14 14:55:00,401930236,China vs Malaysia,[VIP] Over 1.5 Goles,1.38,1.38,76.4,🟢 [LUZ VERDE / ALTO VALOR],3600.0,Ganada,4968.0,AUDITADA FT 2-0
 2026-11-14 14:55:00,401930236,China vs Malaysia,[FREE] Gol en 2do Tiempo,1.18,1.18,82.9,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 2-0
 2026-11-14 14:55:00,401930236,China vs Malaysia,[FREE] Córners China > 4.5,1.18,1.18,82.7,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 2-0
-2026-11-14 14:55:00,401930243,Chinese Taipei vs Kyrgyz Republic,[VIP] Córners Kyrgyz Republic > 4.5,1.38,1.38,79.4,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Perdida,0.0,AUDITADA FT 0-0
+2026-11-14 14:55:00,401930243,Chinese Taipei vs Kyrgyz Republic,[VIP] Córners Kyrgyz Republic > 4.5,1.38,1.38,79.4,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,6900.0,AUDITADA FT 0-0
 2026-11-14 14:55:00,401930243,Chinese Taipei vs Kyrgyz Republic,[VIP] Over 1.5 Goles,1.38,1.38,80.4,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Perdida,0.0,AUDITADA FT 0-0
 2026-11-14 14:55:00,401930243,Chinese Taipei vs Kyrgyz Republic,[FREE] Doble Oport. X2,1.18,1.18,84.9,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 0-0
 2026-11-14 14:55:00,401930243,Chinese Taipei vs Kyrgyz Republic,[FREE] Gol en 2do Tiempo,1.18,1.18,86.4,🟢 [LUZ VERDE / ALTO VALOR],2700.0,Perdida,0.0,AUDITADA FT 0-0
@@ -3753,10 +3667,6 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-11-14 19:55:00,401861165,Noruega vs Gales,[VIP] Córners > 8.5,1.7,1.70,66.5,🟢 [VALOR ALTO / OPERABLE],4700.0,Ganada,7990.0,AUDITADA FT 3-1
 2026-11-14 19:55:00,401861165,Noruega vs Gales,[FREE] Gol en 2do Tiempo,1.18,1.18,79.4,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 3-1
 2026-11-14 19:55:00,401861165,Noruega vs Gales,[FREE] Over 1.5 Goles,1.25,1.25,76.2,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,625.0,AUDITADA FT 3-1
-2026-11-14 20:25:00,401883118,Almería vs FC Andorra,[VIP] Tarjetas > 3.5,1.56,1.56,66.5,🟢 [VALOR ALTO / OPERABLE],1700.0,Ganada,2652.0,AUDITADA FT 2-1
-2026-11-14 20:25:00,401883118,Almería vs FC Andorra,[VIP] Remates Puerta > 6.5,1.7,1.70,66.5,🟢 [VALOR ALTO / OPERABLE],4700.0,Ganada,7990.0,AUDITADA FT 2-1
-2026-11-14 20:25:00,401883118,Almería vs FC Andorra,[FREE] Faltas Totales > 22.5,1.18,1.18,86.5,🟢 [LUZ VERDE / ALTO VALOR],2900.0,Ganada,3422.0,AUDITADA FT 2-1
-2026-11-14 20:25:00,401883118,Almería vs FC Andorra,[FREE] Doble Oport. 1X,1.18,1.18,85.1,🟢 [LUZ VERDE / ALTO VALOR],600.0,Ganada,708.0,AUDITADA FT 2-1
 2026-11-14 20:25:00,401883135,Mallorca vs Córdoba,[VIP] Córners > 8.5,1.45,1.45,71.2,🟢 [LUZ VERDE / ALTO VALOR],1800.0,Ganada,2610.0,AUDITADA FT 3-3
 2026-11-14 20:25:00,401883135,Mallorca vs Córdoba,[VIP] Tarjetas > 3.5,1.53,1.53,66.6,🟢 [VALOR ALTO / OPERABLE],900.0,Ganada,1377.0,AUDITADA FT 3-3
 2026-11-14 20:25:00,401883135,Mallorca vs Córdoba,[FREE] Doble Oport. 1X,1.18,1.18,85.2,🟢 [LUZ VERDE / ALTO VALOR],800.0,Ganada,944.0,AUDITADA FT 3-3
@@ -3766,7 +3676,7 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-11-14 21:55:00,401929774,Sint Maarten vs French Guiana,[FREE] Doble Oport. X2,1.18,1.18,79.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 1-5
 2026-11-14 21:55:00,401929774,Sint Maarten vs French Guiana,[FREE] Over 1.5 Goles,1.24,1.24,78.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,620.0,AUDITADA FT 1-5
 2026-11-14 21:55:00,401927204,Argelia vs Togo,[VIP] Faltas Totales > 22.5,1.59,1.59,66.5,🟢 [VALOR ALTO / OPERABLE],2400.0,Ganada,3816.0,AUDITADA FT 1-0
-2026-11-14 21:55:00,401927204,Argelia vs Togo,[VIP] Remates Puerta > 6.5,1.67,1.67,66.5,🟢 [VALOR ALTO / OPERABLE],4100.0,Perdida,0.0,AUDITADA FT 1-0
+2026-11-14 21:55:00,401927204,Argelia vs Togo,[VIP] Remates Puerta > 6.5,1.67,1.67,66.5,🟢 [VALOR ALTO / OPERABLE],4100.0,Ganada,6847.0,AUDITADA FT 1-0
 2026-11-14 21:55:00,401927204,Argelia vs Togo,[FREE] Doble Oport. 1X,1.18,1.18,80.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 1-0
 2026-11-14 21:55:00,401927204,Argelia vs Togo,[FREE] Tarjetas > 4.5,1.28,1.28,66.9,🟢 [VALOR ALTO / OPERABLE],500.0,Ganada,640.0,AUDITADA FT 1-0
 2026-11-14 21:55:00,401927215,Angola vs South Sudan,[VIP] Ambos Marcan (BTTS),1.5,1.50,69.3,🟢 [LUZ VERDE / ALTO VALOR],2000.0,Perdida,0.0,AUDITADA FT 2-0
@@ -3775,7 +3685,7 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-11-14 21:55:00,401927215,Angola vs South Sudan,[FREE] Over 1.5 Goles,1.18,1.18,80.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 2-0
 2026-11-14 22:40:00,401861170,Austria vs Irlanda,[VIP] Córners > 8.5,1.64,1.64,66.5,🟢 [VALOR ALTO / OPERABLE],3500.0,Ganada,5740.0,AUDITADA FT 1-0
 2026-11-14 22:40:00,401861170,Austria vs Irlanda,[VIP] Faltas Totales > 22.5,1.74,1.74,66.5,🟢 [VALOR ALTO / OPERABLE],5000.0,Ganada,8700.0,AUDITADA FT 1-0
-2026-11-14 22:40:00,401861170,Austria vs Irlanda,[FREE] Remates Puerta > 6.5,1.26,1.26,75.3,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 1-0
+2026-11-14 22:40:00,401861170,Austria vs Irlanda,[FREE] Remates Puerta > 6.5,1.26,1.26,75.3,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,630.0,AUDITADA FT 1-0
 2026-11-14 22:40:00,401861170,Austria vs Irlanda,[FREE] Doble Oport. 1X,1.28,1.28,71.6,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,640.0,AUDITADA FT 1-0
 2026-11-14 22:40:00,401861169,Irlanda del Norte vs Ucrania,[VIP] Doble Oport. 1X,1.43,1.43,71.5,🟢 [LUZ VERDE / ALTO VALOR],1300.0,Ganada,1859.0,AUDITADA FT 1-0
 2026-11-14 22:40:00,401861169,Irlanda del Norte vs Ucrania,[VIP] Tarjetas > 4.5,1.51,1.51,67.7,🟢 [VALOR ALTO / OPERABLE],1100.0,Ganada,1661.0,AUDITADA FT 1-0
@@ -3798,7 +3708,7 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-11-14 23:25:00,401877770,Águilas Doradas vs Independiente Medellín,[FREE] Doble Oport. X2,1.18,1.18,84.6,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 0-1
 2026-11-14 23:25:00,401877770,Águilas Doradas vs Independiente Medellín,[FREE] Faltas Totales > 22.5,1.28,1.28,74.2,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,640.0,AUDITADA FT 0-1
 2026-11-14 23:25:00,401877917,Atlético Bucaramanga vs Fortaleza CEIF,[VIP] Gol en 2do Tiempo,1.42,1.42,76.5,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,7100.0,AUDITADA FT 1-0
-2026-11-14 23:25:00,401877917,Atlético Bucaramanga vs Fortaleza CEIF,[VIP] Remates Puerta > 6.5,1.44,1.44,74.5,🟢 [LUZ VERDE / ALTO VALOR],4100.0,Perdida,0.0,AUDITADA FT 1-0
+2026-11-14 23:25:00,401877917,Atlético Bucaramanga vs Fortaleza CEIF,[VIP] Remates Puerta > 6.5,1.44,1.44,74.5,🟢 [LUZ VERDE / ALTO VALOR],4100.0,Ganada,5904.0,AUDITADA FT 1-0
 2026-11-14 23:25:00,401878029,Atlético Nacional vs Once Caldas,[FREE] Córners > 8.5,1.28,1.28,69.6,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,640.0,AUDITADA FT 1-1
 2026-11-14 23:25:00,401878029,Atlético Nacional vs Once Caldas,[FREE] Remates Puerta > 6.5,1.28,1.28,73.7,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,640.0,AUDITADA FT 1-1
 2026-11-14 23:25:00,401878043,Cúcuta Deportivo vs Jaguares de Córdoba,[VIP] Total Menos de 2.5 (Under),1.42,1.42,75.7,🟢 [LUZ VERDE / ALTO VALOR],4500.0,Ganada,6390.0,AUDITADA FT 2-0
@@ -3853,18 +3763,50 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-11-14 03:55:00,401929772,Jamaica vs México,[VIP] Over 1.5 Goles,1.38,1.38,77.8,🟢 [LUZ VERDE / ALTO VALOR],4800.0,Ganada,6624.0,AUDITADA FT 3-2
 2026-11-14 23:25:00,401878029,Atlético Nacional vs Once Caldas,[VIP] Faltas Totales > 22.5,1.44,1.44,70.8,🟢 [LUZ VERDE / ALTO VALOR],1100.0,Ganada,1584.0,AUDITADA FT 1-1
 2026-11-14 23:25:00,401878029,Atlético Nacional vs Once Caldas,[VIP] Remates Puerta > 7.5,1.78,1.78,66.5,🟢 [VALOR ALTO / OPERABLE],5000.0,Ganada,8900.0,AUDITADA FT 1-1
+2026-11-16 17:55:00,401861181,Kazakhstan vs Slovakia (Uefa Nations League),[VIP] Faltas Totales > 22.5,1.42,PENDIENTE_CLV,77.2,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Pendiente,0.0,AUDITANDO
+2026-11-16 17:55:00,401861181,Kazakhstan vs Slovakia (Uefa Nations League),[VIP] Tarjetas > 3.5,1.47,PENDIENTE_CLV,69.5,🟢 [LUZ VERDE / ALTO VALOR],1100.0,Pendiente,0.0,AUDITANDO
+2026-11-16 17:55:00,401861181,Kazakhstan vs Slovakia (Uefa Nations League),[FREE] Gol en 2do Tiempo,1.25,PENDIENTE_CLV,76.3,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
+2026-11-16 17:55:00,401861181,Kazakhstan vs Slovakia (Uefa Nations League),[FREE] Doble Oport. X2,1.25,PENDIENTE_CLV,76.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
+2026-11-16 19:55:00,401861183,Estonia vs Bulgaria (Uefa Nations League),[VIP] Tarjetas > 4.5,1.57,PENDIENTE_CLV,66.5,🟢 [VALOR ALTO / OPERABLE],1900.0,Pendiente,0.0,AUDITANDO
+2026-11-16 19:55:00,401861183,Estonia vs Bulgaria (Uefa Nations League),[VIP] Gol en 2do Tiempo,1.42,PENDIENTE_CLV,76.5,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Pendiente,0.0,AUDITANDO
+2026-11-16 19:55:00,401861183,Estonia vs Bulgaria (Uefa Nations League),[FREE] Faltas Totales > 22.5,1.18,PENDIENTE_CLV,79.2,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
+2026-11-16 19:55:00,401861183,Estonia vs Bulgaria (Uefa Nations League),[FREE] Doble Oport. X2,1.28,PENDIENTE_CLV,73.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
+2026-11-16 21:55:00,401929707,Cuba vs Grenada (Concacaf Nations League),[VIP] Córners Cuba > 4.5,1.38,PENDIENTE_CLV,81.9,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Pendiente,0.0,AUDITANDO
+2026-11-16 21:55:00,401929707,Cuba vs Grenada (Concacaf Nations League),[VIP] Gol en 2do Tiempo,1.38,PENDIENTE_CLV,78.0,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Pendiente,0.0,AUDITANDO
+2026-11-16 21:55:00,401929707,Cuba vs Grenada (Concacaf Nations League),[FREE] Doble Oport. 1X,1.18,PENDIENTE_CLV,83.2,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
+2026-11-16 21:55:00,401929707,Cuba vs Grenada (Concacaf Nations League),[FREE] Faltas Totales > 22.5,1.18,PENDIENTE_CLV,82.7,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
+2026-11-16 22:40:00,401861185,Alemania vs Países Bajos (Uefa Nations League),[VIP] Remates Puerta > 6.5,1.77,PENDIENTE_CLV,66.5,🟢 [VALOR ALTO / OPERABLE],5000.0,Pendiente,0.0,AUDITANDO
+2026-11-16 22:40:00,401861185,Alemania vs Países Bajos (Uefa Nations League),[VIP] Córners > 8.5,1.63,PENDIENTE_CLV,66.5,🟢 [VALOR ALTO / OPERABLE],3300.0,Pendiente,0.0,AUDITANDO
+2026-11-16 22:40:00,401861185,Alemania vs Países Bajos (Uefa Nations League),[FREE] Gol en 2do Tiempo,1.18,PENDIENTE_CLV,82.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
+2026-11-16 22:40:00,401861185,Alemania vs Países Bajos (Uefa Nations League),[FREE] Over 1.5 Goles,1.18,PENDIENTE_CLV,79.3,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
+2026-11-16 22:40:00,401861188,Grecia vs Serbia (Uefa Nations League),[VIP] Doble Oport. X2,1.46,PENDIENTE_CLV,70.0,🟢 [LUZ VERDE / ALTO VALOR],1200.0,Pendiente,0.0,AUDITANDO
+2026-11-16 22:40:00,401861188,Grecia vs Serbia (Uefa Nations League),[VIP] Faltas Totales > 22.5,1.51,PENDIENTE_CLV,67.5,🟢 [VALOR ALTO / OPERABLE],1000.0,Pendiente,0.0,AUDITANDO
+2026-11-16 22:40:00,401861188,Grecia vs Serbia (Uefa Nations League),[FREE] Gol en 2do Tiempo,1.18,PENDIENTE_CLV,81.1,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
+2026-11-16 22:40:00,401861188,Grecia vs Serbia (Uefa Nations League),[FREE] Over 1.5 Goles,1.28,PENDIENTE_CLV,74.2,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
+2026-11-16 22:40:00,401861187,Macedonia del Norte vs Slovenia (Uefa Nations League),[VIP] Tarjetas > 4.5,1.7,PENDIENTE_CLV,66.5,🟢 [VALOR ALTO / OPERABLE],4700.0,Pendiente,0.0,AUDITANDO
+2026-11-16 22:40:00,401861187,Macedonia del Norte vs Slovenia (Uefa Nations League),[VIP] Córners > 8.5,1.79,PENDIENTE_CLV,66.5,🟢 [VALOR ALTO / OPERABLE],5000.0,Pendiente,0.0,AUDITANDO
+2026-11-16 22:40:00,401861187,Macedonia del Norte vs Slovenia (Uefa Nations League),[FREE] Faltas Totales > 22.5,1.28,PENDIENTE_CLV,71.1,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
+2026-11-16 22:40:00,401861187,Macedonia del Norte vs Slovenia (Uefa Nations League),[FREE] Córners > 7.5,1.28,PENDIENTE_CLV,69.9,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
+2026-11-16 22:40:00,401861186,Suiza vs Escocia (Uefa Nations League),[VIP] Doble Oport. 1X,1.41,PENDIENTE_CLV,72.6,🟢 [LUZ VERDE / ALTO VALOR],1400.0,Pendiente,0.0,AUDITANDO
+2026-11-16 22:40:00,401861186,Suiza vs Escocia (Uefa Nations League),[VIP] Tarjetas > 4.5,1.51,PENDIENTE_CLV,67.5,🟢 [VALOR ALTO / OPERABLE],900.0,Pendiente,0.0,AUDITANDO
+2026-11-16 22:40:00,401861186,Suiza vs Escocia (Uefa Nations League),[FREE] Total Menos de 3.5 (Under),1.18,PENDIENTE_CLV,86.5,🟢 [LUZ VERDE / ALTO VALOR],2900.0,Pendiente,0.0,AUDITANDO
+2026-11-16 22:40:00,401861186,Suiza vs Escocia (Uefa Nations League),[FREE] Faltas Totales > 22.5,1.18,PENDIENTE_CLV,80.9,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
+2026-11-16 02:55:00,401929706,Martinique vs Aruba (Concacaf Nations League),[VIP] Over 1.5 Goles,1.38,PENDIENTE_CLV,78.5,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Pendiente,0.0,AUDITANDO
+2026-11-16 02:55:00,401929706,Martinique vs Aruba (Concacaf Nations League),[VIP] Remates Puerta > 6.5,1.42,PENDIENTE_CLV,72.3,🟢 [LUZ VERDE / ALTO VALOR],1600.0,Pendiente,0.0,AUDITANDO
+2026-11-16 02:55:00,401929706,Martinique vs Aruba (Concacaf Nations League),[FREE] Doble Oport. 1X,1.18,PENDIENTE_CLV,84.7,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
+2026-11-16 02:55:00,401929706,Martinique vs Aruba (Concacaf Nations League),[FREE] Faltas Totales > 22.5,1.18,PENDIENTE_CLV,86.5,🟢 [LUZ VERDE / ALTO VALOR],2900.0,Pendiente,0.0,AUDITANDO
+2026-11-16 02:55:00,401929705,Trinidad and Tobago vs Antigua and Barbuda (Concacaf Nations League),[VIP] Faltas Totales > 22.5,1.44,PENDIENTE_CLV,71.0,🟢 [LUZ VERDE / ALTO VALOR],1300.0,Pendiente,0.0,AUDITANDO
+2026-11-16 02:55:00,401929705,Trinidad and Tobago vs Antigua and Barbuda (Concacaf Nations League),[VIP] Combo 1X + O1.5,1.52,PENDIENTE_CLV,67.3,🟢 [VALOR ALTO / OPERABLE],1100.0,Pendiente,0.0,AUDITANDO
+2026-11-16 02:55:00,401929705,Trinidad and Tobago vs Antigua and Barbuda (Concacaf Nations League),[FREE] Córners > 7.5,1.28,PENDIENTE_CLV,69.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
+2026-11-16 02:55:00,401929705,Trinidad and Tobago vs Antigua and Barbuda (Concacaf Nations League),[FREE] Doble Oport. 1X,1.18,PENDIENTE_CLV,84.8,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
+2026-11-16 03:55:00,401929770,Canada vs Guatemala (Concacaf Nations League),[VIP] Tarjetas > 3.5,1.48,PENDIENTE_CLV,69.0,🟢 [LUZ VERDE / ALTO VALOR],1100.0,Pendiente,0.0,AUDITANDO
+2026-11-16 03:55:00,401929770,Canada vs Guatemala (Concacaf Nations League),[VIP] Córners > 8.5,1.57,PENDIENTE_CLV,66.5,🟢 [VALOR ALTO / OPERABLE],1900.0,Pendiente,0.0,AUDITANDO
+2026-11-16 03:55:00,401929770,Canada vs Guatemala (Concacaf Nations League),[FREE] Faltas Totales > 22.5,1.18,PENDIENTE_CLV,86.4,🟢 [LUZ VERDE / ALTO VALOR],2700.0,Pendiente,0.0,AUDITANDO
+2026-11-16 03:55:00,401929770,Canada vs Guatemala (Concacaf Nations League),[FREE] Doble Oport. 1X,1.18,PENDIENTE_CLV,80.6,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
 2026-11-16 17:55:00,401861180,Islas Feroe vs Moldova (Uefa Nations League),[VIP] Córners Islas Feroe > 4.5,1.48,PENDIENTE_CLV,68.7,🟢 [LUZ VERDE / ALTO VALOR],900.0,Pendiente,0,AUDITANDO
 2026-11-16 17:55:00,401861180,Islas Feroe vs Moldova (Uefa Nations League),[VIP] Tarjetas > 4.5,1.65,PENDIENTE_CLV,66.5,🟢 [VALOR ALTO / OPERABLE],3700.0,Pendiente,0,AUDITANDO
 2026-11-16 17:55:00,401861180,Islas Feroe vs Moldova (Uefa Nations League),[FREE] Faltas Totales > 22.5,1.18,PENDIENTE_CLV,86.5,🟢 [LUZ VERDE / ALTO VALOR],2900.0,Pendiente,0,AUDITANDO
 2026-11-16 17:55:00,401861180,Islas Feroe vs Moldova (Uefa Nations League),[FREE] Doble Oport. 1X,1.18,PENDIENTE_CLV,84.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0,AUDITANDO
-2026-11-16 17:55:00,401861181,Kazakhstan vs Slovakia (Uefa Nations League),[VIP] Faltas Totales > 22.5,1.42,PENDIENTE_CLV,77.2,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Pendiente,0,AUDITANDO
-2026-11-16 17:55:00,401861181,Kazakhstan vs Slovakia (Uefa Nations League),[VIP] Tarjetas > 3.5,1.47,PENDIENTE_CLV,69.5,🟢 [LUZ VERDE / ALTO VALOR],1100.0,Pendiente,0,AUDITANDO
-2026-11-16 17:55:00,401861181,Kazakhstan vs Slovakia (Uefa Nations League),[FREE] Gol en 2do Tiempo,1.25,PENDIENTE_CLV,76.3,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0,AUDITANDO
-2026-11-16 17:55:00,401861181,Kazakhstan vs Slovakia (Uefa Nations League),[FREE] Doble Oport. X2,1.25,PENDIENTE_CLV,76.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0,AUDITANDO
-2026-11-16 19:55:00,401861183,Estonia vs Bulgaria (Uefa Nations League),[VIP] Tarjetas > 4.5,1.57,PENDIENTE_CLV,66.5,🟢 [VALOR ALTO / OPERABLE],1900.0,Pendiente,0,AUDITANDO
-2026-11-16 19:55:00,401861183,Estonia vs Bulgaria (Uefa Nations League),[VIP] Gol en 2do Tiempo,1.42,PENDIENTE_CLV,76.5,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Pendiente,0,AUDITANDO
-2026-11-16 19:55:00,401861183,Estonia vs Bulgaria (Uefa Nations League),[FREE] Faltas Totales > 22.5,1.18,PENDIENTE_CLV,79.2,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0,AUDITANDO
-2026-11-16 19:55:00,401861183,Estonia vs Bulgaria (Uefa Nations League),[FREE] Doble Oport. X2,1.28,PENDIENTE_CLV,73.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0,AUDITANDO
 2026-11-16 19:55:00,401861182,Islandia vs Luxemburgo (Uefa Nations League),[VIP] Faltas Totales > 22.5,1.42,PENDIENTE_CLV,80.1,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Pendiente,0,AUDITANDO
 2026-11-16 19:55:00,401861182,Islandia vs Luxemburgo (Uefa Nations League),[VIP] Over 1.5 Goles,1.38,PENDIENTE_CLV,77.0,🟢 [LUZ VERDE / ALTO VALOR],4100.0,Pendiente,0,AUDITANDO
 2026-11-16 19:55:00,401861182,Islandia vs Luxemburgo (Uefa Nations League),[FREE] Doble Oport. 1X,1.18,PENDIENTE_CLV,85.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0,AUDITANDO
@@ -3877,10 +3819,6 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-11-16 20:55:00,401914292,Andorra vs Azerbaijan (Amistoso Internacional),[VIP] Córners > 8.5,1.57,PENDIENTE_CLV,66.5,🟢 [VALOR ALTO / OPERABLE],1900.0,Pendiente,0,AUDITANDO
 2026-11-16 20:55:00,401914292,Andorra vs Azerbaijan (Amistoso Internacional),[FREE] Gol en 2do Tiempo,1.18,PENDIENTE_CLV,82.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0,AUDITANDO
 2026-11-16 20:55:00,401914292,Andorra vs Azerbaijan (Amistoso Internacional),[FREE] Doble Oport. X2,1.27,PENDIENTE_CLV,74.8,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0,AUDITANDO
-2026-11-16 21:55:00,401929707,Cuba vs Grenada (Concacaf Nations League),[VIP] Córners Cuba > 4.5,1.38,PENDIENTE_CLV,81.9,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Pendiente,0,AUDITANDO
-2026-11-16 21:55:00,401929707,Cuba vs Grenada (Concacaf Nations League),[VIP] Gol en 2do Tiempo,1.38,PENDIENTE_CLV,78.0,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Pendiente,0,AUDITANDO
-2026-11-16 21:55:00,401929707,Cuba vs Grenada (Concacaf Nations League),[FREE] Doble Oport. 1X,1.18,PENDIENTE_CLV,83.2,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0,AUDITANDO
-2026-11-16 21:55:00,401929707,Cuba vs Grenada (Concacaf Nations League),[FREE] Faltas Totales > 22.5,1.18,PENDIENTE_CLV,82.7,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0,AUDITANDO
 2026-11-16 21:55:00,401929771,Guadeloupe vs Bermuda (Concacaf Nations League),[VIP] Córners Guadeloupe > 4.5,1.38,PENDIENTE_CLV,83.4,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Pendiente,0,AUDITANDO
 2026-11-16 21:55:00,401929771,Guadeloupe vs Bermuda (Concacaf Nations League),[VIP] Over 1.5 Goles,1.38,PENDIENTE_CLV,79.1,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Pendiente,0,AUDITANDO
 2026-11-16 21:55:00,401929771,Guadeloupe vs Bermuda (Concacaf Nations League),[FREE] Faltas Totales > 22.5,1.18,PENDIENTE_CLV,85.6,🟢 [LUZ VERDE / ALTO VALOR],1400.0,Pendiente,0,AUDITANDO
@@ -3889,38 +3827,10 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-11-16 21:55:00,401929708,Guyana vs Puerto Rico (Concacaf Nations League),[VIP] Córners Guyana > 4.5,1.38,PENDIENTE_CLV,75.2,🟢 [LUZ VERDE / ALTO VALOR],2500.0,Pendiente,0,AUDITANDO
 2026-11-16 21:55:00,401929708,Guyana vs Puerto Rico (Concacaf Nations League),[FREE] Gol en 1T,1.18,PENDIENTE_CLV,83.2,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0,AUDITANDO
 2026-11-16 21:55:00,401929708,Guyana vs Puerto Rico (Concacaf Nations League),[FREE] Over 1.5 Goles,1.18,PENDIENTE_CLV,81.9,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0,AUDITANDO
-2026-11-16 22:40:00,401861185,Alemania vs Países Bajos (Uefa Nations League),[VIP] Remates Puerta > 6.5,1.77,PENDIENTE_CLV,66.5,🟢 [VALOR ALTO / OPERABLE],5000.0,Pendiente,0,AUDITANDO
-2026-11-16 22:40:00,401861185,Alemania vs Países Bajos (Uefa Nations League),[VIP] Córners > 8.5,1.63,PENDIENTE_CLV,66.5,🟢 [VALOR ALTO / OPERABLE],3300.0,Pendiente,0,AUDITANDO
-2026-11-16 22:40:00,401861185,Alemania vs Países Bajos (Uefa Nations League),[FREE] Gol en 2do Tiempo,1.18,PENDIENTE_CLV,82.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0,AUDITANDO
-2026-11-16 22:40:00,401861185,Alemania vs Países Bajos (Uefa Nations League),[FREE] Over 1.5 Goles,1.18,PENDIENTE_CLV,79.3,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0,AUDITANDO
 2026-11-16 22:40:00,401861179,Gibraltar vs Malta (Uefa Nations League),[VIP] Tarjetas > 4.5,1.59,PENDIENTE_CLV,66.5,🟢 [VALOR ALTO / OPERABLE],2400.0,Pendiente,0,AUDITANDO
 2026-11-16 22:40:00,401861179,Gibraltar vs Malta (Uefa Nations League),[VIP] Gol en 2do Tiempo,1.42,PENDIENTE_CLV,76.5,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Pendiente,0,AUDITANDO
 2026-11-16 22:40:00,401861179,Gibraltar vs Malta (Uefa Nations League),[FREE] Faltas Totales > 22.5,1.24,PENDIENTE_CLV,76.9,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0,AUDITANDO
 2026-11-16 22:40:00,401861179,Gibraltar vs Malta (Uefa Nations League),[FREE] Doble Oport. X2,1.28,PENDIENTE_CLV,73.8,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0,AUDITANDO
-2026-11-16 22:40:00,401861188,Grecia vs Serbia (Uefa Nations League),[VIP] Doble Oport. X2,1.46,PENDIENTE_CLV,70.0,🟢 [LUZ VERDE / ALTO VALOR],1200.0,Pendiente,0,AUDITANDO
-2026-11-16 22:40:00,401861188,Grecia vs Serbia (Uefa Nations League),[VIP] Faltas Totales > 22.5,1.51,PENDIENTE_CLV,67.5,🟢 [VALOR ALTO / OPERABLE],1000.0,Pendiente,0,AUDITANDO
-2026-11-16 22:40:00,401861188,Grecia vs Serbia (Uefa Nations League),[FREE] Gol en 2do Tiempo,1.18,PENDIENTE_CLV,81.1,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0,AUDITANDO
-2026-11-16 22:40:00,401861188,Grecia vs Serbia (Uefa Nations League),[FREE] Over 1.5 Goles,1.28,PENDIENTE_CLV,74.2,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0,AUDITANDO
-2026-11-16 22:40:00,401861187,Macedonia del Norte vs Slovenia (Uefa Nations League),[VIP] Tarjetas > 4.5,1.7,PENDIENTE_CLV,66.5,🟢 [VALOR ALTO / OPERABLE],4700.0,Pendiente,0,AUDITANDO
-2026-11-16 22:40:00,401861187,Macedonia del Norte vs Slovenia (Uefa Nations League),[VIP] Córners > 8.5,1.79,PENDIENTE_CLV,66.5,🟢 [VALOR ALTO / OPERABLE],5000.0,Pendiente,0,AUDITANDO
-2026-11-16 22:40:00,401861187,Macedonia del Norte vs Slovenia (Uefa Nations League),[FREE] Faltas Totales > 22.5,1.28,PENDIENTE_CLV,71.1,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0,AUDITANDO
-2026-11-16 22:40:00,401861187,Macedonia del Norte vs Slovenia (Uefa Nations League),[FREE] Córners > 7.5,1.28,PENDIENTE_CLV,69.9,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0,AUDITANDO
-2026-11-16 22:40:00,401861186,Suiza vs Escocia (Uefa Nations League),[VIP] Doble Oport. 1X,1.41,PENDIENTE_CLV,72.6,🟢 [LUZ VERDE / ALTO VALOR],1400.0,Pendiente,0,AUDITANDO
-2026-11-16 22:40:00,401861186,Suiza vs Escocia (Uefa Nations League),[VIP] Tarjetas > 4.5,1.51,PENDIENTE_CLV,67.5,🟢 [VALOR ALTO / OPERABLE],900.0,Pendiente,0,AUDITANDO
-2026-11-16 22:40:00,401861186,Suiza vs Escocia (Uefa Nations League),[FREE] Total Menos de 3.5 (Under),1.18,PENDIENTE_CLV,86.5,🟢 [LUZ VERDE / ALTO VALOR],2900.0,Pendiente,0,AUDITANDO
-2026-11-16 22:40:00,401861186,Suiza vs Escocia (Uefa Nations League),[FREE] Faltas Totales > 22.5,1.18,PENDIENTE_CLV,80.9,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0,AUDITANDO
-2026-11-16 02:55:00,401929706,Martinique vs Aruba (Concacaf Nations League),[VIP] Over 1.5 Goles,1.38,PENDIENTE_CLV,78.5,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Pendiente,0,AUDITANDO
-2026-11-16 02:55:00,401929706,Martinique vs Aruba (Concacaf Nations League),[VIP] Remates Puerta > 6.5,1.42,PENDIENTE_CLV,72.3,🟢 [LUZ VERDE / ALTO VALOR],1600.0,Pendiente,0,AUDITANDO
-2026-11-16 02:55:00,401929706,Martinique vs Aruba (Concacaf Nations League),[FREE] Doble Oport. 1X,1.18,PENDIENTE_CLV,84.7,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0,AUDITANDO
-2026-11-16 02:55:00,401929706,Martinique vs Aruba (Concacaf Nations League),[FREE] Faltas Totales > 22.5,1.18,PENDIENTE_CLV,86.5,🟢 [LUZ VERDE / ALTO VALOR],2900.0,Pendiente,0,AUDITANDO
-2026-11-16 02:55:00,401929705,Trinidad and Tobago vs Antigua and Barbuda (Concacaf Nations League),[VIP] Faltas Totales > 22.5,1.44,PENDIENTE_CLV,71.0,🟢 [LUZ VERDE / ALTO VALOR],1300.0,Pendiente,0,AUDITANDO
-2026-11-16 02:55:00,401929705,Trinidad and Tobago vs Antigua and Barbuda (Concacaf Nations League),[VIP] Combo 1X + O1.5,1.52,PENDIENTE_CLV,67.3,🟢 [VALOR ALTO / OPERABLE],1100.0,Pendiente,0,AUDITANDO
-2026-11-16 02:55:00,401929705,Trinidad and Tobago vs Antigua and Barbuda (Concacaf Nations League),[FREE] Córners > 7.5,1.28,PENDIENTE_CLV,69.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0,AUDITANDO
-2026-11-16 02:55:00,401929705,Trinidad and Tobago vs Antigua and Barbuda (Concacaf Nations League),[FREE] Doble Oport. 1X,1.18,PENDIENTE_CLV,84.8,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0,AUDITANDO
-2026-11-16 03:55:00,401929770,Canada vs Guatemala (Concacaf Nations League),[VIP] Tarjetas > 3.5,1.48,PENDIENTE_CLV,69.0,🟢 [LUZ VERDE / ALTO VALOR],1100.0,Pendiente,0,AUDITANDO
-2026-11-16 03:55:00,401929770,Canada vs Guatemala (Concacaf Nations League),[VIP] Córners > 8.5,1.57,PENDIENTE_CLV,66.5,🟢 [VALOR ALTO / OPERABLE],1900.0,Pendiente,0,AUDITANDO
-2026-11-16 03:55:00,401929770,Canada vs Guatemala (Concacaf Nations League),[FREE] Faltas Totales > 22.5,1.18,PENDIENTE_CLV,86.4,🟢 [LUZ VERDE / ALTO VALOR],2700.0,Pendiente,0,AUDITANDO
-2026-11-16 03:55:00,401929770,Canada vs Guatemala (Concacaf Nations League),[FREE] Doble Oport. 1X,1.18,PENDIENTE_CLV,80.6,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0,AUDITANDO
 2026-11-16 08:25:00,401933879,Tahiti vs Cook Islands (Amistoso Internacional),[VIP] Doble Oport. 1X,1.38,PENDIENTE_CLV,84.7,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Pendiente,0,AUDITANDO
 2026-11-16 08:25:00,401933879,Tahiti vs Cook Islands (Amistoso Internacional),[VIP] Remates Puerta > 6.5,1.42,PENDIENTE_CLV,72.6,🟢 [LUZ VERDE / ALTO VALOR],1800.0,Pendiente,0,AUDITANDO
 2026-11-16 08:25:00,401933879,Tahiti vs Cook Islands (Amistoso Internacional),[FREE] Córners Tahiti > 4.5,1.18,PENDIENTE_CLV,86.5,🟢 [LUZ VERDE / ALTO VALOR],2900.0,Pendiente,0,AUDITANDO
