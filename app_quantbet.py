@@ -871,6 +871,8 @@ def obtener_resumen_auditoria():
                 for tc in tarjetas_j:
                     id_tc = str(tc.get("id_partido", "")).strip()
                     part_tc = str(tc.get("partido", "")).strip()
+                    if "(" not in part_tc and any(k in part_tc.lower() for k in ["chipre", "montenegro", "letonia", "armenia"]):
+                        part_tc = f"{part_tc} (UEFA Nations League)"
                     hora_ini = str(tc.get("hora", "20:00")).strip()
                     dt_fin_tc = mapa_dt_fin.get(id_tc) or mapa_dt_fin.get(part_tc.lower()) or calcular_dt_fin_real(f_dia, hora_ini)
                     h_fin_tc = dt_fin_tc.strftime("%H:%M")
@@ -1023,6 +1025,8 @@ def listar_jornadas():
 
 
 def evaluar_pick_tarjeta(mapa_ft, df_hist, dia_str, id_partido, duelo_str, pick_str, hora_ini_str="20:00"):
+    if calcular_dt_fin_real(dia_str, hora_ini_str) > obtener_hora_espana():
+        return "", None
     info_m = buscar_resultado_inteligente(mapa_ft, id_partido, duelo_str, dia_str)
     if info_m:
         gh, ga, ght = info_m
@@ -1211,7 +1215,7 @@ def renderizar_panel_en_vivo_silencioso():
 
         html_bloques = f"<div class='notranslate' translate='no'><h3>🟢 3 Tarjetas Abiertas del Canal FREE ({jornada_elegida})</h3>"
 
-        for tf in lista_free:
+        for idx_free, tf in enumerate(lista_free):
             ya_u_f = usados_jornada_partido.setdefault(tf["partido"].strip().lower(), set())
             opciones_f = _completar_dos_selecciones(tf.get("selecciones", []), "FREE", ya_u_f)
             for op_x in opciones_f:
@@ -1257,11 +1261,15 @@ def renderizar_panel_en_vivo_silencioso():
                 else:
                     sem_titulo = f"<span class='badge-programado'>{txt_minuto_f}</span>"
 
-                if opciones_f:
-                    op1 = opciones_f[0]
-                    c_mostrar = min(1.28, float(op1.get("cuota", 1.24)))
-                    filas_html += f"<div style='margin-top:8px; color:#e8fff0;'>• <span class='badge-abierta'>🟢 ABIERTA GRATIS</span> &nbsp; <b>{op1['mercado']}</b> ({op1['prob']}%) ➔ Cuota > <b>{c_mostrar:.2f}</b></div>"
-                if len(opciones_f) > 1:
+                if idx_free == 0:
+                    if opciones_f:
+                        op1 = opciones_f[0]
+                        c_mostrar = min(1.28, float(op1.get("cuota", 1.24)))
+                        filas_html += f"<div style='margin-top:8px; color:#e8fff0;'>• <span class='badge-abierta'>🟢 ABIERTA GRATIS</span> &nbsp; <b>{op1['mercado']}</b> ({op1['prob']}%) ➔ Cuota > <b>{c_mostrar:.2f}</b></div>"
+                    if len(opciones_f) > 1:
+                        filas_html += f"<div style='margin-top:8px; color:#ffcd00;'>• <span class='badge-candado'>📲 2ª JUGADA GRATIS</span> &nbsp; <i>Disponible sin costo dentro de nuestro <a href='{LINK_TELEGRAM_FREE}' target='_blank' style='color:#00ff64; font-weight:600;'>Canal FREE de Telegram (Entrar aquí)</a></i></div>"
+                else:
+                    filas_html += f"<div style='margin-top:8px; color:#ffcd00;'>• <span class='badge-candado'>📲 1ª JUGADA GRATIS</span> &nbsp; <i>Disponible sin costo dentro de nuestro <a href='{LINK_TELEGRAM_FREE}' target='_blank' style='color:#00ff64; font-weight:600;'>Canal FREE de Telegram (Entrar aquí)</a></i></div>"
                     filas_html += f"<div style='margin-top:8px; color:#ffcd00;'>• <span class='badge-candado'>📲 2ª JUGADA GRATIS</span> &nbsp; <i>Disponible sin costo dentro de nuestro <a href='{LINK_TELEGRAM_FREE}' target='_blank' style='color:#00ff64; font-weight:600;'>Canal FREE de Telegram (Entrar aquí)</a></i></div>"
 
             html_bloques += (
