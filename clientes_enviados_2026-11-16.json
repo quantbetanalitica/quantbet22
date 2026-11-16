@@ -1,0 +1,131 @@
+{
+  "fecha": "2026-11-16",
+  "tarjetas_clientes": [
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "401927176",
+      "hora": "18:00",
+      "partido": "Eritrea vs Guinea",
+      "selecciones": [
+        {
+          "mercado": "Remates Puerta > 6.5",
+          "prob": 77.1,
+          "cuota": 1.42
+        },
+        {
+          "mercado": "Doble Oport. X2",
+          "prob": 69.8,
+          "cuota": 1.46
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "401929707",
+      "hora": "20:00",
+      "partido": "Cuba vs Grenada",
+      "selecciones": [
+        {
+          "mercado": "Córners Cuba > 4.5",
+          "prob": 81.9,
+          "cuota": 1.38
+        },
+        {
+          "mercado": "Gol en 2do Tiempo",
+          "prob": 78.0,
+          "cuota": 1.38
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "401933879",
+      "hora": "06:30",
+      "partido": "Tahiti vs Cook Islands",
+      "selecciones": [
+        {
+          "mercado": "Doble Oport. 1X",
+          "prob": 84.7,
+          "cuota": 1.38
+        },
+        {
+          "mercado": "Remates Puerta > 6.5",
+          "prob": 72.6,
+          "cuota": 1.42
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "401927170",
+      "hora": "14:00",
+      "partido": "Namibia vs Camerún",
+      "selecciones": [
+        {
+          "mercado": "Córners Camerún > 4.5",
+          "prob": 79.1,
+          "cuota": 1.38
+        },
+        {
+          "mercado": "Remates Puerta > 6.5",
+          "prob": 71.7,
+          "cuota": 1.42
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "FREE",
+      "id_partido": "401861185",
+      "hora": "20:45",
+      "partido": "Alemania vs Países Bajos",
+      "selecciones": [
+        {
+          "mercado": "Gol en 2do Tiempo",
+          "prob": 82.5,
+          "cuota": 1.18
+        },
+        {
+          "mercado": "Over 1.5 Goles",
+          "prob": 79.3,
+          "cuota": 1.18
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "FREE",
+      "id_partido": "401929708",
+      "hora": "20:00",
+      "partido": "Guyana vs Puerto Rico",
+      "selecciones": [
+        {
+          "mercado": "Gol en 1T",
+          "prob": 83.2,
+          "cuota": 1.18
+        },
+        {
+          "mercado": "Over 1.5 Goles",
+          "prob": 81.9,
+          "cuota": 1.18
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "FREE",
+      "id_partido": "401914292",
+      "hora": "19:00",
+      "partido": "Andorra vs Azerbaijan",
+      "selecciones": [
+        {
+          "mercado": "Gol en 2do Tiempo",
+          "prob": 82.5,
+          "cuota": 1.18
+        },
+        {
+          "mercado": "Doble Oport. X2",
+          "prob": 74.8,
+          "cuota": 1.27
+        }
+      ]
+    }
+  ]
+}
