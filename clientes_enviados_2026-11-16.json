@@ -3,73 +3,73 @@
   "tarjetas_clientes": [
     {
       "tipo_tarjeta": "VIP",
-      "id_partido": "401927176",
+      "id_partido": "401861182",
       "hora": "18:00",
-      "partido": "Eritrea vs Guinea",
+      "partido": "Islandia vs Luxemburgo (Uefa Nations League)",
       "selecciones": [
         {
-          "mercado": "Remates Puerta > 6.5",
-          "prob": 77.1,
+          "mercado": "Faltas Totales > 22.5",
+          "prob": 80.1,
           "cuota": 1.42
         },
+        {
+          "mercado": "Over 1.5 Goles",
+          "prob": 77.0,
+          "cuota": 1.38
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "401861188",
+      "hora": "20:45",
+      "partido": "Grecia vs Serbia (Uefa Nations League)",
+      "selecciones": [
         {
           "mercado": "Doble Oport. X2",
-          "prob": 69.8,
+          "prob": 70.0,
           "cuota": 1.46
-        }
-      ]
-    },
-    {
-      "tipo_tarjeta": "VIP",
-      "id_partido": "401929707",
-      "hora": "20:00",
-      "partido": "Cuba vs Grenada",
-      "selecciones": [
-        {
-          "mercado": "Córners Cuba > 4.5",
-          "prob": 81.9,
-          "cuota": 1.38
         },
         {
-          "mercado": "Gol en 2do Tiempo",
-          "prob": 78.0,
-          "cuota": 1.38
+          "mercado": "Faltas Totales > 22.5",
+          "prob": 67.5,
+          "cuota": 1.51
         }
       ]
     },
     {
       "tipo_tarjeta": "VIP",
-      "id_partido": "401933879",
-      "hora": "06:30",
-      "partido": "Tahiti vs Cook Islands",
+      "id_partido": "401929706",
+      "hora": "01:00",
+      "partido": "Martinique vs Aruba (Concacaf Nations League)",
       "selecciones": [
         {
-          "mercado": "Doble Oport. 1X",
-          "prob": 84.7,
+          "mercado": "Over 1.5 Goles",
+          "prob": 78.5,
           "cuota": 1.38
         },
         {
           "mercado": "Remates Puerta > 6.5",
-          "prob": 72.6,
+          "prob": 72.3,
           "cuota": 1.42
         }
       ]
     },
     {
       "tipo_tarjeta": "VIP",
-      "id_partido": "401927170",
-      "hora": "14:00",
-      "partido": "Namibia vs Camerún",
+      "id_partido": "401861187",
+      "hora": "20:45",
+      "partido": "Macedonia del Norte vs Slovenia (Uefa Nations League)",
       "selecciones": [
         {
-          "mercado": "Córners Camerún > 4.5",
-          "prob": 79.1,
-          "cuota": 1.38
+          "mercado": "Tarjetas > 4.5",
+          "prob": 66.5,
+          "cuota": 1.7
         },
         {
-          "mercado": "Remates Puerta > 6.5",
-          "prob": 71.7,
-          "cuota": 1.42
+          "mercado": "Córners > 8.5",
+          "prob": 66.5,
+          "cuota": 1.79
         }
       ]
     },
@@ -77,7 +77,7 @@
       "tipo_tarjeta": "FREE",
       "id_partido": "401861185",
       "hora": "20:45",
-      "partido": "Alemania vs Países Bajos",
+      "partido": "Alemania vs Países Bajos (Uefa Nations League)",
       "selecciones": [
         {
           "mercado": "Gol en 2do Tiempo",
@@ -93,37 +93,37 @@
     },
     {
       "tipo_tarjeta": "FREE",
-      "id_partido": "401929708",
+      "id_partido": "401929707",
       "hora": "20:00",
-      "partido": "Guyana vs Puerto Rico",
+      "partido": "Cuba vs Grenada (Concacaf Nations League)",
       "selecciones": [
         {
-          "mercado": "Gol en 1T",
+          "mercado": "Doble Oport. 1X",
           "prob": 83.2,
           "cuota": 1.18
         },
         {
-          "mercado": "Over 1.5 Goles",
-          "prob": 81.9,
+          "mercado": "Faltas Totales > 22.5",
+          "prob": 82.7,
           "cuota": 1.18
         }
       ]
     },
     {
       "tipo_tarjeta": "FREE",
-      "id_partido": "401914292",
-      "hora": "19:00",
-      "partido": "Andorra vs Azerbaijan",
+      "id_partido": "401861181",
+      "hora": "16:00",
+      "partido": "Kazakhstan vs Slovakia (Uefa Nations League)",
       "selecciones": [
         {
           "mercado": "Gol en 2do Tiempo",
-          "prob": 82.5,
-          "cuota": 1.18
+          "prob": 76.3,
+          "cuota": 1.25
         },
         {
           "mercado": "Doble Oport. X2",
-          "prob": 74.8,
-          "cuota": 1.27
+          "prob": 76.0,
+          "cuota": 1.25
         }
       ]
     }
