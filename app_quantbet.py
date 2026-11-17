@@ -815,7 +815,7 @@ def buscar_resultado_inteligente(mapa_ft, id_partido, duelo_str, dia_str=None):
     if id_partido and str(id_partido) in mapa_ft:
         return mapa_ft[str(id_partido)]
     duelo_low = str(duelo_str).strip().lower()
-    if duelo_low in mapa_ft:
+    if not dia_str and duelo_low in mapa_ft:
         return mapa_ft[duelo_low]
     if " vs " in duelo_low:
         l_busq, v_busq = duelo_low.split(" vs ", 1)
@@ -828,8 +828,6 @@ def buscar_resultado_inteligente(mapa_ft, id_partido, duelo_str, dia_str=None):
                 fechas_validas = {
                     dia_str,
                     (dt_d + timedelta(days=1)).strftime("%Y-%m-%d"),
-                    (dt_d - timedelta(days=1)).strftime("%Y-%m-%d"),
-                    (dt_d - timedelta(days=2)).strftime("%Y-%m-%d"),
                 }
             except Exception:
                 fechas_validas = None
@@ -874,7 +872,9 @@ def obtener_resumen_auditoria():
                     if "(" not in part_tc and any(k in part_tc.lower() for k in ["chipre", "montenegro", "letonia", "armenia"]):
                         part_tc = f"{part_tc} (UEFA Nations League)"
                     hora_ini = str(tc.get("hora", "20:00")).strip()
-                    dt_fin_tc = mapa_dt_fin.get(id_tc) or mapa_dt_fin.get(part_tc.lower()) or calcular_dt_fin_real(f_dia, hora_ini)
+                    dt_fin_tc = calcular_dt_fin_real(f_dia, hora_ini)
+                    if dt_fin_tc > ahora_esp:
+                        continue
                     h_fin_tc = dt_fin_tc.strftime("%H:%M")
 
                     mapa_horas_fin[part_tc.lower()] = h_fin_tc
@@ -899,7 +899,7 @@ def obtener_resumen_auditoria():
                         cuo_s = float(sel.get("cuota", 1.42 if tipo_t == "VIP" else 1.25))
                         gano_l = evaluar_mercado_real(m_etq, gh_l, ga_l, ght_l, part_tc)
                         filas_clientes.append({
-                            "Fecha_Registro": f"{f_dia} {h_fin_tc}:00",
+                            "Fecha_Registro": dt_fin_tc.strftime("%Y-%m-%d %H:%M:00"),
                             "ID_Partido": id_tc,
                             "Partido": part_tc,
                             "Mercado": m_etq,
