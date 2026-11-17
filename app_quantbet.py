@@ -1060,10 +1060,10 @@ with st.sidebar:
     st.markdown("#### 🔗 Acceso Oficial y Planes")
     st.markdown(
         f"<a href='{LINK_TELEGRAM_FREE}' target='_blank' class='btn-cta-bar'>📲 1. Entrar al Telegram Gratis (FREE)</a>"
-        f"<a href='{LINK_WHOP_TRIAL_099}' target='_blank' class='btn-cta-bar-gold'>🎁 2. Prueba 24h VIP + 10 Días (7.99 USD)</a>"
-        f"<a href='{LINK_WHOP_PASE_3DIAS}' target='_blank' class='btn-cta-bar'>⚡ 3. Pase 3 Días Fecha FIFA (4.99 USD)</a>"
-        f"<a href='{LINK_WHOP_PRO}' target='_blank' class='btn-cta-bar'>👑 4. Promo PRO Cierre de Año (49.99 USD)</a>"
-        f"<a href='{LINK_SOPORTE_BOT}' target='_blank' class='btn-cta-bar'>💬 5. Pagos Locales (Nequi / Bizum / USDT)</a>",
+        f"<a href='{LINK_WHOP_TRIAL_099}' target='_blank' class='btn-cta-bar-gold'>🔓 2. Pase 1 Día VIP por 1.00 USD (4.000 COP)</a>"
+        f"<a href='{LINK_WHOP_PASE_3DIAS}' target='_blank' class='btn-cta-bar'>⚡ 3. Pase 3 Días (4.99 USD) | 10 Días (7.99 USD)</a>"
+        f"<a href='{LINK_WHOP_PRO}' target='_blank' class='btn-cta-bar'>👑 4. Promo PRO Hasta 30 Nov (49.99 USD)</a>"
+        f"<a href='{LINK_SOPORTE_BOT}' target='_blank' class='btn-cta-bar'>💬 5. Pagar 1 USD por Nequi / Bizum / USDT</a>",
         unsafe_allow_html=True
     )
     st.divider()
@@ -1112,13 +1112,13 @@ with c_kpi3:
 st.markdown(
     f"<div class='banner-promo-gigante notranslate' translate='no'>"
     f"<div style='color:#ffcd00; font-size:1.45rem; font-weight:700; letter-spacing:0.3px;'>"
-    f"🔥 PROMOCIÓN EXCLUSIVA NUEVOS MIEMBROS: PRUEBA VIP 24H + PASE 10 DÍAS 🔥"
+    f"🔥 NUEVO PASE DIARIO VIP POR SOLO 1.00 USD (PROMO HASTA EL 30 DE NOVIEMBRE) 🔥"
     f"</div>"
     f"<a href='{LINK_WHOP_TRIAL_099}' target='_blank' class='precio-badge-gigante'>"
-    f"💎 PROBAR 24H VIP (0.00 USD) + 10 DÍAS POR 7.99 USD — ¡ACTIVAR EN 1 CLIC!"
+    f"🔓 DESBLOQUEAR 1 DÍA VIP POR 1.00 USD ($4.000 COP / 1 EUR) — ¡PROBAR HOY!"
     f"</a>"
     f"<div style='color:#e6edf3; font-size:0.98rem; font-weight:500; margin-top:4px;'>"
-    f"🎁 <b>¿Tienes un Código Promocional de Creador Aliado o vienes de Telegram?</b> Aplícalo al activar tu pase o entra a nuestro Canal FREE 👇"
+    f"🎁 <b>Incluye las 4 Tarjetas VIP + Combinada Doble de hoy.</b> ¿Prefieres pagar por Nequi o Bizum? Toca el botón de Soporte o entra al Canal FREE 👇"
     f"</div>"
     f"</div>",
     unsafe_allow_html=True
@@ -1126,37 +1126,37 @@ st.markdown(
 
 b1, b2, b3 = st.columns(3)
 with b1:
-    st.markdown(f"<a href='{LINK_TELEGRAM_FREE}' target='_blank' class='btn-cta-bar'>📲 1. UNIRME AL TELEGRAM GRATIS (3 REGALOS + CUPÓN)</a>", unsafe_allow_html=True)
+    st.markdown(f"<a href='{LINK_TELEGRAM_FREE}' target='_blank' class='btn-cta-bar'>📲 1. UNIRME AL TELEGRAM GRATIS (JUGADAS FREE)</a>", unsafe_allow_html=True)
 with b2:
-    st.markdown(f"<a href='{LINK_WHOP_VIP}' target='_blank' class='btn-cta-bar-gold'>🔥 2. VER PLANES VIP EN WHOP (3 DÍAS / 10 DÍAS / MES)</a>", unsafe_allow_html=True)
+    st.markdown(f"<a href='{LINK_WHOP_VIP}' target='_blank' class='btn-cta-bar-gold'>🔥 2. PASE 1 DÍA (1.00 USD) | 10 DÍAS (7.99 USD)</a>", unsafe_allow_html=True)
 with b3:
-    st.markdown(f"<a href='{LINK_SOPORTE_BOT}' target='_blank' class='btn-cta-bar'>💬 3. PAGAR CON NEQUI / BIZUM / USDT (SOPORTE 24/7)</a>", unsafe_allow_html=True)
+    st.markdown(f"<a href='{LINK_SOPORTE_BOT}' target='_blank' class='btn-cta-bar'>💬 3. PAGAR 1 USD POR NEQUI ($4.000) / BIZUM (1€)</a>", unsafe_allow_html=True)
 
 o1, o2, o3, o4 = st.columns(4)
 with o1:
     st.markdown(
-        f"<div class='oferta-card-animada notranslate' translate='no'>"
-        f"<div><span class='oferta-tag-top'>⚡ FECHA FIFA / FINDE</span>"
-        f"<div class='oferta-precio-limpio'>4.99 USD</div>"
-        f"<div class='oferta-subtexto'>Pase Único 3 Días (Sin suscripción)</div></div>"
-        f"<a href='{LINK_WHOP_PASE_3DIAS}' target='_blank' class='oferta-btn-clic'>Activar Pase 3 Días ➔</a>"
+        f"<div class='oferta-card-animada notranslate' translate='no' style='border-color:#ffcd00;'>"
+        f"<div><span class='oferta-tag-top'>🔓 ACCESO 24 HORAS</span>"
+        f"<div class='oferta-precio-limpio' style='color:#ffcd00;'>1.00 USD</div>"
+        f"<div class='oferta-subtexto'>Pase 1 Día VIP (4.000 COP / 1€ • Sin ataduras)</div></div>"
+        f"<a href='{LINK_WHOP_TRIAL_099}' target='_blank' class='oferta-btn-clic-oro'>Probar 1 Día por 1 USD ➔</a>"
         f"</div>",
         unsafe_allow_html=True
     )
 with o2:
     st.markdown(
-        f"<div class='oferta-card-animada notranslate' translate='no' style='border-color:#ffcd00;'>"
-        f"<div><span class='oferta-tag-top'>🔥 MÁS ELEGIDO (24H TRIAL)</span>"
-        f"<div class='oferta-precio-limpio' style='color:#ffcd00;'>7.99 USD <span style='font-size:0.80rem; font-weight:500;'>/ 10 días</span></div>"
-        f"<div class='oferta-subtexto'>1 Día de Prueba + 4 VIP Diarias + Doble</div></div>"
-        f"<a href='{LINK_WHOP_TRIAL_099}' target='_blank' class='oferta-btn-clic-oro'>Probar 24h + 10 Días ➔</a>"
+        f"<div class='oferta-card-animada notranslate' translate='no'>"
+        f"<div><span class='oferta-tag-top'>🔥 PROMO HASTA 30 NOV</span>"
+        f"<div class='oferta-precio-limpio'>7.99 USD <span style='font-size:0.80rem; font-weight:500;'>/ 10 días</span></div>"
+        f"<div class='oferta-subtexto'>4 VIP Diarias + Combinada Doble (o 3 Días x 4.99)</div></div>"
+        f"<a href='{LINK_WHOP_VIP}' target='_blank' class='oferta-btn-clic'>Activar Promo 10 Días ➔</a>"
         f"</div>",
         unsafe_allow_html=True
     )
 with o3:
     st.markdown(
         f"<div class='oferta-card-animada notranslate' translate='no'>"
-        f"<div><span class='oferta-tag-top'>👑 PROMO CIERRE DE AÑO</span>"
+        f"<div><span class='oferta-tag-top'>👑 OFERTA HASTA 30 NOV</span>"
         f"<div class='oferta-precio-limpio'>49.99 USD <span style='font-size:0.80rem; text-decoration:line-through; color:#8b949e;'>74.99 USD</span></div>"
         f"<div class='oferta-subtexto'>Catálogo PRO Completo + Sniper 3X</div></div>"
         f"<a href='{LINK_WHOP_PRO}' target='_blank' class='oferta-btn-clic'>Desbloquear Plan PRO ➔</a>"
@@ -1338,7 +1338,7 @@ def renderizar_panel_en_vivo_silencioso():
                         f"• <span class='badge-candado'>🔒 SELECCIÓN VIP #{idx_op}</span> &nbsp; "
                         f"Probabilidad Modelo: <b>{op.get('prob', 78.0)}%</b> ➔ Cuota VIP > <b>{c_vip_mostrar:.2f}</b> "
                         f"<a href='{LINK_WHOP_VIP}' target='_blank' class='btn-vip-inline'>"
-                        f"🔥 DESBLOQUEAR VIP (DESDE 4.99 USD)"
+                        f"(🔓 DESBLOQUEAR HOY POR 1.00 USD)"
                         f"</a>"
                         f"</div>"
                     )
