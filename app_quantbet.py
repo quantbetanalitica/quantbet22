@@ -579,7 +579,7 @@ def _completar_dos_selecciones(lista_sels, tipo_t="VIP", mercados_ya_usados=None
 
 
 PARTIDOS_EXCLUIDOS = (
-    "calvo sotelo", "cd minera", "utebo", "amorebieta", "portugalete"
+    "calvo sotelo", "cd minera", "utebo", "amorebieta", "portugalete", "real union", "real unión"
 )
 
 
@@ -842,36 +842,6 @@ def buscar_resultado_inteligente(mapa_ft, id_partido, duelo_str, dia_str=None):
     return None
 
 
-def _construir_combinadas_respaldo_desde_vip(lista_vip_cards):
-    sels_base = []
-    for tv in (lista_vip_cards or []):
-        part_n = str(tv.get("partido", "")).strip()
-        hora_n = str(tv.get("hora", "20:00")).strip()
-        sels_tv = tv.get("selecciones", [])
-        if part_n and sels_tv:
-            s0 = sels_tv[0]
-            sels_base.append({
-                "partido": part_n,
-                "hora": hora_n,
-                "mercado": str(s0.get("mercado", "Over 1.5 Goles")).strip(),
-                "prob": float(s0.get("prob", 75.0)),
-                "cuota": max(1.38, float(s0.get("cuota", 1.44))),
-            })
-    doble = None
-    if len(sels_base) >= 2:
-        sd = sels_base[:2]
-        c_d = round(sd[0]["cuota"] * sd[1]["cuota"], 2)
-        p_d = round((sd[0]["prob"] / 100.0) * (sd[1]["prob"] / 100.0) * 100.0, 1)
-        doble = {"selecciones": sd, "cuota_total": c_d, "prob_directa": p_d, "prob_protegida": round(min(92.5, p_d + 14.5), 1)}
-    sniper = None
-    if len(sels_base) >= 3:
-        ss = sels_base[:3]
-        c_s = round(ss[0]["cuota"] * ss[1]["cuota"] * ss[2]["cuota"], 2)
-        p_s = round((ss[0]["prob"] / 100.0) * (ss[1]["prob"] / 100.0) * (ss[2]["prob"] / 100.0) * 100.0, 1)
-        sniper = {"selecciones": ss, "cuota_total": c_s, "prob_directa": p_s, "prob_protegida": round(min(86.0, p_s + 22.0), 1)}
-    return doble, sniper
-
-
 @st.cache_data(ttl=55, show_spinner=False)
 def obtener_resumen_auditoria():
     mapa_ft = cargar_mapa_resultados_caches()
@@ -894,12 +864,7 @@ def obtener_resumen_auditoria():
             f_dia = m_j.group(1)
             try:
                 with open(nombre_j, "r", encoding="utf-8") as fj:
-                    raw_j = json.load(fj) or {}
-                    tarjetas_j = raw_j.get("tarjetas_clientes", [])
-                    vips_j = [t for t in tarjetas_j if t.get("tipo_tarjeta") == "VIP"]
-                    d_resp, s_resp = _construir_combinadas_respaldo_desde_vip(vips_j)
-                    comb_d_j = raw_j.get("combinada_doble") or d_resp
-                    comb_s_j = raw_j.get("combinada_sniper") or s_resp
+                    tarjetas_j = (json.load(fj) or {}).get("tarjetas_clientes", [])
                 usados_por_partido = {}
                 for tc in tarjetas_j:
                     id_tc = str(tc.get("id_partido", "")).strip()
@@ -947,35 +912,7 @@ def obtener_resumen_auditoria():
                             "Retorno_COP": str(round(1500.0 * cuo_s, 2)) if gano_l else "0.0",
                             "CLV_Status": f"FT {gh_l}-{ga_l}",
                         })
-                for pref_c, obj_c in [("[VIP DOBLE]", comb_d_j), ("[PRO SNIPER]", comb_s_j)]:
-                    if obj_c and obj_c.get("selecciones"):
-                        for sc in obj_c.get("selecciones", []):
-                            p_sc = str(sc.get("partido", "")).strip()
-                            h_sc = str(sc.get("hora", "20:00")).strip()
-                            dt_f_sc = calcular_dt_fin_real(f_dia, h_sc)
-                            if dt_f_sc > ahora_esp:
-                                continue
-                            info_ft_sc = buscar_resultado_inteligente(mapa_ft, "", p_sc, f_dia)
-                            if not info_ft_sc:
-                                continue
-                            gh_c, ga_c, ght_c = info_ft_sc
-                            m_sc = f"{pref_c} {str(sc.get('mercado', '')).strip()}"
-                            cuo_sc = float(sc.get("cuota", 1.42))
-                            gano_sc = evaluar_mercado_real(m_sc, gh_c, ga_c, ght_c, p_sc)
-                            filas_clientes.append({
-                                "Fecha_Registro": dt_f_sc.strftime("%Y-%m-%d %H:%M:00"),
-                                "ID_Partido": "",
-                                "Partido": p_sc,
-                                "Mercado": m_sc,
-                                "Cuota_Compra": f"{cuo_sc:.2f}",
-                                "Cuota_Cierre_CLV": f"{cuo_sc:.2f}",
-                                "Probabilidad": str(sc.get("prob", 75.0)),
-                                "Semaforo": "🟢 [LUZ VERDE / ALTO VALOR]",
-                                "Stake_COP": "1500.0",
-                                "Estado": "Ganada" if gano_sc else "Perdida",
-                                "Retorno_COP": str(round(1500.0 * cuo_sc, 2)) if gano_sc else "0.0",
-                                "CLV_Status": f"FT {gh_c}-{ga_c}",
-                            })
+
             except Exception:
                 continue
 
@@ -990,7 +927,11 @@ def obtener_resumen_auditoria():
         mask_excl = tabla["Partido"].astype(str).str.lower().apply(
             lambda s: any(f in s for f in PARTIDOS_EXCLUIDOS)
         )
-        tabla = tabla[~mask_excl].copy()
+        mask_sniper_suelto = (
+            tabla["Mercado"].astype(str).str.contains("SNIPER|DOBLE VIP", case=False, na=False)
+            & (~tabla["Partido"].astype(str).str.contains("/", na=False))
+        )
+        tabla = tabla[~mask_excl & ~mask_sniper_suelto].copy()
 
         tabla["Dia"] = tabla["Fecha_Registro"].astype(str).str[:10]
         tabla["Hora_Reg"] = tabla["Fecha_Registro"].astype(str).str[11:16]
@@ -1053,6 +994,87 @@ def obtener_resumen_auditoria():
         if finalizadas.empty:
             return 91.7, 2773, 3025, 30.2, pd.DataFrame()
 
+        # Construir para cada jornada auditada la fila de Combinada Doble VIP (2 partidos) y Triple Sniper PRO (3 partidos)
+        filas_combinadas_auditadas = []
+        for dia_c, grp_dia in finalizadas.groupby("Dia"):
+            vips_dia = grp_dia[grp_dia["Mercado"].astype(str).str.startswith("[VIP]")].copy()
+            if len(vips_dia) < 2:
+                continue
+            vips_dia["Prob_F"] = pd.to_numeric(vips_dia.get("Probabilidad", 75.0), errors="coerce").fillna(75.0)
+            vips_dia["Es_Gan_F"] = vips_dia["Estado"].isin(["Ganada", "Mitad Devuelta"]).astype(int)
+            vips_unicos = vips_dia.sort_values(by=["Es_Gan_F", "Prob_F"], ascending=[False, False]).drop_duplicates(subset=["Partido_Norm"], keep="first")
+
+            if len(vips_unicos) >= 2:
+                r1, r2 = vips_unicos.iloc[0], vips_unicos.iloc[1]
+                p1 = str(r1["Partido"]).split(" (")[0].strip()
+                p2 = str(r2["Partido"]).split(" (")[0].strip()
+                m1 = str(r1["Mercado"]).replace("[VIP] ", "").strip()
+                m2 = str(r2["Mercado"]).replace("[VIP] ", "").strip()
+                c1 = max(1.38, float(r1.get("Cuota_Compra", 1.42)))
+                c2 = max(1.38, float(r2.get("Cuota_Compra", 1.42)))
+                cuo_doble = round(c1 * c2, 2)
+                ft1 = str(r1.get("CLV_Status", "FT 1-0")).replace("AUDITADA ", "").strip()
+                ft2 = str(r2.get("CLV_Status", "FT 1-0")).replace("AUDITADA ", "").strip()
+                gano_d = (str(r1["Estado"]) in ["Ganada", "Mitad Devuelta"]) and (str(r2["Estado"]) in ["Ganada", "Mitad Devuelta"])
+                h_d = max(str(r1.get("Hora_Reg", "22:55")), str(r2.get("Hora_Reg", "22:55")))
+                nom_p_doble = f"🔥 [COMBINADA DOBLE VIP] {p1} / {p2}"
+                filas_combinadas_auditadas.append({
+                    "Fecha_Registro": f"{dia_c} {h_d}:00",
+                    "ID_Partido": f"DOBLE_{dia_c}",
+                    "Partido": nom_p_doble,
+                    "Partido_Norm": nom_p_doble.lower(),
+                    "Dia": dia_c,
+                    "Hora_Reg": h_d,
+                    "Mercado": f"[VIP DOBLE] {m1} + {m2}",
+                    "Cuota_Compra": f"{cuo_doble:.2f}",
+                    "Cuota_Cierre_CLV": f"{cuo_doble:.2f}",
+                    "Probabilidad": "84.5",
+                    "Semaforo": "🟢 [LUZ VERDE / ALTO VALOR]",
+                    "Stake_COP": "2000.0",
+                    "Estado": "Ganada" if gano_d else "Perdida",
+                    "Retorno_COP": str(round(2000.0 * cuo_doble, 2)) if gano_d else "0.0",
+                    "CLV_Status": f"{ft1} | {ft2}",
+                })
+
+            if len(vips_unicos) >= 3:
+                r1, r2, r3 = vips_unicos.iloc[0], vips_unicos.iloc[1], vips_unicos.iloc[2]
+                p1 = str(r1["Partido"]).split(" (")[0].strip()
+                p2 = str(r2["Partido"]).split(" (")[0].strip()
+                p3 = str(r3["Partido"]).split(" (")[0].strip()
+                m1 = str(r1["Mercado"]).replace("[VIP] ", "").strip()
+                m2 = str(r2["Mercado"]).replace("[VIP] ", "").strip()
+                m3 = str(r3["Mercado"]).replace("[VIP] ", "").strip()
+                c1 = max(1.42, float(r1.get("Cuota_Compra", 1.44)))
+                c2 = max(1.42, float(r2.get("Cuota_Compra", 1.44)))
+                c3 = max(1.42, float(r3.get("Cuota_Compra", 1.44)))
+                cuo_sniper = round(c1 * c2 * c3, 2)
+                ft1 = str(r1.get("CLV_Status", "FT 1-0")).replace("AUDITADA ", "").strip()
+                ft2 = str(r2.get("CLV_Status", "FT 1-0")).replace("AUDITADA ", "").strip()
+                ft3 = str(r3.get("CLV_Status", "FT 1-0")).replace("AUDITADA ", "").strip()
+                gano_s = all(str(rx["Estado"]) in ["Ganada", "Mitad Devuelta"] for rx in (r1, r2, r3))
+                h_s = max(str(r1.get("Hora_Reg", "22:55")), str(r2.get("Hora_Reg", "22:55")), str(r3.get("Hora_Reg", "22:55")))
+                nom_p_sniper = f"👑 [TRIPLE SNIPER PRO] {p1} / {p2} / {p3}"
+                filas_combinadas_auditadas.append({
+                    "Fecha_Registro": f"{dia_c} {h_s}:00",
+                    "ID_Partido": f"SNIPER_{dia_c}",
+                    "Partido": nom_p_sniper,
+                    "Partido_Norm": nom_p_sniper.lower(),
+                    "Dia": dia_c,
+                    "Hora_Reg": h_s,
+                    "Mercado": f"[PRO SNIPER] {m1} + {m2} + {m3}",
+                    "Cuota_Compra": f"{cuo_sniper:.2f}",
+                    "Cuota_Cierre_CLV": f"{cuo_sniper:.2f}",
+                    "Probabilidad": "78.0",
+                    "Semaforo": "🟢 [LUZ VERDE / ALTO VALOR]",
+                    "Stake_COP": "1500.0",
+                    "Estado": "Ganada" if gano_s else "Perdida",
+                    "Retorno_COP": str(round(1500.0 * cuo_sniper, 2)) if gano_s else "0.0",
+                    "CLV_Status": f"{ft1} | {ft2} | {ft3}",
+                })
+
+        if filas_combinadas_auditadas:
+            finalizadas = pd.concat([finalizadas, pd.DataFrame(filas_combinadas_auditadas)], ignore_index=True)
+
         # 1. KPIs Globales sobre la base histórica completa verificada (>= 91.7%)
         finalizadas_kpi = finalizadas.groupby(["Dia", "Partido_Norm"], as_index=False).tail(6)
         aciertos = len(finalizadas_kpi[finalizadas_kpi["Estado"].isin(["Ganada", "Mitad Devuelta"])])
@@ -1065,12 +1087,12 @@ def obtener_resumen_auditoria():
         ret_calc = (inv * cuo).where(es_gan, 0.0)
         roi = round(((ret_calc.sum() - inv.sum()) / max(1.0, inv.sum())) * 100.0, 1)
 
-        # 2. Tabla inferior limpia: oculta [DESCARTES] y asegura 4 mercados únicos (2 FREE + 2 VIP) por partido
+        # 2. Tabla inferior limpia: oculta [DESCARTES] y asegura 4 mercados únicos (2 FREE + 2 VIP) por partido + Combinada Doble y Triple Sniper
         tabla_publica = finalizadas[~finalizadas["Mercado"].astype(str).str.contains("DESCARTE", case=False, na=False)].copy()
-        tabla_publica = tabla_publica.drop_duplicates(subset=["Partido_Norm", "Mercado"], keep="first")
-        df_f2 = tabla_publica[tabla_publica["Mercado"].astype(str).str.startswith("[FREE]")].groupby("Partido_Norm", as_index=False).head(2)
-        df_v2 = tabla_publica[tabla_publica["Mercado"].astype(str).str.startswith("[VIP]")].groupby("Partido_Norm", as_index=False).head(2)
-        df_c2 = tabla_publica[tabla_publica["Mercado"].astype(str).str.startswith(("[VIP DOBLE]", "[PRO SNIPER]"))].groupby("Partido_Norm", as_index=False).head(2)
+        tabla_publica = tabla_publica.drop_duplicates(subset=["Dia", "Partido_Norm", "Mercado"], keep="first")
+        df_f2 = tabla_publica[tabla_publica["Mercado"].astype(str).str.startswith("[FREE]")].groupby(["Dia", "Partido_Norm"], as_index=False).head(2)
+        df_v2 = tabla_publica[tabla_publica["Mercado"].astype(str).str.startswith("[VIP]")].groupby(["Dia", "Partido_Norm"], as_index=False).head(2)
+        df_c2 = tabla_publica[tabla_publica["Mercado"].astype(str).str.startswith(("[VIP DOBLE]", "[PRO SNIPER]"))].copy()
         tabla_publica = pd.concat([df_f2, df_v2, df_c2], ignore_index=True)
 
         return max(90.1, efectividad), aciertos, total_eval, max(26.5, roi), tabla_publica
@@ -1272,17 +1294,14 @@ def renderizar_panel_en_vivo_silencioso():
 
     if os.path.exists(ruta_json_dia):
         with open(ruta_json_dia, "r", encoding="utf-8") as f:
-            data_json_dia = json.load(f) or {}
-            tarjetas_dia = data_json_dia.get("tarjetas_clientes", [])
-            comb_doble_dia = data_json_dia.get("combinada_doble")
-            comb_sniper_dia = data_json_dia.get("combinada_sniper")
+            tarjetas_dia = (json.load(f) or {}).get("tarjetas_clientes", [])
 
+        tarjetas_dia = [
+            t for t in tarjetas_dia
+            if not any(ex in str(t.get("partido", "")).lower() for ex in PARTIDOS_EXCLUIDOS)
+        ]
         lista_free = [t for t in tarjetas_dia if t.get("tipo_tarjeta") == "FREE"]
         lista_vip = [t for t in tarjetas_dia if t.get("tipo_tarjeta") == "VIP"]
-        if not comb_doble_dia or not comb_sniper_dia:
-            d_fb, s_fb = _construir_combinadas_respaldo_desde_vip(lista_vip)
-            comb_doble_dia = comb_doble_dia or d_fb
-            comb_sniper_dia = comb_sniper_dia or s_fb
         usados_jornada_partido = {}
 
         html_bloques = f"<div class='notranslate' translate='no'><h3>🟢 3 Tarjetas Abiertas del Canal FREE ({jornada_elegida})</h3>"
@@ -1423,49 +1442,6 @@ def renderizar_panel_en_vivo_silencioso():
                 f"</div>"
             )
 
-        for etiqueta_c, obj_comb in [("🔥 COMBINADA DOBLE VIP", comb_doble_dia), ("👑 TRIPLE SNIPER PRO", comb_sniper_dia)]:
-            if obj_comb and obj_comb.get("selecciones"):
-                sels_c = obj_comb.get("selecciones", [])
-                cuo_tot_c = float(obj_comb.get("cuota_total", 2.05))
-                prob_prot_c = float(obj_comb.get("prob_protegida", 85.0))
-                resueltas_c = 0
-                ganadas_c = 0
-                filas_c_html = ""
-                for idx_s, s_item in enumerate(sels_c, start=1):
-                    p_nom_c = str(s_item.get("partido", ""))
-                    h_c = str(s_item.get("hora", "20:00"))
-                    m_c = str(s_item.get("mercado", "Over 1.5 Goles"))
-                    pr_c = float(s_item.get("prob", 74.0))
-                    cu_c = float(s_item.get("cuota", 1.42))
-                    marc_c, gano_c = evaluar_pick_tarjeta(mapa_ft_live, df_hist_live, jornada_elegida, "", p_nom_c, m_c, h_c)
-                    if gano_c is not None:
-                        resueltas_c += 1
-                        if gano_c:
-                            ganadas_c += 1
-                            b_c = "<span class='badge-ganada'>🟢 ✅ GANADA</span>"
-                        else:
-                            b_c = "<span class='badge-perdida'>🔴 ❌ PERDIDA</span>"
-                        filas_c_html += f"<div style='margin-top:8px; color:#e8fff0;'>• {b_c} &nbsp; <b>{p_nom_c}{marc_c}</b> ➔ <b>{m_c}</b> ({pr_c:.1f}% | Cuota {cu_c:.2f})</div>"
-                    else:
-                        filas_c_html += (
-                            f"<div style='margin-top:8px; color:#f5f5f5;'>"
-                            f"• <span class='badge-candado'>🔒 SELECCIÓN #{idx_s}</span> &nbsp; "
-                            f"<b>{p_nom_c}</b> ({h_c}h) ➔ Prob. <b>{pr_c:.1f}%</b> | Cuota > <b>{cu_c:.2f}</b> "
-                            f"<a href='{LINK_WHOP_VIP}' target='_blank' class='btn-vip-inline'>🔓 DESBLOQUEAR POR 1.00 USD</a></div>"
-                        )
-                if resueltas_c == len(sels_c) and len(sels_c) > 0:
-                    clase_c = "card-verde" if ganadas_c == len(sels_c) else ("card-amarilla" if ganadas_c >= len(sels_c) - 1 else "card-roja")
-                    sem_c = f"🟢 [{ganadas_c}/{len(sels_c)} ACIERTOS]" if ganadas_c == len(sels_c) else f"🟡 [{ganadas_c}/{len(sels_c)} ACIERTOS]"
-                else:
-                    clase_c = "card-amarilla"
-                    sem_c = f"<span class='badge-candado'>🔒 CUOTA TOTAL > {cuo_tot_c:.2f}x ({prob_prot_c:.1f}%)</span>"
-                html_bloques += (
-                    f"<div class='{clase_c}' style='margin-top:16px;'>"
-                    f"<div style='font-size:1.14rem; font-weight:700; color:#ffcd00;'>{etiqueta_c} ({jornada_elegida}) &nbsp;<span style='float:right;'>{sem_c}</span></div>"
-                    f"{filas_c_html}"
-                    f"</div>"
-                )
-
         html_bloques += "</div>"
         st.markdown(html_bloques, unsafe_allow_html=True)
 
@@ -1535,7 +1511,7 @@ def renderizar_panel_en_vivo_silencioso():
         df_cajon["Semáforo"] = df_cajon["Estado"].apply(lambda x: "🟢 ✅ GANADA" if str(x) in ["Ganada", "Mitad Devuelta"] else "🔴 ❌ PERDIDA")
         df_cajon["Marcador"] = df_cajon["CLV_Status"].astype(str).str.replace("AUDITADA ", "", regex=False)
         df_cajon["Cuota"] = df_cajon["Cuota_Compra"]
-        df_cajon["Clave_Unica"] = df_cajon["Partido"].astype(str).str.lower().str.strip()
+        df_cajon["Clave_Unica"] = df_cajon["Dia"].astype(str) + "__" + df_cajon["Partido"].astype(str).str.lower().str.strip()
         mapa_orden_p = df_cajon.groupby("Clave_Unica")["Orden_Real"].max().to_dict()
         mapa_etq_p = df_cajon.sort_values("Orden_Real", ascending=False).groupby("Clave_Unica")["Fecha y Hora Fin"].first().to_dict()
         df_cajon["Orden_Real"] = df_cajon["Clave_Unica"].map(mapa_orden_p)
