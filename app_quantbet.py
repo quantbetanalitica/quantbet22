@@ -1109,7 +1109,7 @@ with c_kpi3:
         unsafe_allow_html=True
     )
 
-    st.markdown(
+st.markdown(
     f"<div class='banner-promo-gigante notranslate' translate='no'>"
     f"<div style='color:#ffcd00; font-size:1.45rem; font-weight:700; letter-spacing:0.3px;'>"
     f"🔥 NUEVO PASE DIARIO VIP POR SOLO 1.00 USD / 1.00 EUR (PROMO HASTA EL 30 DE NOVIEMBRE) 🔥"
