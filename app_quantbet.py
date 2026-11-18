@@ -1015,9 +1015,12 @@ def obtener_resumen_auditoria():
                 cuo_doble = round(c1 * c2, 2)
                 ft1 = str(r1.get("CLV_Status", "FT 1-0")).replace("AUDITADA ", "").strip()
                 ft2 = str(r2.get("CLV_Status", "FT 1-0")).replace("AUDITADA ", "").strip()
-                gano_d = (str(r1["Estado"]) in ["Ganada", "Mitad Devuelta"]) and (str(r2["Estado"]) in ["Ganada", "Mitad Devuelta"])
+                ok1 = str(r1["Estado"]) in ["Ganada", "Mitad Devuelta"]
+                ok2 = str(r2["Estado"]) in ["Ganada", "Mitad Devuelta"]
+                ic1, ic2 = ("🟢" if ok1 else "🔴"), ("🟢" if ok2 else "🔴")
+                gano_d = ok1 and ok2
                 h_d = max(str(r1.get("Hora_Reg", "22:55")), str(r2.get("Hora_Reg", "22:55")))
-                nom_p_doble = f"🔥 [COMBINADA DOBLE VIP] {p1} / {p2}"
+                nom_p_doble = f"🔥 [COMBINADA DOBLE VIP] {ic1} {p1} / {ic2} {p2}"
                 filas_combinadas_auditadas.append({
                     "Fecha_Registro": f"{dia_c} {h_d}:00",
                     "ID_Partido": f"DOBLE_{dia_c}",
@@ -1025,7 +1028,7 @@ def obtener_resumen_auditoria():
                     "Partido_Norm": nom_p_doble.lower(),
                     "Dia": dia_c,
                     "Hora_Reg": h_d,
-                    "Mercado": f"[VIP DOBLE] {m1} + {m2}",
+                    "Mercado": f"[VIP DOBLE] {ic1} {m1} + {ic2} {m2}",
                     "Cuota_Compra": f"{cuo_doble:.2f}",
                     "Cuota_Cierre_CLV": f"{cuo_doble:.2f}",
                     "Probabilidad": "84.5",
@@ -1033,7 +1036,7 @@ def obtener_resumen_auditoria():
                     "Stake_COP": "2000.0",
                     "Estado": "Ganada" if gano_d else "Perdida",
                     "Retorno_COP": str(round(2000.0 * cuo_doble, 2)) if gano_d else "0.0",
-                    "CLV_Status": f"{ft1} | {ft2}",
+                    "CLV_Status": f"{ic1} {ft1} | {ic2} {ft2}",
                 })
 
             if len(vips_unicos) >= 3:
@@ -1051,9 +1054,13 @@ def obtener_resumen_auditoria():
                 ft1 = str(r1.get("CLV_Status", "FT 1-0")).replace("AUDITADA ", "").strip()
                 ft2 = str(r2.get("CLV_Status", "FT 1-0")).replace("AUDITADA ", "").strip()
                 ft3 = str(r3.get("CLV_Status", "FT 1-0")).replace("AUDITADA ", "").strip()
-                gano_s = all(str(rx["Estado"]) in ["Ganada", "Mitad Devuelta"] for rx in (r1, r2, r3))
+                ok1 = str(r1["Estado"]) in ["Ganada", "Mitad Devuelta"]
+                ok2 = str(r2["Estado"]) in ["Ganada", "Mitad Devuelta"]
+                ok3 = str(r3["Estado"]) in ["Ganada", "Mitad Devuelta"]
+                ic1, ic2, ic3 = ("🟢" if ok1 else "🔴"), ("🟢" if ok2 else "🔴"), ("🟢" if ok3 else "🔴")
+                gano_s = ok1 and ok2 and ok3
                 h_s = max(str(r1.get("Hora_Reg", "22:55")), str(r2.get("Hora_Reg", "22:55")), str(r3.get("Hora_Reg", "22:55")))
-                nom_p_sniper = f"👑 [TRIPLE SNIPER PRO] {p1} / {p2} / {p3}"
+                nom_p_sniper = f"👑 [TRIPLE SNIPER PRO] {ic1} {p1} / {ic2} {p2} / {ic3} {p3}"
                 filas_combinadas_auditadas.append({
                     "Fecha_Registro": f"{dia_c} {h_s}:00",
                     "ID_Partido": f"SNIPER_{dia_c}",
@@ -1061,7 +1068,7 @@ def obtener_resumen_auditoria():
                     "Partido_Norm": nom_p_sniper.lower(),
                     "Dia": dia_c,
                     "Hora_Reg": h_s,
-                    "Mercado": f"[PRO SNIPER] {m1} + {m2} + {m3}",
+                    "Mercado": f"[PRO SNIPER] {ic1} {m1} + {ic2} {m2} + {ic3} {m3}",
                     "Cuota_Compra": f"{cuo_sniper:.2f}",
                     "Cuota_Cierre_CLV": f"{cuo_sniper:.2f}",
                     "Probabilidad": "78.0",
@@ -1069,7 +1076,7 @@ def obtener_resumen_auditoria():
                     "Stake_COP": "1500.0",
                     "Estado": "Ganada" if gano_s else "Perdida",
                     "Retorno_COP": str(round(1500.0 * cuo_sniper, 2)) if gano_s else "0.0",
-                    "CLV_Status": f"{ft1} | {ft2} | {ft3}",
+                    "CLV_Status": f"{ic1} {ft1} | {ic2} {ft2} | {ic3} {ft3}",
                 })
 
         if filas_combinadas_auditadas:
