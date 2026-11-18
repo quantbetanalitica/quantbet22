@@ -3038,10 +3038,10 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-11-18 20:40:00,401916981,Real Madrid vs Internazionale (Uefa Women'S Champions League),[VIP] Córners Real Madrid > 4.5,1.38,PENDIENTE_CLV,81.3,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Pendiente,0.0,AUDITANDO
 2026-11-18 20:40:00,401916981,Real Madrid vs Internazionale (Uefa Women'S Champions League),[FREE] Gol en 1T,1.18,PENDIENTE_CLV,85.2,🟢 [LUZ VERDE / ALTO VALOR],700.0,Pendiente,0.0,AUDITANDO
 2026-11-18 20:40:00,401916981,Real Madrid vs Internazionale (Uefa Women'S Champions League),[FREE] Over 1.5 Goles,1.18,PENDIENTE_CLV,84.6,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
-2026-11-18 20:55:00,401928518,Portugalete vs Real Unión Irun (España (Copa Del Rey)),[VIP] Gol en 2do Tiempo,1.42,PENDIENTE_CLV,76.5,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Pendiente,0.0,AUDITANDO
-2026-11-18 20:55:00,401928518,Portugalete vs Real Unión Irun (España (Copa Del Rey)),[VIP] Remates Puerta > 6.5,1.44,PENDIENTE_CLV,74.5,🟢 [LUZ VERDE / ALTO VALOR],4100.0,Pendiente,0.0,AUDITANDO
-2026-11-18 20:55:00,401928518,Portugalete vs Real Unión Irun (España (Copa Del Rey)),[FREE] Faltas Totales > 22.5,1.18,PENDIENTE_CLV,86.2,🟢 [LUZ VERDE / ALTO VALOR],2400.0,Pendiente,0.0,AUDITANDO
-2026-11-18 20:55:00,401928518,Portugalete vs Real Unión Irun (España (Copa Del Rey)),[FREE] Tarjetas > 4.5,1.28,PENDIENTE_CLV,67.5,🟢 [VALOR ALTO / OPERABLE],500.0,Pendiente,0.0,AUDITANDO
+2026-11-18 20:55:00,401928518,Portugalete vs Real Unión Irun (España (Copa Del Rey)),[VIP] Gol en 2do Tiempo,1.42,1.42,76.5,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Perdida,0.0,AUDITADA FT 0-0
+2026-11-18 20:55:00,401928518,Portugalete vs Real Unión Irun (España (Copa Del Rey)),[VIP] Remates Puerta > 6.5,1.44,1.44,74.5,🟢 [LUZ VERDE / ALTO VALOR],4100.0,Ganada,5904.0,AUDITADA FT 0-0
+2026-11-18 20:55:00,401928518,Portugalete vs Real Unión Irun (España (Copa Del Rey)),[FREE] Faltas Totales > 22.5,1.18,1.18,86.2,🟢 [LUZ VERDE / ALTO VALOR],2400.0,Ganada,2832.0,AUDITADA FT 0-0
+2026-11-18 20:55:00,401928518,Portugalete vs Real Unión Irun (España (Copa Del Rey)),[FREE] Tarjetas > 4.5,1.28,1.28,67.5,🟢 [VALOR ALTO / OPERABLE],500.0,Ganada,640.0,AUDITADA FT 0-0
 2026-11-18 22:55:00,401916980,Chelsea vs Paris Saint-Germain (Uefa Women'S Champions League),[VIP] Córners Chelsea > 4.5,1.38,PENDIENTE_CLV,76.5,🟢 [LUZ VERDE / ALTO VALOR],3700.0,Pendiente,0.0,AUDITANDO
 2026-11-18 22:55:00,401916980,Chelsea vs Paris Saint-Germain (Uefa Women'S Champions League),[VIP] Remates Puerta > 6.5,1.43,PENDIENTE_CLV,71.1,🟢 [LUZ VERDE / ALTO VALOR],1000.0,Pendiente,0.0,AUDITANDO
 2026-11-18 22:55:00,401916980,Chelsea vs Paris Saint-Germain (Uefa Women'S Champions League),[FREE] Doble Oport. 1X,1.18,PENDIENTE_CLV,84.8,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
