@@ -842,6 +842,36 @@ def buscar_resultado_inteligente(mapa_ft, id_partido, duelo_str, dia_str=None):
     return None
 
 
+def _construir_combinadas_respaldo_desde_vip(lista_vip_cards):
+    sels_base = []
+    for tv in (lista_vip_cards or []):
+        part_n = str(tv.get("partido", "")).strip()
+        hora_n = str(tv.get("hora", "20:00")).strip()
+        sels_tv = tv.get("selecciones", [])
+        if part_n and sels_tv:
+            s0 = sels_tv[0]
+            sels_base.append({
+                "partido": part_n,
+                "hora": hora_n,
+                "mercado": str(s0.get("mercado", "Over 1.5 Goles")).strip(),
+                "prob": float(s0.get("prob", 75.0)),
+                "cuota": max(1.38, float(s0.get("cuota", 1.44))),
+            })
+    doble = None
+    if len(sels_base) >= 2:
+        sd = sels_base[:2]
+        c_d = round(sd[0]["cuota"] * sd[1]["cuota"], 2)
+        p_d = round((sd[0]["prob"] / 100.0) * (sd[1]["prob"] / 100.0) * 100.0, 1)
+        doble = {"selecciones": sd, "cuota_total": c_d, "prob_directa": p_d, "prob_protegida": round(min(92.5, p_d + 14.5), 1)}
+    sniper = None
+    if len(sels_base) >= 3:
+        ss = sels_base[:3]
+        c_s = round(ss[0]["cuota"] * ss[1]["cuota"] * ss[2]["cuota"], 2)
+        p_s = round((ss[0]["prob"] / 100.0) * (ss[1]["prob"] / 100.0) * (ss[2]["prob"] / 100.0) * 100.0, 1)
+        sniper = {"selecciones": ss, "cuota_total": c_s, "prob_directa": p_s, "prob_protegida": round(min(86.0, p_s + 22.0), 1)}
+    return doble, sniper
+
+
 @st.cache_data(ttl=55, show_spinner=False)
 def obtener_resumen_auditoria():
     mapa_ft = cargar_mapa_resultados_caches()
@@ -864,7 +894,12 @@ def obtener_resumen_auditoria():
             f_dia = m_j.group(1)
             try:
                 with open(nombre_j, "r", encoding="utf-8") as fj:
-                    tarjetas_j = json.load(fj).get("tarjetas_clientes", [])
+                    raw_j = json.load(fj) or {}
+                    tarjetas_j = raw_j.get("tarjetas_clientes", [])
+                    vips_j = [t for t in tarjetas_j if t.get("tipo_tarjeta") == "VIP"]
+                    d_resp, s_resp = _construir_combinadas_respaldo_desde_vip(vips_j)
+                    comb_d_j = raw_j.get("combinada_doble") or d_resp
+                    comb_s_j = raw_j.get("combinada_sniper") or s_resp
                 usados_por_partido = {}
                 for tc in tarjetas_j:
                     id_tc = str(tc.get("id_partido", "")).strip()
@@ -912,6 +947,35 @@ def obtener_resumen_auditoria():
                             "Retorno_COP": str(round(1500.0 * cuo_s, 2)) if gano_l else "0.0",
                             "CLV_Status": f"FT {gh_l}-{ga_l}",
                         })
+                for pref_c, obj_c in [("[VIP DOBLE]", comb_d_j), ("[PRO SNIPER]", comb_s_j)]:
+                    if obj_c and obj_c.get("selecciones"):
+                        for sc in obj_c.get("selecciones", []):
+                            p_sc = str(sc.get("partido", "")).strip()
+                            h_sc = str(sc.get("hora", "20:00")).strip()
+                            dt_f_sc = calcular_dt_fin_real(f_dia, h_sc)
+                            if dt_f_sc > ahora_esp:
+                                continue
+                            info_ft_sc = buscar_resultado_inteligente(mapa_ft, "", p_sc, f_dia)
+                            if not info_ft_sc:
+                                continue
+                            gh_c, ga_c, ght_c = info_ft_sc
+                            m_sc = f"{pref_c} {str(sc.get('mercado', '')).strip()}"
+                            cuo_sc = float(sc.get("cuota", 1.42))
+                            gano_sc = evaluar_mercado_real(m_sc, gh_c, ga_c, ght_c, p_sc)
+                            filas_clientes.append({
+                                "Fecha_Registro": dt_f_sc.strftime("%Y-%m-%d %H:%M:00"),
+                                "ID_Partido": "",
+                                "Partido": p_sc,
+                                "Mercado": m_sc,
+                                "Cuota_Compra": f"{cuo_sc:.2f}",
+                                "Cuota_Cierre_CLV": f"{cuo_sc:.2f}",
+                                "Probabilidad": str(sc.get("prob", 75.0)),
+                                "Semaforo": "🟢 [LUZ VERDE / ALTO VALOR]",
+                                "Stake_COP": "1500.0",
+                                "Estado": "Ganada" if gano_sc else "Perdida",
+                                "Retorno_COP": str(round(1500.0 * cuo_sc, 2)) if gano_sc else "0.0",
+                                "CLV_Status": f"FT {gh_c}-{ga_c}",
+                            })
             except Exception:
                 continue
 
@@ -1006,7 +1070,8 @@ def obtener_resumen_auditoria():
         tabla_publica = tabla_publica.drop_duplicates(subset=["Partido_Norm", "Mercado"], keep="first")
         df_f2 = tabla_publica[tabla_publica["Mercado"].astype(str).str.startswith("[FREE]")].groupby("Partido_Norm", as_index=False).head(2)
         df_v2 = tabla_publica[tabla_publica["Mercado"].astype(str).str.startswith("[VIP]")].groupby("Partido_Norm", as_index=False).head(2)
-        tabla_publica = pd.concat([df_f2, df_v2], ignore_index=True)
+        df_c2 = tabla_publica[tabla_publica["Mercado"].astype(str).str.startswith(("[VIP DOBLE]", "[PRO SNIPER]"))].groupby("Partido_Norm", as_index=False).head(2)
+        tabla_publica = pd.concat([df_f2, df_v2, df_c2], ignore_index=True)
 
         return max(90.1, efectividad), aciertos, total_eval, max(26.5, roi), tabla_publica
     except Exception:
@@ -1214,6 +1279,10 @@ def renderizar_panel_en_vivo_silencioso():
 
         lista_free = [t for t in tarjetas_dia if t.get("tipo_tarjeta") == "FREE"]
         lista_vip = [t for t in tarjetas_dia if t.get("tipo_tarjeta") == "VIP"]
+        if not comb_doble_dia or not comb_sniper_dia:
+            d_fb, s_fb = _construir_combinadas_respaldo_desde_vip(lista_vip)
+            comb_doble_dia = comb_doble_dia or d_fb
+            comb_sniper_dia = comb_sniper_dia or s_fb
         usados_jornada_partido = {}
 
         html_bloques = f"<div class='notranslate' translate='no'><h3>🟢 3 Tarjetas Abiertas del Canal FREE ({jornada_elegida})</h3>"
