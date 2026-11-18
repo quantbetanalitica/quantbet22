@@ -1,0 +1,185 @@
+{
+  "fecha": "2026-11-19",
+  "tarjetas_clientes": [
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "401916976",
+      "hora": "21:00",
+      "partido": "Arsenal vs OL Lyonnes (Uefa Women'S Champions League)",
+      "selecciones": [
+        {
+          "mercado": "Doble Oport. 1X",
+          "prob": 71.7,
+          "cuota": 1.42
+        },
+        {
+          "mercado": "Córners > 8.5",
+          "prob": 66.5,
+          "cuota": 1.58
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "401916975",
+      "hora": "21:00",
+      "partido": "Barcelona vs Servette (Uefa Women'S Champions League)",
+      "selecciones": [
+        {
+          "mercado": "Gol en 2do Tiempo",
+          "prob": 83.1,
+          "cuota": 1.38
+        },
+        {
+          "mercado": "Over 1.5 Goles",
+          "prob": 80.1,
+          "cuota": 1.38
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "401916977",
+      "hora": "18:45",
+      "partido": "Paris FC vs HB Køge (Uefa Women'S Champions League)",
+      "selecciones": [
+        {
+          "mercado": "Gol en 1T",
+          "prob": 67.0,
+          "cuota": 1.52
+        },
+        {
+          "mercado": "Córners > 8.5",
+          "prob": 66.5,
+          "cuota": 1.65
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "401841309",
+      "hora": "01:30",
+      "partido": "São Paulo vs Fluminense (Brasil (Serie A))",
+      "selecciones": [
+        {
+          "mercado": "Faltas Totales > 22.5",
+          "prob": 77.8,
+          "cuota": 1.42
+        },
+        {
+          "mercado": "Over 1.5 Goles",
+          "prob": 77.3,
+          "cuota": 1.38
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "FREE",
+      "id_partido": "401916974",
+      "hora": "21:00",
+      "partido": "Benfica vs Roma (Uefa Women'S Champions League)",
+      "selecciones": [
+        {
+          "mercado": "Remates Puerta > 6.5",
+          "prob": 84.3,
+          "cuota": 1.18
+        },
+        {
+          "mercado": "Gol en 2do Tiempo",
+          "prob": 84.5,
+          "cuota": 1.18
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "FREE",
+      "id_partido": "401916978",
+      "hora": "18:45",
+      "partido": "Austria Vienna vs Bayern Munich (Uefa Women'S Champions League)",
+      "selecciones": [
+        {
+          "mercado": "Doble Oport. X2",
+          "prob": 84.7,
+          "cuota": 1.18
+        },
+        {
+          "mercado": "Gol en 2do Tiempo",
+          "prob": 84.5,
+          "cuota": 1.18
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "FREE",
+      "id_partido": "401841308",
+      "hora": "23:30",
+      "partido": "Vasco da Gama vs Internacional (Brasil (Serie A))",
+      "selecciones": [
+        {
+          "mercado": "Over 1.5 Goles",
+          "prob": 81.1,
+          "cuota": 1.18
+        },
+        {
+          "mercado": "Gol en 2do Tiempo",
+          "prob": 83.5,
+          "cuota": 1.18
+        }
+      ]
+    }
+  ],
+  "combinada_doble": {
+    "selecciones": [
+      {
+        "partido": "Vasco da Gama vs Internacional",
+        "hora": "23:30",
+        "mercado": "Over 1.5 Goles",
+        "prob": 81.10536356299569,
+        "cuota": 1.36,
+        "score_elite": 28
+      },
+      {
+        "partido": "Barcelona vs Servette",
+        "hora": "21:00",
+        "mercado": "Over 1.5 Goles",
+        "prob": 80.13016534502474,
+        "cuota": 1.36,
+        "score_elite": 53
+      }
+    ],
+    "cuota_total": 1.85,
+    "prob_directa": 65.0,
+    "prob_protegida": 79.5
+  },
+  "combinada_sniper": {
+    "selecciones": [
+      {
+        "partido": "São Paulo vs Fluminense",
+        "hora": "01:30",
+        "mercado": "Faltas Totales > 22.5",
+        "prob": 77.7713368129507,
+        "cuota": 1.46,
+        "score_elite": 28
+      },
+      {
+        "partido": "Vitória vs Red Bull Bragantino",
+        "hora": "23:30",
+        "mercado": "Faltas Totales > 22.5",
+        "prob": 77.7713368129507,
+        "cuota": 1.46,
+        "score_elite": 8
+      },
+      {
+        "partido": "Arsenal vs OL Lyonnes",
+        "hora": "21:00",
+        "mercado": "Gol en 2do Tiempo",
+        "prob": 76.99755066168322,
+        "cuota": 1.48,
+        "score_elite": 53
+      }
+    ],
+    "cuota_total": 3.15,
+    "prob_directa": 46.6,
+    "prob_protegida": 70.6
+  }
+}
