@@ -46,6 +46,6 @@ jobs:
         run: |
           git config --local user.email "bot@quantbet22.com"
           git config --local user.name "QuantBet22 Auto-Audit"
-          git add auditoria_apuestas.csv cache_partidos_*.json clientes_enviados_*.json || true
+          git add auditoria_apuestas.csv cache_partidos_*.json clientes_enviados_*.json cache_boxscore_ft.json || true
           git diff --staged --quiet || git commit -m "Auto-Auditoria FT en la nube ($(date +'%Y-%m-%d %H:%M UTC'))"
           git push
