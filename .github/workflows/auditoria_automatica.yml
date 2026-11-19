@@ -1,0 +1,49 @@
+name: Auditoria Automatica QuantBet22
+
+on:
+  schedule:
+    # 23:15h España (Invierno CET = UTC+1 -> 22:15 UTC): Envía imagen + texto al Bot de Auditorías, Canal FREE y Canal VIP
+    - cron: '15 22 * * *'
+    # 07:30h España (Invierno CET = UTC+1 -> 06:30 UTC): Cierra la madrugada de Sudamérica, envía 100% al Bot y actualiza la Web
+    - cron: '30 6 * * *'
+  workflow_dispatch:
+    inputs:
+      modo:
+        description: 'Modo manual: clientes (envía a FREE+VIP+Bot) o privado (solo Bot + Web)'
+        required: true
+        default: 'clientes'
+
+permissions:
+  contents: write
+
+jobs:
+  auditar-y-publicar:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Descargar repositorio QuantBet22
+        uses: actions/checkout@v4
+
+      - name: Configurar Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Instalar dependencias ligeras
+        run: |
+          pip install requests pandas pillow edge-tts imageio-ffmpeg
+
+      - name: Ejecutar Auditoria Automatica (PC apagado)
+        run: |
+          if [ "${{ github.event.schedule }}" = "15 22 * * *" ] || [ "${{ github.event.inputs.modo }}" = "clientes" ]; then
+            python auditoria_ayer.py --clientes
+          else
+            python auditoria_ayer.py
+          fi
+
+      - name: Guardar resultados FT actualizados en GitHub (Actualiza Streamlit Web)
+        run: |
+          git config --local user.email "bot@quantbet22.com"
+          git config --local user.name "QuantBet22 Auto-Audit"
+          git add auditoria_apuestas.csv cache_partidos_*.json clientes_enviados_*.json || true
+          git diff --staged --quiet || git commit -m "Auto-Auditoria FT en la nube ($(date +'%Y-%m-%d %H:%M UTC'))"
+          git push
