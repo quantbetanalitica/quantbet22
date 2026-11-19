@@ -3074,26 +3074,26 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-11-19 03:25:00,401841312,Grêmio vs Bahia (Brasil (Serie A)),[VIP] Faltas Totales > 22.5,1.42,1.42,76.2,🟢 [LUZ VERDE / ALTO VALOR],4800.0,Ganada,6816.0,AUDITADA FT 0-0
 2026-11-19 03:25:00,401841312,Grêmio vs Bahia (Brasil (Serie A)),[FREE] Gol en 2do Tiempo,1.18,1.18,82.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 0-0
 2026-11-19 03:25:00,401841312,Grêmio vs Bahia (Brasil (Serie A)),[FREE] Over 1.5 Goles,1.18,1.18,81.3,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 0-0
-2026-11-19 20:40:00,401916978,Austria Vienna vs Bayern Munich (Uefa Women'S Champions League),[VIP] Over 1.5 Goles,1.38,PENDIENTE_CLV,82.0,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Pendiente,0.0,AUDITANDO
-2026-11-19 20:40:00,401916978,Austria Vienna vs Bayern Munich (Uefa Women'S Champions League),[VIP] Córners Bayern Munich > 4.5,1.38,PENDIENTE_CLV,84.2,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Pendiente,0.0,AUDITANDO
-2026-11-19 20:40:00,401916978,Austria Vienna vs Bayern Munich (Uefa Women'S Champions League),[FREE] Doble Oport. X2,1.18,PENDIENTE_CLV,84.7,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
-2026-11-19 20:40:00,401916978,Austria Vienna vs Bayern Munich (Uefa Women'S Champions League),[FREE] Gol en 2do Tiempo,1.18,PENDIENTE_CLV,84.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
-2026-11-19 20:40:00,401916977,Paris FC vs HB Køge (Uefa Women'S Champions League),[VIP] Gol en 1T,1.52,PENDIENTE_CLV,67.0,🟢 [VALOR ALTO / OPERABLE],900.0,Pendiente,0.0,AUDITANDO
-2026-11-19 20:40:00,401916977,Paris FC vs HB Køge (Uefa Women'S Champions League),[VIP] Córners > 8.5,1.65,PENDIENTE_CLV,66.5,🟢 [VALOR ALTO / OPERABLE],3700.0,Pendiente,0.0,AUDITANDO
-2026-11-19 20:40:00,401916977,Paris FC vs HB Køge (Uefa Women'S Champions League),[FREE] Gol en 2do Tiempo,1.28,PENDIENTE_CLV,71.9,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
-2026-11-19 20:40:00,401916977,Paris FC vs HB Køge (Uefa Women'S Champions League),[FREE] Córners > 7.5,1.28,PENDIENTE_CLV,74.1,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
-2026-11-19 22:55:00,401916976,Arsenal vs OL Lyonnes (Uefa Women'S Champions League),[VIP] Doble Oport. 1X,1.42,PENDIENTE_CLV,71.7,🟢 [LUZ VERDE / ALTO VALOR],1100.0,Pendiente,0.0,AUDITANDO
-2026-11-19 22:55:00,401916976,Arsenal vs OL Lyonnes (Uefa Women'S Champions League),[VIP] Córners > 8.5,1.58,PENDIENTE_CLV,66.5,🟢 [VALOR ALTO / OPERABLE],2200.0,Pendiente,0.0,AUDITANDO
-2026-11-19 22:55:00,401916976,Arsenal vs OL Lyonnes (Uefa Women'S Champions League),[FREE] Over 1.5 Goles,1.28,PENDIENTE_CLV,74.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
-2026-11-19 22:55:00,401916976,Arsenal vs OL Lyonnes (Uefa Women'S Champions League),[FREE] Gol en 2do Tiempo,1.23,PENDIENTE_CLV,77.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
-2026-11-19 22:55:00,401916975,Barcelona vs Servette (Uefa Women'S Champions League),[VIP] Gol en 2do Tiempo,1.38,PENDIENTE_CLV,83.1,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Pendiente,0.0,AUDITANDO
-2026-11-19 22:55:00,401916975,Barcelona vs Servette (Uefa Women'S Champions League),[VIP] Over 1.5 Goles,1.38,PENDIENTE_CLV,80.1,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Pendiente,0.0,AUDITANDO
-2026-11-19 22:55:00,401916975,Barcelona vs Servette (Uefa Women'S Champions League),[FREE] Doble Oport. 1X,1.18,PENDIENTE_CLV,84.9,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
-2026-11-19 22:55:00,401916975,Barcelona vs Servette (Uefa Women'S Champions League),[FREE] Córners Barcelona > 4.5,1.18,PENDIENTE_CLV,86.5,🟢 [LUZ VERDE / ALTO VALOR],2900.0,Pendiente,0.0,AUDITANDO
-2026-11-19 22:55:00,401916974,Benfica vs Roma (Uefa Women'S Champions League),[VIP] Over 1.5 Goles,1.38,PENDIENTE_CLV,84.3,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Pendiente,0.0,AUDITANDO
-2026-11-19 22:55:00,401916974,Benfica vs Roma (Uefa Women'S Champions League),[VIP] Ambos Marcan (BTTS),1.5,PENDIENTE_CLV,75.6,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Pendiente,0.0,AUDITANDO
-2026-11-19 22:55:00,401916974,Benfica vs Roma (Uefa Women'S Champions League),[FREE] Remates Puerta > 6.5,1.18,PENDIENTE_CLV,84.3,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
-2026-11-19 22:55:00,401916974,Benfica vs Roma (Uefa Women'S Champions League),[FREE] Gol en 2do Tiempo,1.18,PENDIENTE_CLV,84.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
+2026-11-19 20:40:00,401916978,Austria Vienna vs Bayern Munich (Uefa Women'S Champions League),[VIP] Over 1.5 Goles,1.38,1.38,82.0,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,6900.0,AUDITADA FT 0-4
+2026-11-19 20:40:00,401916978,Austria Vienna vs Bayern Munich (Uefa Women'S Champions League),[VIP] Córners Bayern Munich > 4.5,1.38,1.38,84.2,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,6900.0,AUDITADA FT 0-4
+2026-11-19 20:40:00,401916978,Austria Vienna vs Bayern Munich (Uefa Women'S Champions League),[FREE] Doble Oport. X2,1.18,1.18,84.7,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 0-4
+2026-11-19 20:40:00,401916978,Austria Vienna vs Bayern Munich (Uefa Women'S Champions League),[FREE] Gol en 2do Tiempo,1.18,1.18,84.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 0-4
+2026-11-19 20:40:00,401916977,Paris FC vs HB Køge (Uefa Women'S Champions League),[VIP] Gol en 1T,1.52,1.52,67.0,🟢 [VALOR ALTO / OPERABLE],900.0,Ganada,1368.0,AUDITADA FT 2-1
+2026-11-19 20:40:00,401916977,Paris FC vs HB Køge (Uefa Women'S Champions League),[VIP] Córners > 8.5,1.65,1.65,66.5,🟢 [VALOR ALTO / OPERABLE],3700.0,Ganada,6105.0,AUDITADA FT 2-1
+2026-11-19 20:40:00,401916977,Paris FC vs HB Køge (Uefa Women'S Champions League),[FREE] Gol en 2do Tiempo,1.28,1.28,71.9,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,640.0,AUDITADA FT 2-1
+2026-11-19 20:40:00,401916977,Paris FC vs HB Køge (Uefa Women'S Champions League),[FREE] Córners > 7.5,1.28,1.28,74.1,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,640.0,AUDITADA FT 2-1
+2026-11-19 22:55:00,401916976,Arsenal vs OL Lyonnes (Uefa Women'S Champions League),[VIP] Doble Oport. 1X,1.42,1.42,71.7,🟢 [LUZ VERDE / ALTO VALOR],1100.0,Perdida,0.0,AUDITADA FT 0-2
+2026-11-19 22:55:00,401916976,Arsenal vs OL Lyonnes (Uefa Women'S Champions League),[VIP] Córners > 8.5,1.58,1.58,66.5,🟢 [VALOR ALTO / OPERABLE],2200.0,Perdida,0.0,AUDITADA FT 0-2
+2026-11-19 22:55:00,401916976,Arsenal vs OL Lyonnes (Uefa Women'S Champions League),[FREE] Over 1.5 Goles,1.28,1.28,74.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,640.0,AUDITADA FT 0-2
+2026-11-19 22:55:00,401916976,Arsenal vs OL Lyonnes (Uefa Women'S Champions League),[FREE] Gol en 2do Tiempo,1.23,1.23,77.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,615.0,AUDITADA FT 0-2
+2026-11-19 22:55:00,401916975,Barcelona vs Servette (Uefa Women'S Champions League),[VIP] Gol en 2do Tiempo,1.38,1.38,83.1,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,6900.0,AUDITADA FT 6-0
+2026-11-19 22:55:00,401916975,Barcelona vs Servette (Uefa Women'S Champions League),[VIP] Over 1.5 Goles,1.38,1.38,80.1,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,6900.0,AUDITADA FT 6-0
+2026-11-19 22:55:00,401916975,Barcelona vs Servette (Uefa Women'S Champions League),[FREE] Doble Oport. 1X,1.18,1.18,84.9,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 6-0
+2026-11-19 22:55:00,401916975,Barcelona vs Servette (Uefa Women'S Champions League),[FREE] Córners Barcelona > 4.5,1.18,1.18,86.5,🟢 [LUZ VERDE / ALTO VALOR],2900.0,Ganada,3422.0,AUDITADA FT 6-0
+2026-11-19 22:55:00,401916974,Benfica vs Roma (Uefa Women'S Champions League),[VIP] Over 1.5 Goles,1.38,1.38,84.3,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,6900.0,AUDITADA FT 2-3
+2026-11-19 22:55:00,401916974,Benfica vs Roma (Uefa Women'S Champions League),[VIP] Ambos Marcan (BTTS),1.5,1.50,75.6,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,7500.0,AUDITADA FT 2-3
+2026-11-19 22:55:00,401916974,Benfica vs Roma (Uefa Women'S Champions League),[FREE] Remates Puerta > 6.5,1.18,1.18,84.3,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 2-3
+2026-11-19 22:55:00,401916974,Benfica vs Roma (Uefa Women'S Champions League),[FREE] Gol en 2do Tiempo,1.18,1.18,84.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 2-3
 2026-11-20 01:25:00,401841308,Vasco da Gama vs Internacional (Brasil (Serie A)),[VIP] Remates Puerta > 6.5,1.42,PENDIENTE_CLV,82.6,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Pendiente,0.0,AUDITANDO
 2026-11-20 01:25:00,401841308,Vasco da Gama vs Internacional (Brasil (Serie A)),[VIP] Ambos Marcan (BTTS),1.5,PENDIENTE_CLV,70.7,🟢 [LUZ VERDE / ALTO VALOR],3000.0,Pendiente,0.0,AUDITANDO
 2026-11-20 01:25:00,401841308,Vasco da Gama vs Internacional (Brasil (Serie A)),[FREE] Over 1.5 Goles,1.18,PENDIENTE_CLV,81.1,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
@@ -3106,3 +3106,55 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-11-20 03:25:00,401841309,São Paulo vs Fluminense (Brasil (Serie A)),[VIP] Over 1.5 Goles,1.38,PENDIENTE_CLV,77.3,🟢 [LUZ VERDE / ALTO VALOR],4400.0,Pendiente,0.0,AUDITANDO
 2026-11-20 03:25:00,401841309,São Paulo vs Fluminense (Brasil (Serie A)),[FREE] Gol en 1T,1.18,PENDIENTE_CLV,78.8,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
 2026-11-20 03:25:00,401841309,São Paulo vs Fluminense (Brasil (Serie A)),[FREE] Remates Puerta > 6.5,1.24,PENDIENTE_CLV,76.6,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
+2026-11-20 20:25:00,401900905,Al Ahli vs Al Nassr (Arabia Saudita (Saudi Pro League)),[VIP] Córners > 8.5,1.59,PENDIENTE_CLV,66.5,🟢 [VALOR ALTO / OPERABLE],2400.0,Pendiente,0,AUDITANDO
+2026-11-20 20:25:00,401900905,Al Ahli vs Al Nassr (Arabia Saudita (Saudi Pro League)),[VIP] Faltas Totales > 21.5,1.78,PENDIENTE_CLV,66.5,🟢 [VALOR ALTO / OPERABLE],5000.0,Pendiente,0,AUDITANDO
+2026-11-20 20:25:00,401900905,Al Ahli vs Al Nassr (Arabia Saudita (Saudi Pro League)),[FREE] Doble Oport. X2,1.29,PENDIENTE_CLV,75.9,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0,AUDITANDO
+2026-11-20 20:25:00,401900905,Al Ahli vs Al Nassr (Arabia Saudita (Saudi Pro League)),[FREE] Faltas Totales > 20.5,1.28,PENDIENTE_CLV,65.6,🟢 [VALOR ALTO / OPERABLE],500.0,Pendiente,0,AUDITANDO
+2026-11-20 22:25:00,401883112,FC Andorra vs Leganés (España (Segunda)),[VIP] Córners > 8.5,1.72,PENDIENTE_CLV,66.5,🟢 [VALOR ALTO / OPERABLE],5000.0,Pendiente,0,AUDITANDO
+2026-11-20 22:25:00,401883112,FC Andorra vs Leganés (España (Segunda)),[VIP] Combo 1X + O1.5,1.5,PENDIENTE_CLV,68.7,🟢 [LUZ VERDE / ALTO VALOR],1500.0,Pendiente,0,AUDITANDO
+2026-11-20 22:25:00,401883112,FC Andorra vs Leganés (España (Segunda)),[FREE] Faltas Totales > 25.5,1.28,PENDIENTE_CLV,73.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0,AUDITANDO
+2026-11-20 22:25:00,401883112,FC Andorra vs Leganés (España (Segunda)),[FREE] Victoria FC Andorra,1.28,PENDIENTE_CLV,70.9,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0,AUDITANDO
+2026-11-20 22:25:00,401884736,Bayern Munich vs FC Cologne (Alemania (Bundesliga)),[VIP] Remates Puerta > 7.5,1.58,PENDIENTE_CLV,66.5,🟢 [VALOR ALTO / OPERABLE],2200.0,Pendiente,0,AUDITANDO
+2026-11-20 22:25:00,401884736,Bayern Munich vs FC Cologne (Alemania (Bundesliga)),[VIP] Total Asiático > 2.25,1.59,PENDIENTE_CLV,66.5,🟢 [VALOR ALTO / OPERABLE],2400.0,Pendiente,0,AUDITANDO
+2026-11-20 22:25:00,401884736,Bayern Munich vs FC Cologne (Alemania (Bundesliga)),[FREE] Gol en 2do Tiempo,1.18,PENDIENTE_CLV,83.6,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0,AUDITANDO
+2026-11-20 22:25:00,401884736,Bayern Munich vs FC Cologne (Alemania (Bundesliga)),[FREE] Córners Bayern Munich > 4.5,1.18,PENDIENTE_CLV,86.5,🟢 [LUZ VERDE / ALTO VALOR],2900.0,Pendiente,0,AUDITANDO
+2026-11-20 22:40:00,401876395,Troyes vs Le Havre AC (Francia (Ligue 1)),[VIP] Tarjetas > 3.5,1.74,PENDIENTE_CLV,66.5,🟢 [VALOR ALTO / OPERABLE],5000.0,Pendiente,0,AUDITANDO
+2026-11-20 22:40:00,401876395,Troyes vs Le Havre AC (Francia (Ligue 1)),[VIP] Córners > 9.5,1.61,PENDIENTE_CLV,66.5,🟢 [VALOR ALTO / OPERABLE],2900.0,Pendiente,0,AUDITANDO
+2026-11-20 22:40:00,401876395,Troyes vs Le Havre AC (Francia (Ligue 1)),[FREE] Over 1.5 Goles,1.27,PENDIENTE_CLV,74.7,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0,AUDITANDO
+2026-11-20 22:40:00,401876395,Troyes vs Le Havre AC (Francia (Ligue 1)),[FREE] Faltas Totales > 23.5,1.28,PENDIENTE_CLV,69.1,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0,AUDITANDO
+2026-11-20 22:55:00,401882805,Athletic Club vs Espanyol (España (Laliga)),[VIP] Tarjetas > 3.5,1.49,PENDIENTE_CLV,68.4,🟢 [LUZ VERDE / ALTO VALOR],1000.0,Pendiente,0,AUDITANDO
+2026-11-20 22:55:00,401882805,Athletic Club vs Espanyol (España (Laliga)),[VIP] Faltas Totales > 26.5,1.78,PENDIENTE_CLV,66.5,🟢 [VALOR ALTO / OPERABLE],5000.0,Pendiente,0,AUDITANDO
+2026-11-20 22:55:00,401882805,Athletic Club vs Espanyol (España (Laliga)),[FREE] Córners Athletic Club > 4.5,1.26,PENDIENTE_CLV,75.3,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0,AUDITANDO
+2026-11-20 22:55:00,401882805,Athletic Club vs Espanyol (España (Laliga)),[FREE] Faltas Totales > 25.5,1.28,PENDIENTE_CLV,64.8,🟢 [VALOR ALTO / OPERABLE],500.0,Pendiente,0,AUDITANDO
+2026-11-20 23:40:00,401931821,FC Porto vs Paredes (Portugal (Taça De Portugal)),[VIP] Over 1.5 Goles,1.38,PENDIENTE_CLV,76.8,🟢 [LUZ VERDE / ALTO VALOR],3900.0,Pendiente,0,AUDITANDO
+2026-11-20 23:40:00,401931821,FC Porto vs Paredes (Portugal (Taça De Portugal)),[VIP] Combo 1X + O1.5,1.5,PENDIENTE_CLV,74.5,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Pendiente,0,AUDITANDO
+2026-11-20 23:40:00,401931821,FC Porto vs Paredes (Portugal (Taça De Portugal)),[FREE] Córners FC Porto > 4.5,1.18,PENDIENTE_CLV,86.5,🟢 [LUZ VERDE / ALTO VALOR],2900.0,Pendiente,0,AUDITANDO
+2026-11-20 23:40:00,401931821,FC Porto vs Paredes (Portugal (Taça De Portugal)),[FREE] Faltas Totales > 24.5,1.28,PENDIENTE_CLV,67.0,🟢 [VALOR ALTO / OPERABLE],500.0,Pendiente,0,AUDITANDO
+2026-11-21 00:25:00,401934708,Independiente Medellín vs Independiente Santa Fe (Colombia (Primera A)),[VIP] Remates Puerta > 8.5,1.64,PENDIENTE_CLV,66.5,🟢 [VALOR ALTO / OPERABLE],3500.0,Pendiente,0,AUDITANDO
+2026-11-21 00:25:00,401934708,Independiente Medellín vs Independiente Santa Fe (Colombia (Primera A)),[VIP] Córners > 8.5,1.62,PENDIENTE_CLV,66.5,🟢 [VALOR ALTO / OPERABLE],3100.0,Pendiente,0,AUDITANDO
+2026-11-21 00:25:00,401934708,Independiente Medellín vs Independiente Santa Fe (Colombia (Primera A)),[FREE] Gol en 2do Tiempo,1.18,PENDIENTE_CLV,80.3,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0,AUDITANDO
+2026-11-21 00:25:00,401934708,Independiente Medellín vs Independiente Santa Fe (Colombia (Primera A)),[FREE] Faltas Totales > 23.5,1.28,PENDIENTE_CLV,64.6,🟢 [VALOR ALTO / OPERABLE],500.0,Pendiente,0,AUDITANDO
+2026-11-21 01:55:00,401933760,Vélez Sarsfield vs Belgrano (Córdoba) (Argentina (Liga Profesional)),[VIP] Remates Puerta > 7.5,1.88,PENDIENTE_CLV,26.7,🔴 [CRÍTICO / EVITAR],500.0,Pendiente,0,AUDITANDO
+2026-11-21 01:55:00,401933760,Vélez Sarsfield vs Belgrano (Córdoba) (Argentina (Liga Profesional)),[VIP] Córners > 8.5,1.48,PENDIENTE_CLV,73.5,🟢 [LUZ VERDE / ALTO VALOR],4600.0,Pendiente,0,AUDITANDO
+2026-11-21 01:55:00,401933760,Vélez Sarsfield vs Belgrano (Córdoba) (Argentina (Liga Profesional)),[FREE] Doble Oport. 1X,1.27,PENDIENTE_CLV,74.8,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0,AUDITANDO
+2026-11-21 01:55:00,401933760,Vélez Sarsfield vs Belgrano (Córdoba) (Argentina (Liga Profesional)),[FREE] Faltas Totales > 20.5,1.28,PENDIENTE_CLV,68.3,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0,AUDITANDO
+2026-11-21 02:30:00,401934690,Atlético Bucaramanga vs América de Cali (Colombia (Primera A)),[VIP] Tarjetas > 4.5,1.78,PENDIENTE_CLV,66.5,🟢 [VALOR ALTO / OPERABLE],5000.0,Pendiente,0,AUDITANDO
+2026-11-21 02:30:00,401934690,Atlético Bucaramanga vs América de Cali (Colombia (Primera A)),[VIP] Faltas Totales > 26.5,1.73,PENDIENTE_CLV,66.5,🟢 [VALOR ALTO / OPERABLE],5000.0,Pendiente,0,AUDITANDO
+2026-11-21 02:30:00,401934690,Atlético Bucaramanga vs América de Cali (Colombia (Primera A)),[FREE] Remates Puerta > 6.5,1.28,PENDIENTE_CLV,68.4,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0,AUDITANDO
+2026-11-21 02:30:00,401934690,Atlético Bucaramanga vs América de Cali (Colombia (Primera A)),[FREE] Faltas Totales > 25.5,1.28,PENDIENTE_CLV,66.1,🟢 [VALOR ALTO / OPERABLE],500.0,Pendiente,0,AUDITANDO
+2026-11-21 03:55:00,401877054,Puebla vs Atlético de San Luis (México (Liga Mx)),[VIP] Córners > 8.5,1.6,PENDIENTE_CLV,66.5,🟢 [VALOR ALTO / OPERABLE],2700.0,Pendiente,0,AUDITANDO
+2026-11-21 03:55:00,401877054,Puebla vs Atlético de San Luis (México (Liga Mx)),[VIP] Remates Puerta > 7.5,1.88,PENDIENTE_CLV,47.5,🔴 [CRÍTICO / EVITAR],500.0,Pendiente,0,AUDITANDO
+2026-11-21 03:55:00,401877054,Puebla vs Atlético de San Luis (México (Liga Mx)),[FREE] Gol en 2do Tiempo,1.23,PENDIENTE_CLV,77.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0,AUDITANDO
+2026-11-21 03:55:00,401877054,Puebla vs Atlético de San Luis (México (Liga Mx)),[FREE] Doble Oport. 1X,1.14,PENDIENTE_CLV,80.8,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0,AUDITANDO
+2026-11-21 04:35:00,401934707,Deportivo Cali vs Millonarios (Colombia (Primera A)),[VIP] Remates Puerta > 7.5,1.88,PENDIENTE_CLV,23.6,🔴 [CRÍTICO / EVITAR],500.0,Pendiente,0,AUDITANDO
+2026-11-21 04:35:00,401934707,Deportivo Cali vs Millonarios (Colombia (Primera A)),[VIP] Córners > 8.5,1.48,PENDIENTE_CLV,73.5,🟢 [LUZ VERDE / ALTO VALOR],4600.0,Pendiente,0,AUDITANDO
+2026-11-21 04:35:00,401934707,Deportivo Cali vs Millonarios (Colombia (Primera A)),[FREE] Faltas Totales > 21.5,1.28,PENDIENTE_CLV,67.5,🟢 [VALOR ALTO / OPERABLE],500.0,Pendiente,0,AUDITANDO
+2026-11-21 04:35:00,401934707,Deportivo Cali vs Millonarios (Colombia (Primera A)),[FREE] Remates Puerta > 6.5,1.28,PENDIENTE_CLV,37.0,🔴 [CRÍTICO / EVITAR],500.0,Pendiente,0,AUDITANDO
+2026-11-21 05:55:00,401877053,FC Juárez vs Atlas (México (Liga Mx)),[VIP] Tarjetas > 3.5,1.78,PENDIENTE_CLV,66.5,🟢 [VALOR ALTO / OPERABLE],5000.0,Pendiente,0,AUDITANDO
+2026-11-21 05:55:00,401877053,FC Juárez vs Atlas (México (Liga Mx)),[VIP] Faltas Totales > 24.5,1.77,PENDIENTE_CLV,66.5,🟢 [VALOR ALTO / OPERABLE],5000.0,Pendiente,0,AUDITANDO
+2026-11-21 05:55:00,401877053,FC Juárez vs Atlas (México (Liga Mx)),[FREE] Doble Oport. 1X,1.23,PENDIENTE_CLV,80.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0,AUDITANDO
+2026-11-21 05:55:00,401877053,FC Juárez vs Atlas (México (Liga Mx)),[FREE] Faltas Totales > 23.5,1.28,PENDIENTE_CLV,65.2,🟢 [VALOR ALTO / OPERABLE],500.0,Pendiente,0,AUDITANDO
+2026-11-21 06:05:00,401877052,Tijuana vs Atlante (México (Liga Mx)),[VIP] Remates Puerta > 7.5,1.88,PENDIENTE_CLV,30.4,🔴 [CRÍTICO / EVITAR],500.0,Pendiente,0,AUDITANDO
+2026-11-21 06:05:00,401877052,Tijuana vs Atlante (México (Liga Mx)),[VIP] Córners > 8.5,1.48,PENDIENTE_CLV,73.5,🟢 [LUZ VERDE / ALTO VALOR],4600.0,Pendiente,0,AUDITANDO
+2026-11-21 06:05:00,401877052,Tijuana vs Atlante (México (Liga Mx)),[FREE] Faltas Totales > 22.5,1.28,PENDIENTE_CLV,67.4,🟢 [VALOR ALTO / OPERABLE],500.0,Pendiente,0,AUDITANDO
+2026-11-21 06:05:00,401877052,Tijuana vs Atlante (México (Liga Mx)),[FREE] Córners > 7.5,1.28,PENDIENTE_CLV,57.1,🟡 [MODERADO / VIGILAR],500.0,Pendiente,0,AUDITANDO
