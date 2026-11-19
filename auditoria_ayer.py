@@ -2,10 +2,10 @@
 auditoria_ayer.py — Ejecución rápida de auditoría sin correr el algoritmo de pronósticos.
 
 Uso desde PowerShell:
-  py auditoria_ayer.py                    -> Audita ayer + madrugada de hoy (100% partidos -> tu Bot de Auditorías)
-  py auditoria_ayer.py 2026-11-18         -> Audita una fecha exacta + madrugada siguiente (solo a tu Bot de Auditorías)
-  py auditoria_ayer.py --clientes         -> Además envía la imagen oficial y texto al Canal FREE, Canal VIP y Bot de Auditorías
-  py auditoria_ayer.py 2026-11-18 --clientes --sync-web -> Audita esa fecha, envía a FREE/VIP/Bot y sincroniza la Web App
+  py auditoria_ayer.py                       -> Envía a TU BOT DE AUDITORÍAS: la imagen vertical + texto de las 7 tarjetas VIP/FREE y el reporte exacto del CSV (sin enviar a clientes).
+  py auditoria_ayer.py 2026-11-18            -> Lo mismo para una fecha específica + su madrugada (solo para ti).
+  py auditoria_ayer.py --clientes            -> Envía la imagen vertical + textos respectivos a TU BOT, CANAL FREE y CANAL VIP + actualiza Web.
+  py auditoria_ayer.py 2026-11-18 --clientes -> Envía ahora mismo la imagen + texto oficial del día 18 + madrugada del 19 a TU BOT, CANAL FREE y CANAL VIP + actualiza Web.
 """
 import os
 import sys
@@ -32,11 +32,17 @@ def main():
     fechas_arg = [a for a in args if not a.startswith("--")]
 
     ahora_esp = obtener_ahora_espana()
+    if "--noche" in args:
+        modo_horario = "noche"
+    elif "--manana" in args:
+        modo_horario = "manana"
+    else:
+        modo_horario = "noche" if ahora_esp.hour >= 21 else "manana"
+
     if fechas_arg:
         fecha_auditar = fechas_arg[0]
     else:
-        # Si es de noche (>= 21:00h ESP), audita la jornada de hoy; de mañana/tarde, audita ayer + madrugada de hoy
-        if ahora_esp.hour >= 21:
+        if modo_horario == "noche":
             fecha_auditar = ahora_esp.strftime("%Y-%m-%d")
         else:
             fecha_auditar = (ahora_esp - timedelta(days=1)).strftime("%Y-%m-%d")
@@ -49,26 +55,31 @@ def main():
     ligas_permitidas = m.obtener_ligas_permitidas_oficiales()
 
     print("=" * 90)
-    print(f" 📊 AUDITORÍA RÁPIDA ({fecha_auditar} + MADRUGADA {fecha_siguiente})")
+    print(f" 📊 AUDITORÍA RÁPIDA ({fecha_auditar} + MADRUGADA {fecha_siguiente}) | MODO: {modo_horario.upper()} | CLIENTES: {'SÍ' if enviar_clientes else 'SOLO PRIVADO'}")
     print("=" * 90)
 
-    # 1. Refrescar únicamente los marcadores FT de esa jornada y su madrugada
+    # 1. Refrescar únicamente marcadores FT de esa jornada y su madrugada, y resolver pendientes en CSV (sin modificar apuestas pasadas)
     m.obtener_datos_api_partidos(fecha_auditar, headers, forzar_refresco=True)
     m.resolver_apuestas_pendientes(api_token)
 
-    # 2. Enviar Auditoría #1 (7 Tarjetas) + Auditoría #2 (100% de los partidos del día + madrugada) a tu Bot Privado
-    m.auditar_todos_los_partidos_fecha_bot_auditorias(fecha_siguiente, ligas_permitidas, headers, api_token)
-    print(f"✅ Reporte 100% completo ({fecha_auditar} + madrugada {fecha_siguiente}) enviado a tu Bot de Auditorías.")
+    # 2. Enviar SIEMPRE la imagen vertical oficial + texto (estilo auditoría de 7 tarjetas VIP/FREE)
+    #    - Si enviar_clientes=False -> solo a tu Bot de Auditorías y tu Chat Privado
+    #    - Si enviar_clientes=True  -> a tu Bot de Auditorías, Chat Privado, Canal FREE y Canal VIP (con textos separados)
+    g.publicar_auditoria_nocturna_canal_free(
+        fecha_auditar,
+        enviar_a_clientes=enviar_clientes,
+        modo_horario=modo_horario,
+    )
 
-    # 3. Si se pide --clientes (ej. disparo nocturno 23:15h o manual), enviar imagen + texto a Bot, Canal FREE y Canal VIP
-    if enviar_clientes:
-        g.publicar_auditoria_nocturna_canal_free(fecha_auditar)
+    # 3. Enviar a tu Bot Privado el desglose fiel en texto (AUDITORÍA #1 + AUDITORÍA #2 leyendo 100% del CSV sin recalcular nada)
+    m.auditar_todos_los_partidos_fecha_bot_auditorias(fecha_siguiente, ligas_permitidas, headers, api_token)
+    print(f"✅ Reporte exacto del CSV ({fecha_auditar} + madrugada {fecha_siguiente}) enviado a tu Bot de Auditorías.")
 
     # 4. Sincronizar CSV y cachés con la Web App en GitHub (cuando se corre desde tu PC)
     if sync_web and not os.getenv("GITHUB_ACTIONS"):
         m.actualizar_webapp_github_automatico(fecha_auditar)
 
-    print("🏁 Auditoría rápida finalizada sin tocar los partidos futuros.")
+    print("🏁 Auditoría rápida finalizada al 100%.")
 
 
 if __name__ == "__main__":
