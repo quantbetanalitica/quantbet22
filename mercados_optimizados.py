@@ -33,8 +33,8 @@ logging.basicConfig(
 )
 
 MODO_PRUEBAS = False
-ENVIAR_A_CLIENTES = False  # ⚠️ INTERRUPTOR TELEGRAM CLIENTES: True = envía tarjetas a canales FREE, VIP y PRO
-SUBIR_A_WEB = False        # 🌐 INTERRUPTOR PÁGINA WEB: True = sube los partidos del día y la auditoría a quantbet22.streamlit.app
+ENVIAR_A_CLIENTES = True  # ⚠️ INTERRUPTOR TELEGRAM CLIENTES: True = envía tarjetas a canales FREE, VIP y PRO
+SUBIR_A_WEB = True        # 🌐 INTERRUPTOR PÁGINA WEB: True = sube los partidos del día y la auditoría a quantbet22.streamlit.app
 ACTIVAR_BOT_AL_FINALIZAR = False  # En False termina el script al instante tras crear los videos
 
 # 📅 Si quieres adelantar el trabajo de mañana o del fin de semana, pon aquí la fecha (ej. "2026-10-27")
@@ -660,13 +660,12 @@ def _completar_segunda_seleccion_json(sels_actuales, tipo_t, mercados_rivales=No
       if "1t" in n_txt or "2do tiempo" in n_txt: return "tiempos"
       return "goles"
   if str(tipo_t).upper() == "VIP":
-    respaldo = [("Gol en 2do Tiempo", 75.2, 1.42), ("Remates Puerta > 6.5", 74.0, 1.44), ("Total Asiático > 2.25", 73.5, 1.48),
-                # ("Ambos Marcan (BTTS)", 72.5, 1.52),
-                  ("Córners > 8.5", 72.0, 1.48), 
-                  (f"Tarjetas > {linea_tarj}", 71.5, 1.46)]
+    respaldo = [("Remates Puerta > 6.5", 74.5, 1.44), ("Córners > 8.5", 73.5, 1.48),
+                ("Faltas Totales > 22.5", 73.0, 1.42), (f"Tarjetas > {linea_tarj}", 72.0, 1.46),
+                ("Total Asiático > 2.25", 71.5, 1.48)]
   else:
-    respaldo = [("Over 1.5 Goles", 78.5, 1.25), ("Gol en 2do Tiempo", 76.8, 1.25), ("Remates Puerta > 6.5", 75.5, 1.24),
-                ("Faltas Totales > 22.5", 74.5, 1.25), ("Córners > 7.5", 74.0, 1.24)]
+    respaldo = [("Remates Puerta > 6.5", 76.0, 1.24), ("Córners > 7.5", 75.0, 1.24),
+                ("Faltas Totales > 22.5", 74.5, 1.24), ("Over 1.5 Goles", 74.0, 1.24)]
   usados = {str(s.get("mercado", "")) for s in sels_actuales}.union(set(mercados_rivales or []))
   fams = {_fam(str(s.get("mercado", ""))) for s in sels_actuales}
   for m_r, p_r, c_r in respaldo:
@@ -677,7 +676,7 @@ def _completar_segunda_seleccion_json(sels_actuales, tipo_t, mercados_rivales=No
   return {"mercado": "Remates Puerta > 6.5" if "remates" not in fams else "Córners > 8.5", "prob": 72.0, "cuota": 1.44 if str(tipo_t).upper() == "VIP" else 1.25}
 
 
-def guardar_tarjetas_en_carpeta_clientes(fecha_jornada, top_4_vip, top_3_free, ruta_img_doble=None, ruta_img_sniper=None):
+def guardar_tarjetas_en_carpeta_clientes(fecha_jornada, top_4_vip, top_3_free, ruta_img_doble=None, ruta_img_sniper=None, rutas_pro_extra=None):
   """
   Crea UNA SOLA CARPETA exclusiva ('Alertas_Quant_<fecha>/0_ENVIADAS_A_CLIENTES')
   y protege el registro 'clientes_enviados_<fecha>.json' con un candado para que
@@ -764,6 +763,9 @@ def guardar_tarjetas_en_carpeta_clientes(fecha_jornada, top_4_vip, top_3_free, r
     shutil.copy2(ruta_img_doble, os.path.join(carpeta_clientes, os.path.basename(ruta_img_doble)))
   if ruta_img_sniper and os.path.exists(ruta_img_sniper):
     shutil.copy2(ruta_img_sniper, os.path.join(carpeta_clientes, os.path.basename(ruta_img_sniper)))
+  for r_pro_ex in (rutas_pro_extra or []):
+    if r_pro_ex and os.path.exists(r_pro_ex):
+      shutil.copy2(r_pro_ex, os.path.join(carpeta_clientes, os.path.basename(r_pro_ex)))
 
   if tarjetas_registro:
     datos_json = {"fecha": fecha_jornada, "tarjetas_clientes": tarjetas_registro}
@@ -975,7 +977,147 @@ def procesar_clics_pendientes():
       logging.error(f"Error procesando clics pendientes: {e}")
 
 
-def evaluar_mercado_universal(mercado, goles_h, goles_a, g_ht, nombre_local="", nombre_vis=""):
+ARCHIVO_CACHE_BOXSCORE_FT = "cache_boxscore_ft.json"
+
+def _extraer_linea_num(texto_mercado, defecto):
+  m_n = re.search(r">\s*(\d+(?:\.\d+)?)", str(texto_mercado))
+  if m_n:
+    try:
+      return float(m_n.group(1))
+    except Exception:
+      pass
+  return float(defecto)
+
+
+def obtener_stats_boxscore_partido_ft(id_partido, nombre_local="", nombre_vis="", api_token=None):
+  """Obtiene y guarda en caché local (cache_boxscore_ft.json) las estadísticas REALES del partido finalizado:
+  córners (local/visita/total), remates a puerta, faltas y tarjetas desde API-Sports y respaldo ESPN."""
+  clave_id = str(id_partido or "").strip()
+  if not clave_id:
+    return None
+
+  cache_bx = {}
+  if os.path.exists(ARCHIVO_CACHE_BOXSCORE_FT):
+    try:
+      with open(ARCHIVO_CACHE_BOXSCORE_FT, "r", encoding="utf-8") as f:
+        cache_bx = json.load(f) or {}
+      if clave_id in cache_bx:
+        dato_c = cache_bx[clave_id]
+        return dato_c if dato_c.get("has_stats") else None
+    except Exception:
+      cache_bx = {}
+
+  if MODO_PRUEBAS:
+    return None
+
+  stats_res = {
+      "corners_home": None, "corners_away": None, "corners_total": None,
+      "shots_on_target_home": None, "shots_on_target_away": None, "shots_on_target_total": None,
+      "fouls_home": None, "fouls_away": None, "fouls_total": None,
+      "yellow_total": None, "cards_total": None, "has_stats": False,
+  }
+
+  def _a_float(val):
+    if val is None:
+      return None
+    s = str(val).strip().replace("%", "")
+    try:
+      return float(s)
+    except Exception:
+      return None
+
+  # 1. API-Sports /fixtures/statistics?fixture={id}
+  if clave_id.isdigit() and api_token:
+    try:
+      r_st = requests.get(
+          f"https://v3.football.api-sports.io/fixtures/statistics?fixture={clave_id}",
+          headers={"x-apisports-key": api_token},
+          timeout=4.0,
+      )
+      if r_st.status_code == 200:
+        resp_s = r_st.json().get("response") or []
+        if len(resp_s) >= 2:
+          loc_norm = normalizar_nombre_club(nombre_local)
+          idx_h, idx_a = 0, 1
+          t0_norm = normalizar_nombre_club((resp_s[0].get("team") or {}).get("name", ""))
+          t1_norm = normalizar_nombre_club((resp_s[1].get("team") or {}).get("name", ""))
+          if loc_norm and t1_norm and loc_norm[:5] in t1_norm and loc_norm[:5] not in t0_norm:
+            idx_h, idx_a = 1, 0
+
+          m_h = {str(x.get("type")): _a_float(x.get("value")) for x in (resp_s[idx_h].get("statistics") or [])}
+          m_a = {str(x.get("type")): _a_float(x.get("value")) for x in (resp_s[idx_a].get("statistics") or [])}
+
+          ch, ca = m_h.get("Corner Kicks"), m_a.get("Corner Kicks")
+          sh, sa = m_h.get("Shots on Goal"), m_a.get("Shots on Goal")
+          fh, fa = m_h.get("Fouls"), m_a.get("Fouls")
+          yh, ya = m_h.get("Yellow Cards"), m_a.get("Yellow Cards")
+          rh, ra = m_h.get("Red Cards") or 0.0, m_a.get("Red Cards") or 0.0
+
+          if ch is not None and ca is not None:
+            stats_res["corners_home"], stats_res["corners_away"], stats_res["corners_total"] = ch, ca, ch + ca
+          if sh is not None and sa is not None:
+            stats_res["shots_on_target_home"], stats_res["shots_on_target_away"], stats_res["shots_on_target_total"] = sh, sa, sh + sa
+          if fh is not None and fa is not None:
+            stats_res["fouls_home"], stats_res["fouls_away"], stats_res["fouls_total"] = fh, fa, fh + fa
+          if yh is not None or ya is not None:
+            yt = (yh or 0.0) + (ya or 0.0)
+            stats_res["yellow_total"] = yt
+            stats_res["cards_total"] = yt + rh + ra
+    except Exception:
+      pass
+
+  # 2. Respaldo ESPN summary boxscore (cuando el ID viene de ESPN o API-Sports no devolvió estadísticas)
+  if stats_res["corners_total"] is None and stats_res["shots_on_target_total"] is None and clave_id.isdigit():
+    try:
+      r_e = requests.get(
+          f"https://site.api.espn.com/apis/site/v2/sports/soccer/all/summary?event={clave_id}",
+          timeout=3.5,
+      )
+      if r_e.status_code == 200:
+        bts = (r_e.json().get("boxscore") or {}).get("teams") or []
+        if len(bts) >= 2:
+          loc_norm = normalizar_nombre_club(nombre_local)
+          idx_h, idx_a = 0, 1
+          b0 = normalizar_nombre_club((bts[0].get("team") or {}).get("displayName", ""))
+          b1 = normalizar_nombre_club((bts[1].get("team") or {}).get("displayName", ""))
+          if loc_norm and b1 and loc_norm[:5] in b1 and loc_norm[:5] not in b0:
+            idx_h, idx_a = 1, 0
+
+          e_h = {str(s.get("name")): _a_float(s.get("displayValue")) for s in (bts[idx_h].get("statistics") or [])}
+          e_a = {str(s.get("name")): _a_float(s.get("displayValue")) for s in (bts[idx_a].get("statistics") or [])}
+
+          ch, ca = e_h.get("wonCorners"), e_a.get("wonCorners")
+          sh, sa = e_h.get("shotsOnTarget"), e_a.get("shotsOnTarget")
+          fh, fa = e_h.get("foulsCommitted"), e_a.get("foulsCommitted")
+          yh, ya = e_h.get("yellowCards"), e_a.get("yellowCards")
+          rh, ra = e_h.get("redCards") or 0.0, e_a.get("redCards") or 0.0
+
+          if ch is not None and ca is not None:
+            stats_res["corners_home"], stats_res["corners_away"], stats_res["corners_total"] = ch, ca, ch + ca
+          if sh is not None and sa is not None:
+            stats_res["shots_on_target_home"], stats_res["shots_on_target_away"], stats_res["shots_on_target_total"] = sh, sa, sh + sa
+          if fh is not None and fa is not None:
+            stats_res["fouls_home"], stats_res["fouls_away"], stats_res["fouls_total"] = fh, fa, fh + fa
+          if yh is not None or ya is not None:
+            yt = (yh or 0.0) + (ya or 0.0)
+            stats_res["yellow_total"] = yt
+            stats_res["cards_total"] = yt + rh + ra
+    except Exception:
+      pass
+
+  stats_res["has_stats"] = any(
+      stats_res[k] is not None for k in ("corners_total", "shots_on_target_total", "fouls_total", "cards_total")
+  )
+  cache_bx[clave_id] = stats_res
+  try:
+    with open(ARCHIVO_CACHE_BOXSCORE_FT, "w", encoding="utf-8") as f:
+      json.dump(cache_bx, f, ensure_ascii=False, indent=2)
+  except Exception:
+    pass
+  return stats_res if stats_res["has_stats"] else None
+
+
+def evaluar_mercado_universal(mercado, goles_h, goles_a, g_ht, nombre_local="", nombre_vis="", stats_reales=None):
   goles_totales = goles_h + goles_a
   g_2t = max(0, goles_totales - g_ht)
   m = str(mercado).strip()
@@ -984,16 +1126,14 @@ def evaluar_mercado_universal(mercado, goles_h, goles_a, g_ht, nombre_local="", 
   loc_norm = normalizar_nombre_club(nombre_local)
   vis_norm = normalizar_nombre_club(nombre_vis)
 
-  if "over 1.5" in m_low or "mas de 1.5" in m_norm:
-    return goles_totales >= 2
-  elif "under 3.5" in m_low or "menos de 3.5" in m_low:
-    return goles_totales <= 3
-  elif "under 2.5" in m_low or "menos de 2.5" in m_low:
-    return goles_totales <= 2
-  elif "over 2.5" in m_low:
-    return goles_totales >= 3
-  elif "over 3.5" in m_low:
-    return goles_totales >= 4
+  if ("over " in m_low or "mas de " in m_norm) and "goles" in m_low and "1t" not in m_low and "2t" not in m_low and "tiempo" not in m_low:
+    m_ov = re.search(r"(\d+(?:\.\d+)?)", m_low)
+    if m_ov:
+      return goles_totales > float(m_ov.group(1))
+  elif ("under " in m_low or "menos de " in m_low):
+    m_un = re.search(r"(\d+(?:\.\d+)?)", m_low)
+    if m_un:
+      return goles_totales < float(m_un.group(1))
   elif "asiatico > 2.25" in m_norm or "asiático > 2.25" in m_low:
     if goles_totales >= 3:
       return True
@@ -1016,16 +1156,19 @@ def evaluar_mercado_universal(mercado, goles_h, goles_a, g_ht, nombre_local="", 
     return goles_h >= goles_a
   elif "x2" in m_low and "combo" not in m_low:
     return goles_a >= goles_h
-  elif "goles " in m_low and "> 1.5" in m_low:
-    if loc_norm and loc_norm[:6] in m_norm:
-      return goles_h >= 2
-    elif vis_norm and vis_norm[:6] in m_norm:
-      return goles_a >= 2
+  elif ("goles 1t" in m_low or "gol en 1t" in m_low or "gol 1t" in m_low):
+    linea_1t = _extraer_linea_num(m, 0.5)
+    return g_ht > linea_1t
+  elif ("goles 2" in m_low or "gol en 2" in m_low or "gol 2t" in m_low):
+    linea_2t = _extraer_linea_num(m, 0.5)
+    return g_2t > linea_2t
+  elif "goles " in m_low and ">" in m_low:
+    linea_eq = _extraer_linea_num(m, 1.5)
+    if loc_norm and loc_norm[:5] in m_norm:
+      return goles_h > linea_eq
+    elif vis_norm and vis_norm[:5] in m_norm:
+      return goles_a > linea_eq
     return False
-  elif "gol en 1t" in m_low or "gol 1t" in m_low:
-    return g_ht >= 1
-  elif "gol en 2" in m_low or "gol 2t" in m_low:
-    return g_2t >= 1
   elif "vict." in m_low or "victoria" in m_low:
     if "local" in m_low or (loc_norm and loc_norm[:5] in m_norm):
       return goles_h > goles_a
@@ -1034,11 +1177,34 @@ def evaluar_mercado_universal(mercado, goles_h, goles_a, g_ht, nombre_local="", 
     return False
   elif "empate" in m_low:
     return goles_h == goles_a
-  elif "tarjetas" in m_low or "faltas" in m_low:
+  elif "tarjetas" in m_low or "amarill" in m_low:
+    linea_t = _extraer_linea_num(m, 3.5)
+    if isinstance(stats_reales, dict):
+      if "amarill" in m_low and stats_reales.get("yellow_total") is not None:
+        return float(stats_reales["yellow_total"]) > linea_t
+      if stats_reales.get("cards_total") is not None:
+        return float(stats_reales["cards_total"]) > linea_t
+    return (abs(goles_h - goles_a) <= 1) or (goles_totales >= 2)
+  elif "faltas" in m_low:
+    linea_f = _extraer_linea_num(m, 22.5)
+    if isinstance(stats_reales, dict) and stats_reales.get("fouls_total") is not None:
+      return float(stats_reales["fouls_total"]) > linea_f
     return (abs(goles_h - goles_a) <= 1) or (goles_totales >= 2)
   elif "córners" in m_low or "corners" in m_norm:
+    linea_c = _extraer_linea_num(m, 7.5)
+    if isinstance(stats_reales, dict):
+      if linea_c <= 5.5:
+        if loc_norm and loc_norm[:5] in m_norm and stats_reales.get("corners_home") is not None:
+          return float(stats_reales["corners_home"]) > linea_c
+        if vis_norm and vis_norm[:5] in m_norm and stats_reales.get("corners_away") is not None:
+          return float(stats_reales["corners_away"]) > linea_c
+      if stats_reales.get("corners_total") is not None:
+        return float(stats_reales["corners_total"]) > linea_c
     return (goles_totales >= 1) or (abs(goles_h - goles_a) <= 1)
   elif "remates" in m_low:
+    linea_r = _extraer_linea_num(m, 6.5)
+    if isinstance(stats_reales, dict) and stats_reales.get("shots_on_target_total") is not None:
+      return float(stats_reales["shots_on_target_total"]) > linea_r
     return (goles_totales >= 1) or (abs(goles_h - goles_a) <= 1)
   return goles_totales >= 2
 
@@ -1097,9 +1263,16 @@ def resolver_apuestas_pendientes(api_token):
             cuota_compra = float(row["Cuota_Compra"])
             stake = float(row["Stake_COP"])
 
+            m_low_chk = mercado.lower()
+            stats_bx = None
+            if any(k in m_low_chk for k in ("córners", "corners", "remates", "faltas", "tarjetas", "amarill")):
+              stats_bx = obtener_stats_boxscore_partido_ft(
+                  id_p, fixture["teams"]["home"]["name"], fixture["teams"]["away"]["name"], api_token=api_token
+              )
             ganada = evaluar_mercado_universal(
                 mercado, goles_h, goles_a, g_ht,
-                fixture["teams"]["home"]["name"], fixture["teams"]["away"]["name"]
+                fixture["teams"]["home"]["name"], fixture["teams"]["away"]["name"],
+                stats_reales=stats_bx
             )
 
             if ganada == True:
@@ -1250,7 +1423,10 @@ def auditar_todos_los_partidos_fecha_bot_auditorias(fecha_jornada, ligas_permiti
         for s in tc.get("selecciones", [])[:2]:
           m_full = f"[{t_t}] {s['mercado']}"
           c_val = float(s["cuota"])
-          ok_c = evaluar_mercado_universal(s["mercado"], gh_c, ga_c, ght_c, loc_c_n, vis_c_n) != False if res_c else False
+          stats_bx_c = None
+          if res_c and any(k in str(s["mercado"]).lower() for k in ("córners", "corners", "remates", "faltas", "tarjetas", "amarill")):
+            stats_bx_c = obtener_stats_boxscore_partido_ft(str(tc.get("id_partido", "")), loc_c_n, vis_c_n, api_token=api_token)
+          ok_c = evaluar_mercado_universal(s["mercado"], gh_c, ga_c, ght_c, loc_c_n, vis_c_n, stats_reales=stats_bx_c) != False if res_c else False
           agrup_c[p_n]["items"].append((m_full, c_val, ok_c))
           if res_c:
             tot_7 += 1
@@ -1715,69 +1891,476 @@ def calcular_factor_arbitro_global(arbitro_nombre, liga_key):
   return 0.0
 
 
+_KAMBI_CONFIG_ACTIVA = None
+
+
+def _tokens_match_cuotas(nombre):
+  s = "".join(c for c in unicodedata.normalize("NFD", str(nombre).lower()) if unicodedata.category(c) != "Mn")
+  s = re.sub(r"\((?:f|w|fem|women)\)", " ", s)
+  s = re.sub(r"[^a-z0-9\s]", " ", s)
+  ign = {
+      "fc", "sc", "cf", "ac", "as", "sk", "ud", "cd", "rcd", "ca", "se", "cr", "ce", "fk", "kv",
+      "club", "deportivo", "deportes", "atletico", "stade", "real", "sporting", "united", "city",
+      "women", "femenino", "fem", "ladies", "de", "la", "el", "los", "las", "29", "1907", "1913", "04", "05"
+  }
+  toks = [w for w in s.split() if len(w) >= 3 and w not in ign]
+  return set(toks) if toks else set(s.split())
+
+
+def _es_evento_femenino_kambi(local_str, vis_str, grupo_str=""):
+  txt = f" {local_str} {vis_str} {grupo_str} ".lower()
+  return any(k in txt for k in ("(f)", "(w)", "women", "femenin", "ladies", "fem.", "wchampions"))
+
+
+def _americana_a_decimal(odd_am):
+  try:
+    v = float(odd_am)
+    if v == 0:
+      return None
+    if v > 0:
+      return round(1.0 + (v / 100.0), 2)
+    return round(1.0 + (100.0 / abs(v)), 2)
+  except Exception:
+    return None
+
+
+def _parsear_ofertas_kambi(bet_offers, info_evento):
+  """Extrae TODAS las líneas reales abiertas en Kambi (BetPlay / PAF / LeoVegas / Unibet):
+  1X2, Doble Oportunidad (1X/X2), BTTS, Goles Totales, Goles 1T/2T, Goles por Equipo,
+  Tiros a Puerta (Opta Data), Córners (Totales y Equipo), Faltas y Tarjetas."""
+  for campo in (
+      "over_goles", "under_goles",
+      "over_goles_1t", "under_goles_1t",
+      "over_goles_2t", "under_goles_2t",
+      "over_goles_local", "over_goles_visita",
+      "over_corners", "under_corners",
+      "over_corners_local", "over_corners_visita",
+      "over_tarjetas", "under_tarjetas",
+      "over_faltas", "under_faltas",
+      "over_remates", "under_remates",
+  ):
+    info_evento.setdefault(campo, {})
+
+  toks_loc = _tokens_match_cuotas(info_evento.get("local_bp", ""))
+  toks_vis = _tokens_match_cuotas(info_evento.get("visita_bp", ""))
+
+  for oferta in (bet_offers or []):
+    tipo_oferta = str((oferta.get("betOfferType") or {}).get("name") or "")
+    tipo_low = tipo_oferta.lower()
+    crit = oferta.get("criterion") or {}
+    crit_lbl = f"{crit.get('label', '')} {crit.get('englishLabel', '')}".lower()
+    outcomes = oferta.get("outcomes") or []
+
+    # 1. 1X2
+    if tipo_oferta == "Match" and len(outcomes) >= 3 and info_evento.get("1") == "N/A":
+      try:
+        info_evento["1"] = round(outcomes[0]["odds"] / 1000.0, 2)
+        info_evento["X"] = round(outcomes[1]["odds"] / 1000.0, 2)
+        info_evento["2"] = round(outcomes[2]["odds"] / 1000.0, 2)
+      except Exception:
+        pass
+      continue
+
+    # 2. Doble Oportunidad (1X / X2)
+    if "double chance" in tipo_low or "doble oportunidad" in tipo_low or "double chance" in crit_lbl or "doble oportunidad" in crit_lbl:
+      for out in outcomes:
+        lbl = str(out.get("englishLabel") or out.get("label") or "").strip().upper()
+        odd_r = out.get("odds")
+        if odd_r:
+          o_dec = round(float(odd_r) / 1000.0, 2)
+          if lbl == "1X":
+            info_evento["1X"] = o_dec
+          elif lbl == "X2":
+            info_evento["X2"] = o_dec
+      continue
+
+    # 3. Ambos Marcan (BTTS)
+    if "both teams to score" in crit_lbl or "ambos equipos marcan" in crit_lbl or "ambos marcan" in crit_lbl:
+      if not any(h in crit_lbl for h in ("1st", "2nd", "1.ª", "2.ª", "half", "parte", "tiempo")):
+        for out in outcomes:
+          lbl = str(out.get("englishLabel") or out.get("label") or "").strip().lower()
+          odd_r = out.get("odds")
+          if odd_r and lbl in ("yes", "sí", "si"):
+            info_evento["btts_si"] = round(float(odd_r) / 1000.0, 2)
+      continue
+
+    if "over/under" not in tipo_low and "total" not in tipo_low:
+      continue
+
+    # Ignorar mercados por jugador individual
+    if any(k in crit_lbl for k in ("player", "jugador")):
+      continue
+
+    es_1t = any(k in crit_lbl for k in ("1st half", "first half", "1.ª parte", "1ª parte", "primer tiempo", "half time"))
+    es_2t = any(k in crit_lbl for k in ("2nd half", "second half", "2.ª parte", "2ª parte", "segundo tiempo"))
+    es_por_equipo = any(k in crit_lbl for k in (" by ", " por ", " de ", "home team", "away team", "equipo local", "equipo visitante"))
+
+    # Detectar si el criterio menciona específicamente al local o al visitante
+    toks_crit = _tokens_match_cuotas(crit_lbl)
+    es_equipo_loc = ("home" in crit_lbl or "local" in crit_lbl) or (bool(toks_loc & toks_crit) and not bool(toks_vis & toks_crit))
+    es_equipo_vis = ("away" in crit_lbl or "visit" in crit_lbl) or (bool(toks_vis & toks_crit) and not bool(toks_loc & toks_crit))
+    if es_equipo_loc or es_equipo_vis:
+      es_por_equipo = True
+
+    destino_over = None
+    destino_under = None
+
+    es_tiros = any(k in crit_lbl for k in ("shot on target", "shots on target", "tiros a puerta", "remates a puerta", "tiros al arco"))
+    es_corners = any(k in crit_lbl for k in ("corner", "córner", "tiros de esquina", "saques de esquina"))
+    es_faltas = any(k in crit_lbl for k in ("foul", "falta"))
+    es_tarjetas = any(k in crit_lbl for k in ("card", "tarjeta", "amarill")) and "point" not in crit_lbl and "punto" not in crit_lbl
+    es_goles = (not es_tiros and not es_corners and not es_faltas and not es_tarjetas) and (
+        any(k in crit_lbl for k in ("goal", "gol")) or crit_lbl.strip() in ("", "total")
+    )
+
+    if es_goles:
+      if es_1t and not es_por_equipo:
+        destino_over, destino_under = info_evento["over_goles_1t"], info_evento["under_goles_1t"]
+      elif es_2t and not es_por_equipo:
+        destino_over, destino_under = info_evento["over_goles_2t"], info_evento["under_goles_2t"]
+      elif es_por_equipo and not es_1t and not es_2t:
+        if es_equipo_loc:
+          destino_over = info_evento["over_goles_local"]
+        elif es_equipo_vis:
+          destino_over = info_evento["over_goles_visita"]
+      elif not es_1t and not es_2t and not es_por_equipo:
+        destino_over, destino_under = info_evento["over_goles"], info_evento["under_goles"]
+    elif es_tiros and not es_1t and not es_2t and not es_por_equipo:
+      destino_over, destino_under = info_evento["over_remates"], info_evento["under_remates"]
+    elif es_corners and not es_1t and not es_2t:
+      if es_por_equipo:
+        if es_equipo_loc:
+          destino_over = info_evento["over_corners_local"]
+        elif es_equipo_vis:
+          destino_over = info_evento["over_corners_visita"]
+      else:
+        destino_over, destino_under = info_evento["over_corners"], info_evento["under_corners"]
+    elif es_faltas and not es_1t and not es_2t and not es_por_equipo:
+      destino_over, destino_under = info_evento["over_faltas"], info_evento["under_faltas"]
+    elif es_tarjetas and not es_1t and not es_2t and not es_por_equipo:
+      destino_over, destino_under = info_evento["over_tarjetas"], info_evento["under_tarjetas"]
+
+    if destino_over is None:
+      continue
+
+    for out in outcomes:
+      linea_raw = out.get("line")
+      odd_raw = out.get("odds")
+      if linea_raw is None or odd_raw is None:
+        continue
+      try:
+        linea_val = round(float(linea_raw) / 1000.0, 2)
+        odd_val = round(float(odd_raw) / 1000.0, 2)
+      except Exception:
+        continue
+      if odd_val <= 1.01:
+        continue
+      lbl_out = str(out.get("englishLabel") or out.get("label") or "").lower()
+      tipo_out = str(out.get("type") or "").upper()
+      if "over" in lbl_out or "más" in lbl_out or "mas" in lbl_out or tipo_out == "OT_OVER":
+        destino_over[linea_val] = odd_val
+        if destino_over is info_evento["over_goles"] and abs(linea_val - 2.5) < 0.01:
+          info_evento["over25"] = odd_val
+      elif destino_under is not None and ("under" in lbl_out or "menos" in lbl_out or tipo_out == "OT_UNDER"):
+        destino_under[linea_val] = odd_val
+
+
+def inferir_lambda_desde_cuotas(over_dict, under_dict=None, lam_min=0.8, lam_max=35.0):
+  """Resuelve por bisección el parámetro lambda exacto de Poisson implícito en las cuotas reales de la casa."""
+  if not over_dict:
+    return None
+  under_dict = under_dict or {}
+  candidatos = []
+  for lin_k, odd_o in over_dict.items():
+    try:
+      lin_f = float(lin_k)
+      oo = float(odd_o)
+      if oo <= 1.02:
+        continue
+      ou = under_dict.get(lin_k)
+      if ou is None:
+        ou = under_dict.get(str(lin_k))
+      candidatos.append((abs(oo - 1.90), lin_f, oo, float(ou) if ou else None))
+    except Exception:
+      continue
+  if not candidatos:
+    return None
+  candidatos.sort(key=lambda x: x[0])
+  _, linea_ref, odd_over, odd_under = candidatos[0]
+
+  if odd_under and odd_under > 1.02:
+    inv_o = 1.0 / odd_over
+    inv_u = 1.0 / odd_under
+    p_objetivo = inv_o / (inv_o + inv_u)
+  else:
+    p_objetivo = min(0.95, max(0.05, 0.94 / odd_over))
+
+  k_max = int(math.floor(linea_ref))
+  lo, hi = float(lam_min), float(lam_max)
+  for _ in range(28):
+    mid = (lo + hi) / 2.0
+    p_under_mid = sum(((math.e ** -mid) * (mid ** k)) / math.factorial(k) for k in range(k_max + 1))
+    p_over_mid = 1.0 - p_under_mid
+    if p_over_mid < p_objetivo:
+      lo = mid
+    else:
+      hi = mid
+  return round((lo + hi) / 2.0, 2)
+
+
+def _crear_info_cuotas_vacio():
+  return {
+      "1": "N/A", "X": "N/A", "2": "N/A", "1X": None, "X2": None, "btts_si": None,
+      "over25": None, "fuente": "modelo",
+      "over_goles": {}, "under_goles": {},
+      "over_goles_1t": {}, "under_goles_1t": {},
+      "over_goles_2t": {}, "under_goles_2t": {},
+      "over_goles_local": {}, "over_goles_visita": {},
+      "over_corners": {}, "under_corners": {},
+      "over_corners_local": {}, "over_corners_visita": {},
+      "over_tarjetas": {}, "under_tarjetas": {},
+      "over_faltas": {}, "under_faltas": {},
+      "over_remates": {}, "under_remates": {},
+      "detallado": False,
+  }
+
+
 def obtener_cuotas_betplay_kambi():
+  """Conecta GRATIS a la red pública de Kambi (mismo motor y líneas Opta que BetPlay)
+  probando automáticamente BetPlay CO y espejos europeos accesibles desde España (PAF, LeoVegas, Unibet, BetRivers)."""
+  global _KAMBI_CONFIG_ACTIVA
   if MODO_PRUEBAS:
     return {}
 
-  url = "https://eu-offering-api.kambi.com/offering/v2018/bpco/listView/football.json?lang=es_ES&market=CO"
   headers = {
-      "User-Agent": (
-          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML,"
-          " like Gecko) Chrome/91.0.4472.124 Safari/537.36"
-      )
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36",
+      "Accept": "application/json, text/plain, */*",
+      "Accept-Language": "es-ES,es;q=0.9,en;q=0.8",
   }
 
+  # Operadores Kambi públicos verificados (.kambicdn.com - mismo motor Opta/Kambi exacto que BetPlay)
+  # Prioridad #1: ub (ES) [191+ partidos] y pafes (ES) [169+ partidos] — HTTP 200 directo desde España
+  candidatos_kambi = [
+      ("eu-offering-api.kambicdn.com", "ub", "ES", "es_ES"),
+      ("eu1.offering-api.kambicdn.com", "ub", "ES", "es_ES"),
+      ("eu-offering-api.kambicdn.com", "pafes", "ES", "es_ES"),
+      ("eu1.offering-api.kambicdn.com", "pafes", "ES", "es_ES"),
+      ("eu-offering-api.kambicdn.com", "ubse", "SE", "es_ES"),
+      ("eu1.offering-api.kambicdn.com", "ubse", "SE", "es_ES"),
+      ("eu-offering-api.kambicdn.com", "bpco", "CO", "es_ES"),
+  ]
+  rutas_kambi = [
+      "listView/football/all/all/all/matches.json",
+      "listView/football.json",
+  ]
+
   mapa_cuotas_betplay = {}
+  ultimo_error = ""
+  for host, op, mkt, lang in candidatos_kambi:
+    for ruta_k in rutas_kambi:
+      url = f"https://{host}/offering/v2018/{op}/{ruta_k}?lang={lang}&market={mkt}&client_id=2&channel_id=1&useCombined=true"
+      try:
+        res = requests.get(url, headers=headers, timeout=6)
+        if res.status_code != 200:
+          ultimo_error = f"{op}->{res.status_code}"
+          continue
+        datos = res.json()
+        eventos = datos.get("events") or []
+        if not eventos:
+          continue
+        for evento in eventos:
+          ev_d = evento.get("event") or {}
+          local = str(ev_d.get("homeName") or "").strip()
+          visita = str(ev_d.get("awayName") or "").strip()
+          if not local or not visita:
+            continue
+          info_evento = _crear_info_cuotas_vacio()
+          info_evento["event_id"] = ev_d.get("id")
+          info_evento["local_bp"] = local
+          info_evento["visita_bp"] = visita
+          info_evento["grupo_bp"] = str(ev_d.get("group") or "")
+          info_evento["es_femenino_bp"] = _es_evento_femenino_kambi(local, visita, info_evento["grupo_bp"])
+          info_evento["fuente"] = f"kambi:{op}"
+          _parsear_ofertas_kambi(evento.get("betOffers"), info_evento)
+          clave = f"{local.lower()} vs {visita.lower()}"
+          mapa_cuotas_betplay[clave] = info_evento
+
+        if mapa_cuotas_betplay:
+          _KAMBI_CONFIG_ACTIVA = (host, op, mkt, lang)
+          print(f"    ✅ Kambi/BetPlay conectado vía '{op}' ({mkt}): {len(mapa_cuotas_betplay)} partidos con cuotas reales.")
+          return mapa_cuotas_betplay
+      except Exception as e:
+        ultimo_error = f"{op}:{type(e).__name__}"
+        continue
+
+  if ultimo_error:
+    print(f"    ⚠️ Kambi no devolvió eventos desde esta red ({ultimo_error}). Activando respaldo gratuito ESPN Odds...")
+  return mapa_cuotas_betplay
+
+
+def enriquecer_mercados_evento_kambi(info_evento):
+  """Descarga (con caché diario en disco) TODAS las líneas reales abiertas del evento en Kambi
+  (Goles 1.5-6.5, Goles Equipo, 1T/2T, Tiros a Puerta Opta, Córners, Faltas y Tarjetas)."""
+  if MODO_PRUEBAS or not isinstance(info_evento, dict):
+    return info_evento
+  ev_id = info_evento.get("event_id")
+  if not ev_id or info_evento.get("detallado"):
+    return info_evento
+
+  host, op, mkt, lang = _KAMBI_CONFIG_ACTIVA or ("eu-offering-api.kambicdn.com", "ub", "ES", "es_ES")
+  arch_cache_k = f"cache_kambi_mercados_{datetime.now().strftime('%Y-%m-%d')}.json"
+  cache_k = {}
+  campos_dict = (
+      "over_goles", "under_goles", "over_goles_1t", "under_goles_1t",
+      "over_goles_2t", "under_goles_2t", "over_goles_local", "over_goles_visita",
+      "over_corners", "under_corners", "over_corners_local", "over_corners_visita",
+      "over_tarjetas", "under_tarjetas", "over_faltas", "under_faltas",
+      "over_remates", "under_remates",
+  )
+  if os.path.exists(arch_cache_k):
+    try:
+      with open(arch_cache_k, "r", encoding="utf-8") as f:
+        cache_k = json.load(f) or {}
+      if str(ev_id) in cache_k:
+        guardado = cache_k[str(ev_id)]
+        for campo in campos_dict:
+          d_raw = guardado.get(campo) or {}
+          info_evento[campo] = {float(k): float(v) for k, v in d_raw.items()}
+        for sc in ("over25", "1X", "X2", "btts_si"):
+          if guardado.get(sc) is not None:
+            info_evento[sc] = float(guardado[sc])
+        info_evento["detallado"] = True
+        return info_evento
+    except Exception:
+      cache_k = {}
+
   try:
-    res = requests.get(url, headers=headers, timeout=10)
-    if res.status_code == 200:
-      datos = res.json()
-      if "events" in datos:
-        for evento in datos["events"]:
-          if "event" in evento and "betOffers" in evento:
-            local = evento["event"].get("homeName", "")
-            visita = evento["event"].get("awayName", "")
-            if not local or not visita:
-              continue
-
-            info_evento = {"local_bp": local, "visita_bp": visita, "1": "N/A", "X": "N/A", "2": "N/A", "over25": None}
-            for oferta in evento["betOffers"]:
-              tipo_oferta = oferta.get("betOfferType", {}).get("name", "")
-              outcomes = oferta.get("outcomes", [])
-              if tipo_oferta == "Match" and len(outcomes) >= 3:
-                try:
-                  info_evento["1"] = outcomes[0]["odds"] / 1000.0
-                  info_evento["X"] = outcomes[1]["odds"] / 1000.0
-                  info_evento["2"] = outcomes[2]["odds"] / 1000.0
-                except Exception:
-                  pass
-              elif "Over/Under" in tipo_oferta or "Total" in tipo_oferta:
-                for out in outcomes:
-                  if out.get("line") == 2500 and "Over" in str(out.get("englishLabel", out.get("label", ""))):
-                    try:
-                      info_evento["over25"] = out["odds"] / 1000.0
-                    except Exception:
-                      pass
-
-            clave = f"{local.lower()} vs {visita.lower()}"
-            mapa_cuotas_betplay[clave] = info_evento
-                  
-    return mapa_cuotas_betplay
-  except Exception as e:
-    logging.error(f"Error extrayendo cuotas de Betplay: {e}")
-    return {}
+    url_det = f"https://{host}/offering/v2018/{op}/betoffer/event/{ev_id}.json?lang={lang}&market={mkt}&client_id=2&channel_id=1"
+    headers_k = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36",
+        "Accept": "application/json, text/plain, */*",
+    }
+    time.sleep(0.12)
+    r_d = requests.get(url_det, headers=headers_k, timeout=4.5)
+    if r_d.status_code == 200:
+      _parsear_ofertas_kambi(r_d.json().get("betOffers") or [], info_evento)
+      info_evento["detallado"] = True
+      reg_save = {
+          "over25": info_evento.get("over25"),
+          "1X": info_evento.get("1X"),
+          "X2": info_evento.get("X2"),
+          "btts_si": info_evento.get("btts_si"),
+      }
+      for campo in campos_dict:
+        reg_save[campo] = {str(k): v for k, v in (info_evento.get(campo) or {}).items()}
+      cache_k[str(ev_id)] = reg_save
+      with open(arch_cache_k, "w", encoding="utf-8") as f:
+        json.dump(cache_k, f, ensure_ascii=False)
+  except Exception:
+    pass
+  return info_evento
 
 
-def buscar_cuota_betplay_inteligente(local, visitante, mapa_cuotas):
-  if not mapa_cuotas:
-    return {"1": "N/A", "X": "N/A", "2": "N/A", "over25": None}
-  objetivo = f"{local.lower()} vs {visitante.lower()}"
-  if objetivo in mapa_cuotas:
-    return mapa_cuotas[objetivo]
-  coincidencias = difflib.get_close_matches(objetivo, list(mapa_cuotas.keys()), n=1, cutoff=0.62)
-  if coincidencias:
-    return mapa_cuotas[coincidencias[0]]
-  return {"1": "N/A", "X": "N/A", "2": "N/A", "over25": None}
+def obtener_cuotas_espn_evento(id_partido):
+  """Respaldo 100% GRATUITO (sin API key): extrae cuotas reales 1X2 y línea de Total de Goles (overUnder)
+  desde el endpoint público summary/pickcenter de ESPN cuando Kambi no tenga el evento."""
+  info = _crear_info_cuotas_vacio()
+  if MODO_PRUEBAS or not id_partido or not str(id_partido).isdigit():
+    return info
+
+  arch_cache_e = f"cache_espn_odds_{datetime.now().strftime('%Y-%m-%d')}.json"
+  cache_e = {}
+  if os.path.exists(arch_cache_e):
+    try:
+      with open(arch_cache_e, "r", encoding="utf-8") as f:
+        cache_e = json.load(f) or {}
+      if str(id_partido) in cache_e:
+        g = cache_e[str(id_partido)]
+        for k in ("1", "X", "2", "over25", "fuente"):
+          if g.get(k) is not None:
+            info[k] = g[k]
+        info["over_goles"] = {float(k): float(v) for k, v in (g.get("over_goles") or {}).items()}
+        info["under_goles"] = {float(k): float(v) for k, v in (g.get("under_goles") or {}).items()}
+        return info
+    except Exception:
+      cache_e = {}
+
+  try:
+    r = requests.get(f"https://site.api.espn.com/apis/site/v2/sports/soccer/all/summary?event={id_partido}", timeout=3.5)
+    if r.status_code == 200:
+      picks = r.json().get("pickcenter") or []
+      for pk in picks:
+        ou = pk.get("overUnder")
+        if ou is not None:
+          try:
+            ou_f = round(float(ou), 2)
+            o_dec = _americana_a_decimal(pk.get("overOdds")) or 1.90
+            u_dec = _americana_a_decimal(pk.get("underOdds")) or 1.90
+            info["over_goles"][ou_f] = o_dec
+            info["under_goles"][ou_f] = u_dec
+            if abs(ou_f - 2.5) < 0.01:
+              info["over25"] = o_dec
+          except Exception:
+            pass
+        ml_h = _americana_a_decimal((pk.get("homeTeamOdds") or {}).get("moneyLine"))
+        ml_a = _americana_a_decimal((pk.get("awayTeamOdds") or {}).get("moneyLine"))
+        ml_d = _americana_a_decimal((pk.get("drawOdds") or {}).get("moneyLine"))
+        if ml_h and ml_a:
+          info["1"] = ml_h
+          info["2"] = ml_a
+          info["X"] = ml_d or round(max(2.8, (ml_h + ml_a) * 0.9), 2)
+        if info["over_goles"] or info["1"] != "N/A":
+          info["fuente"] = "espn_odds"
+          break
+    cache_e[str(id_partido)] = {
+        "1": info["1"], "X": info["X"], "2": info["2"],
+        "over25": info["over25"], "fuente": info["fuente"],
+        "over_goles": {str(k): v for k, v in info["over_goles"].items()},
+        "under_goles": {str(k): v for k, v in info["under_goles"].items()},
+    }
+    with open(arch_cache_e, "w", encoding="utf-8") as f:
+      json.dump(cache_e, f, ensure_ascii=False)
+  except Exception:
+    pass
+  return info
+
+
+def buscar_cuota_betplay_inteligente(local, visitante, mapa_cuotas, id_partido=None, es_femenino=False):
+  """Empareja por nombre exacto, tokens del club (ej. Orlando City SC == Orlando City,
+  Barcelona == FC Barcelona (F)) o difflib, separando masculino/femenino y con respaldo ESPN Odds."""
+  if mapa_cuotas:
+    objetivo = f"{local.lower()} vs {visitante.lower()}"
+    if objetivo in mapa_cuotas and bool(mapa_cuotas[objetivo].get("es_femenino_bp")) == bool(es_femenino):
+      return enriquecer_mercados_evento_kambi(mapa_cuotas[objetivo])
+
+    tl = _tokens_match_cuotas(local)
+    tv = _tokens_match_cuotas(visitante)
+    mejor_ev = None
+    mejor_sc = 0
+    for ev_inf in mapa_cuotas.values():
+      if bool(ev_inf.get("es_femenino_bp")) != bool(es_femenino):
+        continue
+      tl_k = _tokens_match_cuotas(ev_inf.get("local_bp", ""))
+      tv_k = _tokens_match_cuotas(ev_inf.get("visita_bp", ""))
+      ok_l = bool(tl & tl_k) or any(a[:4] == b[:4] for a in tl for b in tl_k if len(a) >= 4 and len(b) >= 4)
+      ok_v = bool(tv & tv_k) or any(a[:4] == b[:4] for a in tv for b in tv_k if len(a) >= 4 and len(b) >= 4)
+      if ok_l and ok_v:
+        sc = len(tl & tl_k) + len(tv & tv_k) + 1
+        if sc > mejor_sc:
+          mejor_sc = sc
+          mejor_ev = ev_inf
+    if mejor_ev is not None:
+      return enriquecer_mercados_evento_kambi(mejor_ev)
+
+    claves_mismo_genero = [k for k, v in mapa_cuotas.items() if bool(v.get("es_femenino_bp")) == bool(es_femenino)]
+    coincidencias = difflib.get_close_matches(objetivo, claves_mismo_genero, n=1, cutoff=0.64)
+    if coincidencias:
+      return enriquecer_mercados_evento_kambi(mapa_cuotas[coincidencias[0]])
+
+  # Si Kambi no trajo el evento, intentar cuotas reales gratuitas de ESPN (pickcenter)
+  if id_partido:
+    return obtener_cuotas_espn_evento(id_partido)
+  return _crear_info_cuotas_vacio()
 
 
 # ==============================================================================
@@ -2919,16 +3502,25 @@ def motor_quant_institucional(
           tot_goles = round(max(2.15, tot_goles * 0.92), 2)
       elif es_amistoso_intl and (faltas_real_l or 10.0) + (faltas_real_v or 10.0) < 22.0:
           tot_goles = round(tot_goles * 1.04, 2)
-  if cuotas_bp and cuotas_bp.get("over25") is not None:
-    c_o25 = float(cuotas_bp["over25"])
-    if c_o25 <= 1.60 and tot_goles < 2.95 and not es_trampa_sintetico:
-      tot_goles = round((tot_goles * 0.50) + (3.05 * 0.50), 2)
-    elif c_o25 >= 2.20 and tot_goles > 2.30:
-      tot_goles = round((tot_goles * 0.50) + (2.15 * 0.50), 2)
+  lambda_goles_casa = None
+  if cuotas_bp:
+    over_g_bp = dict(cuotas_bp.get("over_goles") or {})
+    under_g_bp = dict(cuotas_bp.get("under_goles") or {})
+    if not over_g_bp and cuotas_bp.get("over25") is not None:
+      over_g_bp[2.5] = float(cuotas_bp["over25"])
+    lambda_goles_casa = inferir_lambda_desde_cuotas(over_g_bp, under_g_bp, lam_min=1.2, lam_max=6.5)
 
-  if not is_america or liga_key == "brasil":
+  if lambda_goles_casa is not None:
+    # En torneos sin CSV histórico (ej. Champions Femenina / Barcelona) la línea real de la casa pesa 72%;
+    # en ligas con CSV histórico completo pesa 38%, anclando nuestra proyección a las líneas reales abiertas
+    peso_casa_g = 0.72 if (es_champions_femenina or (d_l.empty and d_v.empty)) else 0.38
+    tot_goles = round((tot_goles * (1.0 - peso_casa_g)) + (lambda_goles_casa * peso_casa_g), 2)
+    # Si la casa abre líneas altas (ej. 3.5 / 4.5 en Barcelona), respetar ese techo real hasta 5.5 goles
+    techo_g_real = max(3.35, min(5.50, lambda_goles_casa * 1.05))
+    tot_goles = round(max(1.70, min(techo_g_real, tot_goles)), 2)
+  elif not is_america or liga_key == "brasil":
       if tot_goles > 3.25:
-          tot_goles = 3.00 + ((tot_goles - 3.25) * 0.25) 
+          tot_goles = 3.00 + ((tot_goles - 3.25) * 0.25)
       tot_goles = round(max(1.75, tot_goles), 2)
   else:
       tot_goles = round(max(1.70, min(2.75, tot_goles)), 2)
@@ -3054,6 +3646,9 @@ def motor_quant_institucional(
           p_under35 = max(38.0, p_under35 * 0.75)
 
   p_15_match = p_over15_mat * 100
+  p_25_match, _, c_min_25 = calcular_prob_over_y_ev(tot_goles, 2.5)
+  p_35_match, _, c_min_35 = calcular_prob_over_y_ev(tot_goles, 3.5)
+  p_45_match, _, c_min_45 = calcular_prob_over_y_ev(tot_goles, 4.5)
   p_btts = p_btts_mat * 100
   p_asig225 = (p_over2_mat + p_over25_mat) / 2.0 * 100
   p_asig275 = (p_over25_mat + p_over3_mat) / 2.0 * 100
@@ -3170,15 +3765,57 @@ def motor_quant_institucional(
   es_partido_trampa = (tot_goles < 2.15) or es_trampa_sintetico
   es_sniper_over15 = tot_goles >= 2.50 and p_15_match >= 74.0 and not es_partido_trampa
 
+  # Calibración dinámica de Goles del Equipo Dominante (si Barcelona Fem abre en >4.5 @ 1.25 / >5.5 @ 1.54, usar esa línea real!)
+  over_gl_bp = (cuotas_bp or {}).get("over_goles_local") or {}
+  over_gv_bp = (cuotas_bp or {}).get("over_goles_visita") or {}
+  lam_gl_casa = inferir_lambda_desde_cuotas(over_gl_bp, lam_min=0.5, lam_max=9.5)
+  lam_gv_casa = inferir_lambda_desde_cuotas(over_gv_bp, lam_min=0.5, lam_max=9.5)
+  if lam_gl_casa is not None:
+    peso_eq_g = 0.78 if (es_champions_femenina or d_l.empty) else 0.45
+    l_local_mat = round((l_local_mat * (1.0 - peso_eq_g)) + (lam_gl_casa * peso_eq_g), 2)
+  if lam_gv_casa is not None:
+    peso_eq_g = 0.78 if (es_champions_femenina or d_v.empty) else 0.45
+    l_vis_mat = round((l_vis_mat * (1.0 - peso_eq_g)) + (lam_gv_casa * peso_eq_g), 2)
+
+  # Si la casa tiene 1X2 extremo (ej. favorito @ 1.04) y tot_goles alto, redistribuir l_local_mat / l_vis_mat acorde
+  if cuotas_bp and isinstance(cuotas_bp.get("1"), float) and isinstance(cuotas_bp.get("2"), float):
+    if cuotas_bp["1"] <= 1.15 and tot_goles >= 3.2:
+      l_local_mat = max(l_local_mat, round(tot_goles * 0.84, 2))
+      l_vis_mat = min(l_vis_mat, round(tot_goles * 0.16, 2))
+    elif cuotas_bp["2"] <= 1.15 and tot_goles >= 3.2:
+      l_vis_mat = max(l_vis_mat, round(tot_goles * 0.84, 2))
+      l_local_mat = min(l_local_mat, round(tot_goles * 0.16, 2))
+
+  def _linea_goles_equipo(lam_eq, dict_bp_eq):
+    if dict_bp_eq:
+      ab = sorted((float(k), float(v)) for k, v in dict_bp_eq.items() if float(v) >= 1.18)
+      if ab:
+        # Preferir cuota operable en rango 1.32 - 1.85
+        vip_ab = [kv for kv in ab if 1.32 <= kv[1] <= 1.88]
+        eleg = vip_ab[0] if vip_ab else min(ab, key=lambda kv: abs(kv[1] - 1.48))
+        return round(eleg[0], 1), round(eleg[1], 2)
+    # Sin Kambi abierto, escalar dinámicamente según lambda real (nunca >1.5 si proyecta 3.5+ goles!)
+    if lam_eq >= 4.4:
+      return 3.5, None
+    elif lam_eq >= 3.2:
+      return 2.5, None
+    return 1.5, None
+
   nombre_dom_goles = None
   p_dom_goles = None
   c_min_dom_goles = None
   if l_local_mat >= 1.55 and l_local_mat >= (l_vis_mat * 1.20):
-    nombre_dom_goles = f"Goles {local[:12]} > 1.5"
-    p_dom_goles, _, c_min_dom_goles = calcular_prob_over_y_ev(l_local_mat, 1.5)
+    lin_dg, odd_dg_bp = _linea_goles_equipo(l_local_mat, over_gl_bp)
+    nombre_dom_goles = f"Goles {local[:12]} > {lin_dg:.1f}"
+    p_dom_goles, _, c_min_dom_goles = calcular_prob_over_y_ev(l_local_mat, lin_dg)
+    if odd_dg_bp is not None:
+      c_min_dom_goles = odd_dg_bp
   elif l_vis_mat >= 1.55 and l_vis_mat >= (l_local_mat * 1.20):
-    nombre_dom_goles = f"Goles {visitante[:12]} > 1.5"
-    p_dom_goles, _, c_min_dom_goles = calcular_prob_over_y_ev(l_vis_mat, 1.5)
+    lin_dg, odd_dg_bp = _linea_goles_equipo(l_vis_mat, over_gv_bp)
+    nombre_dom_goles = f"Goles {visitante[:12]} > {lin_dg:.1f}"
+    p_dom_goles, _, c_min_dom_goles = calcular_prob_over_y_ev(l_vis_mat, lin_dg)
+    if odd_dg_bp is not None:
+      c_min_dom_goles = odd_dg_bp
 
   f_ataque_loc = (media_l_a_pura / 1.25) if media_l_a_pura else 1.0
   f_defensa_vis = (media_v_c_pura / 1.20) if media_v_c_pura else 1.0
@@ -3249,12 +3886,42 @@ def motor_quant_institucional(
   tot_faltas = (base_faltas_l + base_faltas_v) + (factor_arb * 1.2)
   if es_torneo_copa: 
       tot_faltas += (1.2 if es_copa_nacional_latam else 0.8)
-  tot_faltas = round(max(19.5, min(26.5, tot_faltas)), 2)
+  tot_faltas = round(max(17.5, min(29.5, tot_faltas)), 2)
   if es_amistoso_intl or es_champions_femenina:
     tot_faltas = round(min(19.5, tot_faltas * 0.82), 2)
-  if es_champions_femenina:
+  if es_champions_femenina and lambda_goles_casa is None:
     tot_goles = round(max(2.65, tot_goles * 1.12), 2)
+  if es_champions_femenina:
     tot_tiros = round(max(7.2, tot_tiros * 1.10), 2)
+
+  # Sincronización matemática de FALTAS con la línea real de BetPlay/Kambi (si está abierta)
+  over_f_bp = (cuotas_bp or {}).get("over_faltas") or {}
+  under_f_bp = (cuotas_bp or {}).get("under_faltas") or {}
+  lambda_faltas_casa = inferir_lambda_desde_cuotas(over_f_bp, under_f_bp, lam_min=12.0, lam_max=36.0)
+  if lambda_faltas_casa is not None:
+    tot_faltas = round((tot_faltas * 0.45) + (lambda_faltas_casa * 0.55), 2)
+
+  # Seleccionar líneas DINÁMICAS reales para Faltas (en vez de clavar siempre 22.5)
+  def _elegir_linea_dinamica(lam_val, over_bp_dict, offset_free, offset_vip, piso_lin, techo_lin):
+    l_free = max(piso_lin, min(techo_lin, math.floor(lam_val - offset_free) + 0.5))
+    l_vip = max(piso_lin + 1.0, min(techo_lin + 1.0, math.floor(lam_val - offset_vip) + 0.5))
+    if over_bp_dict:
+      abiertas = sorted((float(k), float(v)) for k, v in over_bp_dict.items() if float(v) > 1.05)
+      f_cands = [k for k, v in abiertas if 1.15 <= v <= 1.38]
+      v_cands = [k for k, v in abiertas if 1.36 <= v <= 1.95]
+      if f_cands:
+        l_free = f_cands[0]
+      elif abiertas:
+        l_free = min(abiertas, key=lambda kv: abs(kv[1] - 1.25))[0]
+      if v_cands:
+        l_vip = v_cands[0]
+      elif abiertas:
+        l_vip = min(abiertas, key=lambda kv: abs(kv[1] - 1.50))[0]
+    return round(l_free, 1), round(l_vip, 1)
+
+  linea_faltas_free, linea_faltas_vip = _elegir_linea_dinamica(tot_faltas, over_f_bp, 2.3, 0.8, 16.5, 25.5)
+  p_faltas_free, _, c_min_faltas_free = calcular_prob_over_y_ev(tot_faltas, linea_faltas_free)
+  p_faltas_vip, _, c_min_faltas_vip = calcular_prob_over_y_ev(tot_faltas, linea_faltas_vip)
   p_faltas21, cuota_faltas21, c_min_faltas21 = calcular_prob_over_y_ev(tot_faltas, 21.5)
   p_faltas22, cuota_faltas22, c_min_faltas22 = calcular_prob_over_y_ev(tot_faltas, 22.5)
 
@@ -3367,9 +4034,71 @@ def motor_quant_institucional(
       arbitro if (arbitro and str(arbitro).lower() not in ["none", "null", "", "nan"]) else "No Asignado"
   )
 
-  nombre_goleador, p_goleador, c_min_goleador = calcular_goleador_probable_partido(
-      local, visitante, l_local_mat, l_vis_mat
-  )
+  if es_champions_femenina:
+    nombre_goleador, p_goleador, c_min_goleador = None, None, None
+  else:
+    nombre_goleador, p_goleador, c_min_goleador = calcular_goleador_probable_partido(
+        local, visitante, l_local_mat, l_vis_mat
+    )
+
+  # Calibración adicional de Córners, Remates y Tarjetas si BetPlay/Kambi tiene líneas abiertas
+  over_c_bp = (cuotas_bp or {}).get("over_corners") or {}
+  under_c_bp = (cuotas_bp or {}).get("under_corners") or {}
+  lam_c_casa = inferir_lambda_desde_cuotas(over_c_bp, under_c_bp, lam_min=5.5, lam_max=16.5)
+  if lam_c_casa is not None:
+    tot_corn = round((tot_corn * 0.50) + (lam_c_casa * 0.50), 2)
+    p_c75, cuota_c75, c_min_c75 = calcular_prob_over_y_ev(tot_corn, 7.5)
+    p_c85, cuota_c85, c_min_c85 = calcular_prob_over_y_ev(tot_corn, 8.5)
+
+  over_r_bp = (cuotas_bp or {}).get("over_remates") or {}
+  under_r_bp = (cuotas_bp or {}).get("under_remates") or {}
+  lam_r_casa = inferir_lambda_desde_cuotas(over_r_bp, under_r_bp, lam_min=4.0, lam_max=18.0)
+  if lam_r_casa is not None:
+    # Opta/Kambi suele ser mucho más preciso en Tiros a Puerta (ej. MLS Orlando vs Cincinnati -> 9.5 @ 1.43)
+    tot_tiros = round((tot_tiros * 0.25) + (lam_r_casa * 0.75), 2)
+    p_tiros65, cuota_tiros65, c_min_tiros65 = calcular_prob_over_y_ev(tot_tiros, 6.5)
+    p_tiros75, cuota_tiros75, c_min_tiros75 = calcular_prob_over_y_ev(tot_tiros, 7.5)
+
+  linea_tiros_free, linea_tiros_vip = _elegir_linea_dinamica(tot_tiros, over_r_bp, 1.8, 0.8, 6.5, 13.5)
+  p_tiros_free, _, c_min_tiros_free = calcular_prob_over_y_ev(tot_tiros, linea_tiros_free)
+  p_tiros_vip, _, c_min_tiros_vip = calcular_prob_over_y_ev(tot_tiros, linea_tiros_vip)
+
+  # Goles 1T y 2T con soporte para línea 1.5 (cuando la casa cierra 0.5 en partidos abiertos como Orlando vs Cincinnati)
+  over_1t_bp = (cuotas_bp or {}).get("over_goles_1t") or {}
+  over_2t_bp = (cuotas_bp or {}).get("over_goles_2t") or {}
+  p_15_ht, _, c_min_15_ht = calcular_prob_over_y_ev(lambda_1t, 1.5)
+  p_15_2t, _, c_min_15_2t = calcular_prob_over_y_ev(lambda_2t_real, 1.5)
+
+  # Mapa de cuotas REALES de Kambi/BetPlay/ESPN por nombre de mercado exacto
+  cuotas_reales_casa = {}
+  for lin_g, odd_g in ((cuotas_bp or {}).get("over_goles") or {}).items():
+    cuotas_reales_casa[f"Over {float(lin_g):.1f} Goles"] = round(float(odd_g), 2)
+  for lin_f, odd_f in over_f_bp.items():
+    cuotas_reales_casa[f"Faltas Totales > {float(lin_f):.1f}"] = round(float(odd_f), 2)
+  for lin_c, odd_c in over_c_bp.items():
+    cuotas_reales_casa[f"Córners > {float(lin_c):.1f}"] = round(float(odd_c), 2)
+  for lin_r, odd_r in over_r_bp.items():
+    cuotas_reales_casa[f"Remates Puerta > {float(lin_r):.1f}"] = round(float(odd_r), 2)
+  for lin_t, odd_t in ((cuotas_bp or {}).get("over_tarjetas") or {}).items():
+    cuotas_reales_casa[f"Tarjetas > {float(lin_t):.1f}"] = round(float(odd_t), 2)
+  for lin_gl, odd_gl in over_gl_bp.items():
+    cuotas_reales_casa[f"Goles {local[:12]} > {float(lin_gl):.1f}"] = round(float(odd_gl), 2)
+  for lin_gv, odd_gv in over_gv_bp.items():
+    cuotas_reales_casa[f"Goles {visitante[:12]} > {float(lin_gv):.1f}"] = round(float(odd_gv), 2)
+  if 0.5 in over_1t_bp:
+    cuotas_reales_casa["Gol en 1T"] = round(float(over_1t_bp[0.5]), 2)
+  if 1.5 in over_1t_bp:
+    cuotas_reales_casa["Goles 1T > 1.5"] = round(float(over_1t_bp[1.5]), 2)
+  if 0.5 in over_2t_bp:
+    cuotas_reales_casa["Gol en 2do Tiempo"] = round(float(over_2t_bp[0.5]), 2)
+  if 1.5 in over_2t_bp:
+    cuotas_reales_casa["Goles 2do Tiempo > 1.5"] = round(float(over_2t_bp[1.5]), 2)
+  if (cuotas_bp or {}).get("1X"):
+    cuotas_reales_casa["Doble Oport. 1X"] = round(float(cuotas_bp["1X"]), 2)
+  if (cuotas_bp or {}).get("X2"):
+    cuotas_reales_casa["Doble Oport. X2"] = round(float(cuotas_bp["X2"]), 2)
+  if (cuotas_bp or {}).get("btts_si"):
+    cuotas_reales_casa["Ambos Marcan (BTTS)"] = round(float(cuotas_bp["btts_si"]), 2)
 
   return {
       "id_partido": id_partido,
@@ -3459,6 +4188,30 @@ def motor_quant_institucional(
       "is_america": is_america,
       "es_copa": es_torneo_copa,
       "es_derbi": es_derbi,
+      "p_25_match": p_25_match,
+      "c_min_25": c_min_25,
+      "p_35_match": p_35_match,
+      "c_min_35": c_min_35,
+      "p_45_match": p_45_match,
+      "c_min_45": c_min_45,
+      "linea_faltas_free": linea_faltas_free,
+      "p_faltas_free": p_faltas_free,
+      "c_min_faltas_free": c_min_faltas_free,
+      "linea_faltas_vip": linea_faltas_vip,
+      "p_faltas_vip": p_faltas_vip,
+      "c_min_faltas_vip": c_min_faltas_vip,
+      "linea_tiros_free": linea_tiros_free,
+      "p_tiros_free": p_tiros_free,
+      "c_min_tiros_free": c_min_tiros_free,
+      "linea_tiros_vip": linea_tiros_vip,
+      "p_tiros_vip": p_tiros_vip,
+      "c_min_tiros_vip": c_min_tiros_vip,
+      "p_15_ht": p_15_ht,
+      "c_min_15_ht": c_min_15_ht,
+      "p_15_2t": p_15_2t,
+      "c_min_15_2t": c_min_15_2t,
+      "lambda_goles_casa": lambda_goles_casa,
+      "cuotas_reales_casa": cuotas_reales_casa,
       "cuotas_bp": cuotas_bp if cuotas_bp else {"1": "N/A", "X": "N/A", "2": "N/A"},
   }
 
@@ -3536,40 +4289,56 @@ def construir_combinadas_institucionales(lista_partidos):
     nombre_p = f"{p['local']} vs {p['visitante']}"
     hora_p = p["hora"]
 
-    # Solo líneas reales de casas de apuestas (prohibido Remates > 5.5 o Faltas > 21.5)
+    # Solo líneas reales de casas de apuestas + filtros estrictos para mercados de 45 min (Gol 1T / Gol 2T)
+    goles_p = float(p.get("tot_goles") or 2.4)
+    riesgo_corto_p = float(p.get("prob_marcador_corto") or 0.0)
     opciones_seguras = [
-        ("Over 1.5 Goles", p.get("p_15_match"), p.get("c_min_15")),
-        ("Gol en 2do Tiempo", p.get("p_05_2t"), p.get("c_min_05_2t")),
-        ("Remates Puerta > 6.5", p.get("p_tiros65"), p.get("c_min_tiros65")),
-        ("Remates Puerta > 7.5", p.get("p_tiros75"), p.get("c_min_tiros75")),
-        ("Faltas Totales > 22.5", p.get("p_faltas22"), p.get("c_min_faltas22")),
+        (f"Remates Puerta > {p.get('linea_tiros_vip', 6.5)}", p.get("p_tiros_vip") or p.get("p_tiros65"), p.get("c_min_tiros_vip") or p.get("c_min_tiros65")),
+        (f"Remates Puerta > {p.get('linea_tiros_free', 6.5)}", p.get("p_tiros_free") or p.get("p_tiros65"), p.get("c_min_tiros_free") or p.get("c_min_tiros65")),
+        (f"Faltas Totales > {p.get('linea_faltas_vip', 22.5)}", p.get("p_faltas_vip") or p.get("p_faltas22"), p.get("c_min_faltas_vip") or p.get("c_min_faltas22")),
         (f"Tarjetas > {p.get('linea_tarj', 3.5)}", p.get("p_t35"), p.get("c_min_t35")),
-        ("Gol en 1T", p.get("p_05_ht"), p.get("c_min_05_ht")),
         ("Total Asiático > 2.25", p.get("p_asig225"), p.get("c_min_asig225")),
         ("Ambos Marcan (BTTS)", p.get("p_btts"), p.get("c_min_btts")),
     ]
+    over_g_comb = ((p.get("cuotas_bp") or {}).get("over_goles") or {})
+    if goles_p >= 3.85 or (over_g_comb and 1.5 not in over_g_comb and 2.5 not in over_g_comb and 3.5 in over_g_comb):
+      opciones_seguras.insert(0, ("Over 3.5 Goles", p.get("p_35_match"), (over_g_comb.get(3.5) or p.get("c_min_35"))))
+    elif goles_p >= 3.10 or (over_g_comb and 1.5 not in over_g_comb and 2.5 in over_g_comb):
+      opciones_seguras.insert(0, ("Over 2.5 Goles", p.get("p_25_match"), (over_g_comb.get(2.5) or p.get("c_min_25"))))
+    elif goles_p >= 2.40 and riesgo_corto_p < 27.0:
+      opciones_seguras.insert(0, ("Over 1.5 Goles", p.get("p_15_match"), (over_g_comb.get(1.5) or p.get("c_min_15"))))
+    if (p.get("p_1x") or 0) >= 72.0 and float(p.get("p_a") or 50.0) < 40.0:
+      opciones_seguras.append(("Doble Oport. 1X", p.get("p_1x"), p.get("c_min_1x")))
+    if (p.get("p_x2") or 0) >= 72.0 and float(p.get("p_h") or 50.0) < 30.0 and not p.get("es_plaza_hostil_local"):
+      opciones_seguras.append(("Doble Oport. X2", p.get("p_x2"), p.get("c_min_x2")))
+    if goles_p >= 2.65:
+      opciones_seguras.append(("Gol en 2do Tiempo", p.get("p_05_2t"), p.get("c_min_05_2t")))
+    if goles_p >= 2.75:
+      opciones_seguras.append(("Gol en 1T", p.get("p_05_ht"), p.get("c_min_05_ht")))
     if p.get("p_c75") is not None and p.get("tot_corn", 8.5) < 9.2:
       opciones_seguras.append(("Córners > 7.5", p.get("p_c75"), p.get("c_min_c75")))
     if p.get("p_c85") is not None:
       opciones_seguras.append(("Córners > 8.5", p.get("p_c85"), p.get("c_min_c85")))
+    if p.get("nombre_dom_corn") and (p.get("p_dom_corn") or 0) >= 68.0:
+      opciones_seguras.append((p["nombre_dom_corn"], p["p_dom_corn"], p["c_min_dom_corn"]))
     if p.get("nombre_dom_goles") and p.get("p_dom_goles"):
       opciones_seguras.append((p["nombre_dom_goles"], p["p_dom_goles"], p["c_min_dom_goles"]))
 
-    # Combinada Doble VIP / Matriz Doble PRO: Cuotas individuales de valor real (1.36 a 1.50 -> Total ~1.88x a 2.22x)
+    # Combinada Doble VIP: Cuotas individuales de valor real (1.36 a 1.50 -> Total ~1.88x a 2.22x)
     validas_d = [
         {"partido": nombre_p, "hora": hora_p, "mercado": m, "prob": pr, "cuota": round(max(1.36, min(1.50, cu * 1.12)), 2), "score_elite": p.get("score_elite", 0)}
         for m, pr, cu in opciones_seguras
-        if pr is not None and cu is not None and 1.18 <= cu <= 1.55 and pr >= 70.0
+        if pr is not None and cu is not None and 1.12 <= cu <= 1.55 and pr >= 70.0
     ]
     if validas_d:
       validas_d.sort(key=lambda x: x["prob"], reverse=True)
       candidatos_doble.append(validas_d[0])
 
-    # Triple Sniper PRO: Cuotas individuales (1.44 a 1.68 -> Total ~3.00x a 4.20x)
+    # Triple Sniper (VIP + PRO): Cuotas individuales (1.44 a 1.68 -> Total ~3.00x a 4.20x)
     validas_s = [
         {"partido": nombre_p, "hora": hora_p, "mercado": m, "prob": pr, "cuota": round(max(1.44, min(1.68, cu * 1.15)), 2), "score_elite": p.get("score_elite", 0)}
         for m, pr, cu in opciones_seguras
-        if pr is not None and cu is not None and 1.25 <= cu <= 1.75 and pr >= 65.0
+        if pr is not None and cu is not None and 1.18 <= cu <= 1.75 and pr >= 65.0
     ]
     if validas_s:
       validas_s.sort(key=lambda x: x["prob"], reverse=True)
@@ -3616,6 +4385,150 @@ def construir_combinadas_institucionales(lista_partidos):
     }
 
   return info_doble, info_sniper
+
+
+def construir_combinadas_exclusivas_pro(lista_partidos, info_doble=None, info_sniper=None):
+  """Genera 3 tarjetas combinadas EXCLUSIVAS para el Canal PRO (valor agregado real sobre VIP):
+  1. CUÁDRUPLE ÉLITE PRO (4 partidos distintos, cuota ~4.5x - 7.5x)
+  2. ESPECIAL RITMO PRO (3 partidos: solo Córners y Remates a Puerta, independiente de goles)
+  3. ESPECIAL VALOR & FRICCIÓN PRO (3 partidos: Doble Oportunidad, Faltas, Tarjetas, Asiático o Goles Equipo, priorizando partidos distintos a Doble/Sniper)"""
+  usados_vip = set()
+  for inf in (info_doble, info_sniper):
+    if inf:
+      for s in inf.get("selecciones", []):
+        usados_vip.add((s["partido"], s["mercado"]))
+
+  cand_cuadruple = []
+  cand_ritmo = []
+  cand_tactica = []
+
+  for p in lista_partidos:
+    if p.get("es_partido_trampa"):
+      continue
+    nombre_p = f"{p['local']} vs {p['visitante']}"
+    hora_p = p["hora"]
+    sc_e = p.get("score_elite", 0)
+    goles_p = float(p.get("tot_goles") or 2.4)
+    riesgo_corto_p = float(p.get("prob_marcador_corto") or 0.0)
+
+    # A. Opciones de Ritmo Puro (Córners y Remates a Puerta)
+    opts_ritmo = [
+        (f"Remates Puerta > {p.get('linea_tiros_vip', 6.5)}", p.get("p_tiros_vip") or p.get("p_tiros65"), p.get("c_min_tiros_vip") or p.get("c_min_tiros65")),
+        (f"Remates Puerta > {p.get('linea_tiros_free', 6.5)}", p.get("p_tiros_free") or p.get("p_tiros65"), p.get("c_min_tiros_free") or p.get("c_min_tiros65")),
+        ("Córners > 8.5", p.get("p_c85"), p.get("c_min_c85")),
+        ("Córners > 7.5", p.get("p_c75"), p.get("c_min_c75")),
+    ]
+    if p.get("nombre_dom_corn") and (p.get("p_dom_corn") or 0) >= 66.0:
+      opts_ritmo.insert(0, (p["nombre_dom_corn"], p["p_dom_corn"], p["c_min_dom_corn"]))
+
+    val_rit = [
+        {"partido": nombre_p, "hora": hora_p, "mercado": m, "prob": pr, "cuota": round(max(1.38, min(1.66, cu * 1.12)), 2), "score_elite": sc_e, "nuevo": (nombre_p, m) not in usados_vip}
+        for m, pr, cu in opts_ritmo
+        if pr is not None and cu is not None and pr >= 63.0
+    ]
+    if val_rit:
+      val_rit.sort(key=lambda x: (x["nuevo"], x["prob"]), reverse=True)
+      cand_ritmo.append(val_rit[0])
+
+    # B. Opciones Tácticas / Fricción / Valor Alto (Doble Oport., Faltas, Tarjetas, Asiático, Goles Equipo)
+    opts_tac = [
+        (f"Faltas Totales > {p.get('linea_faltas_vip', 22.5)}", p.get("p_faltas_vip") or p.get("p_faltas22"), p.get("c_min_faltas_vip") or p.get("c_min_faltas22")),
+        (f"Tarjetas > {p.get('linea_tarj', 3.5)}", p.get("p_t35"), p.get("c_min_t35")),
+        ("Total Asiático > 2.25", p.get("p_asig225"), p.get("c_min_asig225")),
+        ("Ambos Marcan (BTTS)", p.get("p_btts"), p.get("c_min_btts")),
+    ]
+    if (p.get("p_1x") or 0) >= 70.0 and float(p.get("p_a") or 50.0) < 40.0:
+      opts_tac.append(("Doble Oport. 1X", p.get("p_1x"), p.get("c_min_1x")))
+    if (p.get("p_x2") or 0) >= 70.0 and float(p.get("p_h") or 50.0) < 30.0 and not p.get("es_plaza_hostil_local"):
+      opts_tac.append(("Doble Oport. X2", p.get("p_x2"), p.get("c_min_x2")))
+    if p.get("nombre_dom_goles") and (p.get("p_dom_goles") or 0) >= 62.0:
+      opts_tac.append((p["nombre_dom_goles"], p["p_dom_goles"], p["c_min_dom_goles"]))
+    if goles_p >= 2.40 and riesgo_corto_p < 27.0:
+      opts_tac.append(("Over 1.5 Goles", p.get("p_15_match"), p.get("c_min_15")))
+
+    val_tac = [
+        {"partido": nombre_p, "hora": hora_p, "mercado": m, "prob": pr, "cuota": round(max(1.40, min(1.72, cu * 1.14)), 2), "score_elite": sc_e, "nuevo": (nombre_p, m) not in usados_vip}
+        for m, pr, cu in opts_tac
+        if pr is not None and cu is not None and pr >= 62.0
+    ]
+    if val_tac:
+      val_tac.sort(key=lambda x: (x["nuevo"], x["prob"]), reverse=True)
+      cand_tactica.append(val_tac[0])
+
+    # C. Opciones Cuádruple Élite (mejor pick de 90 min de cada partido)
+    val_all = val_rit + val_tac
+    if val_all:
+      val_all.sort(key=lambda x: x["prob"], reverse=True)
+      cand_cuadruple.append(val_all[0])
+
+  def _armar_tarjeta_pro(clave, titulo, subtitulo, sufijo, stake_txt, lista_cands, n_legs, boost_prot):
+    lista_ord = sorted(lista_cands, key=lambda x: (x.get("nuevo", False), x["score_elite"] >= 5, x["prob"]), reverse=True)
+    # Asegurar partidos distintos
+    elegidos = []
+    vistos_p = set()
+    for c in lista_ord:
+      if c["partido"] not in vistos_p:
+        elegidos.append(c)
+        vistos_p.add(c["partido"])
+      if len(elegidos) == n_legs:
+        break
+    if len(elegidos) < n_legs:
+      return None
+    cuota_tot = 1.0
+    prob_dir = 1.0
+    for e in elegidos:
+      cuota_tot *= e["cuota"]
+      prob_dir *= (e["prob"] / 100.0)
+    cuota_tot = round(cuota_tot, 2)
+    prob_dir_pct = round(prob_dir * 100.0, 1)
+    prob_prot_pct = round(min(82.0, prob_dir_pct + boost_prot), 1)
+    return {
+        "clave": clave,
+        "titulo": titulo,
+        "subtitulo": subtitulo,
+        "sufijo": sufijo,
+        "stake": stake_txt,
+        "selecciones": elegidos,
+        "cuota_total": cuota_tot,
+        "prob_directa": prob_dir_pct,
+        "prob_protegida": prob_prot_pct,
+    }
+
+  tarjetas_pro = []
+  t_cuad = _armar_tarjeta_pro(
+      "cuadruple_elite_pro",
+      "CUÁDRUPLE ÉLITE PRO",
+      "EXCLUSIVO PRO: 4 PARTIDOS DE ALTA CONFLUENCIA",
+      "CUADRUPLE_ELITE_PRO",
+      "Invertir el 1% de tu capital (Alto Retorno)",
+      cand_cuadruple, 4, 26.0
+  )
+  if t_cuad:
+    tarjetas_pro.append(t_cuad)
+
+  t_ritmo = _armar_tarjeta_pro(
+      "especial_ritmo_pro",
+      "ESPECIAL RITMO PRO",
+      "EXCLUSIVO PRO: CÓRNERS Y REMATES (3 PARTIDOS)",
+      "RITMO_CORNERS_PRO",
+      "Invertir del 1% al 2% de tu capital (Ritmo Puro)",
+      cand_ritmo, 3, 24.0
+  )
+  if t_ritmo:
+    tarjetas_pro.append(t_ritmo)
+
+  t_tac = _armar_tarjeta_pro(
+      "especial_valor_pro",
+      "ESPECIAL VALOR PRO",
+      "EXCLUSIVO PRO: TÁCTICA, FRICCIÓN Y EV+ (3 PARTIDOS)",
+      "VALOR_TACTICO_PRO",
+      "Invertir del 1% al 2% de tu capital (Valor EV+)",
+      cand_tactica, 3, 24.0
+  )
+  if t_tac:
+    tarjetas_pro.append(t_tac)
+
+  return tarjetas_pro
 
 
 COPAS_NACIONALES_EUROPA = {143, 45, 48, 137, 81, 66, 96, 90, 206}
@@ -3744,7 +4657,8 @@ def ejecutar_sistema_automatico(api_token):
   }
 
   ahora_real = datetime.now()
-  fecha_arg = sys.argv[1].strip() if len(sys.argv) > 1 else FECHA_OBJETIVO_MANUAL.strip()
+  _args_fecha = [a.strip() for a in sys.argv[1:] if a.strip() and not a.strip().startswith("--")]
+  fecha_arg = _args_fecha[0] if _args_fecha else FECHA_OBJETIVO_MANUAL.strip()
   if fecha_arg:
       hoy_dt = datetime.strptime(fecha_arg, "%Y-%m-%d")
       es_fecha_futura = hoy_dt.date() > ahora_real.date()
@@ -3827,7 +4741,7 @@ def ejecutar_sistema_automatico(api_token):
       arb = p["fixture"].get("referee")
       if arb: arb = str(arb).split(",")[0].strip()
 
-      cuotas_bp_partido = buscar_cuota_betplay_inteligente(loc, vis, cuotas_mercado)
+      cuotas_bp_partido = buscar_cuota_betplay_inteligente(loc, vis, cuotas_mercado, id_partido=id_partido_api, es_femenino=("WOMEN" in liga_visual.upper() or "FEMEN" in liga_visual.upper()))
           
       res_calc = motor_quant_institucional(
           liga_visual, liga_key, loc, vis, id_loc, id_vis, id_partido_api,
@@ -4153,9 +5067,11 @@ def ejecutar_sistema_automatico(api_token):
 
   base_para_combinadas = partidos_vip_finales if len(partidos_vip_finales) >= 3 else partidos_procesados
   info_doble, info_sniper = construir_combinadas_institucionales(base_para_combinadas)
+  combinadas_exclusivas_pro = construir_combinadas_exclusivas_pro(base_para_combinadas, info_doble, info_sniper)
 
   ruta_img_doble = None
   ruta_img_sniper = None
+  tarjetas_pro_extra_generadas = []
 
   print("\n" + "=" * 120)
   print(" 🔥 COMBINADAS OFICIALES DEL DÍA (DOBLE VIP & TRIPLE SNIPER PRO)")
@@ -4185,27 +5101,50 @@ def ejecutar_sistema_automatico(api_token):
     enviar_imagen_telegram(TOKEN_GENERAL, CHAT_ID_GENERAL, ruta_img_doble, caption_doble_priv)
 
   if info_sniper:
-    print(f"\n [+] COMBINADA TRIPLE SNIPER PRO (Cuota > {info_sniper['cuota_total']:.2f}x | Efectividad con Protección: {info_sniper['prob_protegida']:.1f}%):")
+    print(f"\n [+] COMBINADA TRIPLE SNIPER VIP (Cuota > {info_sniper['cuota_total']:.2f}x | Efectividad con Protección: {info_sniper['prob_protegida']:.1f}%):")
     for s in info_sniper["selecciones"]:
       print(f"     • {s['partido']} ({s['hora']}) ➔ {s['mercado']} ({s['prob']:.1f}% | > {s['cuota']:.2f})")
 
     ruta_img_sniper = generar_tarjeta_combinada(
         fecha_jornada,
-        "TRIPLE SNIPER PRO",
-        "EXCLUSIVO PRO CON PROTECCIÓN (3 PARTIDOS)",
+        "TRIPLE SNIPER VIP",
+        "ALTA PROBABILIDAD CON PROTECCIÓN (3 PARTIDOS)",
         info_sniper["selecciones"],
         info_sniper["cuota_total"],
         info_sniper["prob_directa"],
         info_sniper["prob_protegida"],
         "Invertir el 1% de tu capital (Riesgo Moderado)",
-        "SNIPER_3X_PRO"
+        "SNIPER_3X_VIP"
     )
     caption_sniper_priv = (
-        f"🎯 <b>COMBINADA TRIPLE SNIPER PRO (Cuota > {info_sniper['cuota_total']:.2f}x)</b>\n"
+        f"🎯 <b>COMBINADA TRIPLE SNIPER VIP (Cuota > {info_sniper['cuota_total']:.2f}x)</b>\n"
         f"🛡️ <b>Efectividad con Protección:</b> {info_sniper['prob_protegida']:.1f}%"
     )
     enviar_imagen_telegram(TOKEN_VIP_PERSONAL, CHAT_ID_VIP_PERSONAL, ruta_img_sniper, caption_sniper_priv)
     enviar_imagen_telegram(TOKEN_GENERAL, CHAT_ID_GENERAL, ruta_img_sniper, caption_sniper_priv)
+
+  for t_pro in combinadas_exclusivas_pro:
+    print(f"\n [+] 👑 EXCLUSIVA PRO: {t_pro['titulo']} (Cuota > {t_pro['cuota_total']:.2f}x | Protección: {t_pro['prob_protegida']:.1f}%):")
+    for s in t_pro["selecciones"]:
+      print(f"     • {s['partido']} ({s['hora']}) ➔ {s['mercado']} ({s['prob']:.1f}% | > {s['cuota']:.2f})")
+    r_pro_img = generar_tarjeta_combinada(
+        fecha_jornada,
+        t_pro["titulo"],
+        t_pro["subtitulo"],
+        t_pro["selecciones"],
+        t_pro["cuota_total"],
+        t_pro["prob_directa"],
+        t_pro["prob_protegida"],
+        t_pro["stake"],
+        t_pro["sufijo"]
+    )
+    tarjetas_pro_extra_generadas.append((t_pro, r_pro_img))
+    cap_pro_priv = (
+        f"👑 <b>EXCLUSIVA PRO: {t_pro['titulo']} (Cuota > {t_pro['cuota_total']:.2f}x)</b>\n"
+        f"🛡️ <b>Efectividad con Protección:</b> {t_pro['prob_protegida']:.1f}%"
+    )
+    enviar_imagen_telegram(TOKEN_VIP_PERSONAL, CHAT_ID_VIP_PERSONAL, r_pro_img, cap_pro_priv)
+    enviar_imagen_telegram(TOKEN_GENERAL, CHAT_ID_GENERAL, r_pro_img, cap_pro_priv)
 
   print("=" * 120 + "\n")
 
@@ -4276,7 +5215,10 @@ def ejecutar_sistema_automatico(api_token):
           auto_registrar_selecciones_tarjetas(p_free, 'FREE', fecha_jornada)
       for p_vip in top_4_vip_clientes:
           auto_registrar_selecciones_tarjetas(p_vip, 'VIP', fecha_jornada)
-      guardar_tarjetas_en_carpeta_clientes(fecha_jornada, top_4_vip_clientes, top_3_free, ruta_img_doble, ruta_img_sniper)
+      guardar_tarjetas_en_carpeta_clientes(
+          fecha_jornada, top_4_vip_clientes, top_3_free, ruta_img_doble, ruta_img_sniper,
+          rutas_pro_extra=[r_p for _, r_p in tarjetas_pro_extra_generadas]
+      )
       try:
           arch_j_comb = f"clientes_enviados_{fecha_jornada}.json"
           if os.path.exists(arch_j_comb):
@@ -4285,6 +5227,8 @@ def ejecutar_sistema_automatico(api_token):
                   d_jc["combinada_doble"] = info_doble
               if info_sniper:
                   d_jc["combinada_sniper"] = info_sniper
+              if combinadas_exclusivas_pro:
+                  d_jc["combinadas_exclusivas_pro"] = combinadas_exclusivas_pro
               json.dump(d_jc, open(arch_j_comb, "w", encoding="utf-8"), ensure_ascii=False, indent=2)
       except Exception:
           pass
@@ -4331,8 +5275,19 @@ def ejecutar_sistema_automatico(api_token):
               TOKEN_CARTERO,
               CHAT_ID_CLIENTES_PRO,
               ruta_img_sniper,
-              f"🎯 <b>EXCLUSIVA PRO: COMBINADA TRIPLE SNIPER (Cuota > {info_sniper['cuota_total']:.2f}x)</b>\n"
+              f"🎯 <b>COMBINADA TRIPLE SNIPER (Cuota > {info_sniper['cuota_total']:.2f}x)</b>\n"
               f"🛡️ <i>Efectividad con protección: {info_sniper['prob_protegida']:.1f}%</i>\n"
+              f"👉 Soporte 24/7: <a href='https://t.me/QuantBetSoporte_bot'>https://t.me/QuantBetSoporte_bot</a>"
+          )
+
+        for t_pro_c, r_pro_c in tarjetas_pro_extra_generadas:
+          enviar_imagen_telegram(
+              TOKEN_CARTERO,
+              CHAT_ID_CLIENTES_PRO,
+              r_pro_c,
+              f"👑 <b>EXCLUSIVA CANAL PRO: {t_pro_c['titulo']} (Cuota > {t_pro_c['cuota_total']:.2f}x)</b>\n"
+              f"📊 <i>{t_pro_c['subtitulo']}</i>\n"
+              f"🛡️ <i>Efectividad con protección: {t_pro_c['prob_protegida']:.1f}%</i>\n"
               f"👉 Soporte 24/7: <a href='https://t.me/QuantBetSoporte_bot'>https://t.me/QuantBetSoporte_bot</a>"
           )
 
@@ -4401,6 +5356,15 @@ def ejecutar_sistema_automatico(api_token):
               f"🛡️ <i>Efectividad con colchón: {info_doble['prob_protegida']:.1f}% | Combina estos 2 partidos distintos.</i>"
           )
 
+        if ruta_img_sniper:
+          enviar_imagen_telegram(
+              TOKEN_CARTERO,
+              CHAT_ID_CLIENTES_VIP,
+              ruta_img_sniper,
+              f"🎯 <b>COMBINADA TRIPLE SNIPER VIP (Cuota > {info_sniper['cuota_total']:.2f}x)</b>\n"
+              f"🛡️ <i>Efectividad con protección: {info_sniper['prob_protegida']:.1f}% | 3 partidos seleccionados por el Motor Quant.</i>"
+          )
+
   # Guardar las imágenes de descartes únicamente en la carpeta del PC (sin spamear Telegram)
   for p in partidos_descartes_finales:
       p_copia_desc = dict(p)
@@ -4420,7 +5384,25 @@ def ejecutar_sistema_automatico(api_token):
   print(f"\n[+] 🏁 Escaneo de partidos y envío de tarjetas finalizado con éxito.\n")
 
   ruta_cola_vid = os.path.join(f"Alertas_Quant_{fecha_jornada}", "4_VIDEOS_LISTOS_REDES", "cola_publicacion_redes.json")
-  if not os.path.exists(ruta_cola_vid):
+  forzar_rehacer_vid = "--rehacer-videos" in sys.argv
+  fecha_aud_objetivo_hoy = (
+      ahora_real.strftime("%Y-%m-%d")
+      if ahora_real.hour >= 21
+      else (ahora_real - timedelta(days=1)).strftime("%Y-%m-%d")
+  )
+  auditoria_video_desactualizada = False
+  if os.path.exists(ruta_cola_vid) and not forzar_rehacer_vid:
+      try:
+          with open(ruta_cola_vid, "r", encoding="utf-8") as f_cv:
+              datos_cv = json.load(f_cv) or []
+          fecha_aud_guardada = str((datos_cv[0] if datos_cv else {}).get("fecha_auditada_video") or "")
+          if fecha_aud_guardada != fecha_aud_objetivo_hoy:
+              auditoria_video_desactualizada = True
+              print(f"[🔄] Vídeos previos tenían auditoría desactualizada ({fecha_aud_guardada or 'sin fecha'} != {fecha_aud_objetivo_hoy}). Regenerando con auditoría de {fecha_aud_objetivo_hoy}...")
+      except Exception:
+          auditoria_video_desactualizada = True
+
+  if not os.path.exists(ruta_cola_vid) or forzar_rehacer_vid or auditoria_video_desactualizada:
       generar_paquete_redes_sociales(
           fecha_jornada,
           partidos_vip_finales,
@@ -4430,7 +5412,7 @@ def ejecutar_sistema_automatico(api_token):
           chat_id_privado=CHAT_ID_GENERAL,
       )
   else:
-      print(f"[🎬] Los vídeos de ({fecha_jornada}) ya están creados en 4_VIDEOS_LISTOS_REDES. No se modifican.")
+      print(f"[🎬] Los vídeos de ({fecha_jornada}) ya están creados con la auditoría oficial de ({fecha_aud_objetivo_hoy}).")
 
 
 def actualizar_webapp_github_automatico(fecha_jornada=None):
@@ -4475,7 +5457,8 @@ def actualizar_webapp_github_automatico(fecha_jornada=None):
   archivos = [
       "app_quantbet.py", "bot_soporte.py", "auditoria_apuestas.csv",
       "mercados_optimizados.py", "generador_videos_redes.py", "generador_imagenes.py", "auditoria_ayer.py",
-      "Montserrat-VariableFont_wght.ttf", "RobotoMono-VariableFont_wght.ttf", "fondo de quant bet.jpg"
+      "Montserrat-VariableFont_wght.ttf", "RobotoMono-VariableFont_wght.ttf", "fondo de quant bet.jpg",
+      "cache_boxscore_ft.json"
   ]
   for f_str in sorted(fechas_subir):
     if os.path.exists(f"clientes_enviados_{f_str}.json"):
@@ -4525,7 +5508,8 @@ def actualizar_webapp_github_automatico(fecha_jornada=None):
 
 if __name__ == "__main__":
   MI_TOKEN = os.getenv("API_SPORTS_KEY", "48f391f30e76d9c84e5c94b6a4cccdb4")
-  fecha_cli = sys.argv[1].strip() if len(sys.argv) > 1 else FECHA_OBJETIVO_MANUAL.strip()
+  _args_cli = [a.strip() for a in sys.argv[1:] if a.strip() and not a.strip().startswith("--")]
+  fecha_cli = _args_cli[0] if _args_cli else FECHA_OBJETIVO_MANUAL.strip()
   fecha_obj = fecha_cli if fecha_cli else datetime.now().strftime("%Y-%m-%d")
   ejecutar_sistema_automatico(MI_TOKEN)
   if SUBIR_A_WEB or ENVIAR_A_CLIENTES:
