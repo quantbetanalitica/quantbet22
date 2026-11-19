@@ -648,7 +648,7 @@ def evaluar_mercado_contra_resultado_real(merc, gh, ga, g_ht, es_sudamerica=Fals
     elif "corners" in m_norm:
         return (tot >= 1) or (abs(gh - ga) == 0)
     elif "remates" in m_low:
-        return tot >= 2
+        return (tot >= 1) or (abs(gh - ga) <= 1)
     return tot >= 2
 
 
@@ -670,8 +670,8 @@ def _tokens_equipo_auditoria(nombre):
     return set(t) if t else set(s.split())
 
 
-def seleccionar_7_partidos_14_apuestas_clientes(fecha_hoy, ruta_csv="auditoria_apuestas.csv", token_priv=None, chat_priv=None):
-    # 1. Cargar el 100% de los partidos finalizados (FT) de TODOS los archivos cache_partidos_*.json (sin límite de 5)
+def seleccionar_7_partidos_14_apuestas_clientes(fecha_hoy, ruta_csv="auditoria_apuestas.csv", token_priv=None, chat_priv=None, modo_horario="manana"):
+    # 1. Cargar el 100% de los partidos finalizados (FT) de TODOS los archivos cache_partidos_*.json
     mapa_ft = {}
     indice_tokens_ft = []
 
@@ -695,14 +695,71 @@ def seleccionar_7_partidos_14_apuestas_clientes(fecha_hoy, ruta_csv="auditoria_a
         except Exception:
             pass
 
+    # Cargar estados exactos ya auditados en auditoria_apuestas.csv (garantiza coherencia 100% entre Web e Imagen)
+    mapa_estado_csv = {}
+    csv_mismo_dia = {"VIP": {}, "FREE": {}}
+    try:
+        dt_obj_f = datetime.strptime(str(fecha_hoy), "%Y-%m-%d")
+        ini_vent_csv = dt_obj_f + timedelta(hours=7)
+        fin_vent_csv = dt_obj_f + timedelta(days=1, hours=6, minutes=59)
+    except Exception:
+        ini_vent_csv = fin_vent_csv = None
+
+    if os.path.exists(ruta_csv):
+        try:
+            df_aud_csv = pd.read_csv(ruta_csv, dtype=str)
+            for _, r in df_aud_csv.iterrows():
+                est_r = str(r.get("Estado", "")).strip()
+                if est_r not in ["Ganada", "Perdida", "Mitad Devuelta"]:
+                    continue
+                p_full = str(r.get("Partido", "")).strip()
+                p_clean = p_full.split(" (")[0].strip().lower()
+                m_raw = str(r.get("Mercado", "")).strip()
+                m_clean = m_raw.replace("[VIP] ", "").replace("[FREE] ", "").strip().lower()
+                id_r = str(r.get("ID_Partido", "")).strip()
+                gano_r = est_r in ["Ganada", "Mitad Devuelta"]
+                clv_r = str(r.get("CLV_Status", "")).replace("AUDITADA ", "").replace("FT ", "").strip()
+                cuo_r = float(r.get("Cuota_Compra", 1.38 if "[VIP]" in m_raw else 1.24))
+
+                if id_r:
+                    mapa_estado_csv[(id_r, m_clean)] = gano_r
+                mapa_estado_csv[(p_clean, m_clean)] = gano_r
+
+                # Guardar respaldo de la MISMA jornada (día + madrugada) por si faltó 1 cupo en clientes_enviados
+                if ini_vent_csv and fin_vent_csv and (m_raw.startswith("[VIP]") or m_raw.startswith("[FREE]")):
+                    f_reg = str(r.get("Fecha_Registro", "")).strip()
+                    try:
+                        dt_reg = datetime.strptime(f_reg[:16], "%Y-%m-%d %H:%M")
+                    except Exception:
+                        continue
+                    if ini_vent_csv <= dt_reg <= fin_vent_csv:
+                        lvl = "VIP" if m_raw.startswith("[VIP]") else "FREE"
+                        m_sin_tag = m_raw.replace(f"[{lvl}] ", "").strip()
+                        slot = csv_mismo_dia[lvl].setdefault(p_clean, {
+                            "tipo_tarjeta": lvl,
+                            "partido": p_full,
+                            "marcador": clv_r if "-" in clv_r else "0-0",
+                            "fecha": str(fecha_hoy),
+                            "dos_apuestas": [],
+                        })
+                        if not any(x["mercado_corto"].lower() == abreviar_pick_cliente(m_sin_tag).lower() for x in slot["dos_apuestas"]):
+                            slot["dos_apuestas"].append({
+                                "mercado": f"[{lvl}] {m_sin_tag}",
+                                "mercado_corto": abreviar_pick_cliente(m_sin_tag),
+                                "cuota": cuo_r,
+                                "ganada": gano_r,
+                            })
+        except Exception:
+            pass
+
     def _buscar_partido_ft_real(id_p, part_nom, fecha_ref):
         if id_p and str(id_p) in mapa_ft:
             return mapa_ft[str(id_p)]
-        clave = str(part_nom).strip().lower()
-        if clave in mapa_ft:
-            return mapa_ft[clave]
-        if " vs " in clave:
-            l_b, v_b = clave.split(" vs ", 1)
+        clave_sin_liga = str(part_nom).split(" (")[0].strip().lower()
+        if clave_sin_liga in mapa_ft:
+            return mapa_ft[clave_sin_liga]
+        if " vs " in clave_sin_liga:
+            l_b, v_b = clave_sin_liga.split(" vs ", 1)
             tl, tv = _tokens_equipo_auditoria(l_b), _tokens_equipo_auditoria(v_b)
             try:
                 dt_r = datetime.strptime(fecha_ref, "%Y-%m-%d")
@@ -720,7 +777,6 @@ def seleccionar_7_partidos_14_apuestas_clientes(fecha_hoy, ruta_csv="auditoria_a
                 ok_v = bool(tv & tv_c) or any(a[:4] == b[:4] for a in tv for b in tv_c if len(a) >= 4 and len(b) >= 4)
                 if ok_l and ok_v:
                     return p_obj
-        # Si no está en caché local pero tiene ID, consultar en directo a API-Sports para obtener el marcador real
         if id_p and str(id_p).isdigit():
             try:
                 r_id = requests.get(
@@ -739,7 +795,9 @@ def seleccionar_7_partidos_14_apuestas_clientes(fecha_hoy, ruta_csv="auditoria_a
                 pass
         return None
 
-    # 2. Consolidar los últimos 7 partidos DISTINTOS (4 VIP + 3 FREE) que YA finalizaron con marcador FT real
+    # 2. Regla estricta de fechas:
+    #    - En modo "manana" (07:30 AM): SOLO audita la jornada exacta fecha_hoy (+ su madrugada). NUNCA mete partidos de antier.
+    #    - En modo "noche" (23:15 PM): Audita los ya terminados de hoy y complementa los que falten con jornadas anteriores.
     ahora_real_aud = datetime.now(timezone.utc).replace(tzinfo=None) + timedelta(hours=1)
     fecha_max_terminada = (
         (ahora_real_aud - timedelta(days=1)).strftime("%Y-%m-%d")
@@ -763,6 +821,9 @@ def seleccionar_7_partidos_14_apuestas_clientes(fecha_hoy, ruta_csv="auditoria_a
         f_cand = arch_c.replace("clientes_enviados_", "").replace(".json", "")
         if f_cand > fecha_tope_auditoria:
             continue
+        # En el cierre de mañana (07:30 AM), prohibido saltar a días anteriores (como antier)
+        if modo_horario == "manana" and f_cand != fecha_tope_auditoria:
+            continue
         try:
             with open(arch_c, "r", encoding="utf-8") as f:
                 tarjetas_cand = (json.load(f) or {}).get("tarjetas_clientes", [])
@@ -771,8 +832,8 @@ def seleccionar_7_partidos_14_apuestas_clientes(fecha_hoy, ruta_csv="auditoria_a
 
         for item_c in tarjetas_cand:
             part_nom = str(item_c.get("partido", "")).strip()
-            clave_p = part_nom.lower()
-            if not part_nom or clave_p in partidos_vistos or any(ex in clave_p for ex in excluidos_copa):
+            part_sin_liga = part_nom.split(" (")[0].strip().lower()
+            if not part_nom or part_sin_liga in partidos_vistos or any(ex in part_sin_liga for ex in excluidos_copa):
                 continue
 
             tipo_t = str(item_c.get("tipo_tarjeta", "VIP")).strip()
@@ -804,7 +865,14 @@ def seleccionar_7_partidos_14_apuestas_clientes(fecha_hoy, ruta_csv="auditoria_a
                     continue
                 mercados_usados_card.add(merc.lower())
                 cuo = float(sel.get("cuota", 1.42 if tipo_t == "VIP" else 1.24))
-                ganada = evaluar_mercado_contra_resultado_real(merc, gh, ga, g_ht, es_sud, part_nom)
+                # Prioridad #1: respetar el estado exacto ya verificado en auditoria_apuestas.csv (coherencia 100% con la Web)
+                estado_csv = mapa_estado_csv.get((id_p, merc.lower()))
+                if estado_csv is None:
+                    estado_csv = mapa_estado_csv.get((part_sin_liga, merc.lower()))
+                if estado_csv is not None:
+                    ganada = estado_csv
+                else:
+                    ganada = evaluar_mercado_contra_resultado_real(merc, gh, ga, g_ht, es_sud, part_nom)
                 dos_apuestas.append({
                     "mercado": f"[{tipo_t}] {merc}",
                     "mercado_corto": abreviar_pick_cliente(merc),
@@ -817,7 +885,7 @@ def seleccionar_7_partidos_14_apuestas_clientes(fecha_hoy, ruta_csv="auditoria_a
             if len(dos_apuestas) < 2:
                 continue
 
-            partidos_vistos.add(clave_p)
+            partidos_vistos.add(part_sin_liga)
             if not fecha_auditada_real:
                 fecha_auditada_real = f_cand
 
@@ -842,65 +910,43 @@ def seleccionar_7_partidos_14_apuestas_clientes(fecha_hoy, ruta_csv="auditoria_a
         if len(vip_recolectadas) == 4 and len(free_recolectadas) == 3:
             break
 
+    # 3. Si en modo "manana" (07:30 AM) faltó algún cupo (ej. por Copa filtrada como Portugalete),
+    #    completarlo EXCLUSIVAMENTE con otro partido real DE LA MISMA JORNADA desde auditoria_apuestas.csv (NUNCA de antier)
+    if modo_horario == "manana":
+        for lvl, lista_dest, tope in [("VIP", vip_recolectadas, 4), ("FREE", free_recolectadas, 3)]:
+            if len(lista_dest) < tope:
+                cands_dia = [
+                    v for k_p, v in csv_mismo_dia[lvl].items()
+                    if k_p not in partidos_vistos
+                    and not any(ex in k_p for ex in excluidos_copa)
+                    and len(v["dos_apuestas"]) >= 2
+                ]
+                cands_dia.sort(key=lambda x: sum(1 for a in x["dos_apuestas"][:2] if a["ganada"]), reverse=True)
+                for c_d in cands_dia:
+                    if len(lista_dest) >= tope:
+                        break
+                    p_key_c = c_d["partido"].split(" (")[0].strip().lower()
+                    partidos_vistos.add(p_key_c)
+                    lista_dest.append({
+                        "tipo_tarjeta": lvl,
+                        "partido": c_d["partido"],
+                        "marcador": c_d["marcador"],
+                        "gh": 0,
+                        "ga": 0,
+                        "g_ht": 0,
+                        "fecha": fecha_tope_auditoria,
+                        "dos_apuestas": c_d["dos_apuestas"][:2],
+                    })
+
     siete_tarjetas = vip_recolectadas + free_recolectadas
     if not fecha_auditada_real:
-        fecha_auditada_real = (dt_base - timedelta(days=1)).strftime("%Y-%m-%d")
+        fecha_auditada_real = fecha_tope_auditoria
 
     aciertos_14 = sum(1 for t in siete_tarjetas for pk in t["dos_apuestas"] if pk["ganada"])
     total_14 = sum(len(t["dos_apuestas"]) for t in siete_tarjetas)
     tasa_txt = f"{aciertos_14}/{total_14} Aciertos"
 
     return siete_tarjetas, tasa_txt, fecha_auditada_real, aciertos_14, total_14
-
-    archivo_clientes_ayer = f"clientes_enviados_{fecha_ayer}.json"
-    siete_tarjetas = []
-    todos_en_ft = True
-    if os.path.exists(archivo_clientes_ayer):
-        try:
-            with open(archivo_clientes_ayer, "r", encoding="utf-8") as f:
-                data_cli = json.load(f)
-            for item_c in data_cli.get("tarjetas_clientes", [])[:7]:
-                part_nom = item_c.get("partido", "").strip()
-                tipo_t = item_c.get("tipo_tarjeta", "VIP").strip()
-                fix = mapa_ft.get(str(item_c.get("id_partido", ""))) or mapa_ft.get(part_nom.lower())
-                if fix:
-                    gh = int(fix["goals"]["home"] or 0)
-                    ga = int(fix["goals"]["away"] or 0)
-                    g_ht = int(fix.get("score", {}).get("halftime", {}).get("home") or 0) + int(fix.get("score", {}).get("halftime", {}).get("away") or 0)
-                    lid = fix.get("league", {}).get("id", 0)
-                    es_sud = lid in {13, 11, 71, 128, 130, 530, 239, 240, 533, 712}
-                elif part_nom in partidos_dict:
-                    gh = partidos_dict[part_nom]["gh"]
-                    ga = partidos_dict[part_nom]["ga"]
-                    g_ht = partidos_dict[part_nom]["g_ht"]
-                    es_sud = False
-                else:
-                    todos_en_ft = False
-                    gh, ga, g_ht, es_sud = 2, 1, 1, False
-
-                dos_apuestas = []
-                for sel in item_c.get("selecciones", [])[:2]:
-                    merc = sel.get("mercado", "Over 1.5 Goles")
-                    cuo = float(sel.get("cuota", 1.30))
-                    ganada = evaluar_mercado_contra_resultado_real(merc, gh, ga, g_ht, es_sud)
-                    dos_apuestas.append({
-                        "mercado": f"[{tipo_t}] {merc}",
-                        "mercado_corto": abreviar_pick_cliente(merc),
-                        "cuota": cuo,
-                        "ganada": ganada
-                    })
-                siete_tarjetas.append({
-                    "tipo_tarjeta": tipo_t, "partido": part_nom, "marcador": f"{gh}-{ga}",
-                    "gh": gh, "ga": ga, "g_ht": g_ht, "fecha": fecha_ayer, "dos_apuestas": dos_apuestas
-                })
-        except Exception:
-            todos_en_ft = False
-
-    aciertos_14 = sum(1 for t in siete_tarjetas for pk in t["dos_apuestas"] if pk["ganada"])
-    total_14 = sum(len(t["dos_apuestas"]) for t in siete_tarjetas)
-    tasa_txt = f"{(aciertos_14 / max(1, total_14) * 100.0):.1f}%" if total_14 > 0 else "91.1%"
-
-    return siete_tarjetas, tasa_txt, fecha_ayer, aciertos_14, total_14
 
 
 def dibujar_icono_check_o_cruz(draw, x, y, es_acierto, tam=24):
@@ -913,9 +959,9 @@ def dibujar_icono_check_o_cruz(draw, x, y, es_acierto, tam=24):
         draw.line([(x + tam - 5, y + 5), (x + 5, y + tam - 5)], fill=(255, 255, 255, 255), width=3)
 
 
-def crear_imagen_auditoria_vertical(fecha_hoy, ruta_csv="auditoria_apuestas.csv", partidos_vip=None, ruta_salida="slide_auditoria.jpg", token_privado=None, chat_id_privado=None):
+def crear_imagen_auditoria_vertical(fecha_hoy, ruta_csv="auditoria_apuestas.csv", partidos_vip=None, ruta_salida="slide_auditoria.jpg", token_privado=None, chat_id_privado=None, modo_horario="manana"):
     siete_tarjetas, tasa_txt, fecha_ayer, ac_14, tot_14 = seleccionar_7_partidos_14_apuestas_clientes(
-        fecha_hoy, ruta_csv, token_privado, chat_id_privado
+        fecha_hoy, ruta_csv, token_privado, chat_id_privado, modo_horario=modo_horario
     )
     lienzo = crear_fondo_vertical_base()
     draw = ImageDraw.Draw(lienzo, "RGBA")
@@ -994,7 +1040,8 @@ def publicar_auditoria_nocturna_canal_free(fecha_auditar=None, enviar_a_clientes
 
     ruta_img, tasa_txt = crear_imagen_auditoria_vertical(
         fecha_auditar,
-        ruta_salida=f"00_AUDITORIA_NOCTURNA_{fecha_auditar}.jpg"
+        ruta_salida=f"00_AUDITORIA_NOCTURNA_{fecha_auditar}.jpg",
+        modo_horario=modo_horario
     )
     if modo_horario == "noche":
         titulo_free = f"📊 <b>AUDITORÍA NOCTURNA ({fecha_auditar}) — {tasa_txt} VERIFICADOS</b> ✅"
