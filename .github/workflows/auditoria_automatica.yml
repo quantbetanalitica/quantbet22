@@ -2,16 +2,16 @@ name: Auditoria Automatica QuantBet22
 
 on:
   schedule:
-    # 23:15h España (Invierno CET = UTC+1 -> 22:15 UTC): Envía imagen + texto al Bot de Auditorías, Canal FREE y Canal VIP
+    # 23:15h España (Invierno CET = UTC+1 -> 22:15 UTC): Envía imagen + texto de terminados hoy + complementados a Bot, Canal FREE y Canal VIP
     - cron: '15 22 * * *'
-    # 07:30h España (Invierno CET = UTC+1 -> 06:30 UTC): Cierra la madrugada de Sudamérica, envía 100% al Bot y actualiza la Web
+    # 07:30h España (Invierno CET = UTC+1 -> 06:30 UTC): Envía imagen + texto oficial cerrada de los 7 partidos VIP/FREE de ayer + madrugada a Bot, Canal FREE y Canal VIP + reporte CSV al Bot
     - cron: '30 6 * * *'
   workflow_dispatch:
     inputs:
       modo:
-        description: 'Modo manual: clientes (envía a FREE+VIP+Bot) o privado (solo Bot + Web)'
+        description: 'Modo manual: noche (23:15 terminados+complementados), manana (07:30 cierre completo) o privado (solo tu Bot)'
         required: true
-        default: 'clientes'
+        default: 'manana'
 
 permissions:
   contents: write
@@ -34,10 +34,12 @@ jobs:
 
       - name: Ejecutar Auditoria Automatica (PC apagado)
         run: |
-          if [ "${{ github.event.schedule }}" = "15 22 * * *" ] || [ "${{ github.event.inputs.modo }}" = "clientes" ]; then
-            python auditoria_ayer.py --clientes
+          if [ "${{ github.event.schedule }}" = "15 22 * * *" ] || [ "${{ github.event.inputs.modo }}" = "noche" ]; then
+            python auditoria_ayer.py --clientes --noche
+          elif [ "${{ github.event.inputs.modo }}" = "privado" ]; then
+            python auditoria_ayer.py --manana
           else
-            python auditoria_ayer.py
+            python auditoria_ayer.py --clientes --manana
           fi
 
       - name: Guardar resultados FT actualizados en GitHub (Actualiza Streamlit Web)
