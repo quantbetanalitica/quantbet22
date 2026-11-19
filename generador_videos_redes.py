@@ -271,7 +271,7 @@ _req_vid.post = _hook_req_post_quirurgico
 
 
 import asyncio
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 import json
 import os
 from pathlib import Path
@@ -740,7 +740,7 @@ def seleccionar_7_partidos_14_apuestas_clientes(fecha_hoy, ruta_csv="auditoria_a
         return None
 
     # 2. Consolidar los últimos 7 partidos DISTINTOS (4 VIP + 3 FREE) que YA finalizaron con marcador FT real
-    ahora_real_aud = datetime.now()
+    ahora_real_aud = datetime.now(timezone.utc).replace(tzinfo=None) + timedelta(hours=1)
     fecha_max_terminada = (
         (ahora_real_aud - timedelta(days=1)).strftime("%Y-%m-%d")
         if ahora_real_aud.hour < 21
@@ -980,11 +980,14 @@ def crear_imagen_auditoria_vertical(fecha_hoy, ruta_csv="auditoria_apuestas.csv"
     return ruta_salida, tasa_txt
 
 
-def publicar_auditoria_nocturna_canal_free(fecha_auditar=None):
-    """Refresca marcadores FT, genera la imagen oficial de las 7 tarjetas y la envía al Canal FREE y a tu chat privado."""
+def publicar_auditoria_nocturna_canal_free(fecha_auditar=None, enviar_a_clientes=True, modo_horario="manana"):
+    """Refresca marcadores FT, genera la imagen vertical oficial de las 7 tarjetas (4 VIP + 3 FREE)
+    y envía SIEMPRE imagen + texto a tu Bot de Auditorías y Chat Privado;
+    si enviar_a_clientes=True, también la publica en Canal FREE y Canal VIP con sus textos respectivos."""
     import mercados_optimizados as m
+    ahora_esp = datetime.now(timezone.utc).replace(tzinfo=None) + timedelta(hours=1)
     if not fecha_auditar:
-        fecha_auditar = datetime.now().strftime("%Y-%m-%d")
+        fecha_auditar = ahora_esp.strftime("%Y-%m-%d") if modo_horario == "noche" else (ahora_esp - timedelta(days=1)).strftime("%Y-%m-%d")
     headers = {"x-apisports-key": API_KEY_RESPALDO_AYER}
     m.obtener_datos_api_partidos(fecha_auditar, headers, forzar_refresco=True)
     m.resolver_apuestas_pendientes(API_KEY_RESPALDO_AYER)
@@ -993,12 +996,29 @@ def publicar_auditoria_nocturna_canal_free(fecha_auditar=None):
         fecha_auditar,
         ruta_salida=f"00_AUDITORIA_NOCTURNA_{fecha_auditar}.jpg"
     )
+    if modo_horario == "noche":
+        titulo_free = f"📊 <b>AUDITORÍA NOCTURNA ({fecha_auditar}) — {tasa_txt} VERIFICADOS</b> ✅"
+        intro_free = (
+            "Ahí tienen en pantalla el avance real de la jornada de hoy con marcador final (FT) "
+            "sobre las tarjetas ya finalizadas (y complementado con los últimos encuentros cerrados)."
+        )
+        cta_dia = "MAÑANA"
+        titulo_vip = f"🏆 <b>AVANCE NOCTURNO EQUIPO VIP ({fecha_auditar}) — {tasa_txt} VERIFICADOS</b> ✅"
+    else:
+        titulo_free = f"📊 <b>AUDITORÍA OFICIAL CERRADA ({fecha_auditar}) — {tasa_txt} VERIFICADOS</b> ✅"
+        intro_free = (
+            "Ahí tienen en pantalla la transparencia total de nuestro algoritmo en Python: "
+            "resultados reales auditados con marcador final (FT) sobre las 7 tarjetas oficiales VIP y FREE entregadas a clientes."
+        )
+        cta_dia = "HOY"
+        titulo_vip = f"🏆 <b>BALANCE OFICIAL CERRADO EQUIPO VIP ({fecha_auditar}) — {tasa_txt} VERIFICADOS</b> ✅"
+
     caption_oficial_free = (
-        f"📊 <b>AUDITORÍA OFICIAL CERRADA ({fecha_auditar}) — {tasa_txt} VERIFICADOS</b> ✅\n\n"
-        "Ahí tienen en pantalla la transparencia de nuestro algoritmo en Python: resultados reales auditados con marcador final (FT) sobre nuestras 7 tarjetas del día.\n\n"
-        "🔥 <b>¿QUIERES PROBAR MAÑANA EL CANAL VIP POR SOLO 1.00 USD?</b>\n"
+        f"{titulo_free}\n\n"
+        f"{intro_free}\n\n"
+        f"🔥 <b>¿QUIERES PROBAR {cta_dia} EL CANAL VIP POR SOLO 1.00 USD?</b>\n"
         "Habilitamos el <b>PASE DIARIO DE 24 HORAS por solo 1.00 USD</b>:\n"
-        "✅ Recibes las 4 Tarjetas VIP de cuota alta de mañana.\n"
+        f"✅ Recibes las 4 Tarjetas VIP de cuota alta de {cta_dia.lower()}.\n"
         "✅ Recibes la Combinada Doble Institucional VIP.\n"
         "✅ Pago único por 1 día (sin cobros automáticos).\n\n"
         "⏳ <i>IMPORTANTE: Los precios de promoción VIP (7.99 USD por 10 días) y Plan PRO están disponibles únicamente hasta el 30 DE NOVIEMBRE.</i>\n\n"
@@ -1011,7 +1031,7 @@ def publicar_auditoria_nocturna_canal_free(fecha_auditar=None):
         "👉 <a href='https://quantbet22.streamlit.app'>https://quantbet22.streamlit.app</a>"
     )
     caption_oficial_vip = (
-        f"🏆 <b>BALANCE OFICIAL CERRADO EQUIPO VIP ({fecha_auditar}) — {tasa_txt} VERIFICADOS</b> ✅\n\n"
+        f"{titulo_vip}\n\n"
         "¡Excelente jornada, equipo VIP! Ahí tienen en pantalla la auditoría real con marcador final (FT) sobre nuestras 7 tarjetas oficiales.\n\n"
         "📈 <i>Recuerden mantener disciplina con el Stake de Kelly y consultar todas las estadísticas y combinadas auditadas en tiempo real en nuestra plataforma web:</i>\n"
         "🌐 👉 <a href='https://quantbet22.streamlit.app'>https://quantbet22.streamlit.app</a>\n\n"
@@ -1020,15 +1040,18 @@ def publicar_auditoria_nocturna_canal_free(fecha_auditar=None):
         "👉 <a href='https://whop.com/youtube-d4c7/products/uantbet22-membresia-pro-avanzada/?ref=related_products'>Desbloquear Plan PRO aquí</a>\n"
         "💬 Soporte directo 24/7: @QuantBetSoporte_bot"
     )
-    # 1. Enviar a tu Bot Personal de Auditorías
+    # 1. Enviar SIEMPRE imagen + texto a tu Bot Personal de Auditorías
     m.enviar_imagen_telegram(m.TOKEN_TICKETS, m.CHAT_ID_GRUPO_AUDITORIAS, ruta_img, caption_oficial_free)
-    # 2. Enviar a tu chat privado personal
+    # 2. Enviar SIEMPRE imagen + texto a tu chat privado personal
     m.enviar_imagen_telegram(m.TOKEN_GENERAL, m.CHAT_ID_GENERAL, ruta_img, caption_oficial_free)
-    # 3. Enviar directo al Canal FREE de Clientes
-    m.enviar_imagen_telegram(m.TOKEN_CARTERO, m.CHAT_ID_CLIENTES_FREE, ruta_img, caption_oficial_free)
-    # 4. Enviar directo al Canal VIP de Clientes con su texto exclusivo
-    m.enviar_imagen_telegram(m.TOKEN_CARTERO, m.CHAT_ID_CLIENTES_VIP, ruta_img, caption_oficial_vip)
-    print(f"✅ Auditoría nocturna ({fecha_auditar}) enviada con éxito a tu Bot de Auditorías, Canal FREE y Canal VIP.")
+    if enviar_a_clientes:
+        # 3. Enviar directo al Canal FREE de Clientes
+        m.enviar_imagen_telegram(m.TOKEN_CARTERO, m.CHAT_ID_CLIENTES_FREE, ruta_img, caption_oficial_free)
+        # 4. Enviar directo al Canal VIP de Clientes con su texto exclusivo
+        m.enviar_imagen_telegram(m.TOKEN_CARTERO, m.CHAT_ID_CLIENTES_VIP, ruta_img, caption_oficial_vip)
+        print(f"✅ Imagen + texto de auditoría ({fecha_auditar} | {modo_horario}) enviada a Bot de Auditorías, Canal FREE y Canal VIP.")
+    else:
+        print(f"✅ Imagen + texto de auditoría ({fecha_auditar} | {modo_horario}) enviada en MODO PRIVADO solo a tu Bot de Auditorías y Chat Privado.")
 
 
 
