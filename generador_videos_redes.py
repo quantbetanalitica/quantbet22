@@ -589,7 +589,7 @@ def estampar_subtitulo_metro(ruta_slide_base, texto_subtitulo, ruta_salida_frame
     return ruta_salida_frame
 
 
-def evaluar_mercado_contra_resultado_real(merc, gh, ga, g_ht, es_sudamerica=False, partido_nom=""):
+def evaluar_mercado_contra_resultado_real(merc, gh, ga, g_ht, es_sudamerica=False, partido_nom="", stats_reales=None):
     tot = gh + ga
     g_2t = max(0, tot - g_ht)
     m = str(merc).strip()
@@ -601,16 +601,14 @@ def evaluar_mercado_contra_resultado_real(merc, gh, ga, g_ht, es_sudamerica=Fals
     m_norm = _norm_txt(m_low)
     loc_n, vis_n = (_norm_txt(partido_nom).split(" vs ") + ["", ""])[:2]
 
-    if "over 1.5" in m_low or "mas de 1.5" in m_norm:
-        return tot >= 2
-    elif "under 2.5" in m_low or "menos de 2.5" in m_low:
-        return tot <= 2
-    elif "under 3.5" in m_low or "menos de 3.5" in m_low:
-        return tot <= 3
-    elif "over 2.5" in m_low:
-        return tot >= 3
-    elif "over 3.5" in m_low:
-        return tot >= 4
+    if ("over " in m_low or "mas de " in m_norm) and "goles" in m_low and "1t" not in m_low and "2t" not in m_low and "tiempo" not in m_low:
+        m_ov = re.search(r"(\d+(?:\.\d+)?)", m_low)
+        if m_ov:
+            return tot > float(m_ov.group(1))
+    elif "under " in m_low or "menos de " in m_low:
+        m_un = re.search(r"(\d+(?:\.\d+)?)", m_low)
+        if m_un:
+            return tot < float(m_un.group(1))
     elif "asiatico > 2.25" in m_norm:
         return tot >= 2
     elif "asiatico > 2.75" in m_norm:
@@ -625,15 +623,19 @@ def evaluar_mercado_contra_resultado_real(merc, gh, ga, g_ht, es_sudamerica=Fals
         return gh >= ga
     elif "x2" in m_low:
         return ga >= gh
-    elif "gol en 1t" in m_low or "gol 1t" in m_low:
-        return g_ht >= 1
-    elif "gol en 2" in m_low or "gol 2t" in m_low:
-        return g_2t >= 1
-    elif "goles " in m_low and "> 1.5" in m_low:
+    elif "goles 1t" in m_low or "gol en 1t" in m_low or "gol 1t" in m_low:
+        m_n = re.search(r">\s*(\d+(?:\.\d+)?)", m)
+        return g_ht > (float(m_n.group(1)) if m_n else 0.5)
+    elif "goles 2" in m_low or "gol en 2" in m_low or "gol 2t" in m_low:
+        m_n = re.search(r">\s*(\d+(?:\.\d+)?)", m)
+        return g_2t > (float(m_n.group(1)) if m_n else 0.5)
+    elif "goles " in m_low and ">" in m_low:
+        m_n = re.search(r">\s*(\d+(?:\.\d+)?)", m)
+        lin_eq = float(m_n.group(1)) if m_n else 1.5
         if loc_n and loc_n[:5] in m_norm:
-            return gh >= 2
+            return gh > lin_eq
         elif vis_n and vis_n[:5] in m_norm:
-            return ga >= 2
+            return ga > lin_eq
         return False
     elif "vict." in m_low or "victoria" in m_low:
         if "local" in m_low or (loc_n and loc_n[:5] in m_norm):
@@ -643,11 +645,38 @@ def evaluar_mercado_contra_resultado_real(merc, gh, ga, g_ht, es_sudamerica=Fals
         return False
     elif "empate" in m_low:
         return gh == ga
-    elif "tarjetas" in m_low or "faltas" in m_low:
+    elif "tarjetas" in m_low or "amarill" in m_low:
+        m_n = re.search(r">\s*(\d+(?:\.\d+)?)", m)
+        linea_t = float(m_n.group(1)) if m_n else 3.5
+        if isinstance(stats_reales, dict):
+            if "amarill" in m_low and stats_reales.get("yellow_total") is not None:
+                return float(stats_reales["yellow_total"]) > linea_t
+            if stats_reales.get("cards_total") is not None:
+                return float(stats_reales["cards_total"]) > linea_t
+        return (abs(gh - ga) <= 1) or (tot >= 2)
+    elif "faltas" in m_low:
+        m_n = re.search(r">\s*(\d+(?:\.\d+)?)", m)
+        linea_f = float(m_n.group(1)) if m_n else 22.5
+        if isinstance(stats_reales, dict) and stats_reales.get("fouls_total") is not None:
+            return float(stats_reales["fouls_total"]) > linea_f
         return (abs(gh - ga) <= 1) or (tot >= 2)
     elif "corners" in m_norm:
-        return (tot >= 1) or (abs(gh - ga) == 0)
+        m_n = re.search(r">\s*(\d+(?:\.\d+)?)", m)
+        linea_c = float(m_n.group(1)) if m_n else 7.5
+        if isinstance(stats_reales, dict):
+            if linea_c <= 5.5:
+                if loc_n and loc_n[:5] in m_norm and stats_reales.get("corners_home") is not None:
+                    return float(stats_reales["corners_home"]) > linea_c
+                if vis_n and vis_n[:5] in m_norm and stats_reales.get("corners_away") is not None:
+                    return float(stats_reales["corners_away"]) > linea_c
+            if stats_reales.get("corners_total") is not None:
+                return float(stats_reales["corners_total"]) > linea_c
+        return (tot >= 1) or (abs(gh - ga) <= 1)
     elif "remates" in m_low:
+        m_n = re.search(r">\s*(\d+(?:\.\d+)?)", m)
+        linea_r = float(m_n.group(1)) if m_n else 6.5
+        if isinstance(stats_reales, dict) and stats_reales.get("shots_on_target_total") is not None:
+            return float(stats_reales["shots_on_target_total"]) > linea_r
         return (tot >= 1) or (abs(gh - ga) <= 1)
     return tot >= 2
 
@@ -695,11 +724,20 @@ def seleccionar_7_partidos_14_apuestas_clientes(fecha_hoy, ruta_csv="auditoria_a
         except Exception:
             pass
 
-    # Cargar estados exactos ya auditados en auditoria_apuestas.csv (garantiza coherencia 100% entre Web e Imagen)
+    # Calcular SIEMPRE primero la fecha exacta a auditar (ayer antes de las 21:00h ESP, hoy desde las 21:00h ESP)
+    ahora_real_aud = datetime.now(timezone.utc).replace(tzinfo=None) + timedelta(hours=1)
+    fecha_max_terminada = (
+        (ahora_real_aud - timedelta(days=1)).strftime("%Y-%m-%d")
+        if ahora_real_aud.hour < 21
+        else ahora_real_aud.strftime("%Y-%m-%d")
+    )
+    fecha_tope_auditoria = min(str(fecha_hoy), fecha_max_terminada)
+
+    # Cargar estados exactos ya auditados en auditoria_apuestas.csv usando fecha_tope_auditoria (NO una fecha futura)
     mapa_estado_csv = {}
     csv_mismo_dia = {"VIP": {}, "FREE": {}}
     try:
-        dt_obj_f = datetime.strptime(str(fecha_hoy), "%Y-%m-%d")
+        dt_obj_f = datetime.strptime(str(fecha_tope_auditoria), "%Y-%m-%d")
         ini_vent_csv = dt_obj_f + timedelta(hours=7)
         fin_vent_csv = dt_obj_f + timedelta(days=1, hours=6, minutes=59)
     except Exception:
@@ -739,7 +777,7 @@ def seleccionar_7_partidos_14_apuestas_clientes(fecha_hoy, ruta_csv="auditoria_a
                             "tipo_tarjeta": lvl,
                             "partido": p_full,
                             "marcador": clv_r if "-" in clv_r else "0-0",
-                            "fecha": str(fecha_hoy),
+                            "fecha": str(fecha_tope_auditoria),
                             "dos_apuestas": [],
                         })
                         if not any(x["mercado_corto"].lower() == abreviar_pick_cliente(m_sin_tag).lower() for x in slot["dos_apuestas"]):
@@ -798,13 +836,7 @@ def seleccionar_7_partidos_14_apuestas_clientes(fecha_hoy, ruta_csv="auditoria_a
     # 2. Regla estricta de fechas:
     #    - En modo "manana" (07:30 AM): SOLO audita la jornada exacta fecha_hoy (+ su madrugada). NUNCA mete partidos de antier.
     #    - En modo "noche" (23:15 PM): Audita los ya terminados de hoy y complementa los que falten con jornadas anteriores.
-    ahora_real_aud = datetime.now(timezone.utc).replace(tzinfo=None) + timedelta(hours=1)
-    fecha_max_terminada = (
-        (ahora_real_aud - timedelta(days=1)).strftime("%Y-%m-%d")
-        if ahora_real_aud.hour < 21
-        else ahora_real_aud.strftime("%Y-%m-%d")
-    )
-    fecha_tope_auditoria = min(str(fecha_hoy), fecha_max_terminada)
+    # fecha_tope_auditoria ya calculada arriba con hora real de España (UTC+1)
     dt_base = datetime.strptime(fecha_tope_auditoria, "%Y-%m-%d")
     archivos_clientes = sorted(
         [a for a in os.listdir(".") if re.match(r"clientes_enviados_\d{4}-\d{2}-\d{2}\.json", a)],
@@ -815,7 +847,7 @@ def seleccionar_7_partidos_14_apuestas_clientes(fecha_hoy, ruta_csv="auditoria_a
     free_recolectadas = []
     partidos_vistos = set()
     fecha_auditada_real = None
-    excluidos_copa = ("portugalete", "real union", "real unión", "calvo sotelo", "cd minera", "utebo", "amorebieta")
+    excluidos_copa = ()  # Unificado: el filtro de copas ocurre al escanear; aquí se auditan fielmente las 7 tarjetas enviadas
 
     for arch_c in archivos_clientes:
         f_cand = arch_c.replace("clientes_enviados_", "").replace(".json", "")
@@ -872,7 +904,15 @@ def seleccionar_7_partidos_14_apuestas_clientes(fecha_hoy, ruta_csv="auditoria_a
                 if estado_csv is not None:
                     ganada = estado_csv
                 else:
-                    ganada = evaluar_mercado_contra_resultado_real(merc, gh, ga, g_ht, es_sud, part_nom)
+                    stats_bx_gv = None
+                    if any(k in merc.lower() for k in ("córners", "corners", "remates", "faltas", "tarjetas", "amarill")):
+                        try:
+                            import mercados_optimizados as _mo_bx
+                            loc_g, vis_g = (part_sin_liga.split(" vs ") + ["", ""])[:2]
+                            stats_bx_gv = _mo_bx.obtener_stats_boxscore_partido_ft(id_p, loc_g, vis_g, api_token=API_KEY_RESPALDO_AYER)
+                        except Exception:
+                            stats_bx_gv = None
+                    ganada = evaluar_mercado_contra_resultado_real(merc, gh, ga, g_ht, es_sud, part_nom, stats_reales=stats_bx_gv)
                 dos_apuestas.append({
                     "mercado": f"[{tipo_t}] {merc}",
                     "mercado_corto": abreviar_pick_cliente(merc),
@@ -1463,7 +1503,12 @@ def generar_tarjeta_trampa_sino_existe(p_trampa, directorio_dia):
     ruta_especifica = os.path.join(dir_desc, f"{hora_clean}_{loc_clean}_vs_{vis_clean}_DESCARTES.jpg")
     if os.path.exists(ruta_especifica):
         return ruta_especifica
-    return generar_captura_automatica(p_trampa, "DESCARTES")
+    r_tmp = generar_captura_automatica(p_trampa, "DESCARTES")
+    if r_tmp and os.path.exists(r_tmp):
+        import shutil as _sh_tr
+        _sh_tr.move(r_tmp, ruta_especifica)
+        return ruta_especifica
+    return r_tmp
 
 
 def es_partido_de_america(p):
@@ -1528,13 +1573,18 @@ def generar_paquete_redes_sociales(fecha_jornada, partidos_vip, partidos_descart
         key=lambda x: (str(x.get("fecha", "")), str(x.get("hora", "20:45")))
     )
     partido_europa_1, partido_europa_2 = par_cronologico[0], par_cronologico[1]
+    ahora_esp_vid = datetime.now(timezone.utc).replace(tzinfo=None) + timedelta(hours=1)
+    modo_aud_vid = "noche" if ahora_esp_vid.hour >= 21 else "manana"
+    fecha_aud_esperada_vid = ahora_esp_vid.strftime("%Y-%m-%d") if modo_aud_vid == "noche" else (ahora_esp_vid - timedelta(days=1)).strftime("%Y-%m-%d")
     slide_aud_1, tasa_real = crear_imagen_auditoria_vertical(
-        fecha_jornada,
+        fecha_aud_esperada_vid,
         partidos_vip=partidos_vip,
         ruta_salida=os.path.join(carpeta_videos, "temp_aud_1.jpg"),
         token_privado=TOKEN_AUDITORIAS_PRIVADO,
-        chat_id_privado=CHAT_ID_AUDITORIAS_PRIVADO
+        chat_id_privado=CHAT_ID_AUDITORIAS_PRIVADO,
+        modo_horario=modo_aud_vid
     )
+    print(f"    📊 [AUDITORÍA EN VÍDEO] Estampada jornada oficial: {fecha_aud_esperada_vid} ({tasa_real} | modo={modo_aud_vid})")
 
     cola_json = []
 
@@ -1657,6 +1707,8 @@ def generar_paquete_redes_sociales(fecha_jornada, partidos_vip, partidos_descart
     except Exception as e:
         print(f"    [!] Error Video 2 (Europa #2): {e}")
 
+    for item_cj in cola_json:
+        item_cj["fecha_auditada_video"] = fecha_aud_esperada_vid
     with open(os.path.join(carpeta_videos, "cola_publicacion_redes.json"), "w", encoding="utf-8") as f:
         json.dump(cola_json, f, ensure_ascii=False, indent=2)
 
