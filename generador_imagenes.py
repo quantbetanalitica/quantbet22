@@ -227,7 +227,14 @@ def limpiar_emojis_fuente(texto):
     return t.strip()
 
 
-def calcular_cuota_real_casa(prob, cuota_modelo=None, tipo_nivel="FREE", nombre_mercado=""):
+def calcular_cuota_real_casa(prob, cuota_modelo=None, tipo_nivel="FREE", nombre_mercado="", cuotas_reales_casa=None):
+    if isinstance(cuotas_reales_casa, dict) and nombre_mercado in cuotas_reales_casa:
+        try:
+            c_real = round(float(cuotas_reales_casa[nombre_mercado]), 2)
+            if c_real >= 1.12:
+                return c_real
+        except Exception:
+            pass
     if prob is None or prob <= 0:
         return 1.25
     cuota_justa = 100.0 / prob
@@ -347,28 +354,71 @@ def generar_captura_automatica(res_m, tipo_filtro="DESCARTES"):
             ("Córners > 8.5", res_m.get('p_c85'), res_m.get('c_min_c85')),
         ]
 
-    if tot_tiros >= 8.2:
-        p_t85, c_t85 = _prob_poisson_over(tot_tiros, 8.5)
-        lineas_tiros_dinamicas = [
-            ("Remates Puerta > 6.5", res_m.get('p_tiros65'), res_m.get('c_min_tiros65')),
-            ("Remates Puerta > 7.5", res_m.get('p_tiros75'), res_m.get('c_min_tiros75')),
-            ("Remates Puerta > 8.5", p_t85, c_t85),
-        ]
-    else:
-        lineas_tiros_dinamicas = [
-            ("Remates Puerta > 6.5", res_m.get('p_tiros65'), res_m.get('c_min_tiros65')),
-            ("Remates Puerta > 7.5", res_m.get('p_tiros75'), res_m.get('c_min_tiros75')),
-        ]
+    cuotas_bp_all = res_m.get("cuotas_bp") or {}
+    over_remates_bp = cuotas_bp_all.get("over_remates") or {}
+    over_1t_bp = cuotas_bp_all.get("over_goles_1t") or {}
+    over_2t_bp = cuotas_bp_all.get("over_goles_2t") or {}
+    linea_t_free = float(res_m.get("linea_tiros_free") or max(6.5, min(12.5, math.floor(tot_tiros - 1.8) + 0.5)))
+    linea_t_vip = float(res_m.get("linea_tiros_vip") or max(7.5, min(13.5, math.floor(tot_tiros - 0.8) + 0.5)))
+    p_tf_m = res_m.get("p_tiros_free")
+    c_tf_m = res_m.get("c_min_tiros_free")
+    if p_tf_m is None:
+        p_tf_m, c_tf_m = _prob_poisson_over(tot_tiros, linea_t_free)
+    p_tv_m = res_m.get("p_tiros_vip")
+    c_tv_m = res_m.get("c_min_tiros_vip")
+    if p_tv_m is None:
+        p_tv_m, c_tv_m = _prob_poisson_over(tot_tiros, linea_t_vip)
 
-    # LOS 20 MERCADOS MATEMÁTICOS COMPLETOS CONECTADOS AL MOTOR
+    lineas_tiros_dinamicas = [(f"Remates Puerta > {linea_t_free:.1f}", p_tf_m, c_tf_m)]
+    if abs(linea_t_vip - linea_t_free) >= 0.5:
+        lineas_tiros_dinamicas.append((f"Remates Puerta > {linea_t_vip:.1f}", p_tv_m, c_tv_m))
+
+    cuotas_reales_casa = res_m.get("cuotas_reales_casa") or {}
+    over_goles_bp = ((res_m.get("cuotas_bp") or {}).get("over_goles") or {})
+    tot_faltas_val = float(res_m.get("tot_faltas") or 22.5)
+    linea_f_free = float(res_m.get("linea_faltas_free") or max(16.5, min(25.5, math.floor(tot_faltas_val - 2.3) + 0.5)))
+    linea_f_vip = float(res_m.get("linea_faltas_vip") or max(18.5, min(27.5, math.floor(tot_faltas_val - 0.8) + 0.5)))
+    p_f_free = res_m.get("p_faltas_free")
+    c_f_free = res_m.get("c_min_faltas_free")
+    if p_f_free is None:
+        p_f_free, c_f_free = _prob_poisson_over(tot_faltas_val, linea_f_free)
+    p_f_vip = res_m.get("p_faltas_vip")
+    c_f_vip = res_m.get("c_min_faltas_vip")
+    if p_f_vip is None:
+        p_f_vip, c_f_vip = _prob_poisson_over(tot_faltas_val, linea_f_vip)
+
+    p_25_m = res_m.get("p_25_match")
+    c_25_m = res_m.get("c_min_25")
+    if p_25_m is None:
+        p_25_m, c_25_m = _prob_poisson_over(tot_goles, 2.5)
+    p_35_m = res_m.get("p_35_match")
+    c_35_m = res_m.get("c_min_35")
+    if p_35_m is None:
+        p_35_m, c_35_m = _prob_poisson_over(tot_goles, 3.5)
+    p_45_m = res_m.get("p_45_match")
+    c_45_m = res_m.get("c_min_45")
+    if p_45_m is None:
+        p_45_m, c_45_m = _prob_poisson_over(tot_goles, 4.5)
+
+    lineas_faltas_dinamicas = [(f"Faltas Totales > {linea_f_free:.1f}", p_f_free, c_f_free)]
+    if abs(linea_f_vip - linea_f_free) >= 0.5:
+        lineas_faltas_dinamicas.append((f"Faltas Totales > {linea_f_vip:.1f}", p_f_vip, c_f_vip))
+
+    # LOS 20+ MERCADOS MATEMÁTICOS COMPLETOS CALIBRADOS A LAS LÍNEAS REALES DE LA CASA
     mercados_brutos = [
         ("Over 1.5 Goles", res_m.get('p_15_match'), res_m.get('c_min_15')),
+        ("Over 2.5 Goles", p_25_m, c_25_m),
+        ("Over 3.5 Goles", p_35_m, c_35_m),
+        ("Over 4.5 Goles", p_45_m, c_45_m),
+        ("Over 5.5 Goles", *_prob_poisson_over(tot_goles, 5.5)),
         ("Gol en 1T", res_m.get('p_05_ht'), res_m.get('c_min_05_ht')),
+        ("Goles 1T > 1.5", res_m.get('p_15_ht'), res_m.get('c_min_15_ht')),
         ("Gol en 2do Tiempo", res_m.get('p_05_2t'), res_m.get('c_min_05_2t')),
+        ("Goles 2do Tiempo > 1.5", res_m.get('p_15_2t'), res_m.get('c_min_15_2t')),
         ("Ambos Marcan (BTTS)", res_m.get('p_btts'), res_m.get('c_min_btts')),
         ("Total Asiático > 2.25", res_m.get('p_asig225'), res_m.get('c_min_asig225')),
         ("Total Asiático > 2.75", res_m.get('p_asig275'), res_m.get('c_min_asig275')),
-        ("Faltas Totales > 22.5", res_m.get('p_faltas22'), res_m.get('c_min_faltas22')),
+        *lineas_faltas_dinamicas,
         ("Doble Oport. 1X", res_m.get('p_1x'), res_m.get('c_min_1x')),
         ("Doble Oport. X2", res_m.get('p_x2'), res_m.get('c_min_x2')),
         ("Combo 1X + O1.5", res_m.get('p_combo_1x_over15'), res_m.get('c_min_combo_1x')),
@@ -384,18 +434,30 @@ def generar_captura_automatica(res_m, tipo_filtro="DESCARTES"):
         mercados_brutos.append((f"Victoria {res_m['local'][:12]}", res_m.get("p_h"), res_m.get("cuota_h")))
     if (res_m.get("p_a") or 0) >= 63.0:
         mercados_brutos.append((f"Victoria {res_m['visitante'][:12]}", res_m.get("p_a"), res_m.get("cuota_a")))
-    if res_m.get("nombre_dom_goles") and (res_m.get("p_dom_goles") or 0) >= 62.0:
+    if res_m.get("nombre_dom_goles") and ((res_m.get("p_dom_goles") or 0) >= 62.0 or (res_m["nombre_dom_goles"] in cuotas_reales_casa and (res_m.get("p_dom_goles") or 0) >= 52.0)):
         mercados_brutos.append((res_m["nombre_dom_goles"], res_m.get("p_dom_goles"), res_m.get("c_min_dom_goles")))
     if res_m.get("nombre_dom_corn") and (res_m.get("p_dom_corn") or 0) >= 64.0:
         mercados_brutos.append((res_m["nombre_dom_corn"], res_m.get("p_dom_corn"), res_m.get("c_min_dom_corn")))
-    if res_m.get("nombre_goleador") and (res_m.get("p_goleador") or 0) >= 62.0:
-        mercados_brutos.append((res_m["nombre_goleador"], res_m.get("p_goleador"), res_m.get("c_min_goleador")))
+    # Goleador individual desactivado en tarjetas automáticas hasta auditar autores reales por evento
 
     mercados_ritmo = []
     mercados_ganador_respaldo = []
 
     for nombre, prob, cuota_orig in mercados_brutos:
-        if prob is None or cuota_orig is None or prob < 56.0:
+        if prob is None or cuota_orig is None:
+            continue
+        # Si la casa de apuestas (BetPlay/Kambi) tiene cuota real abierta para este mercado exacto,
+        # calibrar la probabilidad combinando nuestro Poisson con la probabilidad implícita sin margen de la casa
+        if nombre in cuotas_reales_casa:
+            try:
+                odd_k_real = float(cuotas_reales_casa[nombre])
+                if odd_k_real > 1.05:
+                    p_impl_casa = min(92.0, (94.0 / odd_k_real))
+                    prob = round((float(prob) * 0.50) + (p_impl_casa * 0.50), 1)
+                    cuota_orig = odd_k_real
+            except Exception:
+                pass
+        if prob < 56.0:
             continue
         if "AMISTOSO" in liga_vis and ("Tarjetas" in nombre or "Faltas" in nombre):
          continue
@@ -429,19 +491,123 @@ def generar_captura_automatica(res_m, tipo_filtro="DESCARTES"):
         alta_friccion_cerrada = float(res_m.get("tot_faltas") or 22.0) >= 23.0 and abs(float(res_m.get("p_h", 50.0)) - float(res_m.get("p_a", 50.0))) < 18.0
         umbral_goles_o15 = 2.56 if (es_liga_cerrada or alta_friccion_cerrada or (not loc_protegido and not vis_protegido)) else 2.40
         riesgo_corto_dc = float(res_m.get("prob_marcador_corto") or 0.0)
-        if nombre == "Over 1.5 Goles" and (tot_goles < umbral_goles_o15 or prob < 71.0 or riesgo_corto_dc >= 27.0):
-            continue
-        if nombre == "Total Asiático > 2.25" and tot_goles < 2.52:
-            continue
-        if nombre == "Total Asiático > 2.75" and tot_goles < 2.78:
-            continue
-        if nombre == "Gol en 1T" and (tot_goles < umbral_goles_o15 or prob < 67.0):
-            continue
-        if nombre == "Gol en 2do Tiempo" and (tot_goles < 2.38 or prob < 67.0):
-            continue
+        # Calibración con líneas reales abiertas en casa de apuestas (ej. Barcelona: si casa abre desde 3.5, escalar a 3.5)
+        if nombre in ("Over 1.5 Goles", "Over 2.5 Goles", "Over 3.5 Goles", "Over 4.5 Goles", "Over 5.5 Goles"):
+            lin_g_num = float(nombre.split()[1])
+            if over_goles_bp:
+                odd_real_g = over_goles_bp.get(lin_g_num)
+                if odd_real_g is None:
+                    odd_real_g = over_goles_bp.get(str(lin_g_num))
+                if odd_real_g is None:
+                    continue
+                odd_real_g = float(odd_real_g)
+                if tipo_filtro == "VIP" and (odd_real_g < 1.30 or odd_real_g > 2.15):
+                    continue
+                if tipo_filtro == "FREE" and (odd_real_g < 1.14 or odd_real_g > 1.50):
+                    continue
+            else:
+                if nombre == "Over 1.5 Goles":
+                    if tot_goles < umbral_goles_o15 or prob < 71.0 or riesgo_corto_dc >= 27.0:
+                        continue
+                    if tot_goles >= 3.20 or (tipo_filtro == "VIP" and tot_goles >= 2.95):
+                        continue
+                elif nombre == "Over 2.5 Goles":
+                    if tot_goles < 2.90 or prob < 62.0:
+                        continue
+                    if tipo_filtro == "FREE" and tot_goles < 3.30:
+                        continue
+                elif nombre == "Over 3.5 Goles":
+                    if tot_goles < 3.80 or prob < 58.0:
+                        continue
+                elif nombre == "Over 4.5 Goles":
+                    if tot_goles < 4.70 or prob < 57.0:
+                        continue
+                elif nombre == "Over 5.5 Goles":
+                    if tot_goles < 5.65 or prob < 57.0:
+                        continue
+            if nombre == "Over 1.5 Goles" and (tot_goles < umbral_goles_o15 or prob < 71.0 or riesgo_corto_dc >= 27.0):
+                continue
 
-        # 4. Regla #4: Prohibir X2 (visitante) cuando el local tiene >= 30% de ganar o juega en plaza hostil/altura (ej. Bosnia)
+        # Gate de Remates a Puerta contra deslizador real Opta/Kambi (nunca ofrecer 6.5 si la casa empieza en 9.5!)
+        if nombre.startswith("Remates Puerta > ") and over_remates_bp:
+            try:
+                lin_r_num = float(nombre.split(">")[1].strip())
+                odd_r_real = over_remates_bp.get(lin_r_num) or over_remates_bp.get(str(lin_r_num))
+                if odd_r_real is None:
+                    continue
+                odd_r_real = float(odd_r_real)
+                if tipo_filtro == "VIP" and (odd_r_real < 1.30 or odd_r_real > 2.15):
+                    continue
+                if tipo_filtro == "FREE" and (odd_r_real < 1.14 or odd_r_real > 1.55):
+                    continue
+            except Exception:
+                pass
+
+        if nombre == "Total Asiático > 2.25":
+            if tot_goles < 2.52 or tot_goles >= 3.55:
+                continue
+            if over_goles_bp and ((2.5 not in over_goles_bp and "2.5" not in over_goles_bp) or float(over_goles_bp.get(2.5) or over_goles_bp.get("2.5") or 9.0) < 1.32):
+                continue
+        if nombre == "Total Asiático > 2.75":
+            if tot_goles < 2.78 or tot_goles >= 4.05:
+                continue
+            if over_goles_bp and ((2.5 not in over_goles_bp and "2.5" not in over_goles_bp) or float(over_goles_bp.get(2.5) or over_goles_bp.get("2.5") or 9.0) < 1.26):
+                continue
+
+        # Gate de Goles 1T / 2T contra líneas reales de Kambi (si la 2ª parte empieza en 1.5, NO sacar 0.5!)
+        if nombre == "Gol en 1T":
+            if over_1t_bp:
+                odd_1t05 = over_1t_bp.get(0.5) or over_1t_bp.get("0.5")
+                if odd_1t05 is None or float(odd_1t05) < (1.30 if tipo_filtro == "VIP" else 1.14):
+                    continue
+            elif tot_goles < 2.75 or tot_goles >= 3.50 or prob < 69.0 or riesgo_corto_dc >= 24.0:
+                continue
+        if nombre == "Goles 1T > 1.5":
+            if over_1t_bp:
+                odd_1t15 = over_1t_bp.get(1.5) or over_1t_bp.get("1.5")
+                if odd_1t15 is None or float(odd_1t15) < 1.25 or float(odd_1t15) > 2.15:
+                    continue
+            elif tot_goles < 3.60 or prob < 58.0:
+                continue
+        if nombre == "Gol en 2do Tiempo":
+            if over_2t_bp:
+                odd_2t05 = over_2t_bp.get(0.5) or over_2t_bp.get("0.5")
+                if odd_2t05 is None or float(odd_2t05) < (1.30 if tipo_filtro == "VIP" else 1.14):
+                    continue
+            elif tot_goles < 2.65 or tot_goles >= 3.35 or prob < 70.0 or riesgo_corto_dc >= 25.0:
+                continue
+        if nombre == "Goles 2do Tiempo > 1.5":
+            if over_2t_bp:
+                odd_2t15 = over_2t_bp.get(1.5) or over_2t_bp.get("1.5")
+                if odd_2t15 is None or float(odd_2t15) < 1.25 or float(odd_2t15) > 2.15:
+                    continue
+            elif tot_goles < 3.25 or prob < 58.0:
+                continue
+
+        # 4. Regla #4 + Escudo anti cuota basura en 1X / X2 (ej. Barcelona Fem @ 1.02 donde 1X paga 1.001!)
         if "Doble Oport." in nombre or "Combo " in nombre or "Victoria " in nombre:
+            c1_bp = cuotas_bp_all.get("1") if isinstance(cuotas_bp_all.get("1"), (int, float)) else None
+            c2_bp = cuotas_bp_all.get("2") if isinstance(cuotas_bp_all.get("2"), (int, float)) else None
+            c1x_bp = cuotas_bp_all.get("1X") if isinstance(cuotas_bp_all.get("1X"), (int, float)) else None
+            cx2_bp = cuotas_bp_all.get("X2") if isinstance(cuotas_bp_all.get("X2"), (int, float)) else None
+            if "Doble Oport. 1X" == nombre:
+                if (c1x_bp is not None and c1x_bp < 1.14) or (c1_bp is not None and c1_bp < 1.28) or float(res_m.get("p_h", 0)) >= 68.0:
+                    continue
+            if "Doble Oport. X2" == nombre:
+                if (cx2_bp is not None and cx2_bp < 1.14) or (c2_bp is not None and c2_bp < 1.28) or float(res_m.get("p_a", 0)) >= 68.0:
+                    continue
+            if nombre.startswith("Victoria "):
+                es_v_loc = res_m["local"][:8].lower() in nombre.lower()
+                if es_v_loc and c1_bp is not None and c1_bp < (1.30 if tipo_filtro == "VIP" else 1.18):
+                    continue
+                if (not es_v_loc) and c2_bp is not None and c2_bp < (1.30 if tipo_filtro == "VIP" else 1.18):
+                    continue
+            if nombre == "Combo 1X + O1.5":
+                if (c1_bp is not None and c1_bp < 1.24) or tot_goles >= 3.60 or (over_goles_bp and 1.5 not in over_goles_bp and "1.5" not in over_goles_bp):
+                    continue
+            if nombre == "Combo X2 + O1.5":
+                if (c2_bp is not None and c2_bp < 1.24) or tot_goles >= 3.60 or (over_goles_bp and 1.5 not in over_goles_bp and "1.5" not in over_goles_bp):
+                    continue
             if "1X" in nombre and (vis_protegido and not loc_protegido or float(res_m.get("p_a", 0)) >= 40.0):
                 continue
             if "X2" in nombre and (loc_protegido and not vis_protegido or float(res_m.get("p_h", 0)) >= 30.0 or res_m.get("es_plaza_hostil_local")):
@@ -464,8 +630,13 @@ def generar_captura_automatica(res_m, tipo_filtro="DESCARTES"):
     exclusivos_vip_extremos = {
         "Remates Puerta > 7.5", "Remates Puerta > 8.5", "Córners > 9.5",
         "Total Asiático > 2.25", "Total Asiático > 2.75", "Total Menos de 2.5 (Under)",
-        "Combo 1X + O1.5", "Combo X2 + O1.5"
+        "Combo 1X + O1.5", "Combo X2 + O1.5", "Over 4.5 Goles"
     }
+    if abs(linea_f_vip - linea_f_free) >= 0.5:
+        exclusivos_vip_extremos.add(f"Faltas Totales > {linea_f_vip:.1f}")
+    if abs(linea_t_vip - linea_t_free) >= 0.5:
+        exclusivos_vip_extremos.add(f"Remates Puerta > {linea_t_vip:.1f}")
+    exclusivos_vip_extremos.update({"Over 5.5 Goles", "Goles 1T > 1.5", "Goles 2do Tiempo > 1.5"})
     if res_m.get("nombre_goleador"):
         exclusivos_vip_extremos.add(res_m["nombre_goleador"])
 
@@ -474,13 +645,13 @@ def generar_captura_automatica(res_m, tipo_filtro="DESCARTES"):
         lineas_bajas_irreales.add("Córners > 7.5")
 
     candidatos_free = [
-        (m[0], min(86.5, m[1]), calcular_cuota_real_casa(m[1], m[2], "FREE", m[0]))
+        (m[0], min(86.5, m[1]), calcular_cuota_real_casa(m[1], m[2], "FREE", m[0], cuotas_reales_casa))
         for m in todos_ordenados
         if m[0] not in exclusivos_vip_extremos and m[0] not in lineas_bajas_irreales and m[1] >= 62.0
     ]
     if len(candidatos_free) < 2:
         candidatos_free = [
-            (m[0], min(86.5, m[1]), calcular_cuota_real_casa(m[1], m[2], "FREE", m[0]))
+            (m[0], min(86.5, m[1]), calcular_cuota_real_casa(m[1], m[2], "FREE", m[0], cuotas_reales_casa))
             for m in todos_ordenados
             if m[0] not in exclusivos_vip_extremos
         ]
@@ -507,10 +678,14 @@ def generar_captura_automatica(res_m, tipo_filtro="DESCARTES"):
         if tot_goles < 2.95 and ("goles" in fams_usadas_free or "tiempos" in fams_usadas_free):
             fams_usadas_free.update({"goles", "tiempos"})
         colchones_bajos = {"Córners > 7.5", "Total Menos de 3.5 (Under)"}
+        if abs(linea_f_vip - linea_f_free) >= 0.5:
+            colchones_bajos.add(f"Faltas Totales > {linea_f_free:.1f}")
+        if abs(linea_t_vip - linea_t_free) >= 0.5:
+            colchones_bajos.add(f"Remates Puerta > {linea_t_free:.1f}")
         excluidos_vip = nombres_usados_free.union(colchones_bajos)
 
         candidatos_vip = [
-            (m[0], min(89.5, max(66.5, m[1])), calcular_cuota_real_casa(m[1], m[2], "VIP", m[0]))
+            (m[0], min(89.5, max(66.5, m[1])), calcular_cuota_real_casa(m[1], m[2], "VIP", m[0], cuotas_reales_casa))
             for m in todos_ordenados
             if m[1] >= 57.0 and m[0] not in excluidos_vip
         ]
@@ -533,7 +708,7 @@ def generar_captura_automatica(res_m, tipo_filtro="DESCARTES"):
         )
     else:
         candidatos_desc = [
-            (m[0], m[1], calcular_cuota_real_casa(m[1], m[2], "FREE", m[0]))
+            (m[0], m[1], calcular_cuota_real_casa(m[1], m[2], "FREE", m[0], cuotas_reales_casa))
             for m in todos_ordenados
         ]
         top_2 = seleccionar_par_distinto_familia(candidatos_desc, tipo_filtro="DESCARTES", registrar_memoria=True, tot_goles=tot_goles)
@@ -546,16 +721,39 @@ def generar_captura_automatica(res_m, tipo_filtro="DESCARTES"):
             else ("Doble Oport. X2", float(res_m.get("p_x2") or 72.0), 1.22)
         )
         if tot_goles >= 2.35 or hay_favorito_claro:
-            respaldo_fams = (
-                [("Gol en 2do Tiempo", 76.5, 1.42), ("Remates Puerta > 6.5", 74.5, 1.44), ("Gol en 1T", 74.0, 1.42), ("Córners > 8.5", 73.5, 1.48), ("Faltas Totales > 22.5", 73.0, 1.42), (f"Tarjetas > {res_m.get('linea_tarj', 3.5)}", 72.0, 1.46)]
-                if tipo_filtro == "VIP"
-                else [("Over 1.5 Goles", 78.5, 1.24), ("Gol en 2do Tiempo", 77.0, 1.24), ("Remates Puerta > 6.5", 75.5, 1.24), ("Córners > 7.5", 74.5, 1.24), ("Faltas Totales > 22.5", 74.0, 1.24), do_segura_respaldo]
-            )
+            nom_f_vip = f"Faltas Totales > {linea_f_vip:.1f}"
+            nom_f_free = f"Faltas Totales > {linea_f_free:.1f}"
+            c_fv = calcular_cuota_real_casa(p_f_vip or 66.0, c_f_vip, "VIP", nom_f_vip, cuotas_reales_casa)
+            c_ff = calcular_cuota_real_casa(p_f_free or 74.0, c_f_free, "FREE", nom_f_free, cuotas_reales_casa)
+            respaldo_vip = [
+                (f"Remates Puerta > {linea_t_vip:.1f}", round(p_tv_m or 68.0, 1), calcular_cuota_real_casa(p_tv_m or 68.0, c_tv_m, "VIP", f"Remates Puerta > {linea_t_vip:.1f}", cuotas_reales_casa)),
+                ("Córners > 8.5", 73.5, calcular_cuota_real_casa(73.5, 1.48, "VIP", "Córners > 8.5", cuotas_reales_casa)),
+                (nom_f_vip, round(p_f_vip or 68.0, 1), c_fv),
+                (f"Tarjetas > {res_m.get('linea_tarj', 3.5)}", 72.0, 1.46),
+            ]
+            respaldo_free = [
+                (f"Remates Puerta > {linea_t_free:.1f}", round(p_tf_m or 74.0, 1), calcular_cuota_real_casa(p_tf_m or 74.0, c_tf_m, "FREE", f"Remates Puerta > {linea_t_free:.1f}", cuotas_reales_casa)),
+                ("Córners > 7.5", 74.5, calcular_cuota_real_casa(74.5, 1.24, "FREE", "Córners > 7.5", cuotas_reales_casa)),
+                (nom_f_free, round(p_f_free or 74.0, 1), c_ff),
+                do_segura_respaldo,
+            ]
+            if tot_goles >= 2.55 and tot_goles < 3.60 and float(res_m.get("prob_marcador_corto") or 0.0) < 27.0 and (not over_goles_bp or 1.5 in over_goles_bp):
+                respaldo_free.insert(0, ("Over 1.5 Goles", 76.5, calcular_cuota_real_casa(76.5, 1.24, "FREE", "Over 1.5 Goles", cuotas_reales_casa)))
+            if tot_goles >= 2.65:
+                respaldo_vip.append(("Gol en 2do Tiempo", 74.0, 1.42))
+            if tot_goles >= 2.75:
+                respaldo_vip.append(("Gol en 1T", 73.0, 1.42))
+            respaldo_fams = respaldo_vip if tipo_filtro == "VIP" else respaldo_free
         else:
+            nom_f_vip = f"Faltas Totales > {linea_f_vip:.1f}"
+            nom_f_free = f"Faltas Totales > {linea_f_free:.1f}"
             respaldo_fams = (
-                [("Faltas Totales > 22.5", 74.5, 1.42), ("Córners > 8.5", 73.0, 1.48), (f"Tarjetas > {res_m.get('linea_tarj', 3.5)}", 72.5, 1.46)]
+                [(nom_f_vip, round(p_f_vip or 68.0, 1), calcular_cuota_real_casa(p_f_vip or 68.0, c_f_vip, "VIP", nom_f_vip, cuotas_reales_casa)),
+                 ("Córners > 8.5", 73.0, 1.48),
+                 (f"Tarjetas > {res_m.get('linea_tarj', 3.5)}", 72.5, 1.46)]
                 if tipo_filtro == "VIP"
-                else [("Faltas Totales > 22.5", 75.5, 1.24), ("Córners > 7.5", 74.5, 1.24), ("Total Menos de 3.5 (Under)", 78.0, 1.22)]
+                else [(nom_f_free, round(p_f_free or 74.0, 1), calcular_cuota_real_casa(p_f_free or 74.0, c_f_free, "FREE", nom_f_free, cuotas_reales_casa)),
+                      ("Córners > 7.5", 74.5, 1.24), ("Total Menos de 3.5 (Under)", 78.0, 1.22)]
             )
 
         usados_actual = {m[0] for m in top_2}.union(
@@ -662,19 +860,22 @@ def generar_tarjeta_combinada(fecha, titulo_combinada, subtitulo_nivel, lista_se
     draw.text((60, y_pos), "ESCENARIOS SELECCIONADOS:", font=fuente_datos_bold, fill=c_blanco)
     y_pos += 44
 
+    es_cuadruple = len(lista_selecciones) >= 4
+    salto_p, salto_m, salto_c = (32, 28, 34) if es_cuadruple else (36, 32, 40)
+    tam_p_ini, tam_m_ini = (26, 23) if es_cuadruple else (29, 26)
     for idx, item in enumerate(lista_selecciones, start=1):
         partido_txt = f"{idx}. {item['partido']} ({item['hora']})"
         mercado_txt = f"   [+] {item['mercado']} ({item['prob']:.1f}%)"
         cuota_txt = f"       ➔ Índice Individual: > {item['cuota']:.2f}"
 
-        f_part = obtener_fuente_ajustada(draw, partido_txt, "Montserrat-VariableFont_wght.ttf", 29, 950, tam_min=19)
-        f_merc = obtener_fuente_ajustada(draw, mercado_txt, "RobotoMono-VariableFont_wght.ttf", 26, 950, tam_min=18)
+        f_part = obtener_fuente_ajustada(draw, partido_txt, "Montserrat-VariableFont_wght.ttf", tam_p_ini, 950, tam_min=18)
+        f_merc = obtener_fuente_ajustada(draw, mercado_txt, "RobotoMono-VariableFont_wght.ttf", tam_m_ini, 950, tam_min=17)
         draw.text((60, y_pos), partido_txt, font=f_part, fill=c_blanco)
-        y_pos += 36
+        y_pos += salto_p
         draw.text((60, y_pos), mercado_txt, font=f_merc, fill=c_verde)
-        y_pos += 32
+        y_pos += salto_m
         draw.text((60, y_pos), cuota_txt, font=fuente_datos_peq, fill=c_gris)
-        y_pos += 40
+        y_pos += salto_c
 
     draw.line((60, 885, 1020, 885), fill=(65, 65, 65, 255), width=1)
     draw.text((60, 902), "@QuantBet22", font=fuente_marca, fill=(255, 255, 255, 110))
@@ -706,9 +907,7 @@ def _diversificar_20_mercados(candidatos, datos, tipo_alerta):
 
     # Agregar el mercado de Goleador y Dominio de Goles/Córners si superan el umbral de valor
     extras = []
-    if datos.get("nombre_goleador") and (datos.get("p_goleador") or 0) >= 64.0:
-        if str(tipo_alerta).upper() == "VIP":
-            extras.append((datos["nombre_goleador"], float(datos["p_goleador"]), max(1.45, float(datos.get("c_min_goleador", 1.55)))))
+    # Goleador individual excluido de tarjetas automáticas
     if datos.get("nombre_dom_goles") and (datos.get("p_dom_goles") or 0) >= 66.0:
         extras.append((datos["nombre_dom_goles"], float(datos["p_dom_goles"]), max(1.38, float(datos.get("c_min_dom_goles", 1.45)))))
 
