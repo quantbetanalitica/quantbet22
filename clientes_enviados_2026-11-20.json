@@ -1,0 +1,313 @@
+{
+  "fecha": "2026-11-20",
+  "tarjetas_clientes": [
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "401931821",
+      "hora": "21:45",
+      "partido": "FC Porto vs Paredes (Portugal (Taça De Portugal))",
+      "selecciones": [
+        {
+          "mercado": "Over 1.5 Goles",
+          "prob": 76.8,
+          "cuota": 1.38
+        },
+        {
+          "mercado": "Combo 1X + O1.5",
+          "prob": 74.5,
+          "cuota": 1.5
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "401876395",
+      "hora": "20:45",
+      "partido": "Troyes vs Le Havre AC (Francia (Ligue 1))",
+      "selecciones": [
+        {
+          "mercado": "Tarjetas > 3.5",
+          "prob": 66.5,
+          "cuota": 1.74
+        },
+        {
+          "mercado": "Córners > 9.5",
+          "prob": 66.5,
+          "cuota": 1.61
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "401900905",
+      "hora": "18:30",
+      "partido": "Al Ahli vs Al Nassr (Arabia Saudita (Saudi Pro League))",
+      "selecciones": [
+        {
+          "mercado": "Córners > 8.5",
+          "prob": 66.5,
+          "cuota": 1.59
+        },
+        {
+          "mercado": "Faltas Totales > 21.5",
+          "prob": 66.5,
+          "cuota": 1.78
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "401934690",
+      "hora": "00:35",
+      "partido": "Atlético Bucaramanga vs América de Cali (Colombia (Primera A))",
+      "selecciones": [
+        {
+          "mercado": "Tarjetas > 4.5",
+          "prob": 66.5,
+          "cuota": 1.78
+        },
+        {
+          "mercado": "Faltas Totales > 26.5",
+          "prob": 66.5,
+          "cuota": 1.73
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "FREE",
+      "id_partido": "401884736",
+      "hora": "20:30",
+      "partido": "Bayern Munich vs FC Cologne (Alemania (Bundesliga))",
+      "selecciones": [
+        {
+          "mercado": "Gol en 2do Tiempo",
+          "prob": 83.6,
+          "cuota": 1.18
+        },
+        {
+          "mercado": "Córners Bayern Munich > 4.5",
+          "prob": 86.5,
+          "cuota": 1.18
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "FREE",
+      "id_partido": "401882805",
+      "hora": "21:00",
+      "partido": "Athletic Club vs Espanyol (España (Laliga))",
+      "selecciones": [
+        {
+          "mercado": "Córners Athletic Club > 4.5",
+          "prob": 75.3,
+          "cuota": 1.26
+        },
+        {
+          "mercado": "Faltas Totales > 25.5",
+          "prob": 64.8,
+          "cuota": 1.28
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "FREE",
+      "id_partido": "401934708",
+      "hora": "22:30",
+      "partido": "Independiente Medellín vs Independiente Santa Fe (Colombia (Primera A))",
+      "selecciones": [
+        {
+          "mercado": "Gol en 2do Tiempo",
+          "prob": 80.3,
+          "cuota": 1.18
+        },
+        {
+          "mercado": "Faltas Totales > 23.5",
+          "prob": 64.6,
+          "cuota": 1.28
+        }
+      ]
+    }
+  ],
+  "combinada_doble": {
+    "selecciones": [
+      {
+        "partido": "Bayern Munich vs FC Cologne",
+        "hora": "20:30",
+        "mercado": "Córners > 8.5",
+        "prob": 85.26788202322233,
+        "cuota": 1.36,
+        "score_elite": 53
+      },
+      {
+        "partido": "Troyes vs Le Havre AC",
+        "hora": "20:45",
+        "mercado": "Doble Oport. X2",
+        "prob": 84.88592873311674,
+        "cuota": 1.36,
+        "score_elite": 18
+      }
+    ],
+    "cuota_total": 1.85,
+    "prob_directa": 72.4,
+    "prob_protegida": 86.9
+  },
+  "combinada_sniper": {
+    "selecciones": [
+      {
+        "partido": "Bayern Munich vs FC Cologne",
+        "hora": "20:30",
+        "mercado": "Over 1.5 Goles",
+        "prob": 81.12473324402504,
+        "cuota": 1.44,
+        "score_elite": 53
+      },
+      {
+        "partido": "Independiente Medellín vs Independiente Santa Fe",
+        "hora": "22:30",
+        "mercado": "Gol en 2do Tiempo",
+        "prob": 80.2595429745699,
+        "cuota": 1.44,
+        "score_elite": 28
+      },
+      {
+        "partido": "Puebla vs Atlético de San Luis",
+        "hora": "02:00",
+        "mercado": "Doble Oport. 1X",
+        "prob": 79.06001141733347,
+        "cuota": 1.44,
+        "score_elite": 8
+      }
+    ],
+    "cuota_total": 2.99,
+    "prob_directa": 51.5,
+    "prob_protegida": 75.5
+  },
+  "combinadas_exclusivas_pro": [
+    {
+      "clave": "cuadruple_elite_pro",
+      "titulo": "CUÁDRUPLE ÉLITE PRO",
+      "subtitulo": "EXCLUSIVO PRO: 4 PARTIDOS DE ALTA CONFLUENCIA",
+      "sufijo": "CUADRUPLE_ELITE_PRO",
+      "stake": "Invertir el 1% de tu capital (Alto Retorno)",
+      "selecciones": [
+        {
+          "partido": "Bayern Munich vs FC Cologne",
+          "hora": "20:30",
+          "mercado": "Córners > 7.5",
+          "prob": 91.56078903745511,
+          "cuota": 1.38,
+          "score_elite": 53,
+          "nuevo": true
+        },
+        {
+          "partido": "FC Porto vs Paredes",
+          "hora": "21:45",
+          "mercado": "Córners FC Porto > 4.5",
+          "prob": 87.97984986302355,
+          "cuota": 1.38,
+          "score_elite": 20,
+          "nuevo": true
+        },
+        {
+          "partido": "FC Juárez vs Atlas",
+          "hora": "04:00",
+          "mercado": "Doble Oport. 1X",
+          "prob": 84.63447747766246,
+          "cuota": 1.4,
+          "score_elite": 8,
+          "nuevo": true
+        },
+        {
+          "partido": "Independiente Medellín vs Independiente Santa Fe",
+          "hora": "22:30",
+          "mercado": "Over 1.5 Goles",
+          "prob": 76.96800244478518,
+          "cuota": 1.47,
+          "score_elite": 28,
+          "nuevo": true
+        }
+      ],
+      "cuota_total": 3.92,
+      "prob_directa": 52.5,
+      "prob_protegida": 78.5
+    },
+    {
+      "clave": "especial_ritmo_pro",
+      "titulo": "ESPECIAL RITMO PRO",
+      "subtitulo": "EXCLUSIVO PRO: CÓRNERS Y REMATES (3 PARTIDOS)",
+      "sufijo": "RITMO_CORNERS_PRO",
+      "stake": "Invertir del 1% al 2% de tu capital (Ritmo Puro)",
+      "selecciones": [
+        {
+          "partido": "Bayern Munich vs FC Cologne",
+          "hora": "20:30",
+          "mercado": "Córners > 7.5",
+          "prob": 91.56078903745511,
+          "cuota": 1.38,
+          "score_elite": 53,
+          "nuevo": true
+        },
+        {
+          "partido": "FC Porto vs Paredes",
+          "hora": "21:45",
+          "mercado": "Córners FC Porto > 4.5",
+          "prob": 87.97984986302355,
+          "cuota": 1.38,
+          "score_elite": 20,
+          "nuevo": true
+        },
+        {
+          "partido": "Troyes vs Le Havre AC",
+          "hora": "20:45",
+          "mercado": "Córners > 7.5",
+          "prob": 84.13250680889824,
+          "cuota": 1.38,
+          "score_elite": 18,
+          "nuevo": true
+        }
+      ],
+      "cuota_total": 2.63,
+      "prob_directa": 67.8,
+      "prob_protegida": 82.0
+    },
+    {
+      "clave": "especial_valor_pro",
+      "titulo": "ESPECIAL VALOR PRO",
+      "subtitulo": "EXCLUSIVO PRO: TÁCTICA, FRICCIÓN Y EV+ (3 PARTIDOS)",
+      "sufijo": "VALOR_TACTICO_PRO",
+      "stake": "Invertir del 1% al 2% de tu capital (Valor EV+)",
+      "selecciones": [
+        {
+          "partido": "FC Porto vs Paredes",
+          "hora": "21:45",
+          "mercado": "Doble Oport. 1X",
+          "prob": 84.7120374364147,
+          "cuota": 1.4,
+          "score_elite": 20,
+          "nuevo": true
+        },
+        {
+          "partido": "FC Juárez vs Atlas",
+          "hora": "04:00",
+          "mercado": "Doble Oport. 1X",
+          "prob": 84.63447747766246,
+          "cuota": 1.4,
+          "score_elite": 8,
+          "nuevo": true
+        },
+        {
+          "partido": "Bayern Munich vs FC Cologne",
+          "hora": "20:30",
+          "mercado": "Doble Oport. 1X",
+          "prob": 83.01832213553215,
+          "cuota": 1.4,
+          "score_elite": 53,
+          "nuevo": true
+        }
+      ],
+      "cuota_total": 2.74,
+      "prob_directa": 59.5,
+      "prob_protegida": 82.0
+    }
+  ]
+}
