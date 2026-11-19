@@ -501,14 +501,14 @@ def evaluar_mercado_real(merc, gh, ga, g_ht, duelo_str=""):
     duelo_norm = "".join(c for c in unicodedata.normalize("NFD", str(duelo_str).lower()) if unicodedata.category(c) != "Mn")
     loc_n, vis_n = (duelo_norm.split(" vs ") + ["", ""])[:2]
 
-    if "Over 1.5" in m or "over 1.5" in m_low:
-        return tot >= 2
-    elif "Under 2.5" in m or "Menos de 2.5" in m:
-        return tot <= 2
-    elif "Under 3.5" in m or "Menos de 3.5" in m:
-        return tot <= 3
-    elif "Over 2.5" in m:
-        return tot >= 3
+    if ("over " in m_low or "mas de " in m_norm) and "goles" in m_low and "1t" not in m_low and "2t" not in m_low and "tiempo" not in m_low:
+        m_ov = re.search(r"(\d+(?:\.\d+)?)", m_low)
+        if m_ov:
+            return tot > float(m_ov.group(1))
+    elif "under " in m_low or "menos de " in m_low:
+        m_un = re.search(r"(\d+(?:\.\d+)?)", m_low)
+        if m_un:
+            return tot < float(m_un.group(1))
     elif "Asiático > 2.25" in m:
         return (tot >= 2) or (abs(gh - ga) == 0)
     elif "Asiático > 2.75" in m:
@@ -531,10 +531,20 @@ def evaluar_mercado_real(merc, gh, ga, g_ht, duelo_str=""):
         elif "visita" in m_low or (vis_n and vis_n[:5] in m_norm):
             return ga > gh
         return gh != ga
-    elif "Gol en 1T" in m:
-        return g_ht >= 1
-    elif "Gol en 2" in m:
-        return g_2t >= 1
+    elif "Goles 1T" in m or "Gol en 1T" in m:
+        m_n = re.search(r">\s*(\d+(?:\.\d+)?)", m)
+        return g_ht > (float(m_n.group(1)) if m_n else 0.5)
+    elif "Goles 2" in m or "Gol en 2" in m:
+        m_n = re.search(r">\s*(\d+(?:\.\d+)?)", m)
+        return g_2t > (float(m_n.group(1)) if m_n else 0.5)
+    elif "Goles " in m and ">" in m:
+        m_n = re.search(r">\s*(\d+(?:\.\d+)?)", m)
+        lin_eq = float(m_n.group(1)) if m_n else 1.5
+        if loc_n and loc_n[:5] in m_norm:
+            return gh > lin_eq
+        elif vis_n and vis_n[:5] in m_norm:
+            return ga > lin_eq
+        return False
     elif "Tarjetas" in m or "Faltas" in m:
         return (abs(gh - ga) <= 1) or (tot >= 1)
     elif "Córners" in m:
