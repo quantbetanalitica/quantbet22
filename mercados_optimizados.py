@@ -1145,8 +1145,8 @@ def auditar_todos_los_partidos_fecha_bot_auditorias(fecha_jornada, ligas_permiti
   dt_hoy = datetime.strptime(fecha_jornada, "%Y-%m-%d")
   fecha_ayer = (dt_hoy - timedelta(days=1)).strftime("%Y-%m-%d")
 
-  inicio_ayer = dt_hoy - timedelta(days=1, hours=-5)
-  fin_madrugada_hoy = dt_hoy + timedelta(hours=6, minutes=30)
+  inicio_ayer = dt_hoy - timedelta(days=1) + timedelta(hours=7)
+  fin_madrugada_hoy = dt_hoy + timedelta(hours=6, minutes=59)
 
   partidos_ft = []
   mapa_ft_ayer = {}
@@ -1163,38 +1163,63 @@ def auditar_todos_los_partidos_fecha_bot_auditorias(fecha_jornada, ligas_permiti
           vis_n = p["teams"]["away"]["name"].strip()
           mapa_ft_ayer[fid] = p
           mapa_ft_ayer[f"{loc_n.lower()} vs {vis_n.lower()}"] = p
+          mapa_ft_ayer[(normalizar_nombre_club(loc_n), normalizar_nombre_club(vis_n))] = p
           if lid in ligas_permitidas and fid not in vistos_ids and es_partido_copa_europa_profesional(lid, loc_n, vis_n):
-            f_iso = p.get("fixture", {}).get("date", "")
-            dt_p = datetime.strptime(f_iso[:19], "%Y-%m-%dT%H:%M:%S") + timedelta(hours=1)
+            f_iso = str(p.get("fixture", {}).get("date", ""))
+            if "+01:00" in f_iso or "+02:00" in f_iso:
+              dt_p = datetime.strptime(f_iso[:19], "%Y-%m-%dT%H:%M:%S")
+            else:
+              dt_p = datetime.strptime(f_iso[:19], "%Y-%m-%dT%H:%M:%S") + timedelta(hours=1)
             if inicio_ayer <= dt_p <= fin_madrugada_hoy:
               vistos_ids.add(fid)
               partidos_ft.append((dt_p, lid, p))
       except Exception:
         continue
 
-  if not partidos_ft:
-    return
-
   partidos_ft.sort(key=lambda x: x[0])
 
-  mapa_csv_partido = {}
+  # 1. Leer EXACTAMENTE las apuestas originales registradas en auditoria_apuestas.csv (día + madrugada)
+  #    sin modificar ni recalcular ningún partido antiguo.
+  registros_csv_ordenados = []
+  grupos_csv = {}
   if os.path.exists(ARCHIVO_CSV_AUDITORIA):
     try:
       df_csv = reparar_y_leer_csv_auditoria()
       for _, r in df_csv.iterrows():
-        f_reg = str(r.get("Fecha_Registro", ""))
-        if fecha_ayer not in f_reg:
+        f_reg = str(r.get("Fecha_Registro", "")).strip()
+        try:
+          dt_reg = datetime.strptime(f_reg[:16], "%Y-%m-%d %H:%M")
+        except Exception:
           continue
-        p_nom = str(r.get("Partido", "")).strip()
+        if not (inicio_ayer <= dt_reg <= fin_madrugada_hoy):
+          continue
         merc = str(r.get("Mercado", "")).strip()
+        if "DESCARTE" in merc.upper() or "[VIP DOBLE]" in merc.upper() or "[PRO SNIPER]" in merc.upper():
+          continue
         est_r = str(r.get("Estado", "")).strip()
+        if est_r not in ["Ganada", "Perdida", "Mitad Devuelta"]:
+          continue
+        p_nom_full = str(r.get("Partido", "")).strip()
+        p_nom_limpio = p_nom_full.split(" (")[0].strip()
+        id_r = str(r.get("ID_Partido", "")).strip()
         cuo_r = float(r.get("Cuota_Compra", 1.25))
-        if p_nom and est_r in ["Ganada", "Perdida", "Mitad Devuelta"]:
-          if not any(x[0] == merc for x in mapa_csv_partido.get(p_nom.lower(), [])):
-            mapa_csv_partido.setdefault(p_nom.lower(), []).append((merc, cuo_r, est_r != "Perdida"))
+        clv_r = str(r.get("CLV_Status", "")).replace("AUDITADA ", "").replace("FT ", "").strip()
+        clave_g = id_r if (id_r and id_r.isdigit()) else p_nom_limpio.lower()
+
+        if clave_g not in grupos_csv:
+          grupos_csv[clave_g] = {
+              "dt": dt_reg,
+              "partido": p_nom_full,
+              "marcador": clv_r if "-" in clv_r else "FT",
+              "items": [],
+          }
+          registros_csv_ordenados.append(clave_g)
+        if not any(x[0] == merc for x in grupos_csv[clave_g]["items"]):
+          grupos_csv[clave_g]["items"].append((merc, cuo_r, est_r != "Perdida"))
     except Exception:
       pass
 
+  # 2. AUDITORÍA #1: Las 7 Tarjetas Oficiales enviadas a Clientes (4 VIP + 3 FREE)
   arch_cli = f"clientes_enviados_{fecha_ayer}.json"
   if os.path.exists(arch_cli):
     try:
@@ -1204,8 +1229,14 @@ def auditar_todos_los_partidos_fecha_bot_auditorias(fecha_jornada, ligas_permiti
       tot_7 = 0
       for tc in data_c.get("tarjetas_clientes", [])[:7]:
         p_n = tc["partido"].strip()
+        p_n_sin_liga = p_n.split(" (")[0].strip()
         t_t = tc["tipo_tarjeta"].strip()
-        fix_c = mapa_ft_ayer.get(str(tc.get("id_partido", ""))) or mapa_ft_ayer.get(p_n.lower())
+        loc_c_n, vis_c_n = (p_n_sin_liga.split(" vs ") + ["", ""])[:2]
+        fix_c = (
+            mapa_ft_ayer.get(str(tc.get("id_partido", "")))
+            or mapa_ft_ayer.get(p_n_sin_liga.lower())
+            or mapa_ft_ayer.get((normalizar_nombre_club(loc_c_n), normalizar_nombre_club(vis_c_n)))
+        )
         if fix_c:
           gh_c = int(fix_c["goals"]["home"] or 0)
           ga_c = int(fix_c["goals"]["away"] or 0)
@@ -1219,7 +1250,6 @@ def auditar_todos_los_partidos_fecha_bot_auditorias(fecha_jornada, ligas_permiti
         for s in tc.get("selecciones", [])[:2]:
           m_full = f"[{t_t}] {s['mercado']}"
           c_val = float(s["cuota"])
-          loc_c_n, vis_c_n = (p_n.split(" vs ") + ["", ""])[:2]
           ok_c = evaluar_mercado_universal(s["mercado"], gh_c, ga_c, ght_c, loc_c_n, vis_c_n) != False if res_c else False
           agrup_c[p_n]["items"].append((m_full, c_val, ok_c))
           if res_c:
@@ -1253,45 +1283,21 @@ def auditar_todos_los_partidos_fecha_bot_auditorias(fecha_jornada, ligas_permiti
     except Exception as e:
       logging.error(f"Error en Auditoría #1 Clientes: {e}")
 
+  # 3. AUDITORÍA #2: Reporte 100% fiel de los partidos auditados en auditoria_apuestas.csv (sin recalcular ni inventar partidos)
+  if not registros_csv_ordenados:
+    return
+
+  registros_csv_ordenados.sort(key=lambda k: grupos_csv[k]["dt"])
   lineas_unificadas = []
   aciertos_fecha = 0
   total_fecha = 0
   partidos_verdes = 0
 
-  for idx_m, (dt_p, lid, p) in enumerate(partidos_ft, start=1):
-    loc = p["teams"]["home"]["name"].strip()
-    vis = p["teams"]["away"]["name"].strip()
-    gh = int(p["goals"]["home"] or 0)
-    ga = int(p["goals"]["away"] or 0)
-    score_ht = p.get("score", {}).get("halftime", {})
-    g_ht = int(score_ht.get("home") or 0) + int(score_ht.get("away") or 0)
-    hora_s = dt_p.strftime("%H:%M")
-    clave_duelo = f"{loc.lower()} vs {vis.lower()}"
-
-    picks_partido = mapa_csv_partido.get(clave_duelo, [])
+  for idx_m, clave_g in enumerate(registros_csv_ordenados, start=1):
+    info_g = grupos_csv[clave_g]
+    picks_partido = info_g["items"]
     if not picks_partido:
-      try:
-        liga_vis, liga_k = ligas_permitidas[lid]
-        arb_p = p["fixture"].get("referee")
-        if arb_p:
-          arb_p = str(arb_p).split(",")[0].strip()
-        res_sim = motor_quant_institucional(
-            liga_vis, liga_k, loc, vis,
-            p["teams"]["home"]["id"], p["teams"]["away"]["id"], str(p["fixture"]["id"]),
-            dt_p.strftime("%Y-%m-%d"), hora_s, arbitro=arb_p, api_token=api_token
-        )
-        if res_sim:
-          generar_captura_automatica(res_sim, "FREE")
-          generar_captura_automatica(res_sim, "VIP")
-          for m_v, _, c_v in res_sim.get("seleccion_vip", [])[:2]:
-            g_ok = evaluar_mercado_universal(m_v, gh, ga, g_ht, loc, vis) != False
-            picks_partido.append((f"[VIP] {m_v}", c_v, g_ok))
-          for m_f, _, c_f in res_sim.get("seleccion_free", [])[:2]:
-            g_ok = evaluar_mercado_universal(m_f, gh, ga, g_ht, loc, vis) != False
-            picks_partido.append((f"[FREE] {m_f}", c_f, g_ok))
-      except Exception:
-        pass
-
+      continue
     ac_p = sum(1 for _, _, g in picks_partido if g)
     tot_p = len(picks_partido)
     aciertos_fecha += ac_p
@@ -1301,17 +1307,21 @@ def auditar_todos_los_partidos_fecha_bot_auditorias(fecha_jornada, ligas_permiti
 
     ico_p = "✅" if ac_p == tot_p else ("🟡" if ac_p >= (tot_p / 2.0) else "❌")
     det_p = "\n".join([f"   • {'✅' if g else '❌'} {m} (@{c:.2f})" for m, c, g in picks_partido])
-    lineas_unificadas.append(f"{ico_p} <b>{idx_m}. {loc} vs {vis} ({gh}-{ga}) [{ac_p}/{tot_p}]</b>\n{det_p}")
+    lineas_unificadas.append(f"{ico_p} <b>{idx_m}. {info_g['partido']} ({info_g['marcador']}) [{ac_p}/{tot_p}]</b>\n{det_p}")
 
+  if not lineas_unificadas:
+    return
+
+  num_partidos_aud = len(lineas_unificadas)
   pct_fecha = (aciertos_fecha / max(1, total_fecha)) * 100.0
-  pct_partidos = (partidos_verdes / max(1, len(partidos_ft))) * 100.0
+  pct_partidos = (partidos_verdes / max(1, num_partidos_aud)) * 100.0
 
   informe_auditoria_total = (
-      f"📋 <b>AUDITORÍA #2: REPORTE DEL 100% DE LA FECHA ({fecha_ayer})</b> 📋\n"
+      f"📋 <b>AUDITORÍA #2: REPORTE DEL 100% DE LA FECHA ({fecha_ayer} + Madrugada)</b> 📋\n"
       f"━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
-      f"🏟 <b>Partidos Auditados:</b> {len(partidos_ft)} encuentros finalizados (FT)\n"
+      f"🏟 <b>Partidos Auditados:</b> {num_partidos_aud} encuentros finalizados (FT reales del CSV)\n"
       f"🎯 <b>Efectividad Global de Apuestas (Toda la Fecha):</b> {pct_fecha:.1f}% ({aciertos_fecha}/{total_fecha} acertadas)\n"
-      f"✅ <b>Partidos Rentables (Verde/Amarillo):</b> {pct_partidos:.1f}% ({partidos_verdes}/{len(partidos_ft)} partidos)\n"
+      f"✅ <b>Partidos Rentables (Verde/Amarillo):</b> {pct_partidos:.1f}% ({partidos_verdes}/{num_partidos_aud} partidos)\n"
       f"━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n"
       + "\n\n".join(lineas_unificadas)
   )
