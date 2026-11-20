@@ -536,13 +536,24 @@ def obtener_estado_minuto_en_vivo(mapa_ft, dia_str, hora_ini_str, id_partido, du
     return False, f"⏳ POR JUGAR ({hora_ini_str}h ESP)"
 
 
-def evaluar_mercado_real(merc, gh, ga, g_ht, duelo_str=""):
+@st.cache_data(ttl=55, show_spinner=False)
+def cargar_boxscores_reales_web():
+    if os.path.exists("cache_boxscore_ft.json"):
+        try:
+            with open("cache_boxscore_ft.json", "r", encoding="utf-8") as f:
+                return json.load(f) or {}
+        except Exception:
+            pass
+    return {}
+
+
+def evaluar_mercado_real(merc, gh, ga, g_ht, duelo_str="", stats_reales=None):
     tot = gh + ga
     g_2t = max(0, tot - g_ht)
     m = str(merc).strip()
     m_low = m.lower()
     m_norm = "".join(c for c in unicodedata.normalize("NFD", m_low) if unicodedata.category(c) != "Mn")
-    duelo_norm = "".join(c for c in unicodedata.normalize("NFD", str(duelo_str).lower()) if unicodedata.category(c) != "Mn")
+    duelo_norm = "".join(c for c in unicodedata.normalize("NFD", str(duelo_str).split(" (")[0].lower()) if unicodedata.category(c) != "Mn")
     loc_n, vis_n = (duelo_norm.split(" vs ") + ["", ""])[:2]
 
     if ("over " in m_low or "mas de " in m_norm) and "goles" in m_low and "1t" not in m_low and "2t" not in m_low and "tiempo" not in m_low:
@@ -554,7 +565,7 @@ def evaluar_mercado_real(merc, gh, ga, g_ht, duelo_str=""):
         if m_un:
             return tot < float(m_un.group(1))
     elif "Asiático > 2.25" in m:
-        return (tot >= 2) or (abs(gh - ga) == 0)
+        return tot >= 2
     elif "Asiático > 2.75" in m:
         return tot >= 3
     elif "BTTS" in m or "Ambos Marcan" in m:
@@ -575,13 +586,13 @@ def evaluar_mercado_real(merc, gh, ga, g_ht, duelo_str=""):
         elif "visita" in m_low or (vis_n and vis_n[:5] in m_norm):
             return ga > gh
         return gh != ga
-    elif "Goles 1T" in m or "Gol en 1T" in m:
+    elif "goles 1t" in m_low or "gol en 1t" in m_low or "gol 1t" in m_low:
         m_n = re.search(r">\s*(\d+(?:\.\d+)?)", m)
         return g_ht > (float(m_n.group(1)) if m_n else 0.5)
-    elif "Goles 2" in m or "Gol en 2" in m:
+    elif "goles 2" in m_low or "gol en 2" in m_low or "gol 2t" in m_low:
         m_n = re.search(r">\s*(\d+(?:\.\d+)?)", m)
         return g_2t > (float(m_n.group(1)) if m_n else 0.5)
-    elif "Goles " in m and ">" in m:
+    elif "goles " in m_low and ">" in m_low:
         m_n = re.search(r">\s*(\d+(?:\.\d+)?)", m)
         lin_eq = float(m_n.group(1)) if m_n else 1.5
         if loc_n and loc_n[:5] in m_norm:
@@ -589,11 +600,38 @@ def evaluar_mercado_real(merc, gh, ga, g_ht, duelo_str=""):
         elif vis_n and vis_n[:5] in m_norm:
             return ga > lin_eq
         return False
-    elif "Tarjetas" in m or "Faltas" in m:
-        return (abs(gh - ga) <= 1) or (tot >= 1)
-    elif "Córners" in m:
-        return (tot >= 1) or (abs(gh - ga) == 0)
-    elif "Remates" in m:
+    elif "tarjetas" in m_low or "amarill" in m_low:
+        m_n = re.search(r">\s*(\d+(?:\.\d+)?)", m)
+        linea_t = float(m_n.group(1)) if m_n else 3.5
+        if isinstance(stats_reales, dict):
+            if "amarill" in m_low and stats_reales.get("yellow_total") is not None:
+                return float(stats_reales["yellow_total"]) > linea_t
+            if stats_reales.get("cards_total") is not None:
+                return float(stats_reales["cards_total"]) > linea_t
+        return (abs(gh - ga) <= 1) or (tot >= 2)
+    elif "faltas" in m_low:
+        m_n = re.search(r">\s*(\d+(?:\.\d+)?)", m)
+        linea_f = float(m_n.group(1)) if m_n else 22.5
+        if isinstance(stats_reales, dict) and stats_reales.get("fouls_total") is not None:
+            return float(stats_reales["fouls_total"]) > linea_f
+        return (abs(gh - ga) <= 1) or (tot >= 2)
+    elif "corners" in m_norm:
+        m_n = re.search(r">\s*(\d+(?:\.\d+)?)", m)
+        linea_c = float(m_n.group(1)) if m_n else 7.5
+        if isinstance(stats_reales, dict):
+            if linea_c <= 5.5:
+                if loc_n and loc_n[:5] in m_norm and stats_reales.get("corners_home") is not None:
+                    return float(stats_reales["corners_home"]) > linea_c
+                if vis_n and vis_n[:5] in m_norm and stats_reales.get("corners_away") is not None:
+                    return float(stats_reales["corners_away"]) > linea_c
+            if stats_reales.get("corners_total") is not None:
+                return float(stats_reales["corners_total"]) > linea_c
+        return (tot >= 1) or (abs(gh - ga) <= 1)
+    elif "remates" in m_low:
+        m_n = re.search(r">\s*(\d+(?:\.\d+)?)", m)
+        linea_r = float(m_n.group(1)) if m_n else 6.5
+        if isinstance(stats_reales, dict) and stats_reales.get("shots_on_target_total") is not None:
+            return float(stats_reales["shots_on_target_total"]) > linea_r
         return (tot >= 1) or (abs(gh - ga) <= 1)
     return tot >= 2
 
@@ -823,8 +861,18 @@ def cargar_mapa_resultados_caches():
 
                         ls_h = c_h.get("linescores") or []
                         ls_a = c_a.get("linescores") or []
+                        det_goles_e = [d for d in (comp.get("details") or []) if d.get("scoringPlay")]
                         if ls_h and ls_a:
                             ght_e = int(float(ls_h[0].get("value") or 0)) + int(float(ls_a[0].get("value") or 0))
+                        elif det_goles_e:
+                            ght_e = 0
+                            for dg in det_goles_e:
+                                rel_s = str((dg.get("clock") or {}).get("displayValue") or "")
+                                nums_m = re.findall(r"\d+", rel_s)
+                                min_g = int(nums_m[0]) if nums_m else 90
+                                if ("45+" in rel_s) or (min_g <= 45 and "90+" not in rel_s):
+                                    ght_e += 1
+                            ght_e = min(gh_e + ga_e, ght_e)
                         else:
                             ght_e = (gh_e + ga_e) // 2
                         hallados_ft.append((eid, f_dia_e, loc_e, vis_e, (gh_e, ga_e, ght_e), h_fin_e, dt_f))
@@ -836,11 +884,13 @@ def cargar_mapa_resultados_caches():
         with ThreadPoolExecutor(max_workers=12) as ex:
             for res_ft, res_vivo in ex.map(_consultar_espn_ligero, tareas):
                 for eid, f_dia_e, loc_e, vis_e, info_e, h_fin_e, dt_f in res_ft:
-                    if eid:
+                    # NO sobreescribir un marcador FT/HT real ya cargado desde cache_partidos o API-Sports
+                    if eid and eid not in mapa:
                         mapa[eid] = info_e
                     if loc_e and vis_e:
                         clave_lv = f"{loc_e} vs {vis_e}"
-                        mapa[clave_lv] = info_e
+                        if clave_lv not in mapa:
+                            mapa[clave_lv] = info_e
                         indice_rapido.append((f_dia_e, _tokens_club(loc_e), _tokens_club(vis_e), info_e))
                         if h_fin_e:
                             mapa_horas_fin[clave_lv] = h_fin_e
@@ -951,7 +1001,7 @@ def obtener_resumen_auditoria():
                         ya_usados.add(m_base.lower())
                         m_etq = f"[{tipo_t}] {m_base}"
                         cuo_s = float(sel.get("cuota", 1.42 if tipo_t == "VIP" else 1.25))
-                        gano_l = evaluar_mercado_real(m_etq, gh_l, ga_l, ght_l, part_tc)
+                        gano_l = evaluar_mercado_real(m_etq, gh_l, ga_l, ght_l, part_tc, stats_reales=cargar_boxscores_reales_web().get(str(id_tc)))
                         filas_clientes.append({
                             "Fecha_Registro": dt_fin_tc.strftime("%Y-%m-%d %H:%M:00"),
                             "ID_Partido": id_tc,
@@ -1020,7 +1070,7 @@ def obtener_resumen_auditoria():
 
             if info_m:
                 gh, ga, ght = info_m
-                gano_real = evaluar_mercado_real(merc_k, gh, ga, ght, part_k)
+                gano_real = evaluar_mercado_real(merc_k, gh, ga, ght, part_k, stats_reales=cargar_boxscores_reales_web().get(str(id_k)))
                 tabla.at[idx, "Estado"] = "Ganada" if gano_real else "Perdida"
                 tabla.at[idx, "CLV_Status"] = f"FT {gh}-{ga}"
                 continue
@@ -1198,10 +1248,40 @@ def listar_jornadas():
 def evaluar_pick_tarjeta(mapa_ft, df_hist, dia_str, id_partido, duelo_str, pick_str, hora_ini_str="20:00"):
     if calcular_dt_fin_real(dia_str, hora_ini_str) > obtener_hora_espana():
         return "", None
+
+    # PRIORIDAD #1: Respetar el estado REAL ya auditado con boxscore en auditoria_apuestas.csv
+    # (garantiza coherencia del 100% entre la Web App y las Tarjetas de Auditoría en Telegram)
+    duelo_sin_liga = str(duelo_str).split(" (")[0].strip().lower()
+    pick_limpio = str(pick_str).replace("[VIP] ", "").replace("[FREE] ", "").strip().lower()
+    if not df_hist.empty:
+        try:
+            mask_part = (
+                (df_hist["ID_Partido"].astype(str).str.strip() == str(id_partido).strip())
+                | (df_hist["Partido"].astype(str).str.split(" \(").str[0].str.strip().str.lower() == duelo_sin_liga)
+            )
+            sub_p = df_hist[mask_part]
+            if not sub_p.empty:
+                for _, r_h in sub_p.iterrows():
+                    m_h = str(r_h.get("Mercado", "")).replace("[VIP] ", "").replace("[FREE] ", "").strip().lower()
+                    est_h = str(r_h.get("Estado", "")).strip()
+                    if m_h == pick_limpio and est_h in ["Ganada", "Perdida", "Mitad Devuelta"]:
+                        clv_h = str(r_h.get("CLV_Status", ""))
+                        m_sc = re.search(r"(\d+)-(\d+)", clv_h)
+                        marc_h = f" ({m_sc.group(1)}-{m_sc.group(2)})" if m_sc else ""
+                        if not marc_h:
+                            info_aux = buscar_resultado_inteligente(mapa_ft, id_partido, duelo_str, dia_str)
+                            if info_aux:
+                                marc_h = f" ({info_aux[0]}-{info_aux[1]})"
+                        return marc_h, (est_h in ["Ganada", "Mitad Devuelta"])
+        except Exception:
+            pass
+
+    # PRIORIDAD #2: Evaluar con marcador FT/HT real + boxscore real (cache_boxscore_ft.json)
+    box_stats = cargar_boxscores_reales_web().get(str(id_partido).strip())
     info_m = buscar_resultado_inteligente(mapa_ft, id_partido, duelo_str, dia_str)
     if info_m:
         gh, ga, ght = info_m
-        gano = evaluar_mercado_real(pick_str, gh, ga, ght, duelo_str)
+        gano = evaluar_mercado_real(pick_str, gh, ga, ght, duelo_str, stats_reales=box_stats)
         return f" ({gh}-{ga})", gano
 
     if not df_hist.empty:
@@ -1211,7 +1291,7 @@ def evaluar_pick_tarjeta(mapa_ft, df_hist, dia_str, id_partido, duelo_str, pick_
             res_marc = re.search(r"(\d+)-(\d+)", texto_clv)
             if res_marc:
                 gh, ga = int(res_marc.group(1)), int(res_marc.group(2))
-                gano = evaluar_mercado_real(pick_str, gh, ga, max(1, (gh + ga) // 2), duelo_str)
+                gano = evaluar_mercado_real(pick_str, gh, ga, max(1, (gh + ga) // 2), duelo_str, stats_reales=box_stats)
                 return f" ({gh}-{ga})", gano
 
     return "", None
