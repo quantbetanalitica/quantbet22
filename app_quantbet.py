@@ -55,6 +55,50 @@ def mantener_bot_soporte_24_7_en_nube():
 mantener_bot_soporte_24_7_en_nube()
 
 # ==============================================================================
+# RASTREADOR AUTOMÁTICO DE VISITAS POR RED SOCIAL (?src=tiktok / ig / yt / fb)
+# Panel privado visible SOLO entrando a: https://quantbet22.streamlit.app/?admin=quant22
+# ==============================================================================
+@st.cache_resource
+def _obtener_registro_trafico_web():
+    ruta_tr = "trafico_web_quantbet.json"
+    if os.path.exists(ruta_tr):
+        try:
+            with open(ruta_tr, "r", encoding="utf-8") as f:
+                return json.load(f) or {"dias": {}, "total": {}}
+        except Exception:
+            pass
+    return {"dias": {}, "total": {}}
+
+
+def registrar_visita_origen_web():
+    try:
+        qp = st.query_params
+        es_admin = str(qp.get("admin", "")).strip().lower() == "quant22"
+        if es_admin:
+            return True
+        if not st.session_state.get("_visita_contada_qb"):
+            src_raw = str(qp.get("src", "directo") or "directo").strip().lower()
+            src_limpio = re.sub(r"[^a-z0-9_-]", "", src_raw)[:24] or "directo"
+            reg = _obtener_registro_trafico_web()
+            dia_hoy = (datetime.now(timezone.utc).replace(tzinfo=None) + timedelta(hours=1)).strftime("%Y-%m-%d")
+            reg.setdefault("dias", {}).setdefault(dia_hoy, {})
+            reg["dias"][dia_hoy][src_limpio] = int(reg["dias"][dia_hoy].get(src_limpio, 0)) + 1
+            reg.setdefault("total", {})
+            reg["total"][src_limpio] = int(reg["total"].get(src_limpio, 0)) + 1
+            st.session_state["_visita_contada_qb"] = True
+            try:
+                with open("trafico_web_quantbet.json", "w", encoding="utf-8") as f:
+                    json.dump(reg, f, ensure_ascii=False, indent=2)
+            except Exception:
+                pass
+        return False
+    except Exception:
+        return False
+
+
+_MODO_ADMIN_TRAFICO = registrar_visita_origen_web()
+
+# ==============================================================================
 # ENLACES OFICIALES DE CONVERSIÓN Y PAGO
 # ==============================================================================
 LINK_TELEGRAM_FREE = "https://t.me/+aYoc_N6oiU1lODU0"
@@ -1004,9 +1048,24 @@ def obtener_resumen_auditoria():
         if finalizadas.empty:
             return 91.7, 2773, 3025, 30.2, pd.DataFrame()
 
-        # Construir para cada jornada auditada la fila de Combinada Doble VIP (2 partidos) y Triple Sniper PRO (3 partidos)
+        # Agrupar por JORNADA FUTBOLERA (07:00 a 06:59 del día siguiente) para que la madrugada
+        # pertenezca a la misma jornada y NUNCA se dupliquen la Doble VIP ni la Triple Sniper PRO
+        def _calcular_jornada_futbol(row_f):
+            f_d = str(row_f.get("Dia", ""))[:10]
+            h_s = str(row_f.get("Hora_Reg", "20:00"))[:5]
+            try:
+                dt_j = datetime.strptime(f"{f_d} {h_s}", "%Y-%m-%d %H:%M")
+                if dt_j.hour < 7:
+                    return (dt_j - timedelta(days=1)).strftime("%Y-%m-%d")
+                return f_d
+            except Exception:
+                return f_d
+
+        finalizadas["Jornada_Futbol"] = finalizadas.apply(_calcular_jornada_futbol, axis=1)
+
+        # Construir EXACTAMENTE 1 Combinada Doble VIP (2 partidos) y 1 Triple Sniper PRO (3 partidos) por jornada
         filas_combinadas_auditadas = []
-        for dia_c, grp_dia in finalizadas.groupby("Dia"):
+        for jorn_c, grp_dia in finalizadas.groupby("Jornada_Futbol"):
             vips_dia = grp_dia[grp_dia["Mercado"].astype(str).str.startswith("[VIP]")].copy()
             if len(vips_dia) < 2:
                 continue
@@ -1029,14 +1088,16 @@ def obtener_resumen_auditoria():
                 ok2 = str(r2["Estado"]) in ["Ganada", "Mitad Devuelta"]
                 ic1, ic2 = ("🟢" if ok1 else "🔴"), ("🟢" if ok2 else "🔴")
                 gano_d = ok1 and ok2
-                h_d = max(str(r1.get("Hora_Reg", "22:55")), str(r2.get("Hora_Reg", "22:55")))
+                f_max_d = max(f"{str(r1.get('Dia', jorn_c))[:10]} {str(r1.get('Hora_Reg', '22:55'))[:5]}", f"{str(r2.get('Dia', jorn_c))[:10]} {str(r2.get('Hora_Reg', '22:55'))[:5]}")
+                dia_d, h_d = f_max_d.split(" ")
                 nom_p_doble = f"🔥 [COMBINADA DOBLE VIP] {ic1} {p1} / {ic2} {p2}"
                 filas_combinadas_auditadas.append({
-                    "Fecha_Registro": f"{dia_c} {h_d}:00",
-                    "ID_Partido": f"DOBLE_{dia_c}",
+                    "Fecha_Registro": f"{dia_d} {h_d}:00",
+                    "ID_Partido": f"DOBLE_{jorn_c}",
                     "Partido": nom_p_doble,
                     "Partido_Norm": nom_p_doble.lower(),
-                    "Dia": dia_c,
+                    "Dia": dia_d,
+                    "Jornada_Futbol": jorn_c,
                     "Hora_Reg": h_d,
                     "Mercado": f"[VIP DOBLE] {ic1} {m1} + {ic2} {m2}",
                     "Cuota_Compra": f"{cuo_doble:.2f}",
@@ -1069,14 +1130,20 @@ def obtener_resumen_auditoria():
                 ok3 = str(r3["Estado"]) in ["Ganada", "Mitad Devuelta"]
                 ic1, ic2, ic3 = ("🟢" if ok1 else "🔴"), ("🟢" if ok2 else "🔴"), ("🟢" if ok3 else "🔴")
                 gano_s = ok1 and ok2 and ok3
-                h_s = max(str(r1.get("Hora_Reg", "22:55")), str(r2.get("Hora_Reg", "22:55")), str(r3.get("Hora_Reg", "22:55")))
+                f_max_s = max(
+                    f"{str(r1.get('Dia', jorn_c))[:10]} {str(r1.get('Hora_Reg', '22:55'))[:5]}",
+                    f"{str(r2.get('Dia', jorn_c))[:10]} {str(r2.get('Hora_Reg', '22:55'))[:5]}",
+                    f"{str(r3.get('Dia', jorn_c))[:10]} {str(r3.get('Hora_Reg', '22:55'))[:5]}",
+                )
+                dia_s, h_s = f_max_s.split(" ")
                 nom_p_sniper = f"👑 [TRIPLE SNIPER PRO] {ic1} {p1} / {ic2} {p2} / {ic3} {p3}"
                 filas_combinadas_auditadas.append({
-                    "Fecha_Registro": f"{dia_c} {h_s}:00",
-                    "ID_Partido": f"SNIPER_{dia_c}",
+                    "Fecha_Registro": f"{dia_s} {h_s}:00",
+                    "ID_Partido": f"SNIPER_{jorn_c}",
                     "Partido": nom_p_sniper,
                     "Partido_Norm": nom_p_sniper.lower(),
-                    "Dia": dia_c,
+                    "Dia": dia_s,
+                    "Jornada_Futbol": jorn_c,
                     "Hora_Reg": h_s,
                     "Mercado": f"[PRO SNIPER] {ic1} {m1} + {ic2} {m2} + {ic3} {m3}",
                     "Cuota_Compra": f"{cuo_sniper:.2f}",
@@ -1542,3 +1609,35 @@ def renderizar_panel_en_vivo_silencioso():
 
 
 renderizar_panel_en_vivo_silencioso()
+
+if _MODO_ADMIN_TRAFICO:
+    st.divider()
+    st.markdown("### 📊 PANEL PRIVADO DE TRÁFICO POR RED SOCIAL (SOLO VISIBLE PARA TI)")
+    reg_tr = _obtener_registro_trafico_web()
+    hoy_tr = obtener_hora_espana().strftime("%Y-%m-%d")
+    vis_hoy = reg_tr.get("dias", {}).get(hoy_tr, {})
+    vis_tot = reg_tr.get("total", {})
+
+    c_tr1, c_tr2 = st.columns(2)
+    with c_tr1:
+        st.markdown(f"**Visitas de hoy ({hoy_tr}):** `{sum(vis_hoy.values())}`")
+        if vis_hoy:
+            df_h = pd.DataFrame([{"Red / Origen": k, "Visitas Hoy": v} for k, v in sorted(vis_hoy.items(), key=lambda x: -x[1])])
+            st.dataframe(df_h, hide_index=True)
+        else:
+            st.info("Aún no hay visitas registradas hoy desde el último reinicio.")
+    with c_tr2:
+        st.markdown(f"**Acumulado desde el inicio del servidor:** `{sum(vis_tot.values())}`")
+        if vis_tot:
+            df_t = pd.DataFrame([{"Red / Origen": k, "Visitas Totales": v} for k, v in sorted(vis_tot.items(), key=lambda x: -x[1])])
+            st.dataframe(df_t, hide_index=True)
+
+    st.markdown("**🔗 Tus enlaces exactos para poner en cada perfil y medir visitas automáticamente:**")
+    st.code(
+        "TikTok Bio:        https://quantbet22.streamlit.app/?src=tiktok\n"
+        "Instagram Bio:     https://quantbet22.streamlit.app/?src=instagram\n"
+        "YouTube Perfil:    https://quantbet22.streamlit.app/?src=youtube\n"
+        "Facebook Página:   https://quantbet22.streamlit.app/?src=facebook\n"
+        "Historia Meta:     https://quantbet22.streamlit.app/?src=meta_historia  (ya puesto en auto_meta.py)",
+        language="text"
+    )
