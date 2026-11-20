@@ -68,5 +68,47 @@
     "yellow_total": 3.0,
     "cards_total": 3.0,
     "has_stats": true
+  },
+  "401841308": {
+    "corners_home": 12.0,
+    "corners_away": 8.0,
+    "corners_total": 20.0,
+    "shots_on_target_home": 4.0,
+    "shots_on_target_away": 3.0,
+    "shots_on_target_total": 7.0,
+    "fouls_home": 19.0,
+    "fouls_away": 16.0,
+    "fouls_total": 35.0,
+    "yellow_total": 7.0,
+    "cards_total": 7.0,
+    "has_stats": true
+  },
+  "401841317": {
+    "corners_home": 7.0,
+    "corners_away": 8.0,
+    "corners_total": 15.0,
+    "shots_on_target_home": 5.0,
+    "shots_on_target_away": 7.0,
+    "shots_on_target_total": 12.0,
+    "fouls_home": 15.0,
+    "fouls_away": 23.0,
+    "fouls_total": 38.0,
+    "yellow_total": 8.0,
+    "cards_total": 8.0,
+    "has_stats": true
+  },
+  "401841309": {
+    "corners_home": 8.0,
+    "corners_away": 6.0,
+    "corners_total": 14.0,
+    "shots_on_target_home": 0.0,
+    "shots_on_target_away": 4.0,
+    "shots_on_target_total": 4.0,
+    "fouls_home": 13.0,
+    "fouls_away": 16.0,
+    "fouls_total": 29.0,
+    "yellow_total": 2.0,
+    "cards_total": 2.0,
+    "has_stats": true
   }
 }
