@@ -809,29 +809,32 @@ def seleccionar_7_partidos_14_apuestas_clientes(fecha_hoy, ruta_csv="auditoria_a
                 pass
         return None
 
-    # 2. Regla estricta de fechas:
-    #    - En modo "manana" (07:30 AM): SOLO audita la jornada exacta fecha_hoy (+ su madrugada). NUNCA mete partidos de antier.
-    #    - En modo "noche" (23:15 PM): Audita los ya terminados de hoy y complementa los que falten con jornadas anteriores.
-    # fecha_tope_auditoria ya calculada arriba con hora real de España (UTC+1)
-    dt_base = datetime.strptime(fecha_tope_auditoria, "%Y-%m-%d")
+    # 2. REGLA ESTRICTA DE TRANSPARENCIA POR JORNADA (CERO MEZCLA DE DÍAS):
+    #    Tanto en modo "noche" (23:15 "Cómo vamos hoy") como en modo "manana" (07:30 cierre oficial),
+    #    audita EXCLUSIVAMENTE las 7 tarjetas (4 VIP + 3 FREE) de la jornada fecha_tope_auditoria.
+    #    Los partidos de hoy que aún no hayan terminado (ej. madrugada Latam) salen claramente como
+    #    "POR JUGAR / EN ESPERA" sin contaminar la tabla con partidos del día anterior.
     archivos_clientes = sorted(
         [a for a in os.listdir(".") if re.match(r"clientes_enviados_\d{4}-\d{2}-\d{2}\.json", a)],
         reverse=True
     )
+    arch_oficial_dia = f"clientes_enviados_{fecha_tope_auditoria}.json"
+    if os.path.exists(arch_oficial_dia):
+        archivos_a_leer = [arch_oficial_dia]
+    else:
+        # Solo si no existió jornada ese día, tomar el archivo de clientes inmediatamente anterior
+        anteriores = [a for a in archivos_clientes if a.replace("clientes_enviados_", "").replace(".json", "") <= fecha_tope_auditoria]
+        archivos_a_leer = anteriores[:1]
 
     vip_recolectadas = []
     free_recolectadas = []
     partidos_vistos = set()
     fecha_auditada_real = None
-    excluidos_copa = ()  # Unificado: el filtro de copas ocurre al escanear; aquí se auditan fielmente las 7 tarjetas enviadas
+    excluidos_copa = ()
 
-    for arch_c in archivos_clientes:
+    for arch_c in archivos_a_leer:
         f_cand = arch_c.replace("clientes_enviados_", "").replace(".json", "")
-        if f_cand > fecha_tope_auditoria:
-            continue
-        # En el cierre de mañana (07:30 AM), prohibido saltar a días anteriores (como antier)
-        if modo_horario == "manana" and f_cand != fecha_tope_auditoria:
-            continue
+        fecha_auditada_real = f_cand
         try:
             with open(arch_c, "r", encoding="utf-8") as f:
                 tarjetas_cand = (json.load(f) or {}).get("tarjetas_clientes", [])
@@ -851,8 +854,45 @@ def seleccionar_7_partidos_14_apuestas_clientes(fecha_hoy, ruta_csv="auditoria_a
                 continue
 
             id_p = str(item_c.get("id_partido", "")).strip()
+            hora_p = str(item_c.get("hora", "")).strip()
             fix_real = _buscar_partido_ft_real(id_p, part_nom, f_cand)
+
             if not fix_real:
+                # Partido de HOY todavía pendiente / por jugar en madrugada: mostrarlo en espera (NO sustituir por ayer)
+                mercados_pend = []
+                usados_p = set()
+                for sel in item_c.get("selecciones", []):
+                    merc = str(sel.get("mercado", "Over 1.5 Goles")).strip()
+                    if merc.lower() in usados_p:
+                        continue
+                    usados_p.add(merc.lower())
+                    cuo = float(sel.get("cuota", 1.42 if tipo_t == "VIP" else 1.24))
+                    mercados_pend.append({
+                        "mercado": f"[{tipo_t}] {merc}",
+                        "mercado_corto": abreviar_pick_cliente(merc),
+                        "cuota": cuo,
+                        "ganada": None
+                    })
+                    if len(mercados_pend) == 2:
+                        break
+                if len(mercados_pend) >= 1:
+                    partidos_vistos.add(part_sin_liga)
+                    obj_pend = {
+                        "tipo_tarjeta": tipo_t,
+                        "partido": part_nom,
+                        "marcador": f"{hora_p}h" if hora_p else "PENDIENTE",
+                        "hora": hora_p,
+                        "pendiente": True,
+                        "gh": None,
+                        "ga": None,
+                        "g_ht": None,
+                        "fecha": f_cand,
+                        "dos_apuestas": mercados_pend
+                    }
+                    if tipo_t == "VIP":
+                        vip_recolectadas.append(obj_pend)
+                    else:
+                        free_recolectadas.append(obj_pend)
                 continue
 
             gh = int(float((fix_real.get("goals") or {}).get("home") or 0))
@@ -902,13 +942,12 @@ def seleccionar_7_partidos_14_apuestas_clientes(fecha_hoy, ruta_csv="auditoria_a
                 continue
 
             partidos_vistos.add(part_sin_liga)
-            if not fecha_auditada_real:
-                fecha_auditada_real = f_cand
-
             obj_card = {
                 "tipo_tarjeta": tipo_t,
                 "partido": part_nom,
                 "marcador": f"{gh}-{ga}",
+                "hora": hora_p,
+                "pendiente": False,
                 "gh": gh,
                 "ga": ga,
                 "g_ht": g_ht,
@@ -920,51 +959,22 @@ def seleccionar_7_partidos_14_apuestas_clientes(fecha_hoy, ruta_csv="auditoria_a
             else:
                 free_recolectadas.append(obj_card)
 
-            if len(vip_recolectadas) == 4 and len(free_recolectadas) == 3:
-                break
-
-        if len(vip_recolectadas) == 4 and len(free_recolectadas) == 3:
-            break
-
-    # 3. REGLA DE TRANSPARENCIA ESTRICTA:
-    #    Si existe clientes_enviados_<fecha>.json para la jornada auditada, mostrar ÚNICAMENTE los partidos
-    #    exactos entregados a clientes (NUNCA inyectar partidos extra del CSV que no salieron en FREE/VIP).
-    arch_oficial_dia = f"clientes_enviados_{fecha_tope_auditoria}.json"
-    if modo_horario == "manana" and not os.path.exists(arch_oficial_dia):
-        for lvl, lista_dest, tope in [("VIP", vip_recolectadas, 4), ("FREE", free_recolectadas, 3)]:
-            if len(lista_dest) < tope:
-                cands_dia = [
-                    v for k_p, v in csv_mismo_dia[lvl].items()
-                    if k_p not in partidos_vistos
-                    and not any(ex in k_p for ex in excluidos_copa)
-                    and len(v["dos_apuestas"]) >= 2
-                ]
-                cands_dia.sort(key=lambda x: sum(1 for a in x["dos_apuestas"][:2] if a["ganada"]), reverse=True)
-                for c_d in cands_dia:
-                    if len(lista_dest) >= tope:
-                        break
-                    p_key_c = c_d["partido"].split(" (")[0].strip().lower()
-                    partidos_vistos.add(p_key_c)
-                    lista_dest.append({
-                        "tipo_tarjeta": lvl,
-                        "partido": c_d["partido"],
-                        "marcador": c_d["marcador"],
-                        "gh": 0,
-                        "ga": 0,
-                        "g_ht": 0,
-                        "fecha": fecha_tope_auditoria,
-                        "dos_apuestas": c_d["dos_apuestas"][:2],
-                    })
-
+    # Ordenar dentro de VIP y dentro de FREE: primero los ya finalizados (FT) y debajo los pendientes de madrugada
+    vip_recolectadas.sort(key=lambda x: bool(x.get("pendiente", False)))
+    free_recolectadas.sort(key=lambda x: bool(x.get("pendiente", False)))
     siete_tarjetas = vip_recolectadas + free_recolectadas
     if not fecha_auditada_real:
         fecha_auditada_real = fecha_tope_auditoria
 
-    aciertos_14 = sum(1 for t in siete_tarjetas for pk in t["dos_apuestas"] if pk["ganada"])
-    total_14 = sum(len(t["dos_apuestas"]) for t in siete_tarjetas)
-    tasa_txt = f"{aciertos_14}/{total_14} Aciertos"
+    aciertos_eval = sum(1 for t in siete_tarjetas if not t.get("pendiente") for pk in t["dos_apuestas"] if pk.get("ganada") is True)
+    total_eval = sum(1 for t in siete_tarjetas if not t.get("pendiente") for pk in t["dos_apuestas"] if pk.get("ganada") is not None)
+    pendientes_cnt = sum(1 for t in siete_tarjetas if t.get("pendiente"))
+    if total_eval > 0:
+        tasa_txt = f"{aciertos_eval}/{total_eval} Aciertos" + (" (En curso)" if pendientes_cnt > 0 else "")
+    else:
+        tasa_txt = "Jornada en curso"
 
-    return siete_tarjetas, tasa_txt, fecha_auditada_real, aciertos_14, total_14
+    return siete_tarjetas, tasa_txt, fecha_auditada_real, aciertos_eval, total_eval
 
 
 def dibujar_icono_check_o_cruz(draw, x, y, es_acierto, tam=24):
@@ -977,65 +987,136 @@ def dibujar_icono_check_o_cruz(draw, x, y, es_acierto, tam=24):
         draw.line([(x + tam - 5, y + 5), (x + 5, y + tam - 5)], fill=(255, 255, 255, 255), width=3)
 
 
+def dibujar_icono_pendiente(draw, x, y, tam=24):
+    """Dibuja un icono limpio de reloj/espera en azul para partidos de hoy todavía en curso o por jugar."""
+    draw.rounded_rectangle([(x, y), (x + tam, y + tam)], radius=6, fill=(28, 62, 108, 255), outline=(82, 178, 255, 255), width=2)
+    cx, cy = x + tam // 2, y + tam // 2
+    r = max(4, tam // 2 - 5)
+    draw.ellipse([(cx - r, cy - r), (cx + r, cy + r)], outline=(240, 248, 255, 255), width=2)
+    draw.line([(cx, cy), (cx, cy - max(2, r - 2))], fill=(240, 248, 255, 255), width=2)
+    draw.line([(cx, cy), (cx + max(2, r - 3), cy + 1)], fill=(240, 248, 255, 255), width=2)
+
+
 def crear_imagen_auditoria_vertical(fecha_hoy, ruta_csv="auditoria_apuestas.csv", partidos_vip=None, ruta_salida="slide_auditoria.jpg", token_privado=None, chat_id_privado=None, modo_horario="manana"):
-    siete_tarjetas, tasa_txt, fecha_ayer, ac_14, tot_14 = seleccionar_7_partidos_14_apuestas_clientes(
+    siete_tarjetas, tasa_txt, fecha_ayer, ac_eval, tot_eval = seleccionar_7_partidos_14_apuestas_clientes(
         fecha_hoy, ruta_csv, token_privado, chat_id_privado, modo_horario=modo_horario
     )
-    lienzo = crear_fondo_vertical_base()
+    pendientes_cnt = sum(1 for t in siete_tarjetas if t.get("pendiente"))
+    finalizados_cnt = len(siete_tarjetas) - pendientes_cnt
+
+    lienzo = _crear_fondo_broadcast_pro(acento_izq=(0, 232, 118), acento_der=(64, 174, 255))
     draw = ImageDraw.Draw(lienzo, "RGBA")
-    f_tag, f_titulo, f_sub, f_cta, f_peq = cargar_fuentes_video(38)
-    c_verde = (0, 255, 100, 255)
-    c_rojo = (255, 80, 80, 255)
-    c_oro = (255, 205, 0, 255)
-    c_blanco = (245, 245, 245, 255)
+    c_verde = (0, 232, 118, 255)
+    c_rojo = (255, 82, 92, 255)
+    c_oro = (255, 204, 0, 255)
+    c_azul = (86, 182, 255, 255)
+    c_blanco = (248, 250, 252, 255)
+    c_gris = (172, 186, 204, 255)
 
-    draw.rectangle([(40, 58), (1040, 114)], fill=(12, 28, 20, 238), outline=c_verde, width=2)
-    tit_sup = "AUDITORÍA OFICIAL CLIENTES (4 VIP + 3 FREE = 14 SELECCIONES)"
-    draw.text((62, 71), tit_sup, font=obtener_fuente_video_ajustada(draw, tit_sup, "Montserrat-VariableFont_wght.ttf", 27, 955, 18), fill=c_verde)
+    # Marca superior centrada
+    _dibujar_marca_sup_pro(lienzo, y=46)
+    draw = ImageDraw.Draw(lienzo, "RGBA")
 
-    tit_prin = f"RESULTADOS JORNADA {fecha_ayer}"
-    draw.text((42, 124), tit_prin, font=obtener_fuente_video_ajustada(draw, tit_prin, "Montserrat-VariableFont_wght.ttf", 38, 980, 24), fill=c_blanco)
+    # Cabecera centrada y nítida (Bold real)
+    if pendientes_cnt > 0:
+        tit_sup = "AVANCE EN VIVO CLIENTES  •  SOLO PARTIDOS DE HOY (4 VIP + 3 FREE)"
+        tit_prin = f"¿CÓMO VAMOS HOY?  •  JORNADA {fecha_ayer}"
+        txt_ef = f"Balance Parcial: {ac_eval}/{tot_eval} Aciertos  ({finalizados_cnt}/{len(siete_tarjetas)} finalizados)"
+        txt_sub_ef = f"{pendientes_cnt} partido(s) de madrugada todavía en espera  •  Cero mezcla con días anteriores"
+    else:
+        tit_sup = "AUDITORÍA OFICIAL CLIENTES  •  4 VIP + 3 FREE (14 SELECCIONES)"
+        tit_prin = f"CIERRE OFICIAL JORNADA {fecha_ayer}"
+        txt_ef = f"Efectividad Verificada: {ac_eval}/{tot_eval} Aciertos ({finalizados_cnt}/{len(siete_tarjetas)} finalizados)"
+        txt_sub_ef = f"Fecha Auditada: {fecha_ayer}  •  Las 7 Tarjetas Oficiales Entregadas a Clientes"
 
-    draw.rectangle([(40, 178), (1040, 260)], fill=(18, 26, 22, 242), outline=c_verde, width=2)
-    txt_ef = f"Efectividad Verificada: {tasa_txt} ({ac_14}/{tot_14} acertadas en VIP y FREE)"
-    draw.text((60, 192), txt_ef, font=obtener_fuente_video_ajustada(draw, txt_ef, "Montserrat-VariableFont_wght.ttf", 30, 960, 20), fill=c_verde)
-    draw.text((60, 230), f"Fecha Auditada: {fecha_ayer} | Las 7 Tarjetas Entregadas a Clientes", font=f_peq, fill=c_oro)
+    draw.rounded_rectangle([(46, 84), (1034, 140)], radius=26, fill=(12, 34, 26, 240), outline=c_verde, width=2)
+    f_sup = _fuente_pro_ajustada(draw, tit_sup, "bold", 23, 940, 15)
+    draw.text((_centrar_x_pro(draw, tit_sup, f_sup), 99), tit_sup, font=f_sup, fill=c_verde)
 
-    y = 274
+    f_pr = _fuente_pro_ajustada(draw, tit_prin, "bold", 40, 960, 22)
+    draw.text((_centrar_x_pro(draw, tit_prin, f_pr), 158), tit_prin, font=f_pr, fill=c_blanco)
+
+    # Caja resumen de efectividad centrada
+    draw.rounded_rectangle([(46, 218), (1034, 314)], radius=22, fill=(14, 26, 24, 244), outline=c_verde, width=2)
+    f_ef = _fuente_pro_ajustada(draw, txt_ef, "bold", 31, 940, 19)
+    f_sef = _fuente_pro_ajustada(draw, txt_sub_ef, "mono", 20, 940, 14)
+    draw.text((_centrar_x_pro(draw, txt_ef, f_ef), 232), txt_ef, font=f_ef, fill=c_verde)
+    draw.text((_centrar_x_pro(draw, txt_sub_ef, f_sef), 276), txt_sub_ef, font=f_sef, fill=c_oro)
+
+    # Las 7 tarjetas de clientes de la jornada exacta
+    y = 334
+    alto_card = 128
+    salto_card = 138
     for item in siete_tarjetas[:7]:
-        pks = item["dos_apuestas"]
-        ac_p = sum(1 for k in pks if k["ganada"])
-        tot_p = max(1, len(pks))
-        es_verde = (ac_p == tot_p)
-        col_b = c_verde if es_verde else (c_oro if ac_p == 1 else c_rojo)
-        bg_c = (14, 24, 20, 242) if es_verde else ((26, 24, 14, 242) if ac_p == 1 else (32, 14, 16, 242))
+        pks = item.get("dos_apuestas") or []
+        es_pend = bool(item.get("pendiente"))
 
-        draw.rectangle([(40, y), (1040, y + 118)], fill=bg_c, outline=col_b, width=2)
-        dibujar_icono_check_o_cruz(draw, 58, y + 14, ac_p >= 1, tam=26)
+        if es_pend:
+            col_b = c_azul
+            bg_c = (14, 24, 40, 244)
+        else:
+            ac_p = sum(1 for k in pks if k.get("ganada") is True)
+            tot_p = max(1, len(pks))
+            es_verde = (ac_p == tot_p)
+            col_b = c_verde if es_verde else (c_oro if ac_p >= 1 else c_rojo)
+            bg_c = (12, 28, 22, 244) if es_verde else ((28, 24, 13, 244) if ac_p >= 1 else (36, 15, 18, 244))
 
-        color_tag_nivel = c_oro if item["tipo_tarjeta"] == "VIP" else c_verde
-        tag_nivel_txt = f"[{item['tipo_tarjeta']}]"
-        f_tag_niv = obtener_fuente_video_ajustada(draw, tag_nivel_txt, "Montserrat-VariableFont_wght.ttf", 28, 130, 20)
-        draw.text((94, y + 11), tag_nivel_txt, font=f_tag_niv, fill=color_tag_nivel)
+        draw.rounded_rectangle([(46, y), (1034, y + alto_card)], radius=20, fill=bg_c, outline=col_b, width=2)
 
+        if es_pend:
+            dibujar_icono_pendiente(draw, 66, y + 18, tam=26)
+        else:
+            dibujar_icono_check_o_cruz(draw, 66, y + 18, ac_p >= 1, tam=26)
+
+        tipo_t = str(item.get("tipo_tarjeta", "VIP"))
+        color_tag_nivel = c_oro if tipo_t == "VIP" else c_verde
+        tag_nivel_txt = f"[{tipo_t}]"
+        f_tag_niv = _fuente_pro("bold", 26)
+        draw.text((104, y + 16), tag_nivel_txt, font=f_tag_niv, fill=color_tag_nivel)
         w_tag = draw.textbbox((0, 0), tag_nivel_txt, font=f_tag_niv)[2]
-        linea_duelo = f" {item['partido']} ({item['marcador']})  [{ac_p}/{tot_p}]"
-        f_duelo = obtener_fuente_video_ajustada(draw, linea_duelo, "Montserrat-VariableFont_wght.ttf", 29, 915 - w_tag, 19)
-        draw.text((94 + w_tag, y + 11), linea_duelo, font=f_duelo, fill=c_blanco)
 
-        x_cur = 60
-        for k in pks[:2]:
-            dibujar_icono_check_o_cruz(draw, x_cur, y + 64, k["ganada"], tam=22)
-            txt_k = f"{k['mercado_corto']} ({k['cuota']:.2f})"
-            f_k = obtener_fuente_video_ajustada(draw, txt_k, "RobotoMono-VariableFont_wght.ttf", 24, 445, 17)
-            draw.text((x_cur + 30, y + 60), txt_k, font=f_k, fill=c_verde if k["ganada"] else c_rojo)
-            x_cur += 485
-        y += 126
+        part_corto = str(item.get("partido", "")).strip()
+        if es_pend:
+            h_txt = str(item.get("hora", "")).strip()
+            suf_estado = f"  •  POR JUGAR ({h_txt}h)" if h_txt else "  •  EN ESPERA"
+            linea_duelo = f" {part_corto}{suf_estado}"
+        else:
+            linea_duelo = f" {part_corto} ({item.get('marcador', 'FT')})  [{ac_p}/{tot_p}]"
 
-    draw.rectangle([(40, 1335), (1040, 1500)], fill=(18, 20, 26, 245), outline=c_oro, width=2)
-    draw.text((70, 1355), "PASE VIP 1 DÍA POR 1.00 USD", font=f_sub, fill=c_oro)
-    draw.text((70, 1410), "📲 ENTRA DESDE EL ENLACE DE NUESTRO PERFIL", font=f_cta, fill=c_verde)
-    draw.text((70, 1452), "@QuantBet22 | Laboratorio de Ciencia de Datos", font=f_peq, fill=(180, 180, 180, 255))
+        f_duelo = _fuente_pro_ajustada(draw, linea_duelo, "bold", 26, 900 - w_tag, 17)
+        draw.text((108 + w_tag, y + 17), linea_duelo, font=f_duelo, fill=c_blanco)
+
+        x_cur = 68
+        for idx_k, k in enumerate(pks[:2], start=1):
+            if es_pend or k.get("ganada") is None:
+                dibujar_icono_pendiente(draw, x_cur, y + 72, tam=22)
+                col_pick = c_oro if tipo_t == "VIP" else c_azul
+                # Proteger los picks VIP que todavía NO han empezado para no regalarlos antes del partido en el Canal FREE
+                if tipo_t == "VIP":
+                    txt_k = f"Selección VIP #{idx_k} (>{float(k.get('cuota', 1.45)):.2f})"
+                else:
+                    txt_k = f"{k.get('mercado_corto', '')} ({float(k.get('cuota', 1.24)):.2f})"
+            else:
+                dibujar_icono_check_o_cruz(draw, x_cur, y + 72, bool(k.get("ganada")), tam=22)
+                col_pick = c_verde if k.get("ganada") else c_rojo
+                txt_k = f"{k.get('mercado_corto', '')} ({float(k.get('cuota', 1.25)):.2f})"
+            f_k = _fuente_pro_ajustada(draw, txt_k, "mono", 23, 435, 16)
+            draw.text((x_cur + 32, y + 70), txt_k, font=f_k, fill=col_pick)
+            x_cur += 478
+        y += salto_card
+
+    # Pie CTA centrado y elegante
+    y_cta = max(y + 16, 1320)
+    draw.rounded_rectangle([(46, y_cta), (1034, y_cta + 172)], radius=26, fill=(22, 20, 12, 246), outline=c_oro, width=3)
+    t_c1 = "PASE DE PRUEBA VIP 24 HORAS  •  SOLO 1.00 USD"
+    t_c2 = "VER RESULTADOS EN VIVO EN QUANTBET22.STREAMLIT.APP"
+    t_c3 = "@QUANTBET22  •  TRANSPARENCIA TOTAL EN PYTHON"
+    f_c1 = _fuente_pro_ajustada(draw, t_c1, "bold", 32, 930, 20)
+    f_c2 = _fuente_pro_ajustada(draw, t_c2, "mono", 24, 930, 16)
+    f_c3 = _fuente_pro_ajustada(draw, t_c3, "mono", 20, 930, 14)
+    draw.text((_centrar_x_pro(draw, t_c1, f_c1), y_cta + 24), t_c1, font=f_c1, fill=c_oro)
+    draw.text((_centrar_x_pro(draw, t_c2, f_c2), y_cta + 76), t_c2, font=f_c2, fill=c_verde)
+    draw.text((_centrar_x_pro(draw, t_c3, f_c3), y_cta + 122), t_c3, font=f_c3, fill=c_gris)
 
     lienzo.convert("RGB").save(ruta_salida, quality=96)
     dir_base_aud = os.path.dirname(ruta_salida) or "."
@@ -1046,8 +1127,7 @@ def crear_imagen_auditoria_vertical(fecha_hoy, ruta_csv="auditoria_apuestas.csv"
 
 def publicar_auditoria_nocturna_canal_free(fecha_auditar=None, enviar_a_clientes=True, modo_horario="manana"):
     """Refresca marcadores FT, genera la imagen vertical oficial de las 7 tarjetas (4 VIP + 3 FREE)
-    y envía SIEMPRE imagen + texto a tu Bot de Auditorías y Chat Privado;
-    si enviar_a_clientes=True, también la publica en Canal FREE y Canal VIP con sus textos respectivos."""
+    EXCLUSIVAMENTE de esa jornada (sin mezclar días anteriores) y la publica."""
     import mercados_optimizados as m
     ahora_esp = datetime.now(timezone.utc).replace(tzinfo=None) + timedelta(hours=1)
     if not fecha_auditar:
@@ -1062,25 +1142,30 @@ def publicar_auditoria_nocturna_canal_free(fecha_auditar=None, enviar_a_clientes
         modo_horario=modo_horario
     )
     if modo_horario == "noche":
-        titulo_free = f"📊 <b>AUDITORÍA NOCTURNA ({fecha_auditar}) — {tasa_txt} VERIFICADOS</b> ✅"
+        titulo_free = f"📊 <b>¿CÓMO VAMOS HOY? ({fecha_auditar}) — {tasa_txt}</b> ✅"
         intro_free = (
-            "Ahí tienen en pantalla el avance real de la jornada de hoy con marcador final (FT) "
-            "sobre las tarjetas ya finalizadas (y complementado con los últimos encuentros cerrados)."
+            "Balance parcial en vivo SOLO de las 7 tarjetas enviadas hoy a clientes (4 VIP + 3 FREE): "
+            "marcadores reales (FT) de los partidos terminados y los de madrugada en espera."
         )
         cta_dia = "MAÑANA"
-        titulo_vip = f"🏆 <b>AVANCE NOCTURNO EQUIPO VIP ({fecha_auditar}) — {tasa_txt} VERIFICADOS</b> ✅"
+        titulo_vip = f"🏆 <b>¿CÓMO VAMOS HOY EQUIPO VIP? ({fecha_auditar}) — {tasa_txt}</b> ✅"
+        intro_vip = (
+            "Así vamos hoy con nuestras 7 tarjetas oficiales de la jornada (los encuentros de madrugada siguen en espera y cerrarán mañana a las 07:30h)."
+        )
     else:
         titulo_free = f"📊 <b>AUDITORÍA OFICIAL CERRADA ({fecha_auditar}) — {tasa_txt} VERIFICADOS</b> ✅"
         intro_free = (
-            "Ahí tienen en pantalla la transparencia total de nuestro algoritmo en Python: "
-            "resultados reales auditados con marcador final (FT) sobre las 7 tarjetas oficiales VIP y FREE entregadas a clientes."
+            "Transparencia total en Python: resultados finales (FT) de las 7 tarjetas entregadas a clientes (4 VIP + 3 FREE)."
         )
         cta_dia = "HOY"
         titulo_vip = f"🏆 <b>BALANCE OFICIAL CERRADO EQUIPO VIP ({fecha_auditar}) — {tasa_txt} VERIFICADOS</b> ✅"
+        intro_vip = (
+            "¡Excelente jornada, equipo VIP! Ahí tienen en pantalla el cierre oficial con marcador final (FT) de nuestras 7 tarjetas."
+        )
 
     caption_oficial_free = (
         f"{titulo_free}\n\n"
-        "Transparencia total en Python: resultados reales (FT) de las 7 tarjetas entregadas a clientes (4 VIP + 3 FREE).\n\n"
+        f"{intro_free}\n\n"
         f"🔥 <b>PRUEBA {cta_dia} EL CANAL VIP POR SOLO 1.00 USD (24H)</b>\n"
         f"✅ 4 Tarjetas VIP de cuota alta de {cta_dia.lower()} + Doble VIP + Triple Sniper.\n"
         "✅ Pago único por 1 día (sin cobros automáticos).\n"
@@ -1094,7 +1179,7 @@ def publicar_auditoria_nocturna_canal_free(fecha_auditar=None, enviar_a_clientes
     )
     caption_oficial_vip = (
         f"{titulo_vip}\n\n"
-        "¡Excelente jornada, equipo VIP! Ahí tienen en pantalla la auditoría real con marcador final (FT) sobre nuestras 7 tarjetas oficiales.\n\n"
+        f"{intro_vip}\n\n"
         "📈 <i>Recuerden mantener disciplina con el Stake de Kelly y consultar todas las estadísticas y combinadas auditadas en tiempo real en nuestra plataforma web:</i>\n"
         "🌐 👉 <a href='https://quantbet22.streamlit.app'>https://quantbet22.streamlit.app</a>\n\n"
         "👑 <b>¿Quieres dar el salto al Canal PRO (100% de las ligas + Combinada Triple Sniper 3X)?</b>\n"
@@ -2202,14 +2287,22 @@ def _crear_escena_4_auditoria_7_completa_pro(datos, siete_tarjetas, tasa_txt, fe
     salto_card = 132
     for item in (siete_tarjetas or [])[:7]:
         pks = item.get("dos_apuestas") or []
-        ac_p = sum(1 for k in pks if k.get("ganada"))
+        es_pend_s4 = bool(item.get("pendiente"))
+        ac_p = sum(1 for k in pks if k.get("ganada") is True)
         tot_p = max(1, len(pks))
-        es_verde = (ac_p == tot_p)
-        col_b = _C_VERDE_PRO if es_verde else (_C_ORO_PRO if ac_p >= 1 else _C_ROJO_PRO)
-        bg_c = (12, 28, 22, 244) if es_verde else ((26, 23, 13, 244) if ac_p >= 1 else (34, 14, 17, 244))
+        if es_pend_s4:
+            col_b = _C_AZUL_PRO
+            bg_c = (14, 24, 40, 244)
+        else:
+            es_verde = (ac_p == tot_p)
+            col_b = _C_VERDE_PRO if es_verde else (_C_ORO_PRO if ac_p >= 1 else _C_ROJO_PRO)
+            bg_c = (12, 28, 22, 244) if es_verde else ((26, 23, 13, 244) if ac_p >= 1 else (34, 14, 17, 244))
 
         draw.rounded_rectangle([(52, y), (1028, y + alto_card)], radius=20, fill=bg_c, outline=col_b, width=2)
-        dibujar_icono_check_o_cruz(draw, 72, y + 16, ac_p >= 1, tam=26)
+        if es_pend_s4:
+            dibujar_icono_pendiente(draw, 72, y + 16, tam=26)
+        else:
+            dibujar_icono_check_o_cruz(draw, 72, y + 16, ac_p >= 1, tam=26)
 
         tipo_t = str(item.get("tipo_tarjeta", "VIP"))
         col_tag = _C_ORO_PRO if tipo_t == "VIP" else _C_VERDE_PRO
@@ -2225,10 +2318,15 @@ def _crear_escena_4_auditoria_7_completa_pro(datos, siete_tarjetas, tasa_txt, fe
 
         x_cur = 74
         for k in pks[:2]:
-            dibujar_icono_check_o_cruz(draw, x_cur, y + 68, bool(k.get("ganada")), tam=22)
+            if es_pend_s4 or k.get("ganada") is None:
+                dibujar_icono_pendiente(draw, x_cur, y + 68, tam=22)
+                col_ks4 = _C_AZUL_PRO
+            else:
+                dibujar_icono_check_o_cruz(draw, x_cur, y + 68, bool(k.get("ganada")), tam=22)
+                col_ks4 = _C_VERDE_PRO if k.get("ganada") else _C_ROJO_PRO
             txt_k = f"{k.get('mercado_corto', '')} ({float(k.get('cuota', 1.25)):.2f})"
             f_k = _fuente_pro_ajustada(draw, txt_k, "mono", 22, 425, 15)
-            draw.text((x_cur + 30, y + 66), txt_k, font=f_k, fill=_C_VERDE_PRO if k.get("ganada") else _C_ROJO_PRO)
+            draw.text((x_cur + 30, y + 66), txt_k, font=f_k, fill=col_ks4)
             x_cur += 472
         y += salto_card
 
