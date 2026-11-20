@@ -1,0 +1,313 @@
+{
+  "fecha": "2026-11-21",
+  "tarjetas_clientes": [
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "401884731",
+      "hora": "15:30",
+      "partido": "Borussia Mönchengladbach vs Borussia Dortmund (Alemania (Bundesliga))",
+      "selecciones": [
+        {
+          "mercado": "Over 2.5 Goles",
+          "prob": 66.5,
+          "cuota": 1.63
+        },
+        {
+          "mercado": "Tarjetas > 3.5",
+          "prob": 66.5,
+          "cuota": 1.72
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "401879236",
+      "hora": "16:00",
+      "partido": "Chelsea vs Leeds United (Inglaterra (Premier))",
+      "selecciones": [
+        {
+          "mercado": "Faltas Totales > 20.5",
+          "prob": 66.5,
+          "cuota": 1.71
+        },
+        {
+          "mercado": "Córners > 8.5",
+          "prob": 66.8,
+          "cuota": 1.53
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "401882798",
+      "hora": "21:00",
+      "partido": "Real Madrid vs Celta Vigo (España (Laliga))",
+      "selecciones": [
+        {
+          "mercado": "Faltas Totales > 21.5",
+          "prob": 66.5,
+          "cuota": 1.76
+        },
+        {
+          "mercado": "Remates Puerta > 7.5",
+          "prob": 66.5,
+          "cuota": 1.67
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "401913961",
+      "hora": "23:30",
+      "partido": "Atlético-MG vs Boca Juniors (Copa Sudamericana)",
+      "selecciones": [
+        {
+          "mercado": "Córners > 8.5",
+          "prob": 66.5,
+          "cuota": 1.6
+        },
+        {
+          "mercado": "Faltas Totales > 26.5",
+          "prob": 70.2,
+          "cuota": 1.45
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "FREE",
+      "id_partido": "401879232",
+      "hora": "18:30",
+      "partido": "Newcastle United vs Arsenal (Inglaterra (Premier))",
+      "selecciones": [
+        {
+          "mercado": "Córners > 8.5",
+          "prob": 75.3,
+          "cuota": 1.26
+        },
+        {
+          "mercado": "Remates Puerta > 6.5",
+          "prob": 73.2,
+          "cuota": 1.28
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "FREE",
+      "id_partido": "401879233",
+      "hora": "13:30",
+      "partido": "Manchester City vs Fulham (Inglaterra (Premier))",
+      "selecciones": [
+        {
+          "mercado": "Gol en 1T",
+          "prob": 80.6,
+          "cuota": 1.18
+        },
+        {
+          "mercado": "Córners Manchester City > 4.5",
+          "prob": 81.3,
+          "cuota": 1.18
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "FREE",
+      "id_partido": "401841322",
+      "hora": "20:30",
+      "partido": "Palmeiras vs Flamengo (Brasil (Serie A))",
+      "selecciones": [
+        {
+          "mercado": "Over 1.5 Goles",
+          "prob": 74.2,
+          "cuota": 1.28
+        },
+        {
+          "mercado": "Faltas Totales > 20.5",
+          "prob": 70.1,
+          "cuota": 1.28
+        }
+      ]
+    }
+  ],
+  "combinada_doble": {
+    "selecciones": [
+      {
+        "partido": "Chapecoense vs Cruzeiro",
+        "hora": "01:00",
+        "mercado": "Doble Oport. X2",
+        "prob": 85.15016342773055,
+        "cuota": 1.36,
+        "score_elite": 8
+      },
+      {
+        "partido": "Bayer Leverkusen vs SC Paderborn 07",
+        "hora": "15:30",
+        "mercado": "Doble Oport. 1X",
+        "prob": 84.84028675004653,
+        "cuota": 1.36,
+        "score_elite": 38
+      }
+    ],
+    "cuota_total": 1.85,
+    "prob_directa": 72.2,
+    "prob_protegida": 86.7
+  },
+  "combinada_sniper": {
+    "selecciones": [
+      {
+        "partido": "Manchester City vs Fulham",
+        "hora": "13:30",
+        "mercado": "Córners Manchester City > 4.5",
+        "prob": 81.2879487042598,
+        "cuota": 1.44,
+        "score_elite": 53
+      },
+      {
+        "partido": "Nice vs Paris Saint-Germain",
+        "hora": "17:15",
+        "mercado": "Gol en 1T",
+        "prob": 81.04684921608084,
+        "cuota": 1.44,
+        "score_elite": 18
+      },
+      {
+        "partido": "1. FC Union Berlin vs RB Leipzig",
+        "hora": "15:30",
+        "mercado": "Over 1.5 Goles",
+        "prob": 80.92857042752419,
+        "cuota": 1.44,
+        "score_elite": 38
+      }
+    ],
+    "cuota_total": 2.99,
+    "prob_directa": 53.3,
+    "prob_protegida": 77.3
+  },
+  "combinadas_exclusivas_pro": [
+    {
+      "clave": "cuadruple_elite_pro",
+      "titulo": "CUÁDRUPLE ÉLITE PRO",
+      "subtitulo": "EXCLUSIVO PRO: 4 PARTIDOS DE ALTA CONFLUENCIA",
+      "sufijo": "CUADRUPLE_ELITE_PRO",
+      "stake": "Invertir el 1% de tu capital (Alto Retorno)",
+      "selecciones": [
+        {
+          "partido": "Sporting CP vs Uniao da Serra",
+          "hora": "19:00",
+          "mercado": "Córners Sporting CP > 4.5",
+          "prob": 87.97984986302355,
+          "cuota": 1.38,
+          "score_elite": 20,
+          "nuevo": true
+        },
+        {
+          "partido": "Manchester City vs Fulham",
+          "hora": "13:30",
+          "mercado": "Córners > 7.5",
+          "prob": 86.86598409278321,
+          "cuota": 1.38,
+          "score_elite": 53,
+          "nuevo": true
+        },
+        {
+          "partido": "SV Elversberg vs SC Freiburg",
+          "hora": "15:30",
+          "mercado": "Over 1.5 Goles",
+          "prob": 86.62545643934398,
+          "cuota": 1.4,
+          "score_elite": 18,
+          "nuevo": true
+        },
+        {
+          "partido": "Bahia vs Coritiba",
+          "hora": "21:30",
+          "mercado": "Doble Oport. 1X",
+          "prob": 84.70091667034089,
+          "cuota": 1.4,
+          "score_elite": 8,
+          "nuevo": true
+        }
+      ],
+      "cuota_total": 3.73,
+      "prob_directa": 56.1,
+      "prob_protegida": 82.0
+    },
+    {
+      "clave": "especial_ritmo_pro",
+      "titulo": "ESPECIAL RITMO PRO",
+      "subtitulo": "EXCLUSIVO PRO: CÓRNERS Y REMATES (3 PARTIDOS)",
+      "sufijo": "RITMO_CORNERS_PRO",
+      "stake": "Invertir del 1% al 2% de tu capital (Ritmo Puro)",
+      "selecciones": [
+        {
+          "partido": "Sporting CP vs Uniao da Serra",
+          "hora": "19:00",
+          "mercado": "Córners Sporting CP > 4.5",
+          "prob": 87.97984986302355,
+          "cuota": 1.38,
+          "score_elite": 20,
+          "nuevo": true
+        },
+        {
+          "partido": "Manchester City vs Fulham",
+          "hora": "13:30",
+          "mercado": "Córners > 7.5",
+          "prob": 86.86598409278321,
+          "cuota": 1.38,
+          "score_elite": 53,
+          "nuevo": true
+        },
+        {
+          "partido": "Newcastle United vs Arsenal",
+          "hora": "18:30",
+          "mercado": "Córners > 7.5",
+          "prob": 84.6172310109159,
+          "cuota": 1.38,
+          "score_elite": 68,
+          "nuevo": true
+        }
+      ],
+      "cuota_total": 2.63,
+      "prob_directa": 64.7,
+      "prob_protegida": 82.0
+    },
+    {
+      "clave": "especial_valor_pro",
+      "titulo": "ESPECIAL VALOR PRO",
+      "subtitulo": "EXCLUSIVO PRO: TÁCTICA, FRICCIÓN Y EV+ (3 PARTIDOS)",
+      "sufijo": "VALOR_TACTICO_PRO",
+      "stake": "Invertir del 1% al 2% de tu capital (Valor EV+)",
+      "selecciones": [
+        {
+          "partido": "SV Elversberg vs SC Freiburg",
+          "hora": "15:30",
+          "mercado": "Over 1.5 Goles",
+          "prob": 86.62545643934398,
+          "cuota": 1.4,
+          "score_elite": 18,
+          "nuevo": true
+        },
+        {
+          "partido": "Sporting CP vs Uniao da Serra",
+          "hora": "19:00",
+          "mercado": "Doble Oport. 1X",
+          "prob": 84.7120374364147,
+          "cuota": 1.4,
+          "score_elite": 20,
+          "nuevo": true
+        },
+        {
+          "partido": "Bahia vs Coritiba",
+          "hora": "21:30",
+          "mercado": "Doble Oport. 1X",
+          "prob": 84.70091667034089,
+          "cuota": 1.4,
+          "score_elite": 8,
+          "nuevo": true
+        }
+      ],
+      "cuota_total": 2.74,
+      "prob_directa": 62.2,
+      "prob_protegida": 82.0
+    }
+  ]
+}
