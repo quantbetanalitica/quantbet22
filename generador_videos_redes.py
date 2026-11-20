@@ -89,59 +89,35 @@ def _limpiar_texto_redes_sociales(texto, modo="copy"):
 
     return t
 
-# A. Interceptar dibujo de láminas de vídeo (Sin bordes amarillos exteriores)
+# A. Interceptar dibujo SOLO en láminas de vídeo vertical (1080x1920), respetando el '%' real en las tarjetas 1080x1080 de clientes
+def _es_lienzo_video(draw_obj):
+    try:
+        im_d = getattr(draw_obj, "_image", None)
+        return im_d is not None and im_d.size[1] > 1200
+    except Exception:
+        return False
+
 _orig_draw_text = _ImageDraw_vid.ImageDraw.text
 def _hook_draw_text(self, xy, text, *args, **kwargs):
-    return _orig_draw_text(self, xy, _limpiar_texto_redes_sociales(text, modo="slide"), *args, **kwargs)
+    txt_f = _limpiar_texto_redes_sociales(text, modo="slide") if _es_lienzo_video(self) else text
+    return _orig_draw_text(self, xy, txt_f, *args, **kwargs)
 _ImageDraw_vid.ImageDraw.text = _hook_draw_text
 
 if hasattr(_ImageDraw_vid.ImageDraw, "textbbox"):
     _orig_textbbox = _ImageDraw_vid.ImageDraw.textbbox
     def _hook_textbbox(self, xy, text, *args, **kwargs):
-        return _orig_textbbox(self, xy, _limpiar_texto_redes_sociales(text, modo="slide"), *args, **kwargs)
+        txt_f = _limpiar_texto_redes_sociales(text, modo="slide") if _es_lienzo_video(self) else text
+        return _orig_textbbox(self, xy, txt_f, *args, **kwargs)
     _ImageDraw_vid.ImageDraw.textbbox = _hook_textbbox
 
 if hasattr(_ImageDraw_vid.ImageDraw, "textlength"):
     _orig_textlength = _ImageDraw_vid.ImageDraw.textlength
     def _hook_textlength(self, text, *args, **kwargs):
-        return _orig_textlength(self, _limpiar_texto_redes_sociales(text, modo="slide"), *args, **kwargs)
+        txt_f = _limpiar_texto_redes_sociales(text, modo="slide") if _es_lienzo_video(self) else text
+        return _orig_textlength(self, txt_f, *args, **kwargs)
     _ImageDraw_vid.ImageDraw.textlength = _hook_textlength
 
-_orig_rounded_rect = _ImageDraw_vid.ImageDraw.rounded_rectangle
-def _hook_rounded_rect(self, xy, *args, **kwargs):
-    try:
-        if isinstance(xy, (list, tuple)) and len(xy) == 4:
-            x0, y0, x1, y1 = xy
-            if x0 <= 45 and y0 <= 45 and x1 >= 1030 and y1 >= 1860:
-                kwargs["outline"] = None
-                kwargs["width"] = 0
-                if "fill" not in kwargs or kwargs["fill"] is None:
-                    return None
-        if kwargs.get("outline") in [(255, 205, 0), (255, 215, 0), (255, 200, 0), "#ffcd00", "#ffd700"]:
-            kwargs["outline"] = (45, 68, 95)
-            kwargs["width"] = 1
-    except Exception:
-        pass
-    return _orig_rounded_rect(self, xy, *args, **kwargs)
-_ImageDraw_vid.ImageDraw.rounded_rectangle = _hook_rounded_rect
-
-_orig_rect = _ImageDraw_vid.ImageDraw.rectangle
-def _hook_rect(self, xy, *args, **kwargs):
-    try:
-        if isinstance(xy, (list, tuple)) and len(xy) == 4:
-            x0, y0, x1, y1 = xy
-            if x0 <= 45 and y0 <= 45 and x1 >= 1030 and y1 >= 1860:
-                kwargs["outline"] = None
-                kwargs["width"] = 0
-                if "fill" not in kwargs or kwargs["fill"] is None:
-                    return None
-        if kwargs.get("outline") in [(255, 205, 0), (255, 215, 0), (255, 200, 0), "#ffcd00", "#ffd700"]:
-            kwargs["outline"] = None
-            kwargs["width"] = 0
-    except Exception:
-        pass
-    return _orig_rect(self, xy, *args, **kwargs)
-_ImageDraw_vid.ImageDraw.rectangle = _hook_rect
+# Bordes gestionados directamente por el motor visual v3 (sin sobreescribir colores en tarjetas ni vídeos)
 
 # B. Interceptar la Voz IA (edge_tts) para pronunciar "Poison" claramente
 try:
@@ -950,9 +926,11 @@ def seleccionar_7_partidos_14_apuestas_clientes(fecha_hoy, ruta_csv="auditoria_a
         if len(vip_recolectadas) == 4 and len(free_recolectadas) == 3:
             break
 
-    # 3. Si en modo "manana" (07:30 AM) faltó algún cupo (ej. por Copa filtrada como Portugalete),
-    #    completarlo EXCLUSIVAMENTE con otro partido real DE LA MISMA JORNADA desde auditoria_apuestas.csv (NUNCA de antier)
-    if modo_horario == "manana":
+    # 3. REGLA DE TRANSPARENCIA ESTRICTA:
+    #    Si existe clientes_enviados_<fecha>.json para la jornada auditada, mostrar ÚNICAMENTE los partidos
+    #    exactos entregados a clientes (NUNCA inyectar partidos extra del CSV que no salieron en FREE/VIP).
+    arch_oficial_dia = f"clientes_enviados_{fecha_tope_auditoria}.json"
+    if modo_horario == "manana" and not os.path.exists(arch_oficial_dia):
         for lvl, lista_dest, tope in [("VIP", vip_recolectadas, 4), ("FREE", free_recolectadas, 3)]:
             if len(lista_dest) < tope:
                 cands_dia = [
@@ -1102,20 +1080,17 @@ def publicar_auditoria_nocturna_canal_free(fecha_auditar=None, enviar_a_clientes
 
     caption_oficial_free = (
         f"{titulo_free}\n\n"
-        f"{intro_free}\n\n"
-        f"🔥 <b>¿QUIERES PROBAR {cta_dia} EL CANAL VIP POR SOLO 1.00 USD?</b>\n"
-        "Habilitamos el <b>PASE DIARIO DE 24 HORAS por solo 1.00 USD</b>:\n"
-        f"✅ Recibes las 4 Tarjetas VIP de cuota alta de {cta_dia.lower()}.\n"
-        "✅ Recibes la Combinada Doble Institucional VIP.\n"
-        "✅ Pago único por 1 día (sin cobros automáticos).\n\n"
-        "⏳ <i>IMPORTANTE: Los precios de promoción VIP (7.99 USD por 10 días) y Plan PRO están disponibles únicamente hasta el 30 DE NOVIEMBRE.</i>\n\n"
-        "👇 <b>Activa tu Pase de 1 Día (1.00 USD) ahora mismo:</b>\n"
-        "💳 <b>1. Activar con Tarjeta en 1 clic (Whop Oficial):</b>\n"
-        "👉 <a href='https://whop.com/youtube-d4c7/quantbet22-canal-vip/'>https://whop.com/youtube-d4c7/quantbet22-canal-vip/</a>\n\n"
-        "📲 <b>2. Activar por Bizum, Nequi o USDT:</b>\n"
-        "👉 Escribe <b>\"PASE 1 DIA\"</b> en nuestro soporte: @QuantBetSoporte_bot\n\n"
-        "🌐 <b>Estadísticas y resultados en vivo:</b>\n"
-        "👉 <a href='https://quantbet22.streamlit.app'>https://quantbet22.streamlit.app</a>"
+        "Transparencia total en Python: resultados reales (FT) de las 7 tarjetas entregadas a clientes (4 VIP + 3 FREE).\n\n"
+        f"🔥 <b>PRUEBA {cta_dia} EL CANAL VIP POR SOLO 1.00 USD (24H)</b>\n"
+        f"✅ 4 Tarjetas VIP de cuota alta de {cta_dia.lower()} + Doble VIP + Triple Sniper.\n"
+        "✅ Pago único por 1 día (sin cobros automáticos).\n"
+        "⏳ <i>Promo VIP 10 días ($7.99) y PRO solo hasta el 30 de noviembre.</i>\n\n"
+        "💳 <b>1. Tarjeta en 1 clic (Whop Oficial):</b>\n"
+        "👉 <a href='https://whop.com/youtube-d4c7/quantbet22-canal-vip/'>Activar Pase Diario ($1.00 USD)</a>\n"
+        "📲 <b>2. Bizum, Nequi o USDT:</b>\n"
+        "👉 Escribe <b>\"PASE 1 DIA\"</b> aquí: @QuantBetSoporte_bot\n\n"
+        "🌐 <b>Auditoría y resultados en vivo:</b>\n"
+        "👉 <a href='https://quantbet22.streamlit.app'>quantbet22.streamlit.app</a>"
     )
     caption_oficial_vip = (
         f"{titulo_vip}\n\n"
@@ -1450,24 +1425,18 @@ def guardar_archivos_individuales_y_json(carpeta_videos, prefijo_num, ruta_mp4, 
         f.write(dict_copys["facebook"])
 
     ahora = datetime.now()
-    dt_v1 = ahora + timedelta(minutes=30)
-    resto_5 = dt_v1.minute % 5
-    if resto_5 != 0:
-        dt_v1 += timedelta(minutes=(5 - resto_5))
-    dt_v1 = dt_v1.replace(second=0, microsecond=0)
-
+    dt_jorn = datetime.strptime(fecha_jornada, "%Y-%m-%d")
     if prefijo_num == 1:
-        dt_objetivo = dt_v1
+        dt_dia_1 = dt_jorn - timedelta(days=1)
+        if dt_dia_1.date() < ahora.date():
+            dt_dia_1 = ahora
+        dt_objetivo = dt_dia_1.replace(hour=21, minute=30, second=0, microsecond=0)
     else:
-        if dt_v1.hour >= 18:
-            dt_objetivo = (dt_v1 + timedelta(days=1)).replace(hour=6, minute=0, second=0, microsecond=0)
-        elif dt_v1.hour < 5:
-            dt_objetivo = dt_v1.replace(hour=6, minute=0, second=0, microsecond=0)
-        else:
-            dt_objetivo = dt_v1 + timedelta(hours=5)
+        dt_dia_2 = dt_jorn if dt_jorn.date() >= ahora.date() else ahora
+        dt_objetivo = dt_dia_2.replace(hour=14, minute=0, second=0, microsecond=0)
 
     hora_str_24 = dt_objetivo.strftime("%H:%M")
-    horario_dinamico = f"{hora_str_24} (España) - VIDEO #{prefijo_num} (TOP CARTELERA #{prefijo_num})"
+    horario_dinamico = f"{dt_objetivo.strftime('%Y-%m-%d')} {hora_str_24} (España) - VIDEO #{prefijo_num} (TOP CARTELERA #{prefijo_num})"
 
     cola_json.append({
         "fecha_publicacion": dt_objetivo.strftime("%Y-%m-%d"),
@@ -1484,7 +1453,7 @@ def guardar_archivos_individuales_y_json(carpeta_videos, prefijo_num, ruta_mp4, 
                 "descripcion": dict_copys["youtube_descripcion"],
                 "estado": "pendiente"
             },
-            "facebook": {"descripcion": f"{dict_copys['facebook']}\n\n🌐 App Oficial y Promo $7.99 en vivo: https://quantbet22.streamlit.app", "estado": "pendiente"}
+            "facebook": {"descripcion": f"{dict_copys['facebook']}\n\n🌐 App Oficial en vivo: https://quantbet22.streamlit.app/?src=facebook", "estado": "pendiente"}
         }
     })
 
@@ -1529,7 +1498,961 @@ def es_partido_de_america(p):
     return any(sel in duelo_low for sel in selecciones_america)
 
 
+
+# ==============================================================================
+# MOTOR VISUAL BROADCAST PRO v3 (1080x1920)
+# - MP4 100% compatible con Reproductor de Windows / iOS / Android / Redes
+#   (H.264 High@4.0, yuv420p, 30fps constante, timebase estándar, AAC 44.1kHz, +faststart)
+# - Escudos 100% REALES verificados por NOMBRE (nunca cruza IDs ESPN con API-Sports)
+# - Diseño centrado, simétrico y elegante (sin vacío inferior ni aspecto de hoja)
+# - Historia diaria dedicada centrada verticalmente + Auditoría completa 7 tarjetas
+# ==============================================================================
+CARPETA_ESCUDOS_PRO = os.path.join(os.path.dirname(os.path.abspath(__file__)), "escudos_cache_v2")
+os.makedirs(CARPETA_ESCUDOS_PRO, exist_ok=True)
+
+_C_VERDE_PRO = (0, 232, 118, 255)
+_C_ORO_PRO = (255, 204, 0, 255)
+_C_ROJO_PRO = (255, 78, 88, 255)
+_C_AZUL_PRO = (64, 174, 255, 255)
+_C_NARANJA_PRO = (255, 148, 64, 255)
+_C_BLANCO_PRO = (248, 250, 252, 255)
+_C_GRIS_PRO = (165, 180, 198, 255)
+_C_PANEL_PRO = (14, 22, 35, 236)
+_C_PANEL_ALT = (19, 29, 46, 240)
+_C_BORDE_PRO = (54, 78, 108, 175)
+
+TITULARES_GANCHO_PRO = [
+    "¿TRAMPA EN EL PARTIDO?",
+    "DATO OCULTO DEL DÍA",
+    "LA CASA SE EQUIVOCA",
+    "NADIE ESTÁ VIENDO ESTO",
+    "ALERTA DEL ALGORITMO",
+    "CLAVE TÁCTICA EN PYTHON",
+]
+
+
+def _fuente_pro(preferencia, tam):
+    if preferencia == "bold":
+        candidatos = [
+            "Montserrat-VariableFont_wght.ttf",
+            "Montserrat-Bold.ttf",
+            "/usr/share/fonts/truetype/lato/Lato-Black.ttf",
+            "/usr/share/fonts/truetype/lato/Lato-Bold.ttf",
+            "arialbd.ttf",
+        ]
+    elif preferencia == "mono":
+        candidatos = [
+            "RobotoMono-VariableFont_wght.ttf",
+            "Montserrat-VariableFont_wght.ttf",
+            "/usr/share/fonts/truetype/lato/Lato-Bold.ttf",
+            "consolab.ttf",
+            "arialbd.ttf",
+        ]
+    else:
+        candidatos = [
+            "Montserrat-VariableFont_wght.ttf",
+            "/usr/share/fonts/truetype/lato/Lato-Regular.ttf",
+            "/usr/share/fonts/GoogleSans-Regular.ttf",
+            "arial.ttf",
+        ]
+    for ruta in candidatos:
+        if os.path.exists(ruta):
+            try:
+                f = ImageFont.truetype(ruta, tam)
+                if preferencia in ("bold", "mono") and hasattr(f, "set_variation_by_axes"):
+                    try:
+                        f.set_variation_by_axes([800 if preferencia == "bold" else 700])
+                    except Exception:
+                        pass
+                return f
+            except Exception:
+                continue
+    return ImageFont.load_default()
+
+
+def _fuente_pro_ajustada(draw, texto, preferencia, tam_ini, ancho_max, tam_min=15):
+    tam = tam_ini
+    while tam >= tam_min:
+        f = _fuente_pro(preferencia, tam)
+        bb = draw.textbbox((0, 0), str(texto), font=f)
+        if (bb[2] - bb[0]) <= ancho_max:
+            return f
+        tam -= 2
+    return _fuente_pro(preferencia, tam_min)
+
+
+def _centrar_x_pro(draw, texto, fuente, cx=540):
+    bb = draw.textbbox((0, 0), str(texto), font=fuente)
+    return int(cx - (bb[2] - bb[0]) / 2)
+
+
+def _slug_escudo(nombre):
+    s = "".join(c for c in unicodedata.normalize("NFD", str(nombre).lower()) if unicodedata.category(c) != "Mn")
+    return re.sub(r"[^a-z0-9]+", "_", s).strip("_")
+
+
+def _tokens_escudo(nombre):
+    s = "".join(c for c in unicodedata.normalize("NFD", str(nombre).lower()) if unicodedata.category(c) != "Mn")
+    s = re.sub(r"\((?:f|w|fem|women)\)", " ", s)
+    s = re.sub(r"[^a-z0-9\s]", " ", s)
+    ign = {
+        "fc", "cf", "sc", "cd", "ud", "ac", "as", "sk", "ca", "se", "cr", "ce", "rc", "rcd", "sd",
+        "ad", "gd", "fk", "kv", "usc", "club", "deportivo", "deportes", "stade", "sporting", "de",
+        "la", "el", "los", "las", "del", "calcio", "1907", "1913", "04", "05", "women", "femenino", "fem"
+    }
+    toks = [w for w in s.split() if len(w) >= 3 and w not in ign]
+    return set(toks) if toks else set(w for w in s.split() if len(w) >= 2)
+
+
+def _nombre_coincide_escudo(objetivo, candidato):
+    if not objetivo or not candidato:
+        return False
+    t_obj = _tokens_escudo(objetivo)
+    t_can = _tokens_escudo(candidato)
+    if not t_obj or not t_can:
+        return False
+    # Bloquear rivales de misma ciudad / prefijo opuesto
+    opuestos = [
+        ("city", "united"), ("real", "atletico"), ("madrid", "rayo"),
+        ("inter", "milan"), ("roma", "lazio"), ("benfica", "sporting"),
+        ("river", "boca"), ("nacional", "medellin"), ("millonarios", "santa"),
+        ("flamengo", "fluminense"), ("palmeiras", "corinthians"), ("palmeiras", "santos"),
+    ]
+    for w1, w2 in opuestos:
+        if (w1 in t_obj and w2 in t_can and w2 not in t_obj) or (w2 in t_obj and w1 in t_can and w1 not in t_obj):
+            return False
+    genericos = {"real", "atletico", "united", "city", "olympique", "borussia", "racing", "nacional", "santa", "san", "inter"}
+    dist_obj = t_obj - genericos
+    dist_can = t_can - genericos
+    if not dist_obj or not dist_can:
+        return t_obj == t_can
+    comunes = dist_obj & dist_can
+    if comunes:
+        # Si ambos tienen 2+ palabras distintivas y comparten ciudad (ej. Manchester), exigir que no discrepen en la segunda palabra clave
+        if len(t_obj) >= 2 and len(t_can) >= 2 and (t_obj & {"city", "united", "real", "atletico"}) != (t_can & {"city", "united", "real", "atletico"}):
+            if ("city" in t_obj or "united" in t_obj) and ("city" in t_can or "united" in t_can):
+                return False
+        return True
+    for a in dist_obj:
+        for b in dist_can:
+            if len(a) >= 4 and len(b) >= 4 and (a.startswith(b[:4]) or b.startswith(a[:4])):
+                return True
+    return False
+
+
+def _descargar_y_guardar_png_valido(url_img, ruta_png):
+    from io import BytesIO
+    if not url_img or not str(url_img).startswith("http"):
+        return False
+    u_low = str(url_img).lower()
+    if any(bad in u_low for bad in ("not_available", "placeholder", "default_logo", "no-image", "noimage")):
+        return False
+    try:
+        r_img = requests.get(
+            url_img,
+            headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"},
+            timeout=5.0,
+        )
+        if r_img.status_code == 200 and len(r_img.content) > 700:
+            im = Image.open(BytesIO(r_img.content)).convert("RGBA")
+            if im.width >= 32 and im.height >= 32:
+                # Rechazar el placeholder estándar gris de cámara "Image not available" (sin fondo transparente y casi monocromo gris medio)
+                alpha_vals = list(im.getchannel("A").getdata())
+                pct_opaco = sum(1 for a in alpha_vals if a > 240) / max(1, len(alpha_vals))
+                if pct_opaco > 0.96:
+                    # Un escudo oficial real suele ser PNG con fondo transparente; revisar si el borde es gris placeholder
+                    px = im.load()
+                    r0, g0, b0, _ = px[2, 2]
+                    if abs(r0 - g0) <= 5 and abs(g0 - b0) <= 5 and 25 <= r0 <= 110:
+                        return False
+                im.save(ruta_png)
+                return True
+    except Exception:
+        pass
+    return False
+
+
+def obtener_escudo_real_equipo(nombre_equipo, team_id=None, logo_url=None, tam=220):
+    """Descargador verificado por NOMBRE (5 capas, CERO cruce de IDs entre ESPN y API-Sports)
+    con caché limpio en escudos_cache_v2/."""
+    slug = _slug_escudo(nombre_equipo)
+    ruta_png = os.path.join(CARPETA_ESCUDOS_PRO, f"{slug}.png")
+
+    if not os.path.exists(ruta_png):
+        ok = False
+
+        # Capa 1: URL directa del fixture (viene del mismo proveedor que el partido -> 100% exacta)
+        if logo_url and str(logo_url).startswith("http"):
+            ok = _descargar_y_guardar_png_valido(logo_url, ruta_png)
+
+        # Preparar consultas limpias
+        alias_busq = {
+            "celta vigo": "Celta Vigo", "ath madrid": "Atletico Madrid", "ath bilbao": "Athletic Club",
+            "paris sg": "Paris Saint-Germain", "psg": "Paris Saint-Germain",
+            "ol lyonnes": "Olympique Lyonnais", "man united": "Manchester United", "man city": "Manchester City",
+            "sp lisbon": "Sporting CP", "sp braga": "SC Braga",
+        }
+        nom_orig = str(nombre_equipo).strip()
+        nom_alias = alias_busq.get(nom_orig.lower(), nom_orig)
+        nom_base = re.sub(r"\b(FC|CF|SC|CD|UD|AC|AS|SK|USC|CA|SE|CR|RC|RCD|SD|AD|GD)\b", "", nom_alias, flags=re.I).strip()
+        consultas = []
+        for q_c in (nom_alias, nom_orig, nom_base):
+            if q_c and q_c not in consultas:
+                consultas.append(q_c)
+
+        # Capa 2: ESPN Search API con VERIFICACIÓN ESTRICTA DE NOMBRE
+        if not ok:
+            for q_eq in consultas:
+                try:
+                    r = requests.get(
+                        "https://site.web.api.espn.com/apis/common/v3/search",
+                        params={"query": q_eq, "limit": 8, "type": "team"},
+                        timeout=4.5,
+                    )
+                    if r.status_code == 200:
+                        for it in (r.json().get("items") or []):
+                            if it.get("sport") != "soccer":
+                                continue
+                            disp = str(it.get("displayName") or it.get("name") or "")
+                            if not _nombre_coincide_escudo(nom_alias, disp):
+                                continue
+                            u_l = it.get("image") or (f"https://a.espncdn.com/i/teamlogos/soccer/500/{it['id']}.png" if it.get("id") else "")
+                            if _descargar_y_guardar_png_valido(u_l, ruta_png):
+                                ok = True
+                                break
+                except Exception:
+                    pass
+                if ok:
+                    break
+
+        # Capa 3: TheSportsDB API gratuita con VERIFICACIÓN ESTRICTA DE NOMBRE
+        if not ok:
+            for q_eq in consultas:
+                try:
+                    r_db = requests.get(
+                        "https://www.thesportsdb.com/api/v1/json/3/searchteams.php",
+                        params={"t": q_eq},
+                        timeout=4.5,
+                    )
+                    if r_db.status_code == 200:
+                        for tm in (r_db.json().get("teams") or []):
+                            if str(tm.get("strSport") or "").lower() not in ("soccer", "football", ""):
+                                continue
+                            n_tm = f"{tm.get('strTeam') or ''} {tm.get('strAlternate') or ''}"
+                            if not _nombre_coincide_escudo(nom_alias, n_tm):
+                                continue
+                            u_b = tm.get("strBadge") or tm.get("strTeamBadge") or ""
+                            if _descargar_y_guardar_png_valido(u_b, ruta_png):
+                                ok = True
+                                break
+                except Exception:
+                    pass
+                if ok:
+                    break
+
+        # Capa 4: API-Sports /teams?search= con VERIFICACIÓN ESTRICTA DE NOMBRE
+        if not ok and API_KEY_RESPALDO_AYER:
+            for q_eq in consultas:
+                if len(q_eq) < 3:
+                    continue
+                try:
+                    r_as = requests.get(
+                        "https://v3.football.api-sports.io/teams",
+                        params={"search": q_eq},
+                        headers={"x-apisports-key": API_KEY_RESPALDO_AYER},
+                        timeout=4.5,
+                    )
+                    if r_as.status_code == 200:
+                        for item_t in (r_as.json().get("response") or []):
+                            t_obj = item_t.get("team") or {}
+                            if not _nombre_coincide_escudo(nom_alias, str(t_obj.get("name") or "")):
+                                continue
+                            if _descargar_y_guardar_png_valido(t_obj.get("logo"), ruta_png):
+                                ok = True
+                                break
+                except Exception:
+                    pass
+                if ok:
+                    break
+
+        # Capa 5: Wikipedia / Wikimedia con verificación de título
+        if not ok:
+            for lang_w in ("es", "en"):
+                for q_eq in consultas[:2]:
+                    try:
+                        r_w = requests.get(
+                            f"https://{lang_w}.wikipedia.org/w/api.php",
+                            params={
+                                "action": "query", "generator": "search", "gsrsearch": f"{q_eq} football club",
+                                "gsrlimit": 3, "prop": "pageimages", "pithumbsize": 320, "format": "json"
+                            },
+                            headers={"User-Agent": "QuantBet22Bot/1.0"},
+                            timeout=4.0,
+                        )
+                        if r_w.status_code == 200:
+                            pages = (r_w.json().get("query") or {}).get("pages") or {}
+                            for pg in pages.values():
+                                if not _nombre_coincide_escudo(nom_alias, str(pg.get("title") or "")):
+                                    continue
+                                src_w = (pg.get("thumbnail") or {}).get("source") or ""
+                                if src_w and any(ext in src_w.lower() for ext in (".png", ".svg")):
+                                    if _descargar_y_guardar_png_valido(src_w, ruta_png):
+                                        ok = True
+                                        break
+                    except Exception:
+                        pass
+                    if ok:
+                        break
+                if ok:
+                    break
+
+    if os.path.exists(ruta_png):
+        try:
+            im = Image.open(ruta_png).convert("RGBA")
+            im.thumbnail((tam, tam), Image.Resampling.LANCZOS)
+            lienzo = Image.new("RGBA", (tam, tam), (0, 0, 0, 0))
+            lienzo.paste(im, ((tam - im.width) // 2, (tam - im.height) // 2), im)
+            return lienzo
+        except Exception:
+            pass
+
+    # Respaldo elegante geométrico SOLO si el club no existe en ninguna de las 5 fuentes
+    im = Image.new("RGBA", (tam, tam), (0, 0, 0, 0))
+    d = ImageDraw.Draw(im, "RGBA")
+    pts = [
+        (tam * 0.50, tam * 0.06), (tam * 0.88, tam * 0.20), (tam * 0.82, tam * 0.66),
+        (tam * 0.50, tam * 0.94), (tam * 0.18, tam * 0.66), (tam * 0.12, tam * 0.20),
+    ]
+    d.polygon(pts, fill=(22, 34, 52, 245), outline=(0, 232, 118, 220))
+    d.line(pts + [pts[0]], fill=(0, 232, 118, 220), width=4)
+    pals = [p for p in re.sub(r"[^A-Za-z0-9\s]", "", str(nombre_equipo)).split() if p.upper() not in ("FC", "CF", "SC", "CD", "AC", "AS", "USC")]
+    ini = (pals[0][:3] if len(pals) == 1 else (pals[0][0] + pals[1][0])).upper() if pals else "QB"
+    f_ini = _fuente_pro("bold", int(tam * 0.30))
+    bb = d.textbbox((0, 0), ini, font=f_ini)
+    d.text(((tam - (bb[2] - bb[0])) // 2, (tam - (bb[3] - bb[1])) // 2 - 8), ini, font=f_ini, fill=_C_BLANCO_PRO)
+    return im
+
+
+def _crear_fondo_broadcast_pro(acento_izq=(0, 232, 118), acento_der=(255, 204, 0), W=1080, H=1920):
+    base = Image.new("RGBA", (W, H), (7, 11, 18, 255))
+    ruta_bg = "fondo de quant bet.jpg"
+    if os.path.exists(ruta_bg):
+        try:
+            orig = Image.open(ruta_bg).convert("RGBA")
+            esc = max(W / orig.width, H / orig.height)
+            nw, nh = int(orig.width * esc), int(orig.height * esc)
+            bg_r = orig.resize((nw, nh), Image.Resampling.LANCZOS)
+            left, top = max(0, (nw - W) // 2), max(0, (nh - H) // 2)
+            bg_r = bg_r.crop((left, top, left + W, top + H)).filter(ImageFilter.GaussianBlur(radius=7))
+            velo = Image.new("RGBA", (W, H), (6, 10, 17, 228))
+            base = Image.alpha_composite(bg_r, velo)
+        except Exception:
+            pass
+
+    glow = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+    dg = ImageDraw.Draw(glow, "RGBA")
+    cy_g = int(H * 0.42)
+    for r in range(440, 20, -30):
+        alpha = int(17 * (1.0 - r / 460.0))
+        dg.ellipse([(int(W * 0.22) - r, cy_g - r), (int(W * 0.22) + r, cy_g + r)], fill=(*acento_izq, alpha))
+        dg.ellipse([(int(W * 0.78) - r, cy_g - r), (int(W * 0.78) + r, cy_g + r)], fill=(*acento_der, alpha))
+    glow = glow.filter(ImageFilter.GaussianBlur(radius=48))
+    base = Image.alpha_composite(base, glow)
+
+    grid = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+    dr = ImageDraw.Draw(grid, "RGBA")
+    for y_g in range(0, H, 72):
+        dr.line([(0, y_g), (W, y_g)], fill=(255, 255, 255, 6), width=1)
+    for x_g in range(0, W, 72):
+        dr.line([(x_g, 0), (x_g, H)], fill=(255, 255, 255, 5), width=1)
+    return Image.alpha_composite(base, grid)
+
+
+def _pegar_medallon_pro(lienzo, escudo, cx, cy, radio=168, color_aro=_C_VERDE_PRO):
+    halo = Image.new("RGBA", lienzo.size, (0, 0, 0, 0))
+    dh = ImageDraw.Draw(halo, "RGBA")
+    dh.ellipse([(cx - radio - 22, cy - radio - 22), (cx + radio + 22, cy + radio + 22)], fill=(color_aro[0], color_aro[1], color_aro[2], 50))
+    halo = halo.filter(ImageFilter.GaussianBlur(radius=24))
+    lienzo.alpha_composite(halo)
+
+    draw = ImageDraw.Draw(lienzo, "RGBA")
+    draw.ellipse([(cx - radio, cy - radio), (cx + radio, cy + radio)], fill=(14, 22, 36, 248), outline=color_aro, width=4)
+    draw.ellipse([(cx - radio + 10, cy - radio + 10), (cx + radio - 10, cy + radio - 10)], outline=(255, 255, 255, 36), width=2)
+
+    tam_in = int(radio * 1.38)
+    esc_r = escudo.copy()
+    esc_r.thumbnail((tam_in, tam_in), Image.Resampling.LANCZOS)
+    lienzo.paste(esc_r, (cx - esc_r.width // 2, cy - esc_r.height // 2), esc_r)
+
+
+def _dibujar_marca_sup_pro(lienzo, y=106):
+    draw = ImageDraw.Draw(lienzo, "RGBA")
+    txt = "@QUANTBET22   •   LABORATORIO DE CIENCIA DE DATOS"
+    f_m = _fuente_pro("bold", 21)
+    draw.text((_centrar_x_pro(draw, txt, f_m), y), txt, font=f_m, fill=(195, 212, 232, 215))
+
+
+def _dibujar_cabecera_pro(lienzo, esc_l, esc_v, loc, vis, liga_txt, etiqueta_sup, y_base=112):
+    _dibujar_marca_sup_pro(lienzo, y=y_base)
+    draw = ImageDraw.Draw(lienzo, "RGBA")
+    y_p = y_base + 42
+    draw.rounded_rectangle([(64, y_p), (1016, y_p + 58)], radius=28, fill=(12, 34, 26, 238), outline=_C_VERDE_PRO, width=2)
+    f_pill = _fuente_pro_ajustada(draw, etiqueta_sup.upper(), "bold", 24, 890, 17)
+    draw.text((_centrar_x_pro(draw, etiqueta_sup.upper(), f_pill), y_p + 15), etiqueta_sup.upper(), font=f_pill, fill=_C_VERDE_PRO)
+
+    y_c = y_p + 76
+    draw.rounded_rectangle([(64, y_c), (1016, y_c + 144)], radius=26, fill=_C_PANEL_PRO, outline=_C_BORDE_PRO, width=2)
+    el = esc_l.copy(); el.thumbnail((102, 102), Image.Resampling.LANCZOS)
+    ev = esc_v.copy(); ev.thumbnail((102, 102), Image.Resampling.LANCZOS)
+    lienzo.paste(el, (100, y_c + 72 - el.height // 2), el)
+    lienzo.paste(ev, (980 - ev.width, y_c + 72 - ev.height // 2), ev)
+
+    duelo = f"{loc.upper()}  VS  {vis.upper()}"
+    f_duelo = _fuente_pro_ajustada(draw, duelo, "bold", 34, 620, 20)
+    draw.text((_centrar_x_pro(draw, duelo, f_duelo), y_c + 34), duelo, font=f_duelo, fill=_C_BLANCO_PRO)
+
+    f_lg = _fuente_pro_ajustada(draw, liga_txt.upper(), "mono", 22, 620, 16)
+    draw.text((_centrar_x_pro(draw, liga_txt.upper(), f_lg), y_c + 90), liga_txt.upper(), font=f_lg, fill=_C_ORO_PRO)
+    return y_c + 144
+
+
+def _dibujar_candado_pro(draw, cx, cy, color=_C_ORO_PRO):
+    draw.arc([(cx - 18, cy - 30), (cx + 18, cy + 4)], start=180, end=360, fill=color, width=5)
+    draw.line([(cx - 18, cy - 13), (cx - 18, cy - 2)], fill=color, width=5)
+    draw.line([(cx + 18, cy - 13), (cx + 18, cy - 2)], fill=color, width=5)
+    draw.rounded_rectangle([(cx - 26, cy - 4), (cx + 26, cy + 32)], radius=8, fill=color)
+    draw.ellipse([(cx - 6, cy + 8), (cx + 6, cy + 20)], fill=(12, 18, 28, 255))
+
+
+def _limpiar_pick_visual_pro(pick_txt):
+    t = str(pick_txt).strip()
+    return t.replace("Doble Oport.", "Doble Oportunidad").replace("Ambos Marcan (BTTS)", "Ambos Marcan")
+
+
+def _limpiar_pick_voz_pro(pick_txt):
+    t = _limpiar_pick_visual_pro(pick_txt)
+    t = t.replace("Over ", "Más de ").replace("Under ", "Menos de ")
+    t = t.replace("1X", "uno equis").replace("X2", "equis dos")
+    t = t.replace("1T", "primer tiempo").replace("2do Tiempo", "segundo tiempo").replace("2T", "segundo tiempo")
+    t = t.replace(" > ", " superior a ").replace(">", " superior a ")
+    t = re.sub(r"(\d+)\.5\b", r"\1 punto 5", t)
+    t = re.sub(r"(\d+)\.25\b", r"\1 punto 25", t)
+    t = re.sub(r"(\d+)\.75\b", r"\1 punto 75", t)
+    return t
+
+
+def _crear_escena_1_portada_pro(datos, esc_l, esc_v, titular_gancho, ruta_out):
+    """Portada Matchday centrada y equilibrada (y=120..1290 + subtítulos en y=1345..1495)."""
+    lienzo = _crear_fondo_broadcast_pro()
+    _dibujar_marca_sup_pro(lienzo, y=118)
+    draw = ImageDraw.Draw(lienzo, "RGBA")
+
+    tag_sup = f"MODELO QUANT PYTHON   •   {datos['liga'].upper()}"
+    draw.rounded_rectangle([(72, 166), (1008, 232)], radius=32, fill=(12, 34, 26, 240), outline=_C_VERDE_PRO, width=2)
+    f_tag = _fuente_pro_ajustada(draw, tag_sup, "bold", 24, 880, 16)
+    draw.text((_centrar_x_pro(draw, tag_sup, f_tag), 184), tag_sup, font=f_tag, fill=_C_VERDE_PRO)
+
+    f_hook = _fuente_pro_ajustada(draw, titular_gancho.upper(), "bold", 64, 940, 34)
+    draw.text((_centrar_x_pro(draw, titular_gancho.upper(), f_hook), 286), titular_gancho.upper(), font=f_hook, fill=_C_ORO_PRO)
+
+    sub_hook = "10.000 SIMULACIONES POISSON + LÍNEAS REALES"
+    f_sh = _fuente_pro_ajustada(draw, sub_hook, "mono", 25, 920, 17)
+    draw.text((_centrar_x_pro(draw, sub_hook, f_sh), 380), sub_hook, font=f_sh, fill=_C_GRIS_PRO)
+
+    # Línea de acento elegante
+    draw.line([(240, 444), (840, 444)], fill=(0, 232, 118, 95), width=2)
+
+    cy_esc = 690
+    _pegar_medallon_pro(lienzo, esc_l, 270, cy_esc, radio=172, color_aro=_C_VERDE_PRO)
+    _pegar_medallon_pro(lienzo, esc_v, 810, cy_esc, radio=172, color_aro=_C_ORO_PRO)
+
+    draw = ImageDraw.Draw(lienzo, "RGBA")
+    rombo = [(540, cy_esc - 68), (608, cy_esc), (540, cy_esc + 68), (472, cy_esc)]
+    draw.polygon(rombo, fill=(14, 24, 38, 252), outline=_C_VERDE_PRO)
+    draw.line(rombo + [rombo[0]], fill=_C_VERDE_PRO, width=4)
+    f_vs = _fuente_pro("bold", 44)
+    draw.text((_centrar_x_pro(draw, "VS", f_vs, 540), cy_esc - 26), "VS", font=f_vs, fill=_C_BLANCO_PRO)
+
+    f_loc = _fuente_pro_ajustada(draw, datos["local"].upper(), "bold", 42, 415, 22)
+    f_vis = _fuente_pro_ajustada(draw, datos["visitante"].upper(), "bold", 42, 415, 22)
+    draw.text((_centrar_x_pro(draw, datos["local"].upper(), f_loc, 270), 894), datos["local"].upper(), font=f_loc, fill=_C_BLANCO_PRO)
+    draw.text((_centrar_x_pro(draw, datos["visitante"].upper(), f_vis, 810), 894), datos["visitante"].upper(), font=f_vis, fill=_C_BLANCO_PRO)
+
+    # Tarjeta inferior centrada con fecha, horarios y teaser
+    draw.rounded_rectangle([(72, 1004), (1008, 1264)], radius=28, fill=_C_PANEL_PRO, outline=_C_BORDE_PRO, width=2)
+    txt_hora = f"JORNADA {datos['fecha']}   |   {datos['hora_esp']}h ESP  •  {datos['hora_col']}h COL"
+    f_h = _fuente_pro_ajustada(draw, txt_hora, "mono", 27, 880, 18)
+    draw.text((_centrar_x_pro(draw, txt_hora, f_h), 1046), txt_hora, font=f_h, fill=_C_VERDE_PRO)
+
+    draw.line([(160, 1112), (920, 1112)], fill=(255, 255, 255, 28), width=1)
+
+    txt_teaser = "QUÉDATE HASTA EL FINAL: 1 JUGADA ABIERTA GRATIS"
+    f_ts = _fuente_pro_ajustada(draw, txt_teaser, "bold", 29, 880, 19)
+    draw.text((_centrar_x_pro(draw, txt_teaser, f_ts), 1142), txt_teaser, font=f_ts, fill=_C_BLANCO_PRO)
+
+    txt_sub2 = "MÉTRICAS REALES  •  SIN HUMO  •  AUDITORÍA VERIFICADA"
+    f_s2 = _fuente_pro_ajustada(draw, txt_sub2, "mono", 21, 880, 15)
+    draw.text((_centrar_x_pro(draw, txt_sub2, f_s2), 1204), txt_sub2, font=f_s2, fill=_C_ORO_PRO)
+
+    lienzo.convert("RGB").save(ruta_out, quality=96)
+    return ruta_out
+
+
+def _crear_historia_diaria_pro(datos, esc_l, esc_v, titular_gancho, ruta_out):
+    """Historia Diaria 100% centrada en el lienzo vertical (1080x1920) con espacio limpio
+    en y=1440..1620 pensado para el sticker de enlace de Instagram y Facebook."""
+    lienzo = _crear_fondo_broadcast_pro()
+    _dibujar_marca_sup_pro(lienzo, y=132)
+    draw = ImageDraw.Draw(lienzo, "RGBA")
+
+    tag_sup = f"PARTIDAZO DEL DÍA   •   {datos['liga'].upper()}"
+    draw.rounded_rectangle([(72, 184), (1008, 252)], radius=34, fill=(12, 34, 26, 240), outline=_C_VERDE_PRO, width=2)
+    f_tag = _fuente_pro_ajustada(draw, tag_sup, "bold", 24, 880, 16)
+    draw.text((_centrar_x_pro(draw, tag_sup, f_tag), 203), tag_sup, font=f_tag, fill=_C_VERDE_PRO)
+
+    f_hook = _fuente_pro_ajustada(draw, titular_gancho.upper(), "bold", 62, 940, 32)
+    draw.text((_centrar_x_pro(draw, titular_gancho.upper(), f_hook), 312), titular_gancho.upper(), font=f_hook, fill=_C_ORO_PRO)
+
+    sub_h = f"JORNADA {datos['fecha']}   |   {datos['hora_esp']}h ESP  •  {datos['hora_col']}h COL"
+    f_sh = _fuente_pro_ajustada(draw, sub_h, "mono", 26, 920, 17)
+    draw.text((_centrar_x_pro(draw, sub_h, f_sh), 406), sub_h, font=f_sh, fill=_C_GRIS_PRO)
+
+    cy_esc = 696
+    _pegar_medallon_pro(lienzo, esc_l, 270, cy_esc, radio=174, color_aro=_C_VERDE_PRO)
+    _pegar_medallon_pro(lienzo, esc_v, 810, cy_esc, radio=174, color_aro=_C_ORO_PRO)
+
+    draw = ImageDraw.Draw(lienzo, "RGBA")
+    rombo = [(540, cy_esc - 68), (608, cy_esc), (540, cy_esc + 68), (472, cy_esc)]
+    draw.polygon(rombo, fill=(14, 24, 38, 252), outline=_C_VERDE_PRO)
+    draw.line(rombo + [rombo[0]], fill=_C_VERDE_PRO, width=4)
+    f_vs = _fuente_pro("bold", 44)
+    draw.text((_centrar_x_pro(draw, "VS", f_vs, 540), cy_esc - 26), "VS", font=f_vs, fill=_C_BLANCO_PRO)
+
+    f_loc = _fuente_pro_ajustada(draw, datos["local"].upper(), "bold", 42, 415, 22)
+    f_vis = _fuente_pro_ajustada(draw, datos["visitante"].upper(), "bold", 42, 415, 22)
+    draw.text((_centrar_x_pro(draw, datos["local"].upper(), f_loc, 270), 902), datos["local"].upper(), font=f_loc, fill=_C_BLANCO_PRO)
+    draw.text((_centrar_x_pro(draw, datos["visitante"].upper(), f_vis, 810), 902), datos["visitante"].upper(), font=f_vis, fill=_C_BLANCO_PRO)
+
+    # 3 chips métricos simétricos en el centro
+    chips = [
+        ("GOLES ESP.", f"{datos['tot_goles']:.2f}", _C_VERDE_PRO),
+        ("CÓRNERS", f"{datos['tot_corn']:.1f}", _C_ORO_PRO),
+        ("REMATES", f"{datos['tot_tiros']:.1f}", _C_AZUL_PRO),
+    ]
+    w_ch = 292
+    gap = 26
+    x_ini = (1080 - (3 * w_ch + 2 * gap)) // 2
+    for idx_c, (lbl_c, val_c, col_c) in enumerate(chips):
+        x0 = x_ini + idx_c * (w_ch + gap)
+        draw.rounded_rectangle([(x0, 1022), (x0 + w_ch, 1188)], radius=24, fill=_C_PANEL_PRO, outline=_C_BORDE_PRO, width=2)
+        f_l = _fuente_pro("bold", 21)
+        f_v = _fuente_pro("bold", 54)
+        draw.text((_centrar_x_pro(draw, lbl_c, f_l, x0 + w_ch // 2), 1048), lbl_c, font=f_l, fill=_C_GRIS_PRO)
+        draw.text((_centrar_x_pro(draw, val_c, f_v, x0 + w_ch // 2), 1094), val_c, font=f_v, fill=col_c)
+
+    # Tarjeta CTA elegante centrada (deja zona limpia abajo para sticker clicable)
+    draw.rounded_rectangle([(72, 1236), (1008, 1418)], radius=28, fill=(10, 34, 24, 244), outline=_C_VERDE_PRO, width=3)
+    t_cta1 = "1ª JUGADA ABIERTA GRATIS EN NUESTRA WEB"
+    t_cta2 = "TOCA EL ENLACE DE ABAJO PARA VER TODA LA JORNADA"
+    f_c1 = _fuente_pro_ajustada(draw, t_cta1, "bold", 31, 880, 19)
+    f_c2 = _fuente_pro_ajustada(draw, t_cta2, "mono", 22, 880, 16)
+    draw.text((_centrar_x_pro(draw, t_cta1, f_c1), 1276), t_cta1, font=f_c1, fill=_C_VERDE_PRO)
+    draw.text((_centrar_x_pro(draw, t_cta2, f_c2), 1340), t_cta2, font=f_c2, fill=_C_BLANCO_PRO)
+
+    # Pie sutil
+    f_pie = _fuente_pro("mono", 22)
+    pie_txt = "QUANTBET22.STREAMLIT.APP  •  @QUANTBET22"
+    draw.text((_centrar_x_pro(draw, pie_txt, f_pie), 1676), pie_txt, font=f_pie, fill=(160, 176, 196, 195))
+
+    lienzo.convert("RGB").save(ruta_out, quality=96)
+    return ruta_out
+
+
+def _crear_escena_2_metricas_pro(datos, esc_l, esc_v, ruta_out):
+    """Radiografía estadística centrada y elegante (SIN 1X2), cubriendo y=112..1295."""
+    lienzo = _crear_fondo_broadcast_pro()
+    y_bot = _dibujar_cabecera_pro(lienzo, esc_l, esc_v, datos["local"], datos["visitante"], datos["liga"], "RADIOGRAFÍA ESTADÍSTICA DEL PARTIDO", y_base=112)
+    draw = ImageDraw.Draw(lienzo, "RGBA")
+
+    y1 = y_bot + 32
+    draw.rounded_rectangle([(64, y1), (1016, y1 + 242)], radius=28, fill=_C_PANEL_PRO, outline=_C_BORDE_PRO, width=2)
+    lbl_g = "GOLES ESPERADOS (SIMULACIÓN POISSON)"
+    f_lg = _fuente_pro("bold", 25)
+    draw.text((_centrar_x_pro(draw, lbl_g, f_lg), y1 + 28), lbl_g, font=f_lg, fill=_C_GRIS_PRO)
+
+    val_g = f"{datos['tot_goles']:.2f} GOLES"
+    f_vg = _fuente_pro("bold", 66)
+    draw.text((_centrar_x_pro(draw, val_g, f_vg), y1 + 74), val_g, font=f_vg, fill=_C_VERDE_PRO)
+
+    bx0, by0, bx1, by1 = 112, y1 + 174, 968, y1 + 208
+    draw.rounded_rectangle([(bx0, by0), (bx1, by1)], radius=16, fill=(24, 35, 50, 255))
+    pct_g = max(0.18, min(1.0, datos["tot_goles"] / 4.2))
+    draw.rounded_rectangle([(bx0, by0), (int(bx0 + (bx1 - bx0) * pct_g), by1)], radius=16, fill=_C_VERDE_PRO)
+
+    # Fila 2: Córners y Remates centrados en 2 columnas simétricas
+    y2 = y1 + 270
+    draw.rounded_rectangle([(64, y2), (526, y2 + 260)], radius=28, fill=_C_PANEL_PRO, outline=_C_BORDE_PRO, width=2)
+    draw.text((_centrar_x_pro(draw, "CÓRNERS PROYECTADOS", _fuente_pro("bold", 23), 295), y2 + 30), "CÓRNERS PROYECTADOS", font=_fuente_pro("bold", 23), fill=_C_GRIS_PRO)
+    draw.text((_centrar_x_pro(draw, f"{datos['tot_corn']:.1f}", _fuente_pro("bold", 78), 295), y2 + 80), f"{datos['tot_corn']:.1f}", font=_fuente_pro("bold", 78), fill=_C_ORO_PRO)
+    draw.text((_centrar_x_pro(draw, "Ritmo por bandas", _fuente_pro("mono", 22), 295), y2 + 194), "Ritmo por bandas", font=_fuente_pro("mono", 22), fill=_C_BLANCO_PRO)
+
+    draw.rounded_rectangle([(554, y2), (1016, y2 + 260)], radius=28, fill=_C_PANEL_PRO, outline=_C_BORDE_PRO, width=2)
+    draw.text((_centrar_x_pro(draw, "REMATES A PUERTA", _fuente_pro("bold", 23), 785), y2 + 30), "REMATES A PUERTA", font=_fuente_pro("bold", 23), fill=_C_GRIS_PRO)
+    draw.text((_centrar_x_pro(draw, f"{datos['tot_tiros']:.1f}", _fuente_pro("bold", 78), 785), y2 + 80), f"{datos['tot_tiros']:.1f}", font=_fuente_pro("bold", 78), fill=_C_AZUL_PRO)
+    draw.text((_centrar_x_pro(draw, "Volumen ofensivo", _fuente_pro("mono", 22), 785), y2 + 194), "Volumen ofensivo", font=_fuente_pro("mono", 22), fill=_C_BLANCO_PRO)
+
+    # Fila 3: Faltas, Tarjetas y Perfil táctico centrados
+    y3 = y2 + 288
+    draw.rounded_rectangle([(64, y3), (1016, y3 + 302)], radius=28, fill=_C_PANEL_PRO, outline=_C_BORDE_PRO, width=2)
+    f_t3 = _fuente_pro("bold", 24)
+    draw.text((_centrar_x_pro(draw, "FRICCIÓN, DISCIPLINA Y CONTEXTO", f_t3), y3 + 26), "FRICCIÓN, DISCIPLINA Y CONTEXTO", font=f_t3, fill=_C_GRIS_PRO)
+
+    draw.rounded_rectangle([(100, y3 + 78), (526, y3 + 206)], radius=20, fill=_C_PANEL_ALT, outline=(255, 148, 64, 150), width=2)
+    draw.text((_centrar_x_pro(draw, "FALTAS ESTIMADAS", _fuente_pro("mono", 20), 313), y3 + 96), "FALTAS ESTIMADAS", font=_fuente_pro("mono", 20), fill=_C_GRIS_PRO)
+    draw.text((_centrar_x_pro(draw, f"{datos['tot_faltas']:.1f} faltas", _fuente_pro("bold", 40), 313), y3 + 134), f"{datos['tot_faltas']:.1f} faltas", font=_fuente_pro("bold", 40), fill=_C_NARANJA_PRO)
+
+    draw.rounded_rectangle([(554, y3 + 78), (980, y3 + 206)], radius=20, fill=_C_PANEL_ALT, outline=(255, 204, 0, 150), width=2)
+    draw.text((_centrar_x_pro(draw, "TARJETAS PROYECTADAS", _fuente_pro("mono", 20), 767), y3 + 96), "TARJETAS PROYECTADAS", font=_fuente_pro("mono", 20), fill=_C_GRIS_PRO)
+    draw.text((_centrar_x_pro(draw, f"{datos['tot_tarj']:.1f} tarjetas", _fuente_pro("bold", 40), 767), y3 + 134), f"{datos['tot_tarj']:.1f} tarjetas", font=_fuente_pro("bold", 40), fill=_C_ORO_PRO)
+
+    f_raw = str(datos.get("fuente_cuotas") or "").strip().lower()
+    if not f_raw or f_raw == "modelo":
+        etq_fuente = "MODELO POISSON + DIXON-COLES"
+    else:
+        etq_fuente = f"CUOTAS REALES ({datos['fuente_cuotas'].upper()})"
+    ctx_txt = f"PERFIL: {datos['contexto'].upper()}  •  {etq_fuente}"
+    f_ctx = _fuente_pro_ajustada(draw, ctx_txt, "mono", 21, 880, 15)
+    draw.text((_centrar_x_pro(draw, ctx_txt, f_ctx), y3 + 240), ctx_txt, font=f_ctx, fill=_C_VERDE_PRO)
+
+    lienzo.convert("RGB").save(ruta_out, quality=96)
+    return ruta_out
+
+
+def _crear_escena_3_jugada_pro(datos, esc_l, esc_v, ruta_out):
+    """Escena 3 centrada y simétrica: Jugada #1 Abierta Gratis + Candado VIP (y=112..1295)."""
+    lienzo = _crear_fondo_broadcast_pro()
+    y_bot = _dibujar_cabecera_pro(lienzo, esc_l, esc_v, datos["local"], datos["visitante"], datos["liga"], "SELECCIÓN DEL ALGORITMO QUANT", y_base=112)
+    draw = ImageDraw.Draw(lienzo, "RGBA")
+
+    y1 = y_bot + 36
+    draw.rounded_rectangle([(64, y1), (1016, y1 + 412)], radius=30, fill=(9, 34, 24, 246), outline=_C_VERDE_PRO, width=4)
+
+    # Pill centrada arriba de la tarjeta verde
+    draw.rounded_rectangle([(290, y1 + 32), (790, y1 + 88)], radius=24, fill=_C_VERDE_PRO)
+    f_b1 = _fuente_pro("bold", 25)
+    draw.text((_centrar_x_pro(draw, "JUGADA #1 ABIERTA GRATIS", f_b1), y1 + 46), "JUGADA #1 ABIERTA GRATIS", font=f_b1, fill=(7, 18, 12, 255))
+
+    pick_txt = _limpiar_pick_visual_pro(datos["pick_abierto"]).upper()
+    f_pick = _fuente_pro_ajustada(draw, pick_txt, "bold", 56, 860, 28)
+    draw.text((_centrar_x_pro(draw, pick_txt, f_pick), y1 + 136), pick_txt, font=f_pick, fill=_C_BLANCO_PRO)
+
+    # Pill centrada de índice real
+    cuota_txt = f"ÍNDICE DE VALOR REAL:  > {datos['cuota_abierta']:.2f}"
+    draw.rounded_rectangle([(210, y1 + 234), (870, y1 + 306)], radius=18, fill=(14, 24, 34, 230), outline=_C_VERDE_PRO, width=2)
+    f_cuo = _fuente_pro_ajustada(draw, cuota_txt, "mono", 34, 620, 20)
+    draw.text((_centrar_x_pro(draw, cuota_txt, f_cuo), y1 + 250), cuota_txt, font=f_cuo, fill=_C_VERDE_PRO)
+
+    nota_txt = "GUARDA ESTE VÍDEO PARA CONSULTARLO ANTES DEL PARTIDO"
+    f_nt = _fuente_pro_ajustada(draw, nota_txt, "bold", 23, 880, 16)
+    draw.text((_centrar_x_pro(draw, nota_txt, f_nt), y1 + 344), nota_txt, font=f_nt, fill=_C_ORO_PRO)
+
+    # Tarjeta VIP centrada
+    y2 = y1 + 444
+    draw.rounded_rectangle([(64, y2), (1016, y2 + 398)], radius=30, fill=(24, 20, 11, 244), outline=_C_ORO_PRO, width=3)
+    _dibujar_candado_pro(draw, 540, y2 + 64, color=_C_ORO_PRO)
+
+    t_v1 = "JUGADA #2 GRATIS + 4 TARJETAS VIP"
+    f_v1 = _fuente_pro_ajustada(draw, t_v1, "bold", 34, 860, 22)
+    draw.text((_centrar_x_pro(draw, t_v1, f_v1), y2 + 124), t_v1, font=f_v1, fill=_C_ORO_PRO)
+
+    t_v2 = "Incluye Combinada Doble VIP + Triple Sniper PRO"
+    f_v2 = _fuente_pro_ajustada(draw, t_v2, "mono", 24, 860, 17)
+    draw.text((_centrar_x_pro(draw, t_v2, f_v2), y2 + 180), t_v2, font=f_v2, fill=_C_GRIS_PRO)
+
+    draw.rounded_rectangle([(112, y2 + 236), (968, y2 + 314)], radius=18, fill=(34, 42, 56, 225), outline=(255, 204, 0, 130), width=2)
+    t_oc = "VER GRATIS EN TELEGRAM Y APP WEB (LINK EN PERFIL)"
+    f_oc = _fuente_pro_ajustada(draw, t_oc, "bold", 25, 820, 17)
+    draw.text((_centrar_x_pro(draw, t_oc, f_oc), y2 + 260), t_oc, font=f_oc, fill=_C_BLANCO_PRO)
+
+    t_pase = "PASE DE PRUEBA VIP 24 HORAS DISPONIBLE EN LA WEB"
+    f_ps = _fuente_pro_ajustada(draw, t_pase, "bold", 24, 860, 16)
+    draw.text((_centrar_x_pro(draw, t_pase, f_ps), y2 + 340), t_pase, font=f_ps, fill=_C_VERDE_PRO)
+
+    lienzo.convert("RGB").save(ruta_out, quality=96)
+    return ruta_out
+
+
+def _crear_escena_4_auditoria_7_completa_pro(datos, siete_tarjetas, tasa_txt, fecha_ayer, ac_14, tot_14, ruta_out):
+    """Escena 4 centrada con las 7 tarjetas completas de ayer (y=88..1310) + subtítulos en y=1345..1495."""
+    lienzo = _crear_fondo_broadcast_pro(acento_izq=(0, 232, 118), acento_der=(56, 168, 255))
+    _dibujar_marca_sup_pro(lienzo, y=72)
+    draw = ImageDraw.Draw(lienzo, "RGBA")
+
+    draw.rounded_rectangle([(52, 112), (1028, 168)], radius=26, fill=(12, 34, 26, 240), outline=_C_VERDE_PRO, width=2)
+    tit = f"AUDITORÍA OFICIAL COMPLETA {fecha_ayer}  •  {ac_14}/{tot_14} ACIERTOS"
+    f_t = _fuente_pro_ajustada(draw, tit, "bold", 26, 930, 17)
+    draw.text((_centrar_x_pro(draw, tit, f_t), 126), tit, font=f_t, fill=_C_VERDE_PRO)
+
+    sub = "LAS 7 TARJETAS ENTREGADAS A CLIENTES (4 VIP + 3 FREE) CON MARCADOR FINAL"
+    f_s = _fuente_pro_ajustada(draw, sub, "mono", 20, 960, 14)
+    draw.text((_centrar_x_pro(draw, sub, f_s), 182), sub, font=f_s, fill=_C_GRIS_PRO)
+
+    y = 222
+    alto_card = 122
+    salto_card = 132
+    for item in (siete_tarjetas or [])[:7]:
+        pks = item.get("dos_apuestas") or []
+        ac_p = sum(1 for k in pks if k.get("ganada"))
+        tot_p = max(1, len(pks))
+        es_verde = (ac_p == tot_p)
+        col_b = _C_VERDE_PRO if es_verde else (_C_ORO_PRO if ac_p >= 1 else _C_ROJO_PRO)
+        bg_c = (12, 28, 22, 244) if es_verde else ((26, 23, 13, 244) if ac_p >= 1 else (34, 14, 17, 244))
+
+        draw.rounded_rectangle([(52, y), (1028, y + alto_card)], radius=20, fill=bg_c, outline=col_b, width=2)
+        dibujar_icono_check_o_cruz(draw, 72, y + 16, ac_p >= 1, tam=26)
+
+        tipo_t = str(item.get("tipo_tarjeta", "VIP"))
+        col_tag = _C_ORO_PRO if tipo_t == "VIP" else _C_VERDE_PRO
+        tag_str = f"[{tipo_t}]"
+        f_tag = _fuente_pro("bold", 24)
+        draw.text((108, y + 15), tag_str, font=f_tag, fill=col_tag)
+        w_tag = draw.textbbox((0, 0), tag_str, font=f_tag)[2]
+
+        part_corto = str(item.get("partido", "")).split(" (")[0].strip()
+        duelo_txt = f" {part_corto} ({item.get('marcador', 'FT')})  [{ac_p}/{tot_p}]"
+        f_du = _fuente_pro_ajustada(draw, duelo_txt, "bold", 26, 890 - w_tag, 17)
+        draw.text((112 + w_tag, y + 15), duelo_txt, font=f_du, fill=_C_BLANCO_PRO)
+
+        x_cur = 74
+        for k in pks[:2]:
+            dibujar_icono_check_o_cruz(draw, x_cur, y + 68, bool(k.get("ganada")), tam=22)
+            txt_k = f"{k.get('mercado_corto', '')} ({float(k.get('cuota', 1.25)):.2f})"
+            f_k = _fuente_pro_ajustada(draw, txt_k, "mono", 22, 425, 15)
+            draw.text((x_cur + 30, y + 66), txt_k, font=f_k, fill=_C_VERDE_PRO if k.get("ganada") else _C_ROJO_PRO)
+            x_cur += 472
+        y += salto_card
+
+    y_cta = max(y + 10, 1158)
+    draw.rounded_rectangle([(52, y_cta), (1028, y_cta + 144)], radius=24, fill=(24, 20, 10, 246), outline=_C_ORO_PRO, width=3)
+    preg = f"¿QUIÉN SE LLEVA ESTE {datos['local'].upper()} VS {datos['visitante'].upper()}?"
+    f_pr = _fuente_pro_ajustada(draw, preg, "bold", 30, 920, 18)
+    draw.text((_centrar_x_pro(draw, preg, f_pr), y_cta + 26), preg, font=f_pr, fill=_C_ORO_PRO)
+
+    cta2 = "DEJA TU MARCADOR ABAJO Y ENTRA AL LINK DEL PERFIL"
+    f_c2 = _fuente_pro_ajustada(draw, cta2, "bold", 24, 920, 16)
+    draw.text((_centrar_x_pro(draw, cta2, f_c2), y_cta + 84), cta2, font=f_c2, fill=_C_BLANCO_PRO)
+
+    lienzo.convert("RGB").save(ruta_out, quality=96)
+    return ruta_out
+
+
+def _estampar_subtitulo_pro(ruta_slide, texto_frase, ruta_out, progreso=1.0):
+    """Subtítulo 100% centrado horizontalmente en zona segura móvil (y=1345..1498)."""
+    img = Image.open(ruta_slide).convert("RGBA")
+    draw = ImageDraw.Draw(img, "RGBA")
+
+    x0, y0, x1, y1 = 68, 1345, 1012, 1498
+    draw.rounded_rectangle([(x0, y0), (x1, y1)], radius=24, fill=(6, 10, 16, 244), outline=_C_VERDE_PRO, width=3)
+
+    palabras = str(texto_frase).strip().split()
+    mitad = max(1, len(palabras) // 2)
+    l1 = " ".join(palabras[:mitad]) if len(palabras) > 5 else " ".join(palabras)
+    l2 = " ".join(palabras[mitad:]) if len(palabras) > 5 else ""
+    cx = (x0 + x1) // 2
+
+    if l2:
+        f1 = _fuente_pro_ajustada(draw, l1, "bold", 33, 880, 19)
+        f2 = _fuente_pro_ajustada(draw, l2, "bold", 33, 880, 19)
+        draw.text((_centrar_x_pro(draw, l1, f1, cx), y0 + 20), l1, font=f1, fill=_C_BLANCO_PRO)
+        draw.text((_centrar_x_pro(draw, l2, f2, cx), y0 + 72), l2, font=f2, fill=_C_ORO_PRO)
+    else:
+        f1 = _fuente_pro_ajustada(draw, l1, "bold", 36, 880, 21)
+        draw.text((_centrar_x_pro(draw, l1, f1, cx), y0 + 48), l1, font=f1, fill=_C_ORO_PRO)
+
+    w_bar = int(max(30, min(x1 - x0 - 44, (x1 - x0 - 44) * float(progreso))))
+    draw.rounded_rectangle([(x0 + 22, y1 - 15), (x1 - 22, y1 - 7)], radius=4, fill=(25, 36, 48, 255))
+    draw.rounded_rectangle([(x0 + 22, y1 - 15), (x0 + 22 + w_bar, y1 - 7)], radius=4, fill=_C_VERDE_PRO)
+
+    img.convert("RGB").save(ruta_out, quality=95)
+    return ruta_out
+
+
+def _generar_beat_studio_pro(ruta_wav, duracion_seg=32.0, sr=44100):
+    import math as _mb
+    import struct as _sb
+    n_samples = int(sr * duracion_seg)
+    bpm = 115.0
+    beat_sec = 60.0 / bpm
+    buf = bytearray()
+    for i in range(n_samples):
+        t = i / sr
+        pos_beat = t % beat_sec
+        bar_pos = (t / beat_sec) % 4.0
+        pad = 0.22 * _mb.sin(2 * _mb.pi * 65.41 * t) + 0.14 * _mb.sin(2 * _mb.pi * 98.0 * t) + 0.08 * _mb.sin(2 * _mb.pi * 155.56 * t)
+        pad *= (0.75 + 0.25 * _mb.sin(2 * _mb.pi * 0.25 * t))
+        kick = 0.0
+        if bar_pos < 0.25 or (2.0 <= bar_pos < 2.25):
+            tau = pos_beat
+            if tau < 0.14:
+                freq_k = 110.0 * _mb.exp(-tau * 22.0) + 42.0
+                kick = 0.55 * _mb.exp(-tau * 18.0) * _mb.sin(2 * _mb.pi * freq_k * tau)
+        sub_b = t % (beat_sec / 2.0)
+        pulse = 0.10 * _mb.exp(-sub_b * 28.0) * _mb.sin(2 * _mb.pi * 311.13 * t)
+        muestra = max(-0.95, min(0.95, (pad + kick + pulse) * 0.28))
+        val = int(muestra * 32767)
+        buf.extend(_sb.pack("<hh", val, val))
+    with wave.open(ruta_wav, "wb") as wf:
+        wf.setnchannels(2)
+        wf.setsampwidth(2)
+        wf.setframerate(sr)
+        wf.writeframes(bytes(buf))
+    return ruta_wav
+
+
+def renderizar_video_broadcast_4_escenas(slides_4, segmentos_4, ruta_mp4_salida, carpeta_tmp):
+    """Renderiza MP4 100% compatible con Reproductor de Windows (sin 0x80004005), iPhone, Android,
+    TikTok, Instagram, Facebook y YouTube:
+    - H.264 High@4.0, yuv420p explícito, 30 fps CFR, timebase estándar 1/15360, AAC-LC 44.1kHz stereo, +faststart."""
+    ffmpeg_exe = imageio_ffmpeg.get_ffmpeg_exe()
+    clips_escena = []
+    audios_wav = []
+    temporales = []
+    pref = os.path.splitext(os.path.basename(ruta_mp4_salida))[0][:18]
+
+    wav_port = os.path.join(carpeta_tmp, f"_{pref}_sil0.wav")
+    mp4_port = os.path.join(carpeta_tmp, f"_{pref}_port0.mp4")
+    temporales.extend([wav_port, mp4_port])
+    subprocess.run([ffmpeg_exe, "-y", "-f", "lavfi", "-i", "anullsrc=r=44100:cl=stereo", "-t", "0.35", "-acodec", "pcm_s16le", wav_port], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    subprocess.run([
+        ffmpeg_exe, "-y", "-loop", "1", "-t", "0.35", "-i", os.path.abspath(slides_4[0]),
+        "-vf", "fps=30,scale=1080:1920,format=yuv420p", "-pix_fmt", "yuv420p",
+        "-c:v", "libx264", "-profile:v", "high", "-level", "4.0", "-preset", "fast", "-crf", "19", "-an",
+        os.path.abspath(mp4_port)
+    ], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    clips_escena.append((mp4_port, 0.35))
+    audios_wav.append(wav_port)
+
+    total_segs = len(segmentos_4)
+    for idx, (sub_vis, voz_txt) in enumerate(segmentos_4):
+        r_mp3 = os.path.join(carpeta_tmp, f"_{pref}_v{idx}.mp3")
+        r_wav = os.path.join(carpeta_tmp, f"_{pref}_v{idx}.wav")
+        temporales.extend([r_mp3, r_wav])
+
+        asyncio.run(sintetizar_audio_ia(voz_txt, r_mp3))
+        subprocess.run([ffmpeg_exe, "-y", "-i", os.path.abspath(r_mp3), "-acodec", "pcm_s16le", "-ar", "44100", "-ac", "2", os.path.abspath(r_wav)], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
+        dur = 4.5
+        if os.path.exists(r_wav) and os.path.getsize(r_wav) > 1000:
+            try:
+                with wave.open(r_wav, "rb") as wf:
+                    dur = max(1.6, wf.getnframes() / float(wf.getframerate()))
+            except Exception:
+                pass
+        audios_wav.append(r_wav)
+
+        partes_sub = [s.strip() for s in sub_vis.split("|") if s.strip()]
+        dur_p = dur / max(1, len(partes_sub))
+        lista_sc = os.path.join(carpeta_tmp, f"_{pref}_sc{idx}.txt")
+        temporales.append(lista_sc)
+        r_fr = slides_4[idx]
+        with open(lista_sc, "w", encoding="utf-8") as f_sc:
+            for j, txt_p in enumerate(partes_sub):
+                prog = (idx + (j + 1) / len(partes_sub)) / total_segs
+                r_fr = os.path.join(carpeta_tmp, f"_{pref}_fr_{idx}_{j}.jpg")
+                _estampar_subtitulo_pro(slides_4[idx], txt_p, r_fr, progreso=prog)
+                temporales.append(r_fr)
+                f_sc.write(f"file '{ruta_posix(r_fr)}'\n")
+                f_sc.write(f"duration {dur_p:.3f}\n")
+            f_sc.write(f"file '{ruta_posix(r_fr)}'\n")
+
+        dur_clip = dur + (0.25 if idx < total_segs - 1 else 0.35)
+        r_clip = os.path.join(carpeta_tmp, f"_{pref}_cl{idx}.mp4")
+        temporales.append(r_clip)
+        subprocess.run([
+            ffmpeg_exe, "-y", "-f", "concat", "-safe", "0", "-i", os.path.abspath(lista_sc),
+            "-t", f"{dur_clip:.3f}",
+            "-vf", "fps=30,scale=1080:1920,format=yuv420p", "-pix_fmt", "yuv420p",
+            "-c:v", "libx264", "-profile:v", "high", "-level", "4.0", "-preset", "fast", "-crf", "19", "-an",
+            os.path.abspath(r_clip)
+        ], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        clips_escena.append((r_clip, dur_clip))
+
+    lista_aud = os.path.join(carpeta_tmp, f"_{pref}_aud.txt")
+    voz_full = os.path.join(carpeta_tmp, f"_{pref}_vozfull.wav")
+    temporales.extend([lista_aud, voz_full])
+    with open(lista_aud, "w", encoding="utf-8") as fa:
+        for rw in audios_wav:
+            fa.write(f"file '{ruta_posix(rw)}'\n")
+    subprocess.run([ffmpeg_exe, "-y", "-f", "concat", "-safe", "0", "-i", os.path.abspath(lista_aud), "-c", "copy", os.path.abspath(voz_full)], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
+    dur_total = sum(d for _, d in clips_escena)
+    ruta_musica = "musica_fondo.mp3" if os.path.exists("musica_fondo.mp3") else os.path.join(CARPETA_ESCUDOS_PRO, "beat_studio_pro.wav")
+    if not os.path.exists(ruta_musica):
+        _generar_beat_studio_pro(ruta_musica, duracion_seg=max(34.0, dur_total + 4.0))
+
+    inputs_cmd = [ffmpeg_exe, "-y"]
+    for r_c, _ in clips_escena:
+        inputs_cmd.extend(["-i", os.path.abspath(r_c)])
+    idx_voz = len(clips_escena)
+    idx_mus = len(clips_escena) + 1
+    inputs_cmd.extend(["-i", os.path.abspath(voz_full), "-i", os.path.abspath(ruta_musica)])
+
+    # Timebase estándar 1/15360 (NO AVTB) + format=yuv420p final -> 100% compatible con Windows Media Player
+    fc_parts = [f"[{i}:v]fps=30,settb=1/15360,setpts=PTS-STARTPTS,format=yuv420p[v{i}]" for i in range(len(clips_escena))]
+    fc_parts.append("[v0][v1]concat=n=2:v=1:a=0,fps=30,settb=1/15360,setpts=PTS-STARTPTS,format=yuv420p[s0]")
+    d_cur = clips_escena[0][1] + clips_escena[1][1]
+    prev_lbl = "s0"
+    trans_d = 0.25
+    for k in range(2, len(clips_escena)):
+        off = max(0.1, d_cur - trans_d)
+        nxt_lbl = f"x{k}" if k < len(clips_escena) - 1 else "vpre"
+        fc_parts.append(f"[{prev_lbl}][v{k}]xfade=transition=fade:duration={trans_d}:offset={off:.3f}[{nxt_lbl}]")
+        d_cur = off + clips_escena[k][1]
+        prev_lbl = nxt_lbl
+
+    fc_parts.append("[vpre]fps=30,format=yuv420p[vout]")
+    fc_parts.append(f"[{idx_voz}:a]aformat=sample_fmts=fltp:sample_rates=44100:channel_layouts=stereo,volume=1.08[va];[{idx_mus}:a]aformat=sample_fmts=fltp:sample_rates=44100:channel_layouts=stereo,volume=0.13[ma];[va][ma]amix=inputs=2:duration=first:dropout_transition=2[aout]")
+
+    res_ff = subprocess.run(inputs_cmd + [
+        "-filter_complex", ";".join(fc_parts),
+        "-map", "[vout]", "-map", "[aout]",
+        "-c:v", "libx264", "-profile:v", "main", "-level", "4.0", "-pix_fmt", "yuv420p", "-r", "30",
+        "-video_track_timescale", "30000", "-preset", "medium", "-crf", "19",
+        "-c:a", "aac", "-b:a", "192k", "-ar", "44100", "-ac", "2",
+        "-movflags", "+faststart",
+        "-shortest", os.path.abspath(ruta_mp4_salida)
+    ], stdout=subprocess.DEVNULL, stderr=subprocess.PIPE, text=True)
+
+    # Respaldo automático sin xfade si la versión local de FFmpeg rechaza algún parámetro del filtro
+    if res_ff.returncode != 0 or not os.path.exists(ruta_mp4_salida) or os.path.getsize(ruta_mp4_salida) < 10000:
+        lista_fb = os.path.join(carpeta_tmp, f"_{pref}_fb.txt")
+        temporales.append(lista_fb)
+        with open(lista_fb, "w", encoding="utf-8") as f_fb:
+            for r_c, _ in clips_escena:
+                f_fb.write(f"file '{ruta_posix(r_c)}'\n")
+        subprocess.run([
+            ffmpeg_exe, "-y",
+            "-f", "concat", "-safe", "0", "-i", os.path.abspath(lista_fb),
+            "-i", os.path.abspath(voz_full), "-i", os.path.abspath(ruta_musica),
+            "-filter_complex", "[1:a]aformat=sample_fmts=fltp:sample_rates=44100:channel_layouts=stereo,volume=1.08[va];[2:a]aformat=sample_fmts=fltp:sample_rates=44100:channel_layouts=stereo,volume=0.13[ma];[va][ma]amix=inputs=2:duration=first:dropout_transition=2[aout]",
+            "-map", "0:v:0", "-map", "[aout]",
+            "-c:v", "libx264", "-profile:v", "main", "-level", "4.0", "-pix_fmt", "yuv420p", "-r", "30",
+            "-video_track_timescale", "30000", "-preset", "medium", "-crf", "19",
+            "-c:a", "aac", "-b:a", "192k", "-ar", "44100", "-ac", "2",
+            "-movflags", "+faststart", "-shortest", os.path.abspath(ruta_mp4_salida)
+        ], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
+    for tmp in temporales:
+        if os.path.exists(tmp):
+            try:
+                os.remove(tmp)
+            except Exception:
+                pass
+
+
 def generar_paquete_redes_sociales(fecha_jornada, partidos_vip, partidos_descartes, ruta_img_doble, token_privado=None, chat_id_privado=None):
+    import random as _rnd_v
+
     directorio_dia = f"Alertas_Quant_{fecha_jornada}"
     carpeta_videos = os.path.join(directorio_dia, "4_VIDEOS_LISTOS_REDES")
     os.makedirs(carpeta_videos, exist_ok=True)
@@ -1541,7 +2464,7 @@ def generar_paquete_redes_sociales(fecha_jornada, partidos_vip, partidos_descart
                 pass
 
     print("=" * 120)
-    print(f" 🎬 GENERANDO LOS 2 VIDEOS DIARIOS (VIDEO 1: TOP EUROPA + VIDEO 2: TOP SUDAMÉRICA/EUROPA #2) ({fecha_jornada})")
+    print(f" 🎬 GENERANDO LOS 2 VIDEOS BROADCAST PRO v3 (WINDOWS-SAFE + ESCUDOS REALES + CENTRADO) ({fecha_jornada})")
     print("=" * 120)
 
     if not partidos_vip and not partidos_descartes:
@@ -1555,167 +2478,143 @@ def generar_paquete_redes_sociales(fecha_jornada, partidos_vip, partidos_descart
     candidatos_europa = [p for p in todos_ordenados if not es_partido_de_america(p)]
     candidatos_america = [p for p in todos_ordenados if es_partido_de_america(p)]
 
-    # VIDEO 1 (23:30 PM ESP): Siempre el #1 Mejor Partido de Europa
-    partido_europa_1 = candidatos_europa[0] if candidatos_europa else todos_ordenados[0]
-
-    # VIDEO 2 (04:45 AM ESP): Si hay un partidazo Top en Sudamérica/América (puntaje >= 100), va en el Video 2;
-    # si no hay partidazo importante en América ese día, pone el #2 Mejor Partido de Europa
-    if candidatos_america and puntaje_cartelera_video(candidatos_america[0]) >= 100 and candidatos_america[0] != partido_europa_1:
-        partido_europa_2 = candidatos_america[0]
+    partido_1 = candidatos_europa[0] if candidatos_europa else todos_ordenados[0]
+    if candidatos_america and puntaje_cartelera_video(candidatos_america[0]) >= 100 and candidatos_america[0] != partido_1:
+        partido_2 = candidatos_america[0]
     else:
-        restantes_eu = [p for p in candidatos_europa if p != partido_europa_1]
-        partido_europa_2 = restantes_eu[0] if restantes_eu else (todos_ordenados[1] if len(todos_ordenados) > 1 else partido_europa_1)
-    # Ordenar los 2 mejores partidos por hora real de inicio:
-    # El que se juega MÁS TEMPRANO va en el VIDEO 1 (sale hoy en la noche)
-    # y el que se juega MÁS TARDE (noche) va en el VIDEO 2 (sale mañana en la mañana)
+        restantes_eu = [p for p in candidatos_europa if p != partido_1]
+        partido_2 = restantes_eu[0] if restantes_eu else (todos_ordenados[1] if len(todos_ordenados) > 1 else partido_1)
+
     par_cronologico = sorted(
-        [partido_europa_1, partido_europa_2],
+        [partido_1, partido_2],
         key=lambda x: (str(x.get("fecha", "")), str(x.get("hora", "20:45")))
     )
-    partido_europa_1, partido_europa_2 = par_cronologico[0], par_cronologico[1]
+    partido_1, partido_2 = par_cronologico[0], par_cronologico[1]
+
     ahora_esp_vid = datetime.now(timezone.utc).replace(tzinfo=None) + timedelta(hours=1)
     modo_aud_vid = "noche" if ahora_esp_vid.hour >= 21 else "manana"
     fecha_aud_esperada_vid = ahora_esp_vid.strftime("%Y-%m-%d") if modo_aud_vid == "noche" else (ahora_esp_vid - timedelta(days=1)).strftime("%Y-%m-%d")
-    slide_aud_1, tasa_real = crear_imagen_auditoria_vertical(
+
+    siete_tarjetas_aud, tasa_real, fecha_ayer_real, ac_14, tot_14 = seleccionar_7_partidos_14_apuestas_clientes(
         fecha_aud_esperada_vid,
-        partidos_vip=partidos_vip,
-        ruta_salida=os.path.join(carpeta_videos, "temp_aud_1.jpg"),
-        token_privado=TOKEN_AUDITORIAS_PRIVADO,
-        chat_id_privado=CHAT_ID_AUDITORIAS_PRIVADO,
-        modo_horario=modo_aud_vid
+        token_priv=TOKEN_AUDITORIAS_PRIVADO,
+        chat_priv=CHAT_ID_AUDITORIAS_PRIVADO,
+        modo_horario=modo_aud_vid,
     )
-    print(f"    📊 [AUDITORÍA EN VÍDEO] Estampada jornada oficial: {fecha_aud_esperada_vid} ({tasa_real} | modo={modo_aud_vid})")
+    print(f"    📊 [AUDITORÍA EN VÍDEO] Jornada completa {fecha_ayer_real}: {len(siete_tarjetas_aud)} tarjetas ({ac_14}/{tot_14} aciertos | modo={modo_aud_vid})")
 
     cola_json = []
+    titulares_baraja = list(TITULARES_GANCHO_PRO)
+    _rnd_v.shuffle(titulares_baraja)
 
-    # =========================================================================
-    # VIDEO 1 (23:50 PM ESPAÑA): TOP #1 EUROPA (REAL MADRID / CHAMPIONS / GRANDES LIGAS)
-    # =========================================================================
-    try:
-        loc_eu = partido_europa_1["local"]
-        vis_eu = partido_europa_1["visitante"]
-        liga_eu_hablada = formatear_liga_hablada(partido_europa_1["liga_visual"])
-        goles_eu_hablado = formatear_numero_hablado(partido_europa_1.get("tot_goles", 2.75))
-        corn_eu = partido_europa_1.get("tot_corn", 9.2)
-        tasa_hablada = tasa_real.replace("%", "").replace(".", " punto ") + " por ciento"
+    def _construir_datos_video(p_obj):
+        h_esp = str(p_obj.get("hora", "21:00"))
+        try:
+            h_i = int(h_esp.split(":")[0])
+            h_col = f"{(h_i - 6) % 24:02d}:{h_esp.split(':')[1]}"
+        except Exception:
+            h_col = "15:00"
+        sels_f = p_obj.get("seleccion_free") or p_obj.get("seleccion_vip") or [("Over 1.5 Goles", 76.0, 1.24)]
+        pick_nom, _, pick_cuo = sels_f[0]
+        ctx_c = re.sub(r"[^\w\s/\-áéíóúÁÉÍÓÚñÑ]", "", str(p_obj.get("etiqueta_contexto", "Análisis Cuantitativo"))).strip()
+        f_cuo = str((p_obj.get("cuotas_bp") or {}).get("fuente", "modelo")).replace("kambi:", "Kambi ")
+        return {
+            "fecha": fecha_jornada,
+            "hora_esp": h_esp,
+            "hora_col": h_col,
+            "liga": str(p_obj.get("liga_visual", "Fútbol Profesional")),
+            "local": str(p_obj.get("local", "Local")),
+            "visitante": str(p_obj.get("visitante", "Visitante")),
+            "tot_goles": float(p_obj.get("tot_goles", 2.65)),
+            "tot_corn": float(p_obj.get("tot_corn", 8.8)),
+            "tot_tiros": float(p_obj.get("tot_tiros", 7.8)),
+            "tot_faltas": float(p_obj.get("tot_faltas", 21.0)),
+            "tot_tarj": float(p_obj.get("tot_tarj", 3.6)),
+            "contexto": ctx_c or "Análisis Cuantitativo",
+            "fuente_cuotas": f_cuo,
+            "pick_abierto": str(pick_nom),
+            "cuota_abierta": float(pick_cuo),
+        }
 
-        ruta_img_eu = generar_tarjeta_trampa_sino_existe(partido_europa_1, directorio_dia)
-        slide_eu_1 = crear_slide_vertical(
-            ruta_img_eu,
-            f"PARTIDAZO EUROPA #1 ({partido_europa_1.get('hora', '')}) | PRECISIÓN {tasa_real}",
-            f"{loc_eu} vs {vis_eu}",
-            "TARJETA GRATIS Y PROMO $7.99 EN EL PERFIL",
-            modo_gancho_telegram=True,
-            ruta_salida=os.path.join(carpeta_videos, "temp_eu_1.jpg")
-        )
+    pares_videos = [
+        (1, partido_1, "2_AUDITORIA_21PM", "21:30 (España - Día Previo) - VIDEO #1: PARTIDAZO ESTELAR #1", "01_VIDEO_2130_PRO"),
+        (2, partido_2, "1_ESTRELLA_10AM", "14:00 (España - Día Partido) - VIDEO #2: PARTIDAZO ESTELAR #2", "02_VIDEO_1400_PRO"),
+    ]
 
-        ruta_historia_hoy = os.path.join(carpeta_videos, f"00_HISTORIA_DIARIA_WEB_{fecha_jornada}.jpg")
-        import shutil
-        shutil.copy2(slide_eu_1, ruta_historia_hoy)
+    for num_v, p_vid, tipo_copy, etiqueta_hor, pref_arch in pares_videos:
+        try:
+            datos_v = _construir_datos_video(p_vid)
+            loc_v, vis_v = datos_v["local"], datos_v["visitante"]
+            liga_hab = formatear_liga_hablada(datos_v["liga"])
+            g_hab = formatear_numero_hablado(round(datos_v["tot_goles"], 1))
+            c_hab = f"{datos_v['tot_corn']:.0f}"
+            pick_vis = _limpiar_pick_visual_pro(datos_v["pick_abierto"])
+            pick_voz = _limpiar_pick_voz_pro(datos_v["pick_abierto"])
 
-        sels_eu = partido_europa_1.get("seleccion_free") or partido_europa_1.get("seleccion_vip") or [("Más de 1.5 Goles", 79.5, 1.28)]
-        pick_gratis_eu = str(sels_eu[0][0]).replace("Over 1.5 Goles", "Más de 1 punto 5 goles").replace(">", "más de").replace(".", " punto ")
-        prob_gratis_eu = f"{float(sels_eu[0][1]):.0f} por ciento"
+            # Descarga verificada por NOMBRE (cero cruce de IDs entre ESPN y API-Sports)
+            esc_l = obtener_escudo_real_equipo(loc_v, logo_url=p_vid.get("logo_local"), tam=230)
+            esc_v = obtener_escudo_real_equipo(vis_v, logo_url=p_vid.get("logo_vis"), tam=230)
 
-        cta_voz_1 = "Además, ya habilitamos en nuestra página web el pase diario de veinticuatro horas para desbloquear todas las tarjetas de la jornada. "
+            tit_v = titulares_baraja[(num_v - 1) % len(titulares_baraja)]
+            s1 = _crear_escena_1_portada_pro(datos_v, esc_l, esc_v, tit_v, os.path.join(carpeta_videos, f"_v{num_v}_01_portada.jpg"))
+            s2 = _crear_escena_2_metricas_pro(datos_v, esc_l, esc_v, os.path.join(carpeta_videos, f"_v{num_v}_02_metricas.jpg"))
+            s3 = _crear_escena_3_jugada_pro(datos_v, esc_l, esc_v, os.path.join(carpeta_videos, f"_v{num_v}_03_jugada.jpg"))
+            s4 = _crear_escena_4_auditoria_7_completa_pro(
+                datos_v, siete_tarjetas_aud, tasa_real, fecha_ayer_real, ac_14, tot_14,
+                os.path.join(carpeta_videos, f"_v{num_v}_04_auditoria7.jpg")
+            )
 
-        guion_1 = (
-            f"¿Sabías por qué la mayoría falla en este partidazo entre {loc_eu} y {vis_eu} por {liga_eu_hablada}? "
-            f"Nuestro algoritmo en Python simuló diez mil escenarios proyectando {goles_eu_hablado} goles esperados y {corn_eu:.0f} córners. "
-            f"Ya dejamos la primera tendencia abierta en nuestra aplicación web y las otras dos jugadas sin costo dentro de nuestro canal de Telegram. "
-            f"{cta_voz_1}"
-            f"Toca ahora mismo el enlace de nuestro perfil antes del pitazo inicial."
-        )
-        mp3_1 = os.path.join(carpeta_videos, "voz_1_europa.mp3")
-        mp4_1 = os.path.join(carpeta_videos, f"01_VIDEO_21PM_EUROPA_{limpiar_hashtag(loc_eu)[1:]}_{limpiar_hashtag(vis_eu)[1:]}.mp4")
-        asyncio.run(sintetizar_audio_ia(guion_1, mp3_1))
-        tarjeta_fomo_v1 = ruta_img_doble if (ruta_img_doble and os.path.exists(ruta_img_doble)) else ruta_img_eu
-        slide_eu_3 = crear_slide_vertical(
-            tarjeta_fomo_v1,
-            "PASE DIARIO VIP Y MATRIZ DOBLE EN EL PERFIL",
-            f"{loc_eu} vs {vis_eu}",
-            "ENTRA A NUESTRA WEB Y TELEGRAM DESDE EL PERFIL",
-            difuminar_vip=True,
-            ruta_salida=os.path.join(carpeta_videos, "temp_eu_3.jpg")
-        )
-        renderizar_video_mp4_2_slides(slide_eu_1, slide_aud_1, mp3_1, mp4_1, seg_slide_1=12, texto_guion=guion_1, slide_3=slide_eu_3)
+            # Crear Historia Diaria dedicada (100% centrada en 1080x1920 con métricas y zona de enlace)
+            if num_v == 1:
+                ruta_historia_hoy = os.path.join(carpeta_videos, f"00_HISTORIA_DIARIA_WEB_{fecha_jornada}.jpg")
+                _crear_historia_diaria_pro(datos_v, esc_l, esc_v, tit_v, ruta_historia_hoy)
 
-        dict_1 = generar_diccionario_copys_por_red("2_AUDITORIA_21PM", partido_europa_1, tasa_real)
-        dict_1["horario"] = "23:50 PM (España) - VIDEO #1: PARTIDAZO EUROPA #1 + AUDITORÍA"
-        dict_1["titulo_interno"] = f"VIDEO 1 (23:50 PM EUROPA #1) - {loc_eu.upper()} VS {vis_eu.upper()} + AUDITORÍA ({tasa_real})"
-        guardar_archivos_individuales_y_json(carpeta_videos, 1, mp4_1, dict_1, cola_json, fecha_jornada)
-        print(f"    ✅ Video 1 (23:50 PM EUROPA #1 [{loc_eu} vs {vis_eu}]) creado: {mp4_1}")
-        if token_privado and chat_id_privado:
-            enviar_video_y_mensajes_separados_telegram(token_privado, chat_id_privado, mp4_1, dict_1)
-    except Exception as e:
-        print(f"    [!] Error Video 1 (Europa #1): {e}")
+            if num_v == 1:
+                intro_voz = f"Ojo con el partidazo entre {loc_v} y {vis_v} por {liga_hab}. Quédate hasta el final para ver la primera jugada abierta gratis."
+            else:
+                intro_voz = f"No operes a ciegas en este {loc_v} frente a {vis_v} por {liga_hab}. Quédate al final para guardar la jugada abierta gratis."
 
-    # =========================================================================
-    # VIDEO 2 (04:50 AM ESPAÑA): TOP #2 EUROPA + COMBINADA
-    # =========================================================================
-    try:
-        loc_eu2 = partido_europa_2["local"]
-        vis_eu2 = partido_europa_2["visitante"]
-        liga_eu2_hablada = formatear_liga_hablada(partido_europa_2["liga_visual"])
-        goles_eu2_hablado = formatear_numero_hablado(partido_europa_2.get("tot_goles", 2.65))
-        corn_eu2 = partido_europa_2.get("tot_corn", 9.0)
+            segmentos_4 = [
+                (
+                    f"Ojo con este duelo: {loc_v} vs {vis_v}.|Quédate al final para ver la jugada gratis.",
+                    intro_voz,
+                ),
+                (
+                    f"Simulamos 10.000 escenarios en Python:|{datos_v['tot_goles']:.1f} goles esperados y {datos_v['tot_corn']:.0f} córners.",
+                    f"Nuestro modelo en Páiton simuló diez mil escenarios y detectó {g_hab} goles esperados y {c_hab} córners.",
+                ),
+                (
+                    f"Jugada #1 abierta gratis: {pick_vis}.|La 2ª jugada y las VIP están en el perfil.",
+                    f"Aquí tienes nuestra primera jugada abierta gratis: {pick_voz}. Guarda este vídeo; la segunda jugada gratis y las tarjetas Bip ya están en el enlace del perfil.",
+                ),
+                (
+                    f"Auditoría completa de ayer ({ac_14}/{tot_14} aciertos).|¿Quién gana? Deja tu marcador abajo.",
+                    f"Ahí tienes la auditoría completa de nuestras siete tarjetas oficiales de ayer con marcador final. ¿Quién se lleva este partido? Deja tu marcador abajo.",
+                ),
+            ]
 
-        ruta_img_eu2 = generar_tarjeta_trampa_sino_existe(partido_europa_2, directorio_dia)
-        slide_am_1 = crear_slide_vertical(
-            ruta_img_eu2,
-            f"PARTIDAZO EUROPA #2 ({partido_europa_2.get('hora', '')}) | PRECISIÓN {tasa_real}",
-            f"{loc_eu2} vs {vis_eu2}",
-            "TARJETA GRATIS Y PROMO $7.99 EN EL PERFIL",
-            modo_gancho_telegram=True,
-            ruta_salida=os.path.join(carpeta_videos, "temp_am_1.jpg")
-        )
-        tarjeta_fomo_am = ruta_img_doble if (ruta_img_doble and os.path.exists(ruta_img_doble)) else ruta_img_eu2
-        slide_am_2 = crear_slide_vertical(
-            tarjeta_fomo_am,
-            "PASE DE PRUEBA 10 DÍAS POR SOLO acceso en el perfil",
-            f"{loc_eu2} vs {vis_eu2}",
-            "ENTRA A NUESTRA WEB DESDE EL PERFIL",
-            difuminar_vip=True,
-            ruta_salida=os.path.join(carpeta_videos, "temp_am_2.jpg")
-        )
-        sels_eu2 = partido_europa_2.get("seleccion_free") or partido_europa_2.get("seleccion_vip") or [("Córners más de 7.5", 78.5, 1.25)]
-        pick_gratis_eu2 = str(sels_eu2[0][0]).replace("Over 1.5 Goles", "Más de 1 punto 5 goles").replace(">", "más de").replace(".", " punto ")
-        prob_gratis_eu2 = f"{float(sels_eu2[0][1]):.0f} por ciento"
+            mp4_out = os.path.join(carpeta_videos, f"{pref_arch}_{limpiar_hashtag(loc_v)[1:]}_{limpiar_hashtag(vis_v)[1:]}.mp4")
+            renderizar_video_broadcast_4_escenas([s1, s2, s3, s4], segmentos_4, mp4_out, carpeta_videos)
 
-        cta_voz_2 = "Recuerda que también puedes activar el pase diario de veinticuatro horas y ver la matriz doble en nuestra página web. "
+            dict_v = generar_diccionario_copys_por_red(tipo_copy, p_vid, tasa_real)
+            dict_v["horario"] = etiqueta_hor
+            dict_v["titulo_interno"] = f"VIDEO {num_v} ({'21:30' if num_v == 1 else '14:00'}) - {loc_v.upper()} VS {vis_v.upper()} ({tasa_real})"
+            guardar_archivos_individuales_y_json(carpeta_videos, num_v, mp4_out, dict_v, cola_json, fecha_jornada)
+            print(f"    ✅ Video #{num_v} Broadcast Pro v3 [{loc_v} vs {vis_v}] creado: {mp4_out}")
 
-        guion_2 = (
-            f"No operes a ciegas en el duelo estelar entre {loc_eu2} y {vis_eu2} por {liga_eu2_hablada}. "
-            f"Nuestro sistema matemático en Python detecta {goles_eu2_hablado} goles esperados y {corn_eu2:.0f} córners, "
-            f"activando dos alertas tácticas que ya tienes disponibles entrando a nuestra aplicación web y a nuestro Telegram gratuito. "
-            f"{cta_voz_2}"
-            f"Entra ahora desde el enlace de nuestro perfil antes de que empiece el partido."
-        )
+            if token_privado and chat_id_privado:
+                enviar_video_y_mensajes_separados_telegram(token_privado, chat_id_privado, mp4_out, dict_v)
 
-        mp3_2 = os.path.join(carpeta_videos, "voz_2_europa.mp3")
-        mp4_2 = os.path.join(carpeta_videos, f"02_VIDEO_04AM_EUROPA2_{limpiar_hashtag(loc_eu2)[1:]}_{limpiar_hashtag(vis_eu2)[1:]}.mp4")
-        asyncio.run(sintetizar_audio_ia(guion_2, mp3_2))
-        renderizar_video_mp4_2_slides(slide_am_1, slide_am_2, mp3_2, mp4_2, seg_slide_1=12, texto_guion=guion_2, slide_3=slide_aud_1)
-
-        dict_2 = generar_diccionario_copys_por_red("1_ESTRELLA_10AM", partido_europa_2, tasa_real)
-        dict_2["horario"] = "04:50 AM (España) - VIDEO #2: PARTIDAZO EUROPA #2"
-        dict_2["titulo_interno"] = f"VIDEO 2 (04:50 AM EUROPA #2) - {loc_eu2.upper()} VS {vis_eu2.upper()} ({partido_europa_2.get('hora', '')})"
-        guardar_archivos_individuales_y_json(carpeta_videos, 2, mp4_2, dict_2, cola_json, fecha_jornada)
-        print(f"    ✅ Video 2 (04:50 AM EUROPA #2 [{loc_eu2} vs {vis_eu2}]) creado: {mp4_2}")
-        if token_privado and chat_id_privado:
-            enviar_video_y_mensajes_separados_telegram(token_privado, chat_id_privado, mp4_2, dict_2)
-    except Exception as e:
-        print(f"    [!] Error Video 2 (Europa #2): {e}")
+            for r_tmp in (s1, s2, s3, s4):
+                if os.path.exists(r_tmp):
+                    try:
+                        os.remove(r_tmp)
+                    except Exception:
+                        pass
+        except Exception as e:
+            print(f"    [!] Error generando Video #{num_v} Broadcast Pro v3: {e}")
 
     for item_cj in cola_json:
-        item_cj["fecha_auditada_video"] = fecha_aud_esperada_vid
+        item_cj["fecha_auditada_video"] = fecha_ayer_real
     with open(os.path.join(carpeta_videos, "cola_publicacion_redes.json"), "w", encoding="utf-8") as f:
         json.dump(cola_json, f, ensure_ascii=False, indent=2)
-
-    for temp_f in ["temp_aud_1.jpg", "temp_eu_1.jpg", "temp_am_1.jpg", "temp_am_2.jpg"]:
-        r_t = os.path.join(carpeta_videos, temp_f)
-        if os.path.exists(r_t):
-            try:
-                os.remove(r_t)
-            except Exception:
-                pass
