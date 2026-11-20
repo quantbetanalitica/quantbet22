@@ -1076,6 +1076,8 @@ def crear_imagen_auditoria_vertical(fecha_hoy, ruta_csv="auditoria_apuestas.csv"
         w_tag = draw.textbbox((0, 0), tag_nivel_txt, font=f_tag_niv)[2]
 
         part_corto = str(item.get("partido", "")).strip()
+        if len(part_corto) > 46 and " (" in part_corto:
+            part_corto = part_corto.split(" (")[0].strip()
         if es_pend:
             h_txt = str(item.get("hora", "")).strip()
             suf_estado = f"  •  POR JUGAR ({h_txt}h)" if h_txt else "  •  EN ESPERA"
@@ -1083,7 +1085,7 @@ def crear_imagen_auditoria_vertical(fecha_hoy, ruta_csv="auditoria_apuestas.csv"
         else:
             linea_duelo = f" {part_corto} ({item.get('marcador', 'FT')})  [{ac_p}/{tot_p}]"
 
-        f_duelo = _fuente_pro_ajustada(draw, linea_duelo, "bold", 26, 900 - w_tag, 17)
+        f_duelo = _fuente_pro_ajustada(draw, linea_duelo, "bold", 26, 902 - w_tag - 18, 14)
         draw.text((108 + w_tag, y + 17), linea_duelo, font=f_duelo, fill=c_blanco)
 
         x_cur = 68
