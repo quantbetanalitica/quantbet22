@@ -63,6 +63,8 @@ def es_visitante_protegido(nombre_visitante):
         "velez", "penarol", "nacional", "colo colo", "millonarios", "america de cali",
         "junior", "santa fe", "medellin", "tolima", "ldu quito", "independiente del valle",
         "cruzeiro", "vasco", "internacional", "olimpia", "cerro porteno", "libertad",
+        "al-hilal", "al hilal", "al-nassr", "al nassr", "al-ahli", "al ahli", "al-ittihad", "al ittihad", "al-qadsiah", "al qadsiah",
+        "leganes", "valladolid", "las palmas", "almeria", "granada", "espanyol", "elche", "levante",
         "espana", "spain", "argentina", "brasil", "brazil", "francia", "france",
         "inglaterra", "england", "alemania", "germany", "portugal", "italia", "italy",
         "paises bajos", "netherlands", "colombia", "uruguay", "belgica", "belgium", "croacia", "croatia"
@@ -543,7 +545,8 @@ def generar_captura_automatica(res_m, tipo_filtro="DESCARTES"):
 
         # 3. Regla #3: Filtro Dixon-Coles exacto para Over 1.5 (si P(0-0)+P(1-0)+P(0-1) >= 27%, no priorizar Over 1.5)
         alta_friccion_cerrada = float(res_m.get("tot_faltas") or 22.0) >= 23.0 and abs(float(res_m.get("p_h", 50.0)) - float(res_m.get("p_a", 50.0))) < 18.0
-        umbral_goles_o15 = 2.56 if (es_liga_cerrada or alta_friccion_cerrada or (not loc_protegido and not vis_protegido)) else 2.40
+        es_clasico_cerrado = es_derbi or (is_america and loc_protegido and vis_protegido)
+        umbral_goles_o15 = 2.72 if es_clasico_cerrado else (2.56 if (es_liga_cerrada or alta_friccion_cerrada or (not loc_protegido and not vis_protegido)) else 2.40)
         riesgo_corto_dc = float(res_m.get("prob_marcador_corto") or 0.0)
         # Calibración con líneas reales abiertas en casa de apuestas (ej. Barcelona: si casa abre desde 3.5, escalar a 3.5)
         if nombre in ("Over 1.5 Goles", "Over 2.5 Goles", "Over 3.5 Goles", "Over 4.5 Goles", "Over 5.5 Goles"):
@@ -638,38 +641,70 @@ def generar_captura_automatica(res_m, tipo_filtro="DESCARTES"):
             elif tot_goles < 3.25 or prob < 58.0:
                 continue
 
-        # 4. Regla #4 + Escudo anti cuota basura en 1X / X2 (ej. Barcelona Fem @ 1.02 donde 1X paga 1.001!)
+        # 4. Regla #4 + CANDADO ESTRICTO CONTRA CUOTAS REALES DE LA CASA EN 1X2 / DOBLE OPORT. / COMBOS
         if "Doble Oport." in nombre or "Combo " in nombre or "Victoria " in nombre:
             c1_bp = cuotas_bp_all.get("1") if isinstance(cuotas_bp_all.get("1"), (int, float)) else None
             c2_bp = cuotas_bp_all.get("2") if isinstance(cuotas_bp_all.get("2"), (int, float)) else None
             c1x_bp = cuotas_bp_all.get("1X") if isinstance(cuotas_bp_all.get("1X"), (int, float)) else None
             cx2_bp = cuotas_bp_all.get("X2") if isinstance(cuotas_bp_all.get("X2"), (int, float)) else None
+
+            # En derbis y choques de élites (Al Ahli vs Al Nassr, São Paulo vs Fluminense) prohibir 1X/X2/Victoria/Combo
+            if es_derbi or (vis_protegido and loc_protegido):
+                continue
+
             if "Doble Oport. 1X" == nombre:
-                if (c1x_bp is not None and c1x_bp < 1.14) or (c1_bp is not None and c1_bp < 1.28) or float(res_m.get("p_h", 0)) >= 68.0:
+                if (c1x_bp is not None and (c1x_bp < 1.14 or c1x_bp > (1.62 if tipo_filtro == "VIP" else 1.38))):
+                    continue
+                if (c1_bp is not None and (c1_bp < 1.28 or c1_bp > 2.25)) or (c2_bp is not None and c2_bp <= 2.90):
+                    continue
+                if float(res_m.get("p_h", 0)) >= 68.0:
                     continue
             if "Doble Oport. X2" == nombre:
-                if (cx2_bp is not None and cx2_bp < 1.14) or (c2_bp is not None and c2_bp < 1.28) or float(res_m.get("p_a", 0)) >= 68.0:
+                if (cx2_bp is not None and (cx2_bp < 1.14 or cx2_bp > (1.62 if tipo_filtro == "VIP" else 1.38))):
+                    continue
+                if (c2_bp is not None and (c2_bp < 1.28 or c2_bp > 2.15)) or (c1_bp is not None and c1_bp <= 3.00):
+                    continue
+                # En Brasil / Sudamérica / Arabia el local es muy fuerte: X2 solo con visitante súper favorito en la casa (<= 1.75)
+                if (is_america or "ARABIA" in liga_vis) and (c2_bp is None or c2_bp > 1.75):
+                    continue
+                if float(res_m.get("p_a", 0)) >= 68.0:
                     continue
             if nombre.startswith("Victoria "):
                 es_v_loc = res_m["local"][:8].lower() in nombre.lower()
-                if es_v_loc and c1_bp is not None and c1_bp < (1.30 if tipo_filtro == "VIP" else 1.18):
+                c_vic = c1_bp if es_v_loc else c2_bp
+                # Prohibido recomendar Victoria directa en Segunda División salvo súper favorito real en la casa (<= 1.55)
+                if es_liga_cerrada and (c_vic is None or c_vic > 1.55):
                     continue
-                if (not es_v_loc) and c2_bp is not None and c2_bp < (1.30 if tipo_filtro == "VIP" else 1.18):
-                    continue
+                if c_vic is not None:
+                    if tipo_filtro == "FREE" and (c_vic < 1.18 or c_vic > 1.48):
+                        continue
+                    if tipo_filtro == "VIP" and (c_vic < 1.34 or c_vic > 1.72):
+                        continue
+                else:
+                    # Sin cuota real 1X2 de la casa, exigir superioridad abrumadora (nunca inventar Victoria @ 1.28 en partido parejo)
+                    if es_v_loc and (vis_protegido or float(res_m.get("p_h", 0)) < 72.0):
+                        continue
+                    if (not es_v_loc) and (loc_protegido or float(res_m.get("p_a", 0)) < 72.0):
+                        continue
             if nombre == "Combo 1X + O1.5":
-                if (c1_bp is not None and c1_bp < 1.24) or tot_goles >= 3.60 or (over_goles_bp and 1.5 not in over_goles_bp and "1.5" not in over_goles_bp):
+                if es_liga_cerrada and (c1_bp is None or c1_bp > 1.80):
+                    continue
+                if (c1_bp is not None and (c1_bp < 1.24 or c1_bp > 2.10)) or (c2_bp is not None and c2_bp <= 3.10):
+                    continue
+                if tot_goles >= 3.60 or (over_goles_bp and 1.5 not in over_goles_bp and "1.5" not in over_goles_bp):
                     continue
             if nombre == "Combo X2 + O1.5":
-                if (c2_bp is not None and c2_bp < 1.24) or tot_goles >= 3.60 or (over_goles_bp and 1.5 not in over_goles_bp and "1.5" not in over_goles_bp):
+                if es_liga_cerrada and (c2_bp is None or c2_bp > 1.80):
                     continue
-            if "Doble Oport." in nombre and vis_protegido and loc_protegido:
-                # Choque de élites (ej. Arsenal vs OL Lyonnes, São Paulo vs Fluminense): evitar 1X/X2 por alta volatilidad
+                if (c2_bp is not None and (c2_bp < 1.24 or c2_bp > 2.05)) or (c1_bp is not None and c1_bp <= 3.10):
+                    continue
+                if tot_goles >= 3.60 or (over_goles_bp and 1.5 not in over_goles_bp and "1.5" not in over_goles_bp):
+                    continue
+            if "1X" in nombre and (vis_protegido and not loc_protegido or float(res_m.get("p_a", 0)) >= 34.0):
                 continue
-            if "1X" in nombre and (vis_protegido and not loc_protegido or float(res_m.get("p_a", 0)) >= 36.0):
+            if "X2" in nombre and (loc_protegido or float(res_m.get("p_h", 0)) >= 26.0 or res_m.get("es_plaza_hostil_local") or (is_america and float(res_m.get("p_a", 0)) < 54.0)):
                 continue
-            if "X2" in nombre and (loc_protegido or float(res_m.get("p_h", 0)) >= 28.0 or res_m.get("es_plaza_hostil_local") or (is_america and float(res_m.get("p_a", 0)) < 50.0)):
-                continue
-            umbral_do = 71.0 if "X2" in nombre else (68.0 if "Doble Oport." in nombre else (65.0 if "Combo " in nombre else 70.0))
+            umbral_do = 72.0 if "X2" in nombre else (69.0 if "Doble Oport." in nombre else (66.0 if "Combo " in nombre else 70.0))
             if prob < umbral_do:
                 continue
             mercados_ganador_respaldo.append((nombre, prob, cuota_orig))
