@@ -53,7 +53,7 @@ def es_visitante_protegido(nombre_visitante):
         "manchester united", "tottenham", "aston villa", "newcastle", "roma",
         "atalanta", "lazio", "fiorentina", "bologna", "leipzig", "stuttgart",
         "frankfurt", "hoffenheim", "freiburg", "monaco", "marseille", "lille",
-        "lyon", "nice", "lens", "psv", "ajax", "feyenoord", "az alkmaar",
+        "lyon", "lyonnes", "nice", "lens", "psv", "ajax", "feyenoord", "az alkmaar",
         "club brugge", "anderlecht", "union sg", "gent", "genk", "galatasaray",
         "fenerbahce", "besiktas", "olympiacos", "paok", "panathinaikos", "aek",
         "rangers", "celtic", "slavia", "sparta praha", "plzen", "salzburg",
@@ -67,7 +67,8 @@ def es_visitante_protegido(nombre_visitante):
         "inglaterra", "england", "alemania", "germany", "portugal", "italia", "italy",
         "paises bajos", "netherlands", "colombia", "uruguay", "belgica", "belgium", "croacia", "croatia"
     ]
-    return any(g in v_norm for g in gigantes_visitantes)
+    import re as _re_evp
+    return any(_re_evp.search(rf"(?<![a-z]){_re_evp.escape(g)}(?![a-z])", v_norm) for g in gigantes_visitantes)
 
 
 def seleccionar_par_distinto_familia(lista_candidatos, excluidos=None, familias_excluidas=None, tipo_filtro="FREE", registrar_memoria=True, tot_goles=2.5, **kwargs):
@@ -302,32 +303,66 @@ def _prob_poisson_over(lmbda, linea):
     return p_over, c_min
 
 
+def _fuente_card(preferencia, tam):
+    if preferencia == "bold":
+        cands = ["Montserrat-VariableFont_wght.ttf", "Montserrat-Bold.ttf", "/usr/share/fonts/truetype/lato/Lato-Black.ttf", "/usr/share/fonts/truetype/lato/Lato-Bold.ttf", "arialbd.ttf"]
+    elif preferencia == "mono":
+        cands = ["RobotoMono-VariableFont_wght.ttf", "Montserrat-VariableFont_wght.ttf", "/usr/share/fonts/truetype/lato/Lato-Bold.ttf", "consolab.ttf", "arialbd.ttf"]
+    else:
+        cands = ["Montserrat-VariableFont_wght.ttf", "/usr/share/fonts/truetype/lato/Lato-Regular.ttf", "arial.ttf"]
+    for ruta in cands:
+        if os.path.exists(ruta):
+            try:
+                f = ImageFont.truetype(ruta, tam)
+                if preferencia in ("bold", "mono") and hasattr(f, "set_variation_by_axes"):
+                    try:
+                        f.set_variation_by_axes([800 if preferencia == "bold" else 700])
+                    except Exception:
+                        pass
+                return f
+            except Exception:
+                continue
+    return ImageFont.load_default()
+
+
+def _fuente_card_ajustada(draw, texto, preferencia, tam_ini, ancho_max, tam_min=15):
+    tam = tam_ini
+    while tam >= tam_min:
+        f = _fuente_card(preferencia, tam)
+        bb = draw.textbbox((0, 0), str(texto), font=f)
+        if (bb[2] - bb[0]) <= ancho_max:
+            return f
+        tam -= 2
+    return _fuente_card(preferencia, tam_min)
+
+
+def _cx_card(draw, texto, fuente, cx=540):
+    bb = draw.textbbox((0, 0), str(texto), font=fuente)
+    return int(cx - (bb[2] - bb[0]) / 2)
+
+
+def _cargar_fondo_card_elegante(acento_izq=(0, 232, 118), acento_der=(255, 204, 0)):
+    from PIL import ImageFilter
+    base = cargar_lienzo_base()
+    glow = Image.new("RGBA", (1080, 1080), (0, 0, 0, 0))
+    dg = ImageDraw.Draw(glow, "RGBA")
+    for r in range(360, 20, -28):
+        a = int(16 * (1.0 - r / 380.0))
+        dg.ellipse([(220 - r, 240 - r), (220 + r, 240 + r)], fill=(*acento_izq, a))
+        dg.ellipse([(860 - r, 240 - r), (860 + r, 240 + r)], fill=(*acento_der, a))
+    glow = glow.filter(ImageFilter.GaussianBlur(radius=38))
+    return Image.alpha_composite(base, glow)
+
+
+def _obtener_escudo_card(nombre_eq, logo_url=None, tam=120):
+    try:
+        from generador_videos_redes import obtener_escudo_real_equipo
+        return obtener_escudo_real_equipo(nombre_eq, logo_url=logo_url, tam=tam)
+    except Exception:
+        return None
+
+
 def generar_captura_automatica(res_m, tipo_filtro="DESCARTES"):
-    imagen = cargar_lienzo_base()
-    draw = ImageDraw.Draw(imagen, "RGBA")
-
-    loc_str = res_m['local'].upper()
-    vis_str = "VS " + res_m['visitante'].upper()
-
-    fuente_alerta, fuente_marca, fuente_datos, fuente_datos_peq, fuente_datos_bold = cargar_fuentes_fijas()
-    fuente_titulo = obtener_fuente_ajustada(draw, loc_str, "Montserrat-VariableFont_wght.ttf", 54, 950, tam_min=30)
-    fuente_vs = obtener_fuente_ajustada(draw, vis_str, "Montserrat-VariableFont_wght.ttf", 41, 950, tam_min=26)
-
-    c_blanco = (245, 245, 245, 255)
-    c_gris = (185, 185, 185, 255)
-    c_verde = (0, 255, 100, 255)
-    c_oro = (255, 205, 0, 255)
-
-    draw.text((60, 42), "ESCÁNER QUANT DATA", font=fuente_alerta, fill=c_verde)
-    draw.text((60, 84), loc_str, font=fuente_titulo, fill=c_blanco)
-    draw.text((60, 148), vis_str, font=fuente_vs, fill=c_gris)
-
-    texto_fecha_hora = f"Fecha: {res_m['fecha']}  |  Hora: {res_m['hora']}"
-    texto_liga = f"Liga: {res_m['liga_visual']}"
-    f_liga = obtener_fuente_ajustada(draw, texto_liga, "RobotoMono-VariableFont_wght.ttf", 27, 950, tam_min=19)
-    draw.text((60, 204), texto_fecha_hora, font=fuente_datos, fill=c_gris)
-    draw.text((60, 240), texto_liga, font=f_liga, fill=c_gris)
-    draw.line((60, 282, 1020, 282), fill=(85, 85, 85, 255), width=2)
 
     contexto = limpiar_emojis_fuente(res_m.get('etiqueta_contexto', 'ESTÁNDAR'))
     es_derbi = res_m.get('es_derbi', False)
@@ -459,8 +494,27 @@ def generar_captura_automatica(res_m, tipo_filtro="DESCARTES"):
                 pass
         if prob < 56.0:
             continue
+        es_fem_gi = ("WOMEN" in liga_vis) or ("FEMEN" in liga_vis)
+        over_corners_bp = cuotas_bp_all.get("over_corners") or {}
+        over_faltas_bp = cuotas_bp_all.get("over_faltas") or {}
+        over_tarj_bp = cuotas_bp_all.get("over_tarjetas") or {}
         if "AMISTOSO" in liga_vis and ("Tarjetas" in nombre or "Faltas" in nombre):
-         continue
+            continue
+        if es_fem_gi:
+            # Fútbol femenino (UWCL): muchas menos faltas/tarjetas y menos córners por gol que en masculino.
+            # Bloquear Faltas y Tarjetas salvo que la casa (Kambi) abra línea real operable.
+            if "Faltas" in nombre and nombre not in cuotas_reales_casa:
+                continue
+            if "Tarjetas" in nombre and nombre not in cuotas_reales_casa:
+                continue
+            if "Córners" in nombre:
+                if over_corners_bp:
+                    if nombre.startswith("Córners > ") and nombre not in cuotas_reales_casa:
+                        continue
+                elif tot_corn < 8.6 and ("> 8.5" in nombre or "> 9.5" in nombre):
+                    continue
+                elif "> 7.5" in nombre and tot_corn < 7.8:
+                    continue
 
         if es_cerrojo_estricto_latam:
             if nombre in ["Total Asiático > 2.25", "Total Asiático > 2.75", "Ambos Marcan (BTTS)", "Gol en 1T"]:
@@ -608,9 +662,12 @@ def generar_captura_automatica(res_m, tipo_filtro="DESCARTES"):
             if nombre == "Combo X2 + O1.5":
                 if (c2_bp is not None and c2_bp < 1.24) or tot_goles >= 3.60 or (over_goles_bp and 1.5 not in over_goles_bp and "1.5" not in over_goles_bp):
                     continue
-            if "1X" in nombre and (vis_protegido and not loc_protegido or float(res_m.get("p_a", 0)) >= 40.0):
+            if "Doble Oport." in nombre and vis_protegido and loc_protegido:
+                # Choque de élites (ej. Arsenal vs OL Lyonnes, São Paulo vs Fluminense): evitar 1X/X2 por alta volatilidad
                 continue
-            if "X2" in nombre and (loc_protegido and not vis_protegido or float(res_m.get("p_h", 0)) >= 30.0 or res_m.get("es_plaza_hostil_local")):
+            if "1X" in nombre and (vis_protegido and not loc_protegido or float(res_m.get("p_a", 0)) >= 36.0):
+                continue
+            if "X2" in nombre and (loc_protegido or float(res_m.get("p_h", 0)) >= 28.0 or res_m.get("es_plaza_hostil_local") or (is_america and float(res_m.get("p_a", 0)) < 50.0)):
                 continue
             umbral_do = 71.0 if "X2" in nombre else (68.0 if "Doble Oport." in nombre else (65.0 if "Combo " in nombre else 70.0))
             if prob < umbral_do:
@@ -630,8 +687,10 @@ def generar_captura_automatica(res_m, tipo_filtro="DESCARTES"):
     exclusivos_vip_extremos = {
         "Remates Puerta > 7.5", "Remates Puerta > 8.5", "Córners > 9.5",
         "Total Asiático > 2.25", "Total Asiático > 2.75", "Total Menos de 2.5 (Under)",
-        "Combo 1X + O1.5", "Combo X2 + O1.5", "Over 4.5 Goles"
+        "Combo 1X + O1.5", "Combo X2 + O1.5"
     }
+    if float(over_goles_bp.get(4.5) or over_goles_bp.get("4.5") or 2.0) > 1.38:
+        exclusivos_vip_extremos.add("Over 4.5 Goles")
     if abs(linea_f_vip - linea_f_free) >= 0.5:
         exclusivos_vip_extremos.add(f"Faltas Totales > {linea_f_vip:.1f}")
     if abs(linea_t_vip - linea_t_free) >= 0.5:
@@ -639,6 +698,8 @@ def generar_captura_automatica(res_m, tipo_filtro="DESCARTES"):
     exclusivos_vip_extremos.update({"Over 5.5 Goles", "Goles 1T > 1.5", "Goles 2do Tiempo > 1.5"})
     if res_m.get("nombre_goleador"):
         exclusivos_vip_extremos.add(res_m["nombre_goleador"])
+    if res_m.get("nombre_dom_goles") and float(res_m.get("c_min_dom_goles") or 0) >= 1.38:
+        exclusivos_vip_extremos.add(res_m["nombre_dom_goles"])
 
     lineas_bajas_irreales = {"Total Menos de 3.5 (Under)"} if tot_goles >= 2.25 else set()
     if tot_corn >= 9.6:
@@ -715,11 +776,14 @@ def generar_captura_automatica(res_m, tipo_filtro="DESCARTES"):
 
     # Candado final variado (con Gol 2T, Remates, Faltas, Over 1.5 antes de Córners/Tarjetas)
     if len(top_2) < 2:
-        do_segura_respaldo = (
-            ("Doble Oport. 1X", float(res_m.get("p_1x") or 72.0), 1.22)
-            if float(res_m.get("p_1x") or 0) >= float(res_m.get("p_x2") or 0)
-            else ("Doble Oport. X2", float(res_m.get("p_x2") or 72.0), 1.22)
-        )
+        puede_1x_resp = (not (vis_protegido and loc_protegido)) and (not (vis_protegido and not loc_protegido)) and float(res_m.get("p_a") or 50.0) < 36.0
+        puede_x2_resp = (not loc_protegido) and (not is_america) and (not res_m.get("es_plaza_hostil_local")) and float(res_m.get("p_h") or 50.0) < 28.0
+        if puede_1x_resp and float(res_m.get("p_1x") or 0) >= float(res_m.get("p_x2") or 0):
+            do_segura_respaldo = ("Doble Oport. 1X", float(res_m.get("p_1x") or 72.0), 1.22)
+        elif puede_x2_resp:
+            do_segura_respaldo = ("Doble Oport. X2", float(res_m.get("p_x2") or 72.0), 1.22)
+        else:
+            do_segura_respaldo = ("Total Menos de 3.5 (Under)", float(res_m.get("p_under35") or 74.0), 1.22)
         if tot_goles >= 2.35 or hay_favorito_claro:
             nom_f_vip = f"Faltas Totales > {linea_f_vip:.1f}"
             nom_f_free = f"Faltas Totales > {linea_f_free:.1f}"
@@ -764,55 +828,184 @@ def generar_captura_automatica(res_m, tipo_filtro="DESCARTES"):
         fams_otra = {obtener_familia(m[0]) for m in otra_sel}
         if tot_goles < 2.95 and ("goles" in fams_actual or "tiempos" in fams_actual or "goles" in fams_otra or "tiempos" in fams_otra):
             fams_actual.update({"goles", "tiempos"})
+        es_fem_resp = ("WOMEN" in liga_vis) or ("FEMEN" in liga_vis)
+        if es_fem_resp and tipo_filtro == "FREE" and tot_goles >= 2.40:
+            respaldo_fams = [
+                ("Gol en 2do Tiempo", round(float(res_m.get("p_05_2t") or 76.0), 1), calcular_cuota_real_casa(float(res_m.get("p_05_2t") or 76.0), res_m.get("c_min_05_2t"), "FREE", "Gol en 2do Tiempo", cuotas_reales_casa)),
+                ("Over 1.5 Goles", round(float(res_m.get("p_15_match") or 77.0), 1), calcular_cuota_real_casa(float(res_m.get("p_15_match") or 77.0), res_m.get("c_min_15"), "FREE", "Over 1.5 Goles", cuotas_reales_casa)),
+                *respaldo_fams,
+            ]
+        elif es_fem_resp and tipo_filtro == "VIP":
+            respaldo_fams = [
+                ("Total Asiático > 2.25", round(float(res_m.get("p_asig225") or 66.0), 1), calcular_cuota_real_casa(float(res_m.get("p_asig225") or 66.0), res_m.get("c_min_asig225"), "VIP", "Total Asiático > 2.25", cuotas_reales_casa)),
+                ("Over 2.5 Goles", round(float(p_25_m or 64.0), 1), calcular_cuota_real_casa(float(p_25_m or 64.0), c_25_m, "VIP", "Over 2.5 Goles", cuotas_reales_casa)),
+                ("Gol en 1T", round(float(res_m.get("p_05_ht") or 69.0), 1), calcular_cuota_real_casa(float(res_m.get("p_05_ht") or 69.0), res_m.get("c_min_05_ht"), "VIP", "Gol en 1T", cuotas_reales_casa)),
+                *respaldo_fams,
+            ]
         for r_m in respaldo_fams:
+            if float(r_m[1] or 0) < 56.0:
+                continue
+            if es_fem_resp and ("Faltas" in r_m[0] or "Tarjetas" in r_m[0]) and r_m[0] not in cuotas_reales_casa:
+                continue
+            if es_fem_resp and "Córners > 8.5" in r_m[0] and tot_corn < 8.6 and r_m[0] not in cuotas_reales_casa:
+                continue
+            if es_fem_resp and "Córners > 7.5" in r_m[0] and tot_corn < 7.8 and r_m[0] not in cuotas_reales_casa:
+                continue
             if r_m[0] not in usados_actual and obtener_familia(r_m[0]) not in fams_actual:
                 top_2.append(r_m)
                 fams_actual.add(obtener_familia(r_m[0]))
             if len(top_2) == 2:
                 break
 
+        # Pase final garantizado: nunca dejar 1 sola selección (relaja bloqueo cruzado entre tarjetas manteniendo distinta familia dentro de la misma tarjeta)
+        if len(top_2) < 2:
+            fams_misma_tarjeta = {obtener_familia(m[0]) for m in top_2}
+            emergencia = [
+                ("Gol en 2do Tiempo", round(float(res_m.get("p_05_2t") or 75.0), 1), calcular_cuota_real_casa(float(res_m.get("p_05_2t") or 75.0), res_m.get("c_min_05_2t"), tipo_filtro if tipo_filtro in ("FREE", "VIP") else "FREE", "Gol en 2do Tiempo", cuotas_reales_casa)),
+                ("Over 1.5 Goles", round(float(res_m.get("p_15_match") or 75.0), 1), calcular_cuota_real_casa(float(res_m.get("p_15_match") or 75.0), res_m.get("c_min_15"), tipo_filtro if tipo_filtro in ("FREE", "VIP") else "FREE", "Over 1.5 Goles", cuotas_reales_casa)),
+                ("Gol en 1T", round(float(res_m.get("p_05_ht") or 70.0), 1), calcular_cuota_real_casa(float(res_m.get("p_05_ht") or 70.0), res_m.get("c_min_05_ht"), tipo_filtro if tipo_filtro in ("FREE", "VIP") else "FREE", "Gol en 1T", cuotas_reales_casa)),
+                (f"Remates Puerta > {linea_t_free:.1f}", round(float(p_tf_m or 70.0), 1), calcular_cuota_real_casa(float(p_tf_m or 70.0), c_tf_m, tipo_filtro if tipo_filtro in ("FREE", "VIP") else "FREE", f"Remates Puerta > {linea_t_free:.1f}", cuotas_reales_casa)),
+                ("Total Menos de 3.5 (Under)", round(float(res_m.get("p_under35") or 72.0), 1), calcular_cuota_real_casa(float(res_m.get("p_under35") or 72.0), res_m.get("c_min_under35"), tipo_filtro if tipo_filtro in ("FREE", "VIP") else "FREE", "Total Menos de 3.5 (Under)", cuotas_reales_casa)),
+            ]
+            for e_m in emergencia:
+                if float(e_m[1] or 0) >= 58.0 and e_m[0] not in usados_actual and obtener_familia(e_m[0]) not in fams_misma_tarjeta:
+                    top_2.append(e_m)
+                    fams_misma_tarjeta.add(obtener_familia(e_m[0]))
+                if len(top_2) == 2:
+                    break
+
     res_m[f"seleccion_{tipo_filtro.lower()}"] = top_2
 
-    linea_club_1, linea_club_2 = obtener_explicacion_apuesta_club(res_m)
-    faltas_val = res_m.get('tot_faltas', 23.0)
-    faltas_str = f"{faltas_val:.1f}" if isinstance(faltas_val, (int, float)) else "23.0"
-    corn_val = res_m.get('tot_corn') or 8.6
-    corn_str = f"{corn_val:.1f}" if isinstance(corn_val, (int, float)) else "8.6"
+    # ==========================================================================
+    # RENDERIZADO ESTÉTICO CENTRADO Y SIMÉTRICO (1080x1080) — ESTILO INSTITUCIONAL
+    # ==========================================================================
+    es_vip_card = str(tipo_filtro).upper() == "VIP"
+    c_blanco = (248, 250, 252, 255)
+    c_gris = (168, 182, 200, 255)
+    c_verde = (0, 232, 118, 255)
+    c_oro = (255, 204, 0, 255)
+    c_azul = (64, 174, 255, 255)
+    c_panel = (14, 22, 35, 238)
+    c_borde = (54, 78, 108, 185)
+    c_acento = c_oro if es_vip_card else c_verde
 
-    draw.text((60, 296), "CONTEXTO TÁCTICO", font=fuente_datos_bold, fill=c_blanco)
-    txt_perfil = f"  └─ Perfil: {contexto}"
-    f_perf = obtener_fuente_ajustada(draw, txt_perfil, "RobotoMono-VariableFont_wght.ttf", 27, 950, tam_min=19)
-    draw.text((60, 340), txt_perfil, font=f_perf, fill=c_gris)
+    imagen = _cargar_fondo_card_elegante(
+        acento_izq=(255, 204, 0) if es_vip_card else (0, 232, 118),
+        acento_der=(0, 232, 118) if es_vip_card else (64, 174, 255),
+    )
+    draw = ImageDraw.Draw(imagen, "RGBA")
 
-    txt_metricas = f"  └─ Goles: {res_m.get('tot_goles', 0):.2f}  |  Córners: {corn_str}  |  Fricción: {faltas_str} faltas"
-    f_met = obtener_fuente_ajustada(draw, txt_metricas, "RobotoMono-VariableFont_wght.ttf", 27, 950, tam_min=19)
-    draw.text((60, 380), txt_metricas, font=f_met, fill=c_gris)
+    # 1. Pill superior centrada con nivel y competición
+    tag_nivel = "SELECCIÓN VIP PREMIUM  •  EV+" if es_vip_card else ("ANÁLISIS GRATUITO  •  SEGURIDAD" if str(tipo_filtro).upper() == "FREE" else "ESCÁNER QUANT DATA")
+    top_pill = f"{tag_nivel}   |   {res_m['liga_visual']}"
+    draw.rounded_rectangle([(56, 40), (1024, 92)], radius=26, fill=(22, 20, 12, 238) if es_vip_card else (11, 32, 24, 238), outline=c_acento, width=2)
+    f_pill = _fuente_card_ajustada(draw, top_pill.upper(), "bold", 21, 910, 15)
+    draw.text((_cx_card(draw, top_pill.upper(), f_pill), 54), top_pill.upper(), font=f_pill, fill=c_acento)
 
-    draw.rectangle([(60, 424), (1020, 516)], fill=(25, 24, 18, 220), outline=(255, 205, 0, 145), width=2)
-    dibujar_icono_bandera(draw, 78, 436, color_bandera=(255, 70, 70, 255))
-    f_club_1 = obtener_fuente_ajustada(draw, linea_club_1, "RobotoMono-VariableFont_wght.ttf", 26, 895, tam_min=18)
-    f_club_2 = obtener_fuente_ajustada(draw, linea_club_2, "RobotoMono-VariableFont_wght.ttf", 23, 895, tam_min=16)
-    draw.text((108, 432), linea_club_1, font=f_club_1, fill=c_oro)
-    draw.text((108, 474), linea_club_2, fill=c_blanco, font=f_club_2)
+    # 2. Tarjeta central del Partido con ESCUDOS REALES centrados a cada lado
+    draw.rounded_rectangle([(56, 114), (1024, 344)], radius=28, fill=c_panel, outline=c_borde, width=2)
 
-    y_pos = 540
-    draw.text((60, y_pos), "PROYECCIONES DEL MODELO MATEMÁTICO", font=fuente_datos_bold, fill=c_verde)
-    y_pos += 52
+    esc_l = _obtener_escudo_card(res_m["local"], logo_url=res_m.get("logo_local"), tam=126)
+    esc_v = _obtener_escudo_card(res_m["visitante"], logo_url=res_m.get("logo_vis"), tam=126)
+    if esc_l is not None:
+        draw.ellipse([(88, 156), (232, 300)], fill=(18, 28, 44, 245), outline=c_verde, width=3)
+        imagen.paste(esc_l, (160 - esc_l.width // 2, 228 - esc_l.height // 2), esc_l)
+    if esc_v is not None:
+        draw.ellipse([(848, 156), (992, 300)], fill=(18, 28, 44, 245), outline=c_oro, width=3)
+        imagen.paste(esc_v, (920 - esc_v.width // 2, 228 - esc_v.height // 2), esc_v)
 
-    for nombre, prob, cuota in top_2:
-        if prob > 0:
-            txt_op = f"  [+] {nombre}: {prob:.1f}%"
-            f_op = obtener_fuente_ajustada(draw, txt_op, "Montserrat-VariableFont_wght.ttf", 34, 950, tam_min=22)
-            txt_ind = f"      ➔ ÍNDICE DE VALOR > {cuota:.2f}"
-            f_ind = obtener_fuente_ajustada(draw, txt_ind, "RobotoMono-VariableFont_wght.ttf", 29, 950, tam_min=20)
-            draw.text((60, y_pos), txt_op, font=f_op, fill=c_blanco)
-            y_pos += 44
-            draw.text((60, y_pos), txt_ind, font=f_ind, fill=c_verde)
-            y_pos += 56
+    draw = ImageDraw.Draw(imagen, "RGBA")
+    loc_up = res_m["local"].upper()
+    vis_up = res_m["visitante"].upper()
+    f_loc = _fuente_card_ajustada(draw, loc_up, "bold", 42, 575, 22)
+    f_vis = _fuente_card_ajustada(draw, vis_up, "bold", 42, 575, 22)
+    f_vs_m = _fuente_card("bold", 24)
+    draw.text((_cx_card(draw, loc_up, f_loc), 140), loc_up, font=f_loc, fill=c_blanco)
+    draw.text((_cx_card(draw, "VS", f_vs_m), 196), "VS", font=f_vs_m, fill=c_acento)
+    draw.text((_cx_card(draw, vis_up, f_vis), 230), vis_up, font=f_vis, fill=c_blanco)
 
-    draw.line((60, 885, 1020, 885), fill=(65, 65, 65, 255), width=1)
-    draw.text((60, 902), "@QuantBet22", font=fuente_marca, fill=(255, 255, 255, 110))
-    draw.text((60, 966), "COMUNIDAD DE DATOS: @QuantBet22", font=fuente_datos_bold, fill=c_oro)
+    # Fecha y hora centradas en píldora sutil
+    h_esp_c = str(res_m.get("hora", "20:00"))
+    try:
+        h_c_i = int(h_esp_c.split(":")[0])
+        h_col_c = f"{(h_c_i - 6) % 24:02d}:{h_esp_c.split(':')[1]}"
+        txt_fh = f"{res_m['fecha']}   •   {h_esp_c}h ESP  /  {h_col_c}h COL"
+    except Exception:
+        txt_fh = f"{res_m['fecha']}   •   {h_esp_c}h ESP"
+    f_fh = _fuente_card_ajustada(draw, txt_fh, "mono", 22, 575, 16)
+    draw.text((_cx_card(draw, txt_fh, f_fh), 296), txt_fh, font=f_fh, fill=c_gris)
+
+    # 3. Tres chips métricos simétricos lado a lado (GOLES | CÓRNERS | FALTAS)
+    faltas_val = res_m.get('tot_faltas', 22.0)
+    faltas_str = f"{faltas_val:.1f}" if isinstance(faltas_val, (int, float)) else "22.0"
+    corn_val = res_m.get('tot_corn') or 8.5
+    corn_str = f"{corn_val:.1f}" if isinstance(corn_val, (int, float)) else "8.5"
+    goles_str = f"{float(res_m.get('tot_goles', 2.5)):.2f}"
+
+    chips_c = [
+        ("GOLES ESPERADOS", goles_str, c_verde),
+        ("CÓRNERS PROY.", corn_str, c_oro),
+        ("FRICCIÓN (FALTAS)", faltas_str, c_azul),
+    ]
+    w_ch = 306
+    gap_ch = 25
+    x_ch0 = (1080 - (3 * w_ch + 2 * gap_ch)) // 2
+    for idx_m, (lbl_m, val_m, col_m) in enumerate(chips_c):
+        xc0 = x_ch0 + idx_m * (w_ch + gap_ch)
+        draw.rounded_rectangle([(xc0, 366), (xc0 + w_ch, 478)], radius=20, fill=c_panel, outline=c_borde, width=2)
+        f_ml = _fuente_card("bold", 19)
+        f_mv = _fuente_card("bold", 44)
+        draw.text((_cx_card(draw, lbl_m, f_ml, xc0 + w_ch // 2), 384), lbl_m, font=f_ml, fill=c_gris)
+        draw.text((_cx_card(draw, val_m, f_mv, xc0 + w_ch // 2), 416), val_m, font=f_mv, fill=col_m)
+
+    # 4. Banda táctica centrada limpia
+    linea_club_1, _ = obtener_explicacion_apuesta_club(res_m)
+    txt_banda = f"PERFIL: {contexto.upper()}   •   {linea_club_1.replace('DOMINIO TÁCTICO: ', '')}"
+    draw.rounded_rectangle([(56, 498), (1024, 558)], radius=18, fill=(20, 26, 38, 232), outline=(255, 204, 0, 120), width=2)
+    f_bd = _fuente_card_ajustada(draw, txt_banda, "mono", 20, 920, 14)
+    draw.text((_cx_card(draw, txt_banda, f_bd), 516), txt_banda, font=f_bd, fill=c_oro)
+
+    # 5. Sección de Proyecciones Matemáticas (2 tarjetas simétricas elegantes)
+    f_sec = _fuente_card("bold", 24)
+    tit_sec = "PROYECCIONES DEL MODELO MATEMÁTICO (10.000 SIMULACIONES)"
+    draw.text((_cx_card(draw, tit_sec, f_sec), 582), tit_sec, font=f_sec, fill=c_acento)
+
+    y_card = 626
+    for idx_p, (nombre, prob, cuota) in enumerate(top_2[:2], start=1):
+        if prob <= 0:
+            continue
+        bg_pick = (10, 32, 24, 244) if not es_vip_card else (24, 22, 12, 244)
+        draw.rounded_rectangle([(56, y_card), (1024, y_card + 146)], radius=24, fill=bg_pick, outline=c_acento, width=3)
+
+        # Badge izquierdo con número de selección
+        draw.rounded_rectangle([(82, y_card + 22), (240, y_card + 56)], radius=14, fill=c_acento)
+        f_num = _fuente_card("bold", 19)
+        lbl_n = f"SELECCIÓN #{idx_p}"
+        draw.text((_cx_card(draw, lbl_n, f_num, 161), y_card + 28), lbl_n, font=f_num, fill=(8, 14, 20, 255))
+
+        # Nombre del mercado grande y nítido
+        f_mk = _fuente_card_ajustada(draw, nombre.upper(), "bold", 36, 560, 22)
+        draw.text((84, y_card + 74), nombre.upper(), font=f_mk, fill=c_blanco)
+
+        # Panel derecho con Probabilidad % y Cuota/Índice
+        draw.rounded_rectangle([(684, y_card + 20), (998, y_card + 126)], radius=18, fill=(12, 19, 30, 245), outline=c_borde, width=2)
+        p_txt = f"PROB. {prob:.1f}%"
+        c_txt = f"ÍNDICE > {cuota:.2f}"
+        f_pt = _fuente_card_ajustada(draw, p_txt, "bold", 26, 286, 18)
+        f_ct = _fuente_card_ajustada(draw, c_txt, "mono", 28, 286, 19)
+        draw.text((_cx_card(draw, p_txt, f_pt, 841), y_card + 34), p_txt, font=f_pt, fill=c_blanco)
+        draw.text((_cx_card(draw, c_txt, f_ct, 841), y_card + 76), c_txt, font=f_ct, fill=c_verde)
+
+        y_card += 166
+
+    # 6. Pie centrado limpio y profesional
+    draw.line((120, 976, 960, 976), fill=(70, 90, 115, 160), width=2)
+    f_pie1 = _fuente_card("bold", 28)
+    f_pie2 = _fuente_card("mono", 20)
+    pie_a = "@QuantBet22   •   COMUNIDAD DE DATOS"
+    pie_b = "MODELO POISSON + DIXON-COLES  •  QUANTBET22.STREAMLIT.APP"
+    draw.text((_cx_card(draw, pie_a, f_pie1), 992), pie_a, font=f_pie1, fill=c_oro)
+    draw.text((_cx_card(draw, pie_b, f_pie2), 1030), pie_b, font=f_pie2, fill=c_gris)
 
     nombre_carpeta = f"Alertas_Quant_{res_m['fecha']}"
     if not os.path.exists(nombre_carpeta):
@@ -823,63 +1016,85 @@ def generar_captura_automatica(res_m, tipo_filtro="DESCARTES"):
     nombre_img = f"QuantBet_{loc_limpio}_{vis_limpio}_{tipo_filtro}.jpg"
     ruta_completa = os.path.join(nombre_carpeta, nombre_img)
 
-    imagen_final = imagen.convert("RGB")
-    imagen_final.save(ruta_completa, quality=98)
+    imagen.convert("RGB").save(ruta_completa, quality=98)
     return ruta_completa
 
 
 def generar_tarjeta_combinada(fecha, titulo_combinada, subtitulo_nivel, lista_selecciones, cuota_total, prob_directa, prob_protegida, stake_sugerido, sufijo_archivo):
-    imagen = cargar_lienzo_base()
+    c_blanco = (248, 250, 252, 255)
+    c_gris = (168, 182, 200, 255)
+    c_verde = (0, 232, 118, 255)
+    c_oro = (255, 204, 0, 255)
+    c_panel = (14, 22, 35, 238)
+    c_borde = (54, 78, 108, 185)
+
+    imagen = _cargar_fondo_card_elegante(acento_izq=(255, 204, 0), acento_der=(0, 232, 118))
     draw = ImageDraw.Draw(imagen, "RGBA")
-    fuente_alerta, fuente_marca, fuente_datos, fuente_datos_peq, fuente_datos_bold = cargar_fuentes_fijas()
+
     titulo_seguro = titulo_combinada.upper().replace("VIP", "PRO").replace("COMBINADA", "MATRIZ")
-    fuente_titulo = obtener_fuente_ajustada(draw, titulo_seguro, "Montserrat-VariableFont_wght.ttf", 50, 950, tam_min=30)
-    fuente_vs = obtener_fuente_ajustada(draw, f"ÍNDICE CONJUNTO: > {cuota_total:.2f}x", "Montserrat-VariableFont_wght.ttf", 38, 950, tam_min=26)
+    sub_limpio = limpiar_emojis_fuente(subtitulo_nivel).upper()
 
-    c_blanco = (245, 245, 245, 255)
-    c_gris = (185, 185, 185, 255)
-    c_verde = (0, 255, 100, 255)
-    c_oro = (255, 205, 0, 255)
+    # 1. Pill superior centrada
+    draw.rounded_rectangle([(56, 38), (1024, 90)], radius=26, fill=(24, 20, 11, 240), outline=c_oro, width=2)
+    f_sub = _fuente_card_ajustada(draw, sub_limpio, "bold", 22, 910, 15)
+    draw.text((_cx_card(draw, sub_limpio, f_sub), 52), sub_limpio, font=f_sub, fill=c_oro)
 
-    sub_limpio = limpiar_emojis_fuente(subtitulo_nivel)
-    draw.text((60, 44), sub_limpio, font=fuente_alerta, fill=c_oro)
-    draw.text((60, 88), titulo_seguro, font=fuente_titulo, fill=c_blanco)
-    draw.text((60, 152), f"ÍNDICE CONJUNTO: > {cuota_total:.2f}x", font=fuente_vs, fill=c_verde)
-    draw.text((60, 206), f"Fecha: {fecha}   |   Metodología: Partidos distintos", font=fuente_datos, fill=c_gris)
-    draw.line((60, 250, 1020, 250), fill=(90, 90, 90, 255), width=2)
+    # 2. Título principal + Fecha centrados
+    f_tit = _fuente_card_ajustada(draw, titulo_seguro, "bold", 50, 940, 28)
+    draw.text((_cx_card(draw, titulo_seguro, f_tit), 108), titulo_seguro, font=f_tit, fill=c_blanco)
 
-    draw.text((60, 268), "PARÁMETROS DE CONFIANZA", font=fuente_datos_bold, fill=c_blanco)
-    txt_ef = f"  └─ Probabilidad Conjunta: {prob_protegida:.1f}% (Base: {prob_directa:.1f}%)"
-    txt_gb = "  └─ Nivel de Confluencia: Alta Estabilidad Estadística"
-    f_ef = obtener_fuente_ajustada(draw, txt_ef, "RobotoMono-VariableFont_wght.ttf", 26, 950, tam_min=18)
-    f_gb = obtener_fuente_ajustada(draw, txt_gb, "RobotoMono-VariableFont_wght.ttf", 26, 950, tam_min=18)
-    draw.text((60, 308), txt_ef, font=f_ef, fill=c_verde)
-    draw.text((60, 344), txt_gb, font=f_gb, fill=c_oro)
+    txt_f = f"JORNADA {fecha}   •   SELECCIONES EN PARTIDOS DISTINTOS"
+    f_ft = _fuente_card_ajustada(draw, txt_f, "mono", 21, 920, 15)
+    draw.text((_cx_card(draw, txt_f, f_ft), 174), txt_f, font=f_ft, fill=c_gris)
 
-    y_pos = 394
-    draw.text((60, y_pos), "ESCENARIOS SELECCIONADOS:", font=fuente_datos_bold, fill=c_blanco)
-    y_pos += 44
+    # 3. Dos tarjetas KPI centradas lado a lado (ÍNDICE CONJUNTO | PROBABILIDAD CONJUNTA)
+    draw.rounded_rectangle([(56, 218), (526, 336)], radius=22, fill=(10, 32, 24, 244), outline=c_verde, width=3)
+    draw.text((_cx_card(draw, "ÍNDICE CONJUNTO", _fuente_card("bold", 20), 291), 234), "ÍNDICE CONJUNTO", font=_fuente_card("bold", 20), fill=c_gris)
+    draw.text((_cx_card(draw, f"> {cuota_total:.2f}x", _fuente_card("bold", 48), 291), 266), f"> {cuota_total:.2f}x", font=_fuente_card("bold", 48), fill=c_verde)
 
-    es_cuadruple = len(lista_selecciones) >= 4
-    salto_p, salto_m, salto_c = (32, 28, 34) if es_cuadruple else (36, 32, 40)
-    tam_p_ini, tam_m_ini = (26, 23) if es_cuadruple else (29, 26)
+    draw.rounded_rectangle([(554, 218), (1024, 336)], radius=22, fill=c_panel, outline=c_oro, width=2)
+    draw.text((_cx_card(draw, "ESTABILIDAD MODELO", _fuente_card("bold", 20), 789), 234), "ESTABILIDAD MODELO", font=_fuente_card("bold", 20), fill=c_gris)
+    draw.text((_cx_card(draw, f"{prob_protegida:.1f}%", _fuente_card("bold", 48), 789), 266), f"{prob_protegida:.1f}%", font=_fuente_card("bold", 48), fill=c_oro)
+
+    # 4. Tarjetas simétricas por cada pierna de la combinada
+    n_legs = len(lista_selecciones)
+    alto_leg = 128 if n_legs >= 4 else (162 if n_legs == 3 else 210)
+    gap_leg = 14 if n_legs >= 4 else (18 if n_legs == 3 else 24)
+    y_cur = 364 if n_legs >= 4 else (376 if n_legs == 3 else 404)
+
     for idx, item in enumerate(lista_selecciones, start=1):
-        partido_txt = f"{idx}. {item['partido']} ({item['hora']})"
-        mercado_txt = f"   [+] {item['mercado']} ({item['prob']:.1f}%)"
-        cuota_txt = f"       ➔ Índice Individual: > {item['cuota']:.2f}"
+        draw.rounded_rectangle([(56, y_cur), (1024, y_cur + alto_leg)], radius=22, fill=c_panel, outline=c_borde, width=2)
+        partido_txt = f"#{idx}  {item['partido'].upper()}  ({item['hora']}h)"
+        mercado_txt = f"{item['mercado'].upper()}"
+        cuota_txt = f"> {item['cuota']:.2f}"
+        prob_txt = f"{item['prob']:.1f}%"
 
-        f_part = obtener_fuente_ajustada(draw, partido_txt, "Montserrat-VariableFont_wght.ttf", tam_p_ini, 950, tam_min=18)
-        f_merc = obtener_fuente_ajustada(draw, mercado_txt, "RobotoMono-VariableFont_wght.ttf", tam_m_ini, 950, tam_min=17)
-        draw.text((60, y_pos), partido_txt, font=f_part, fill=c_blanco)
-        y_pos += salto_p
-        draw.text((60, y_pos), mercado_txt, font=f_merc, fill=c_verde)
-        y_pos += salto_m
-        draw.text((60, y_pos), cuota_txt, font=fuente_datos_peq, fill=c_gris)
-        y_pos += salto_c
+        f_p = _fuente_card_ajustada(draw, partido_txt, "bold", 26 if n_legs < 4 else 23, 660, 17)
+        f_m = _fuente_card_ajustada(draw, mercado_txt, "bold", 31 if n_legs < 4 else 26, 660, 18)
 
-    draw.line((60, 885, 1020, 885), fill=(65, 65, 65, 255), width=1)
-    draw.text((60, 902), "@QuantBet22", font=fuente_marca, fill=(255, 255, 255, 110))
-    draw.text((60, 966), "COMUNIDAD DE DATOS: @QuantBet22", font=fuente_datos_bold, fill=c_oro)
+        pad_top = 24 if n_legs == 2 else (22 if n_legs == 3 else 18)
+        draw.text((86, y_cur + pad_top), partido_txt, font=f_p, fill=c_gris)
+        draw.text((86, y_cur + pad_top + (46 if n_legs == 2 else 38)), mercado_txt, font=f_m, fill=c_blanco)
+
+        if n_legs == 2:
+            draw.text((86, y_cur + pad_top + 106), "Confluencia verificada por simulación Monte Carlo (Poisson)", font=_fuente_card("mono", 19), fill=c_oro)
+
+        # Pill derecha con cuota y probabilidad
+        draw.rounded_rectangle([(768, y_cur + 18), (998, y_cur + alto_leg - 18)], radius=16, fill=(10, 28, 22, 240), outline=c_verde, width=2)
+        cy_box = y_cur + alto_leg // 2
+        f_cb = _fuente_card("bold", 34 if n_legs < 4 else 28)
+        f_pb = _fuente_card("mono", 22 if n_legs < 4 else 19)
+        draw.text((_cx_card(draw, cuota_txt, f_cb, 883), cy_box - (36 if n_legs < 4 else 30)), cuota_txt, font=f_cb, fill=c_verde)
+        draw.text((_cx_card(draw, prob_txt, f_pb, 883), cy_box + (8 if n_legs < 4 else 4)), prob_txt, font=f_pb, fill=c_blanco)
+
+        y_cur += alto_leg + gap_leg
+
+    # 5. Pie centrado limpio
+    draw.line((120, 976, 960, 976), fill=(70, 90, 115, 160), width=2)
+    f_pie1 = _fuente_card("bold", 28)
+    f_pie2 = _fuente_card("mono", 20)
+    draw.text((_cx_card(draw, "@QuantBet22   •   COMUNIDAD DE DATOS", f_pie1), 992), "@QuantBet22   •   COMUNIDAD DE DATOS", font=f_pie1, fill=c_oro)
+    draw.text((_cx_card(draw, "MODELO POISSON + DIXON-COLES  •  QUANTBET22.STREAMLIT.APP", f_pie2), 1030), "MODELO POISSON + DIXON-COLES  •  QUANTBET22.STREAMLIT.APP", font=f_pie2, fill=c_gris)
 
     directorio_base = f"Alertas_Quant_{fecha}"
     os.makedirs(directorio_base, exist_ok=True)
