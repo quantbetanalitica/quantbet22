@@ -33,8 +33,8 @@ logging.basicConfig(
 )
 
 MODO_PRUEBAS = False
-ENVIAR_A_CLIENTES = True  # ⚠️ INTERRUPTOR TELEGRAM CLIENTES: True = envía tarjetas a canales FREE, VIP y PRO
-SUBIR_A_WEB = True        # 🌐 INTERRUPTOR PÁGINA WEB: True = sube los partidos del día y la auditoría a quantbet22.streamlit.app
+ENVIAR_A_CLIENTES = False  # ⚠️ INTERRUPTOR TELEGRAM CLIENTES: True = envía tarjetas a canales FREE, VIP y PRO
+SUBIR_A_WEB = False        # 🌐 INTERRUPTOR PÁGINA WEB: True = sube los partidos del día y la auditoría a quantbet22.streamlit.app
 ACTIVAR_BOT_AL_FINALIZAR = False  # En False termina el script al instante tras crear los videos
 
 # 📅 Si quieres adelantar el trabajo de mañana o del fin de semana, pon aquí la fecha (ej. "2026-10-27")
@@ -1887,7 +1887,11 @@ def cargar_datos_historicos_unificados(liga_key):
         "belgica": "B1", "turquia": "T1", "grecia": "G1", "escocia": "SC0"
     }
     if not df_eu.empty and "Div" in df_eu.columns and liga_key in mapa_div:
-      df_filtrado = df_eu[df_eu["Div"] == mapa_div[liga_key]]
+      if liga_key == "españa_2":
+        # Incluir SP2 + SP1 para que descendidos recientes (Leganés, Valladolid, Las Palmas) tengan historial real
+        df_filtrado = df_eu[df_eu["Div"].isin(["SP2", "SP1"])]
+      else:
+        df_filtrado = df_eu[df_eu["Div"] == mapa_div[liga_key]]
       if len(df_filtrado) >= 30:
         return df_filtrado
     return df_eu
@@ -2414,7 +2418,12 @@ def es_partido_rivalidad_alta(local, visitante):
       ("cali", "américa"), ("san lorenzo", "huracán"), ("rosario", "newell"),
       ("galatasaray", "fenerbahce"), ("celtic", "rangers"), ("ajax", "feyenoord"),
       ("olympiacos", "panathinaikos"), ("betis", "sevilla"), ("real sociedad", "athletic"),
-      ("cucuta", "bucaramanga"), ("junior", "union magdalena"), ("once caldas", "pereira")
+      ("cucuta", "bucaramanga"), ("junior", "union magdalena"), ("once caldas", "pereira"),
+      ("al-ahli", "al-nassr"), ("al ahli", "al nassr"), ("al-hilal", "al-nassr"), ("al hilal", "al nassr"),
+      ("al-hilal", "al-ittihad"), ("al hilal", "al ittihad"), ("al-ahli", "al-ittihad"), ("al ahli", "al ittihad"),
+      ("al-ahli", "al-hilal"), ("al ahli", "al hilal"), ("al-nassr", "al-ittihad"), ("al nassr", "al ittihad"),
+      ("vasco", "fluminense"), ("vasco", "botafogo"), ("botafogo", "flamengo"), ("botafogo", "fluminense"),
+      ("atletico mineiro", "cruzeiro"), ("atletico-mg", "cruzeiro"), ("corinthians", "sao paulo")
   ]
   l_low = normalizar_nombre_club(local)
   v_low = normalizar_nombre_club(visitante)
@@ -3230,11 +3239,27 @@ def motor_quant_institucional(
               media_l_a_pura = max(1.50, media_l_a_pura * 1.25)
               media_v_a_pura = min(0.90, media_v_a_pura * 0.78)
           elif loc_es_primera and not vis_es_primera:
-              factor_l = max(factor_l, 1.16)
-              media_l_a_pura = max(1.38, media_l_a_pura * 1.18)
-              media_l_c_pura = min(1.05, media_l_c_pura * 0.82)
-              factor_v = min(factor_v, 0.96)
-              media_v_a_pura = min(1.02, media_v_a_pura * 0.86)
+              factor_l = max(factor_l, 1.12)
+              media_l_a_pura = max(1.30, media_l_a_pura * 1.12)
+              media_l_c_pura = min(1.08, media_l_c_pura * 0.88)
+              factor_v = min(factor_v, 0.98)
+          elif vis_es_primera and not loc_es_primera:
+              # Descendido / club de roce 1ª visitando a club menor de Segunda (ej. FC Andorra vs Leganés)
+              factor_v = max(factor_v, 1.12)
+              media_v_a_pura = max(1.26, media_v_a_pura * 1.14)
+              media_v_c_pura = min(1.08, media_v_c_pura * 0.88)
+              factor_l = min(factor_l, 0.96)
+              media_l_a_pura = min(1.18, media_l_a_pura * 0.88)
+
+      # Jerarquía específica de Arabia Saudita (Big 4 + Al-Qadsiah: nunca tratar a Al-Ahli en casa como equipo débil)
+      if liga_key == "arabia_saudita":
+          big4_arabia = ("al-hilal", "al hilal", "al-nassr", "al nassr", "al-ahli", "al ahli", "al-ittihad", "al ittihad", "al-qadsiah", "al qadsiah", "al-shabab", "al shabab")
+          loc_sa_n = normalizar_nombre_club(local)
+          vis_sa_n = normalizar_nombre_club(visitante)
+          if any(b in loc_sa_n for b in big4_arabia):
+              factor_l = max(factor_l, 1.18)
+          if any(b in vis_sa_n for b in big4_arabia):
+              factor_v = max(factor_v, 1.18)
 
       if any(eq in local.lower() for eq in elite_europa):
           factor_l = 1.18
@@ -3743,9 +3768,11 @@ def motor_quant_institucional(
     p_h_bp = (inv_1 / suma_inv) * 100.0
     p_d_bp = (inv_x / suma_inv) * 100.0
     p_a_bp = (inv_2 / suma_inv) * 100.0
-    p_h = (p_h * 0.55) + (p_h_bp * 0.45)
-    p_d = (p_d * 0.55) + (p_d_bp * 0.45)
-    p_a = (p_a * 0.55) + (p_a_bp * 0.45)
+    # En ligas con alta rotación de plantillas o paridad (Segunda, Arabia, Latam) la casa absorbe lesiones/fichajes en vivo -> 68% peso mercado
+    peso_mercado_1x2 = 0.68 if liga_key in ("españa_2", "arabia_saudita", "brasil", "colombia", "argentina", "mexico", "usa") else 0.58
+    p_h = (p_h * (1.0 - peso_mercado_1x2)) + (p_h_bp * peso_mercado_1x2)
+    p_d = (p_d * (1.0 - peso_mercado_1x2)) + (p_d_bp * peso_mercado_1x2)
+    p_a = (p_a * (1.0 - peso_mercado_1x2)) + (p_a_bp * peso_mercado_1x2)
 
   p_h = max(12.0, min(75.0, p_h))
   p_d = max(15.0, min(36.0, p_d))
@@ -3860,38 +3887,58 @@ def motor_quant_institucional(
   f_ataque_vis = (media_v_a_pura / 1.20) if media_v_a_pura else 1.0
   f_defensa_loc = (media_l_c_pura / 1.20) if media_l_c_pura else 1.0
 
+  # PERFIL ESTADÍSTICO PROPIO POR LIGA/PAÍS (cada campeonato tiene ritmo, faltas, tiros y fricción distintos)
+  PERFIL_POR_LIGA = {
+      "inglaterra":     {"tiros_eq": 4.35, "faltas_eq": 10.3, "conv_tiros": 1.04},
+      "alemania":       {"tiros_eq": 4.40, "faltas_eq": 10.6, "conv_tiros": 1.04},
+      "holanda":        {"tiros_eq": 4.35, "faltas_eq": 10.4, "conv_tiros": 1.03},
+      "españa":         {"tiros_eq": 3.85, "faltas_eq": 12.1, "conv_tiros": 0.98},
+      "españa_2":       {"tiros_eq": 3.30, "faltas_eq": 12.9, "conv_tiros": 0.90},
+      "italia":         {"tiros_eq": 3.80, "faltas_eq": 11.9, "conv_tiros": 0.96},
+      "francia":        {"tiros_eq": 3.95, "faltas_eq": 11.5, "conv_tiros": 0.98},
+      "portugal":       {"tiros_eq": 3.85, "faltas_eq": 12.6, "conv_tiros": 0.97},
+      "turquia":        {"tiros_eq": 4.00, "faltas_eq": 12.3, "conv_tiros": 0.98},
+      "arabia_saudita": {"tiros_eq": 4.05, "faltas_eq": 10.3, "conv_tiros": 0.99},
+      "brasil":         {"tiros_eq": 3.60, "faltas_eq": 12.6, "conv_tiros": 0.94},
+      "argentina":      {"tiros_eq": 3.35, "faltas_eq": 13.0, "conv_tiros": 0.91},
+      "colombia":       {"tiros_eq": 3.45, "faltas_eq": 12.8, "conv_tiros": 0.92},
+      "mexico":         {"tiros_eq": 3.95, "faltas_eq": 11.6, "conv_tiros": 0.98},
+      "usa":            {"tiros_eq": 4.30, "faltas_eq": 11.2, "conv_tiros": 1.04},
+      "internacional":  {"tiros_eq": 3.70, "faltas_eq": 11.4, "conv_tiros": 0.95},
+  }
+  perf_lg = PERFIL_POR_LIGA.get(liga_key, {"tiros_eq": 3.75, "faltas_eq": 11.4, "conv_tiros": 0.96})
+
   if is_america:
-      m_tiros_latam = 3.95 if not es_copa_nacional_latam else 3.65
-      f_base_local = 11.4 + (diferencia_dominio * 3.2)
-      f_base_visita = 11.4 + (diferencia_dominio * 2.8)
-      if factor_v >= 1.10: 
-          f_base_local += 1.5
-      base_faltas_l = faltas_l if faltas_l is not None else (f_base_local * min(1.20, max(0.85, f_defensa_loc)) * (1.06 if es_derbi else 1.0))
-      base_faltas_v = faltas_v if faltas_v is not None else (f_base_visita * min(1.20, max(0.85, f_defensa_vis)) * (1.06 if es_derbi else 1.0))
-      base_tiros_l = tiros_l if tiros_l is not None else (m_tiros_latam * f_ataque_loc * min(1.18, max(0.85, f_defensa_vis)))
-      base_tiros_v = tiros_v if tiros_v is not None else (m_tiros_latam * f_ataque_vis * min(1.18, max(0.85, f_defensa_loc)))
-      factor_conv_tiros = 1.02 if liga_key == "brasil" else 0.96
-      tot_tiros = (base_tiros_l + base_tiros_v) * factor_conv_tiros * (0.94 if es_derbi else 1.00)
-      tot_tiros = round(max(5.8, min(9.6, tot_tiros)), 2)
+      m_tiros_latam = perf_lg["tiros_eq"] * (0.93 if es_copa_nacional_latam else 1.0)
+      f_base_local = perf_lg["faltas_eq"] + (diferencia_dominio * 2.2)
+      f_base_visita = perf_lg["faltas_eq"] + (diferencia_dominio * 1.9)
+      if factor_v >= 1.10:
+          f_base_local += 1.2
+      base_faltas_l = faltas_l if faltas_l is not None else (f_base_local * min(1.18, max(0.86, f_defensa_loc)) * (1.07 if es_derbi else 1.0))
+      base_faltas_v = faltas_v if faltas_v is not None else (f_base_visita * min(1.18, max(0.86, f_defensa_vis)) * (1.07 if es_derbi else 1.0))
+      base_tiros_l = tiros_l if tiros_l is not None else (m_tiros_latam * f_ataque_loc * min(1.15, max(0.84, f_defensa_vis)))
+      base_tiros_v = tiros_v if tiros_v is not None else (m_tiros_latam * f_ataque_vis * min(1.15, max(0.84, f_defensa_loc)))
+      # En clásicos sudamericanos o choques de élites (ej. São Paulo vs Fluminense 0-1), caen los remates y suben las faltas
+      mult_derbi_tiros = 0.86 if (es_derbi or es_choque_elites) else 1.00
+      tot_tiros = (base_tiros_l + base_tiros_v) * perf_lg["conv_tiros"] * mult_derbi_tiros
+      tot_tiros = round(max(5.2, min(9.4, tot_tiros)), 2)
   elif liga_key == "arabia_saudita":
-      base_tiros_l = (l_local_mat * 2.35) + 0.85
-      base_tiros_v = (l_vis_mat * 2.25) + 0.75
-      base_faltas_l = 10.1 + (diferencia_dominio * 1.4)
-      base_faltas_v = 10.1 + (diferencia_dominio * 1.4)
-      factor_conv_tiros = 0.98
-      tot_tiros = round(max(5.6, min(9.4, (base_tiros_l + base_tiros_v) * factor_conv_tiros)), 2)
+      base_tiros_l = (l_local_mat * 2.30) + 0.85
+      base_tiros_v = (l_vis_mat * 2.20) + 0.75
+      base_faltas_l = perf_lg["faltas_eq"] + (diferencia_dominio * 1.3) + (0.8 if es_derbi else 0.0)
+      base_faltas_v = perf_lg["faltas_eq"] + (diferencia_dominio * 1.3) + (0.8 if es_derbi else 0.0)
+      tot_tiros = round(max(5.6, min(9.5, (base_tiros_l + base_tiros_v) * perf_lg["conv_tiros"])), 2)
   else:
-      est_tiros_l_xg = max(2.6, (l_local_mat * 2.45) + 0.85) * min(1.15, max(0.88, f_defensa_vis))
-      est_tiros_v_xg = max(2.2, (l_vis_mat * 2.35) + 0.75) * min(1.15, max(0.88, f_defensa_loc))
+      est_tiros_l_xg = max(2.4, (l_local_mat * 2.35) + (perf_lg["tiros_eq"] * 0.24)) * min(1.14, max(0.86, f_defensa_vis))
+      est_tiros_v_xg = max(2.1, (l_vis_mat * 2.25) + (perf_lg["tiros_eq"] * 0.22)) * min(1.14, max(0.86, f_defensa_loc))
       base_tiros_l = ((float(tiros_l) * 0.75) + (est_tiros_l_xg * 0.25)) if tiros_l is not None else est_tiros_l_xg
       base_tiros_v = ((float(tiros_v) * 0.75) + (est_tiros_v_xg * 0.25)) if tiros_v is not None else est_tiros_v_xg
-      base_faltas_l = faltas_l if faltas_l is not None else (10.8 + (0.9 / max(l_local_mat, 0.45)))
-      base_faltas_v = faltas_v if faltas_v is not None else (10.8 + (0.9 / max(l_vis_mat, 0.45)))
-      factor_conv_tiros = 0.96 if liga_key in ["italia", "españa_2", "grecia"] else 1.00
-      tot_tiros = (base_tiros_l + base_tiros_v) * factor_conv_tiros * (0.95 if es_derbi else 1.00)
+      base_faltas_l = faltas_l if faltas_l is not None else (perf_lg["faltas_eq"] + (0.8 / max(l_local_mat, 0.45)))
+      base_faltas_v = faltas_v if faltas_v is not None else (perf_lg["faltas_eq"] + (0.8 / max(l_vis_mat, 0.45)))
+      tot_tiros = (base_tiros_l + base_tiros_v) * perf_lg["conv_tiros"] * (0.93 if es_derbi else 1.00)
       if ("BLOQUE BAJO" in etiqueta_contexto or "SINTÉTICO" in etiqueta_contexto) and tot_goles < 2.35:
-          tot_tiros *= 0.92
-      tot_tiros = round(max(5.6, min(9.8, tot_tiros)), 2)
+          tot_tiros *= 0.91
+      tot_tiros = round(max(5.2, min(9.8, tot_tiros)), 2)
 
   # 3. ECUACIÓN DE TRANSFERENCIA FÍSICA POR REBOTE (Tiros Bloqueados -> Córners y Fricción) + INGENIERÍA INVERSA DE LÍNEAS
   tiros_desviados_a_corner = 0.0
@@ -4147,6 +4194,10 @@ def motor_quant_institucional(
     cuotas_reales_casa["Doble Oport. X2"] = round(float(cuotas_bp["X2"]), 2)
   if (cuotas_bp or {}).get("btts_si"):
     cuotas_reales_casa["Ambos Marcan (BTTS)"] = round(float(cuotas_bp["btts_si"]), 2)
+  if isinstance((cuotas_bp or {}).get("1"), (int, float)):
+    cuotas_reales_casa[f"Victoria {local[:12]}"] = round(float(cuotas_bp["1"]), 2)
+  if isinstance((cuotas_bp or {}).get("2"), (int, float)):
+    cuotas_reales_casa[f"Victoria {visitante[:12]}"] = round(float(cuotas_bp["2"]), 2)
 
   return {
       "id_partido": id_partido,
@@ -5534,17 +5585,19 @@ def actualizar_webapp_github_automatico(fecha_jornada=None):
       (hoy_dt - timedelta(days=1)).strftime("%Y-%m-%d"),
   }
 
-  archivos = [
-      "app_quantbet.py", "bot_soporte.py", "auditoria_apuestas.csv",
-      "mercados_optimizados.py", "generador_videos_redes.py", "generador_imagenes.py", "auditoria_ayer.py",
-      "Montserrat-VariableFont_wght.ttf", "RobotoMono-VariableFont_wght.ttf", "fondo de quant bet.jpg",
-      "cache_boxscore_ft.json"
-  ]
-  for f_str in sorted(fechas_subir):
+  # Prioridad #1: subir PRIMERO los JSON de clientes y la auditoría (los que alimentan la Web App)
+  archivos = []
+  for f_str in sorted(fechas_subir, reverse=True):
     if os.path.exists(f"clientes_enviados_{f_str}.json"):
       archivos.append(f"clientes_enviados_{f_str}.json")
     if os.path.exists(f"cache_partidos_{f_str}.json"):
       archivos.append(f"cache_partidos_{f_str}.json")
+  archivos.extend([
+      "app_quantbet.py", "auditoria_apuestas.csv", "cache_boxscore_ft.json",
+      "bot_soporte.py", "mercados_optimizados.py", "generador_videos_redes.py",
+      "generador_imagenes.py", "auditoria_ayer.py",
+      "Montserrat-VariableFont_wght.ttf", "RobotoMono-VariableFont_wght.ttf", "fondo de quant bet.jpg",
+  ])
 
   token_partes = ["ghp_8IdQkFO039GIZ8w", "KW6B6LgBgw9k7Ow46DY7X"]
   GITHUB_TOKEN = os.getenv("GITHUB_TOKEN", "".join(token_partes))
@@ -5554,36 +5607,54 @@ def actualizar_webapp_github_automatico(fecha_jornada=None):
       "Accept": "application/vnd.github.v3+json",
   }
 
+  print(f"\n🌐 [SYNC WEB APP] Sincronizando jornada ({fecha_jornada}) con GitHub / quantbet22.streamlit.app...")
+  subidos_ok = 0
+  sin_cambios = 0
   for nombre_arch in archivos:
     if not os.path.exists(nombre_arch):
       continue
-    try:
-      url_api = f"https://api.github.com/repos/{REPO}/contents/{nombre_arch}"
-      with open(nombre_arch, "rb") as f:
-        contenido_raw = f.read()
+    for intento_gh in range(1, 3):
+      try:
+        url_api = f"https://api.github.com/repos/{REPO}/contents/{nombre_arch}"
+        with open(nombre_arch, "rb") as f:
+          contenido_raw = f.read()
 
-      # Calcular el SHA1 de Git local: si ya es idéntico en GitHub, NO volver a subirlo
-      sha_local = hashlib.sha1(f"blob {len(contenido_raw)}\0".encode("utf-8") + contenido_raw).hexdigest()
-      r_get = requests.get(url_api, headers=headers, timeout=15)
-      sha_remoto = r_get.json().get("sha") if r_get.status_code == 200 else None
+        sha_local = hashlib.sha1(f"blob {len(contenido_raw)}\0".encode("utf-8") + contenido_raw).hexdigest()
+        r_get = requests.get(url_api, headers=headers, timeout=15)
+        if r_get.status_code == 401:
+          print(f"❌ [GITHUB 401] Token de GitHub vencido o rechazado al consultar {nombre_arch}. Renueva GITHUB_TOKEN.")
+          return
+        sha_remoto = r_get.json().get("sha") if r_get.status_code == 200 else None
 
-      if sha_remoto == sha_local:
-        continue
+        if sha_remoto == sha_local:
+          sin_cambios += 1
+          break
 
-      contenido_b64 = base64.b64encode(contenido_raw).decode("utf-8")
-      datos = {
-          "message": f"Sync {nombre_arch} ({fecha_jornada})",
-          "content": contenido_b64,
-          "branch": "main",
-      }
-      if sha_remoto:
-        datos["sha"] = sha_remoto
+        contenido_b64 = base64.b64encode(contenido_raw).decode("utf-8")
+        datos = {
+            "message": f"Sync {nombre_arch} ({fecha_jornada})",
+            "content": contenido_b64,
+            "branch": "main",
+        }
+        if sha_remoto:
+          datos["sha"] = sha_remoto
 
-      r_put = requests.put(url_api, headers=headers, json=datos, timeout=25)
-      if r_put.status_code in [200, 201]:
-        print(f"✅ [200 OK] 🌐 Actualizado en la Web App: {nombre_arch}")
-    except Exception:
-      pass
+        r_put = requests.put(url_api, headers=headers, json=datos, timeout=25)
+        if r_put.status_code in [200, 201]:
+          print(f"✅ [{r_put.status_code} OK] 🌐 Actualizado en la Web App: {nombre_arch}")
+          subidos_ok += 1
+          break
+        elif r_put.status_code == 409 and intento_gh == 1:
+          print(f"    🔄 [GITHUB 409] Conflicto de SHA en {nombre_arch}, reintentando...")
+          time.sleep(1.5)
+          continue
+        else:
+          print(f"❌ [GITHUB HTTP {r_put.status_code}] Error subiendo {nombre_arch}: {r_put.text[:220]}")
+          break
+      except Exception as e_gh:
+        print(f"❌ [GITHUB ERROR] Excepción subiendo {nombre_arch}: {e_gh}")
+        break
+  print(f"🌐 [SYNC WEB APP FINALIZADO] {subidos_ok} archivo(s) actualizados | {sin_cambios} ya estaban al día.")
 
 
 if __name__ == "__main__":
@@ -5591,6 +5662,10 @@ if __name__ == "__main__":
   _args_cli = [a.strip() for a in sys.argv[1:] if a.strip() and not a.strip().startswith("--")]
   fecha_cli = _args_cli[0] if _args_cli else FECHA_OBJETIVO_MANUAL.strip()
   fecha_obj = fecha_cli if fecha_cli else datetime.now().strftime("%Y-%m-%d")
+  if "--solo-subir-web" in sys.argv:
+      actualizar_webapp_github_automatico(fecha_obj)
+      print("\n[✅] SINCRONIZACIÓN WEB COMPLETADA.")
+      sys.exit(0)
   ejecutar_sistema_automatico(MI_TOKEN)
   if SUBIR_A_WEB or ENVIAR_A_CLIENTES:
       actualizar_webapp_github_automatico(fecha_obj)
