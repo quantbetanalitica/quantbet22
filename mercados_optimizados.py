@@ -182,7 +182,7 @@ def _obtener_partidos_respaldo_espn(fecha, datos_previos=None):
                         encontrados.append({
                             "fixture": {"id": int(ev.get("id", 0) or abs(hash(f"{loc_n}{vis_n}{fecha}")) % 9000000), "date": f_iso, "referee": None, "status": {"short": est_short}},
                             "league": {"id": lid, "name": slug},
-                            "teams": {"home": {"id": id_h, "name": loc_n}, "away": {"id": id_a, "name": vis_n}},
+                            "teams": {"home": {"id": id_h, "name": loc_n, "logo": c_h.get("team", {}).get("logo", "")}, "away": {"id": id_a, "name": vis_n, "logo": c_a.get("team", {}).get("logo", "")}},
                             "goals": {"home": gh, "away": ga},
                             "score": {"halftime": {"home": ght_h, "away": ght_a}},
                         })
@@ -410,7 +410,7 @@ def construir_indice_real_desde_caches_json():
 
 ARCHIVO_CACHE_GOLES_EQUIPOS = "cache_goles_reales_equipos.json"
 
-def obtener_estadisticas_api_equipo_con_cache(id_equipo, api_token, nombre_equipo=""):
+def obtener_estadisticas_api_equipo_con_cache(id_equipo, api_token, nombre_equipo="", es_femenino=False):
   """
   Si el equipo no está en el CSV local, busca en el caché de partidos y, si es un equipo nuevo,
   descarga automáticamente sus últimos 10-12 partidos reales desde ESPN y API-Sports (GF, GC y 1T).
@@ -447,8 +447,8 @@ def obtener_estadisticas_api_equipo_con_cache(id_equipo, api_token, nombre_equip
 
   gf_nuevos, gc_nuevos, htgf_nuevos, htgc_nuevos = [], [], [], []
 
-  # 1. Buscar últimos 12 partidos terminados del equipo en ESPN API (rápido e ilimitado)
-  if nombre_equipo and not MODO_PRUEBAS:
+  # 1. Buscar últimos 12 partidos terminados del equipo en ESPN API (en femenino NO mezclar con el equipo masculino)
+  if nombre_equipo and not MODO_PRUEBAS and not es_femenino:
     try:
       r_b = requests.get(
           "https://site.web.api.espn.com/apis/common/v3/search",
@@ -1621,10 +1621,53 @@ traductor_nombres = {
 }
 
 
+def _post_telegram_con_reintentos(url, payload, files_path=None, timeout=18, max_intentos=4):
+  """Envía peticiones a Telegram manejando HTTP 429 (retry_after), errores de red y fallback sin HTML."""
+  modo_html = True
+  for intento in range(1, max_intentos + 1):
+    try:
+      data_env = dict(payload)
+      if not modo_html:
+        data_env.pop("parse_mode", None)
+        for campo in ("text", "caption"):
+          if campo in data_env:
+            data_env[campo] = re.sub(r"<[^>]+>", "", str(data_env[campo]))[:1000 if campo == "caption" else 3900]
+
+      if files_path:
+        with open(files_path, "rb") as ph:
+          res = requests.post(url, data=data_env, files={"photo": ph}, timeout=timeout)
+      else:
+        res = requests.post(url, json=data_env, timeout=timeout)
+
+      if res.status_code == 200:
+        return True, 200
+      if res.status_code == 429:
+        espera = 6.0
+        try:
+          espera = float((res.json().get("parameters") or {}).get("retry_after") or 6.0)
+        except Exception:
+          pass
+        espera = max(2.0, min(65.0, espera + 1.5))
+        print(f"    ⏳ [TELEGRAM 429] Límite de velocidad alcanzado. Esperando {espera:.1f}s antes de reintentar ({intento}/{max_intentos})...")
+        time.sleep(espera)
+        continue
+      if res.status_code == 400 and modo_html:
+        modo_html = False
+        time.sleep(0.8)
+        continue
+      logging.error(f"Telegram HTTP {res.status_code}: {res.text[:250]}")
+      time.sleep(2.0 * intento)
+    except Exception as e:
+      logging.error(f"Excepción Telegram intento {intento}: {e}")
+      time.sleep(2.0 * intento)
+  return False, 0
+
+
 def enviar_telegram(token, chat_id, mensaje, reply_markup=None):
   if not token or not chat_id:
-    return
+    return False
   url = f"https://api.telegram.org/bot{token}/sendMessage"
+  ok_global = True
   if len(mensaje) > 3500:
     parrafos = mensaje.split("\n\n")
     bloque = ""
@@ -1633,85 +1676,77 @@ def enviar_telegram(token, chat_id, mensaje, reply_markup=None):
         bloque += p + "\n\n"
       else:
         if bloque.strip():
-          requests.post(
-              url,
-              json={"chat_id": chat_id, "text": bloque.strip(), "parse_mode": "HTML", "disable_web_page_preview": True},
-              timeout=10,
+          ok_p, _ = _post_telegram_con_reintentos(
+              url, {"chat_id": chat_id, "text": bloque.strip(), "parse_mode": "HTML", "disable_web_page_preview": True}, timeout=12
           )
-          time.sleep(0.6)
+          ok_global = ok_global and ok_p
+          time.sleep(1.0)
         bloque = "⚡ <b>(Continuación del Reporte)...</b>\n\n" + p + "\n\n"
     if bloque.strip():
       payload = {"chat_id": chat_id, "text": bloque.strip(), "parse_mode": "HTML", "disable_web_page_preview": True}
       if reply_markup:
         payload["reply_markup"] = reply_markup
-      requests.post(url, json=payload, timeout=10)
-      time.sleep(0.6)
+      ok_p, _ = _post_telegram_con_reintentos(url, payload, timeout=12)
+      ok_global = ok_global and ok_p
+      time.sleep(1.0)
   else:
-    try:
-      payload = {"chat_id": chat_id, "text": mensaje, "parse_mode": "HTML", "disable_web_page_preview": True}
-      if reply_markup:
-        payload["reply_markup"] = reply_markup
-      requests.post(url, json=payload, timeout=10)
-      time.sleep(0.6)
-    except Exception as e:
-      logging.error(f"Error Telegram: {e}")
+    payload = {"chat_id": chat_id, "text": mensaje, "parse_mode": "HTML", "disable_web_page_preview": True}
+    if reply_markup:
+      payload["reply_markup"] = reply_markup
+    ok_global, _ = _post_telegram_con_reintentos(url, payload, timeout=12)
+    time.sleep(1.0)
+  return ok_global
 
 
 _HISTORIAL_IMAGENES_CANAL = set()
 
 def enviar_imagen_telegram(token, chat_id, ruta_imagen, caption="", reply_markup=None):
-  if not token or not chat_id or not ruta_imagen or not os.path.exists(ruta_imagen): 
-      return
+  if not token or not chat_id or not ruta_imagen or not os.path.exists(ruta_imagen):
+    print(f"    ❌ [ERROR IMAGEN] No existe la ruta para enviar a Telegram: {ruta_imagen}")
+    return False
 
   nom_base = os.path.basename(str(ruta_imagen)).lower()
+  clave_envio = None
   if "_vs_" in nom_base:
-      limpio_b = re.sub(r"^(vip_\d+_|free_\d+_)?(\d{4}_)?", "", nom_base)
-      limpio_b = re.sub(r"_(vip|free|descartes)\.jpg$", "", limpio_b)
-      eq1, eq2 = limpio_b.split("_vs_", 1)
-      for pref in ["deportivo_", "deportes_", "atletico_", "independiente_", "club_", "real_"]:
-          if eq1.startswith(pref) and len(eq1) > len(pref) + 2: eq1 = eq1[len(pref):]
-          if eq2.startswith(pref) and len(eq2) > len(pref) + 2: eq2 = eq2[len(pref):]
-      tipo_img = "VIP" if "_vip" in nom_base else ("FREE" if "_free" in nom_base else "OTRO")
-      clave_envio = (str(chat_id), tipo_img, tuple(sorted([eq1.strip("_"), eq2.strip("_")])))
-      if clave_envio in _HISTORIAL_IMAGENES_CANAL:
-          print(f"    ⏭️ [CANDADO ANTI-REPETIDOS] Partido duplicado/invertido bloqueado: {os.path.basename(ruta_imagen)}")
-          return
-      _HISTORIAL_IMAGENES_CANAL.add(clave_envio)
+    limpio_b = re.sub(r"^(vip_\d+_|free_\d+_)?(\d{4}_)?", "", nom_base)
+    limpio_b = re.sub(r"_(vip|free|descartes)\.jpg$", "", limpio_b)
+    eq1, eq2 = limpio_b.split("_vs_", 1)
+    for pref in ["deportivo_", "deportes_", "atletico_", "independiente_", "club_", "real_"]:
+      if eq1.startswith(pref) and len(eq1) > len(pref) + 2: eq1 = eq1[len(pref):]
+      if eq2.startswith(pref) and len(eq2) > len(pref) + 2: eq2 = eq2[len(pref):]
+    tipo_img = "VIP" if "_vip" in nom_base else ("FREE" if "_free" in nom_base else "OTRO")
+    clave_envio = (str(chat_id), tipo_img, tuple(sorted([eq1.strip("_"), eq2.strip("_")])))
+    if clave_envio in _HISTORIAL_IMAGENES_CANAL:
+      print(f"    ⏭️ [CANDADO ANTI-REPETIDOS] Partido duplicado/invertido bloqueado: {os.path.basename(ruta_imagen)}")
+      return False
 
   cap_seguro = str(caption)
   if len(cap_seguro) > 1010:
-      lineas_ok = []
-      largo_ac = 0
-      for lin in cap_seguro.splitlines():
-          if largo_ac + len(lin) + 2 <= 1005:
-              lineas_ok.append(lin)
-              largo_ac += len(lin) + 1
-          else:
-              break
-      cap_seguro = "\n".join(lineas_ok)
+    lineas_ok = []
+    largo_ac = 0
+    for lin in cap_seguro.splitlines():
+      if largo_ac + len(lin) + 2 <= 1005:
+        lineas_ok.append(lin)
+        largo_ac += len(lin) + 1
+      else:
+        break
+    cap_seguro = "\n".join(lineas_ok)
 
   url = f"https://api.telegram.org/bot{token}/sendPhoto"
-  try:
-    with open(ruta_imagen, 'rb') as photo:
-      payload = {"chat_id": chat_id, "caption": cap_seguro, "parse_mode": "HTML"}
-      
-      if reply_markup:
-          payload["reply_markup"] = json.dumps(reply_markup)
-          
-      files = {"photo": photo}
-      res = requests.post(url, data=payload, files=files, timeout=15)
-      
-      if res.status_code == 200:
-          print(f"    📸 [+] Imagen enviada al canal con éxito.")
-      else:
-          with open(ruta_imagen, 'rb') as photo_retry:
-              cap_limpio = re.sub(r"<[^>]+>", "", cap_seguro)[:1000]
-              requests.post(url, data={"chat_id": chat_id, "caption": cap_limpio}, files={"photo": photo_retry}, timeout=15)
-              print(f"    📸 [+] Imagen enviada al canal con éxito (modo seguro).")
-          
-      time.sleep(2.0)  
-  except Exception as e:
-    logging.error(f"Error crítico subiendo imagen a Telegram: {e}")
+  payload = {"chat_id": chat_id, "caption": cap_seguro, "parse_mode": "HTML"}
+  if reply_markup:
+    payload["reply_markup"] = json.dumps(reply_markup)
+
+  ok_envio, code_env = _post_telegram_con_reintentos(url, payload, files_path=ruta_imagen, timeout=20, max_intentos=4)
+  if ok_envio:
+    if clave_envio is not None:
+      _HISTORIAL_IMAGENES_CANAL.add(clave_envio)
+    print(f"    📸 [200 OK] Imagen confirmada en Telegram: {os.path.basename(ruta_imagen)}")
+    time.sleep(2.6)
+    return True
+  else:
+    print(f"    ❌ [FALLO TELEGRAM] No se pudo enviar {os.path.basename(ruta_imagen)} tras 4 intentos (HTTP {code_env}).")
+    return False
 
 
 def sincronizar_csv_locales_api(api_token):
@@ -2374,7 +2409,7 @@ def es_partido_rivalidad_alta(local, visitante):
       ("chelsea", "arsenal"), ("liverpool", "everton"), ("manchester", "liverpool"),
       ("boca", "river"), ("millonarios", "santa fe"), ("nacional", "américa"),
       ("gremio", "internacional"), ("palmeiras", "corinthians"), ("flamengo", "fluminense"), 
-      ("sao paulo", "santos"), ("benfica", "sporting"), ("porto", "benfica"),
+      ("sao paulo", "santos"), ("sao paulo", "fluminense"), ("sao paulo", "palmeiras"), ("sao paulo", "corinthians"), ("sao paulo", "flamengo"), ("flamengo", "palmeiras"), ("flamengo", "vasco"), ("benfica", "sporting"), ("porto", "benfica"),
       ("américa", "medellín"), ("nacional", "millonarios"), ("racing", "independiente"),
       ("cali", "américa"), ("san lorenzo", "huracán"), ("rosario", "newell"),
       ("galatasaray", "fenerbahce"), ("celtic", "rangers"), ("ajax", "feyenoord"),
@@ -2634,12 +2669,13 @@ def encontrar_nombre_exacto(nombre_ingresado, lista_equipos):
 # ==============================================================================
 ARCHIVO_CACHE_STATS_REALES = "cache_stats_reales_equipos.json"
 
-def obtener_stats_reales_api_equipo(id_equipo, nombre_equipo, api_token=None):
+def obtener_stats_reales_api_equipo(id_equipo, nombre_equipo, api_token=None, es_femenino=False):
   """
   Extrae en paralelo (menos de 1 seg por equipo) los promedios REALES de Córners,
   Remates a Puerta, Faltas y Tarjetas y guarda todo en caché local permanente.
   """
-  if not id_equipo and not nombre_equipo:
+  if (not id_equipo and not nombre_equipo) or es_femenino:
+    # En fútbol femenino no consultar la búsqueda genérica de ESPN para evitar traer stats del equipo masculino
     return None
 
   clave_eq = normalizar_nombre_club(nombre_equipo) if nombre_equipo else str(id_equipo)
@@ -2795,20 +2831,20 @@ def motor_quant_institucional(
   faltas_v = None
   corn_l = None
   corn_v = None
-  # Si el club o Selección no está en el CSV local, extraer sus promedios REALES de la API
+  es_champions_femenina = ("WOMEN" in liga_visual.upper() or "FEMEN" in liga_visual.upper())
+  # Si el club o Selección no está en el CSV local, extraer sus promedios REALES de la API (sin mezclar masculino en UWCL)
   if corn_l is None or tiros_l is None:
-      st_real_l = obtener_stats_reales_api_equipo(id_local, local, api_token)
+      st_real_l = obtener_stats_reales_api_equipo(id_local, local, api_token, es_femenino=es_champions_femenina)
       if st_real_l:
           corn_l = corn_l if corn_l is not None else st_real_l.get("corners")
           tiros_l = tiros_l if tiros_l is not None else st_real_l.get("tiros")
           tarj_l = tarj_l if tarj_l is not None else st_real_l.get("tarjetas")
   if corn_v is None or tiros_v is None:
-      st_real_v = obtener_stats_reales_api_equipo(id_vis, visitante, api_token)
+      st_real_v = obtener_stats_reales_api_equipo(id_vis, visitante, api_token, es_femenino=es_champions_femenina)
       if st_real_v:
           corn_v = corn_v if corn_v is not None else st_real_v.get("corners")
           tiros_v = tiros_v if tiros_v is not None else st_real_v.get("tiros")
           tarj_v = tarj_v if tarj_v is not None else st_real_v.get("tarjetas")
-  es_champions_femenina = ("WOMEN" in liga_visual.upper() or "FEMEN" in liga_visual.upper())
   datos = pd.DataFrame() if es_champions_femenina else cargar_datos_historicos_unificados(liga_key)
   d_l = pd.DataFrame()
   d_v = pd.DataFrame()
@@ -2859,14 +2895,14 @@ def motor_quant_institucional(
     # Extraer promedios reales de los últimos 12-15 partidos (Córners, Tiros, Faltas y Tarjetas) para TODOS los equipos
   faltas_real_l = None
   faltas_real_v = None
-  st_real_l = obtener_stats_reales_api_equipo(id_local, local, api_token)
+  st_real_l = obtener_stats_reales_api_equipo(id_local, local, api_token, es_femenino=es_champions_femenina)
   if st_real_l:
       corn_l = corn_l if corn_l is not None else st_real_l.get("corners")
       tiros_l = tiros_l if tiros_l is not None else st_real_l.get("tiros")
       tarj_l = tarj_l if tarj_l is not None else st_real_l.get("tarjetas")
       faltas_real_l = st_real_l.get("faltas")
 
-  st_real_v = obtener_stats_reales_api_equipo(id_vis, visitante, api_token)
+  st_real_v = obtener_stats_reales_api_equipo(id_vis, visitante, api_token, es_femenino=es_champions_femenina)
   if st_real_v:
       corn_v = corn_v if corn_v is not None else st_real_v.get("corners")
       tiros_v = tiros_v if tiros_v is not None else st_real_v.get("tiros")
@@ -2883,10 +2919,10 @@ def motor_quant_institucional(
       m_tarj_v = m_tiros_v = m_faltas_v = m_corn_v = None
   else:
       media_l_a, media_l_c, g1t_l_a, g1t_l_c, m_tarj_l, m_tiros_l, m_faltas_l, m_corn_l = (
-          obtener_estadisticas_api_equipo_con_cache(id_local, api_token, local)
+          obtener_estadisticas_api_equipo_con_cache(id_local, api_token, local, es_femenino=es_champions_femenina)
       )
       media_v_a, media_v_c, g1t_v_a, g1t_v_c, m_tarj_v, m_tiros_v, m_faltas_v, m_corn_v = (
-          obtener_estadisticas_api_equipo_con_cache(id_vis, api_token, visitante)
+          obtener_estadisticas_api_equipo_con_cache(id_vis, api_token, visitante, es_femenino=es_champions_femenina)
       )
       if not d_l.empty:
           media_l_a = float(d_l["FTHG"].tail(10).mean())
@@ -3511,13 +3547,15 @@ def motor_quant_institucional(
     lambda_goles_casa = inferir_lambda_desde_cuotas(over_g_bp, under_g_bp, lam_min=1.2, lam_max=6.5)
 
   if lambda_goles_casa is not None:
-    # En torneos sin CSV histórico (ej. Champions Femenina / Barcelona) la línea real de la casa pesa 72%;
-    # en ligas con CSV histórico completo pesa 38%, anclando nuestra proyección a las líneas reales abiertas
-    peso_casa_g = 0.72 if (es_champions_femenina or (d_l.empty and d_v.empty)) else 0.38
+    # En Champions Femenina (sin CSV histórico femenino) la línea real de Kambi/ESPN manda al 82%;
+    # en ligas con CSV histórico completo pesa 38%, anclando la proyección sin exagerar goles en duelos cerrados
+    peso_casa_g = 0.82 if es_champions_femenina else (0.70 if (d_l.empty and d_v.empty) else 0.38)
     tot_goles = round((tot_goles * (1.0 - peso_casa_g)) + (lambda_goles_casa * peso_casa_g), 2)
-    # Si la casa abre líneas altas (ej. 3.5 / 4.5 en Barcelona), respetar ese techo real hasta 5.5 goles
-    techo_g_real = max(3.35, min(5.50, lambda_goles_casa * 1.05))
+    techo_g_real = max(3.35, min(5.50, lambda_goles_casa * 1.03))
     tot_goles = round(max(1.70, min(techo_g_real, tot_goles)), 2)
+  elif es_champions_femenina:
+      # Sin cuotas de casa, evitar inflar duelos parejos femeninos (ej. Benfica vs Roma) a 3.68 goles
+      tot_goles = round(max(2.35, min(3.15, tot_goles * 0.96)), 2)
   elif not is_america or liga_key == "brasil":
       if tot_goles > 3.25:
           tot_goles = 3.00 + ((tot_goles - 3.25) * 0.25)
@@ -3887,12 +3925,12 @@ def motor_quant_institucional(
   if es_torneo_copa: 
       tot_faltas += (1.2 if es_copa_nacional_latam else 0.8)
   tot_faltas = round(max(17.5, min(29.5, tot_faltas)), 2)
-  if es_amistoso_intl or es_champions_femenina:
-    tot_faltas = round(min(19.5, tot_faltas * 0.82), 2)
-  if es_champions_femenina and lambda_goles_casa is None:
-    tot_goles = round(max(2.65, tot_goles * 1.12), 2)
   if es_champions_femenina:
-    tot_tiros = round(max(7.2, tot_tiros * 1.10), 2)
+    # Fútbol femenino (UWCL): muchas menos faltas (media real 13.5 - 16.5) y ritmo más limpio que masculino
+    tot_faltas = round(max(12.5, min(16.8, tot_faltas * 0.70)), 2)
+    tot_tiros = round(max(6.8, min(10.5, tot_tiros * 1.04)), 2)
+  elif es_amistoso_intl:
+    tot_faltas = round(min(19.5, tot_faltas * 0.82), 2)
 
   # Sincronización matemática de FALTAS con la línea real de BetPlay/Kambi (si está abierta)
   over_f_bp = (cuotas_bp or {}).get("over_faltas") or {}
@@ -3959,9 +3997,15 @@ def motor_quant_institucional(
   tot_corn *= (1.03 if es_torneo_copa else 1.0) * (1.06 if (es_altura or es_local_nordico_sintetico) else 1.0)
   if ("BLOQUE BAJO" in etiqueta_contexto and not es_asedio_contra_bloque_bajo_eu) or "SINTÉTICO" in etiqueta_contexto or "CERROJO" in etiqueta_contexto:
       tot_corn *= 0.92
-  if tot_corn > 9.6: 
-      tot_corn = 9.6 + ((tot_corn - 9.6) * 0.45)
-  tot_corn = round(max(7.4, tot_corn), 2)
+  if es_champions_femenina:
+      # En fútbol femenino hay más goles directos y MENOS córners que en masculino (media real UWCL ~7.2 - 8.8)
+      base_corn_l = round(base_corn_l * 0.78, 2)
+      base_corn_v = round(base_corn_v * 0.78, 2)
+      tot_corn = round(max(6.4, min(8.9, (base_corn_l + base_corn_v) + (tiros_desviados_a_corner * 0.25))), 2)
+  else:
+      if tot_corn > 9.6:
+          tot_corn = 9.6 + ((tot_corn - 9.6) * 0.45)
+      tot_corn = round(max(7.4, tot_corn), 2)
 
   p_c_loc45, _, c_min_c_loc45 = calcular_prob_over_y_ev(base_corn_l, 4.5)
   p_c_vis45, _, c_min_c_vis45 = calcular_prob_over_y_ev(base_corn_v, 4.5)
@@ -4002,7 +4046,10 @@ def motor_quant_institucional(
   if is_intl or es_torneo_copa: 
       tot_tarj = round(max(3.6 if es_copa_nacional_latam else 3.5, tendencia_actual * (1.22 if es_copa_nacional_latam else 1.15)), 2)
   tot_tarj = max(tot_tarj, 2.5)
-  if es_amistoso_intl:
+  if es_champions_femenina:
+    # En UWCL el promedio real de tarjetas es bajo (~2.0 - 2.9), muy por debajo del 3.5 de copas masculinas
+    tot_tarj = round(max(1.8, min(2.9, tot_tarj * 0.66)), 2)
+  elif es_amistoso_intl:
     tot_tarj = round(min(2.6, tot_tarj * 0.68), 2)
   if arbitro is None or str(arbitro).lower() in ["none", "null", "", "nan", "no asignado"]: 
       tot_tarj *= 0.90  
@@ -4046,7 +4093,8 @@ def motor_quant_institucional(
   under_c_bp = (cuotas_bp or {}).get("under_corners") or {}
   lam_c_casa = inferir_lambda_desde_cuotas(over_c_bp, under_c_bp, lam_min=5.5, lam_max=16.5)
   if lam_c_casa is not None:
-    tot_corn = round((tot_corn * 0.50) + (lam_c_casa * 0.50), 2)
+    peso_c_k = 0.75 if es_champions_femenina else 0.50
+    tot_corn = round((tot_corn * (1.0 - peso_c_k)) + (lam_c_casa * peso_c_k), 2)
     p_c75, cuota_c75, c_min_c75 = calcular_prob_over_y_ev(tot_corn, 7.5)
     p_c85, cuota_c85, c_min_c85 = calcular_prob_over_y_ev(tot_corn, 8.5)
 
@@ -4750,6 +4798,10 @@ def ejecutar_sistema_automatico(api_token):
       )
       if res_calc:
         res_calc["ya_empezo"] = ya_empezo
+        res_calc["id_local"] = id_loc
+        res_calc["id_vis"] = id_vis
+        res_calc["logo_local"] = str((p.get("teams", {}).get("home") or {}).get("logo") or "")
+        res_calc["logo_vis"] = str((p.get("teams", {}).get("away") or {}).get("logo") or "")
       return res_calc
     except Exception as e:
       logging.error(f"Error procesando partido en hilo: {e}")
@@ -5155,18 +5207,9 @@ def ejecutar_sistema_automatico(api_token):
       reverse=True
   )
 
-# 1. CANAL FREE (3 Tarjetas): Garantizar 1 cupo para Liga Colombiana/Sudamérica si hay partidos hoy
-  candidatos_latam = [p for p in candidatos_clientes if p.get('is_america') and p.get('ruta_free')]
-  candidatos_eu_free = [p for p in candidatos_clientes if not p.get('is_america') and p.get('ruta_free') and not p.get('es_madrugada')]
-  if candidatos_latam and len(candidatos_eu_free) >= 2:
-      top_3_free = candidatos_eu_free[:2] + [candidatos_latam[0]]
-  else:
-      top_3_free = [p for p in candidatos_clientes if p.get('ruta_free') and not p.get('es_madrugada')][:3]
-      if len(top_3_free) < 3:
-          top_3_free = [p for p in candidatos_clientes if p.get('ruta_free')][:3]
-
-  # 2. CANAL VIP (4 Tarjetas): Garantizar mínimo 1-2 cupos de Liga Colombiana/Sudamérica junto a los mejores de Europa
-  # Bloquear micro-selecciones/islas y partidos ya empezados de las 7 tarjetas de clientes y de la Web
+  # =========================================================================================
+  # SELECCIÓN ÚNICA Y SINCRONIZADA DE CLIENTES (3 FREE + 4 VIP = 7 PARTIDOS DISTINTOS)
+  # =========================================================================================
   islas_excluidas_clientes = [
       "tahiti", "cook islands", "islas cook", "eswatini", "somalia", "oman", "namibia", "comoros",
       "guyana", "puerto rico", "andorra", "san marino", "liechtenstein", "gibraltar", "faroe", "islas feroe",
@@ -5180,20 +5223,22 @@ def ejecutar_sistema_automatico(api_token):
   if len(candidatos_clientes_limpios) >= 7:
       candidatos_clientes = candidatos_clientes_limpios
 
-  candidatos_latam = [p for p in candidatos_clientes if p.get('is_america') and p.get('ruta_free') and p.get('score_elite', 0) >= 8]
-  candidatos_eu_free = [p for p in candidatos_clientes if not p.get('is_america') and p.get('ruta_free') and not p.get('es_madrugada')]
-  if candidatos_latam and len(candidatos_eu_free) >= 2:
-      top_3_free = candidatos_eu_free[:2] + [candidatos_latam[0]]
+  # 1. CANAL FREE (exactamente 3 tarjetas, garantizando 1 cupo de Sudamérica si existe)
+  candidatos_latam_f = [p for p in candidatos_clientes if p.get('is_america') and p.get('ruta_free') and os.path.exists(str(p.get('ruta_free'))) and p.get('score_elite', 0) >= 8]
+  candidatos_eu_free = [p for p in candidatos_clientes if not p.get('is_america') and p.get('ruta_free') and os.path.exists(str(p.get('ruta_free'))) and not p.get('es_madrugada')]
+  if candidatos_latam_f and len(candidatos_eu_free) >= 2:
+      top_3_free = candidatos_eu_free[:2] + [candidatos_latam_f[0]]
   else:
-      top_3_free = [p for p in candidatos_clientes if p.get('ruta_free') and not p.get('es_madrugada')][:3]
+      top_3_free = [p for p in candidatos_clientes if p.get('ruta_free') and os.path.exists(str(p.get('ruta_free'))) and not p.get('es_madrugada')][:3]
       if len(top_3_free) < 3:
-          top_3_free = [p for p in candidatos_clientes if p.get('ruta_free')][:3]
+          top_3_free = [p for p in candidatos_clientes if p.get('ruta_free') and os.path.exists(str(p.get('ruta_free')))][:3]
 
+  # 2. CANAL VIP (exactamente 4 tarjetas distintas a las 3 del FREE)
   ids_usados_free = {str(p.get('id_partido')) for p in top_3_free}
   candidatos_vip_ordenados = sorted(
       [
           p for p in candidatos_clientes
-          if str(p.get('id_partido')) not in ids_usados_free and p.get('ruta_vip')
+          if str(p.get('id_partido')) not in ids_usados_free and p.get('ruta_vip') and os.path.exists(str(p.get('ruta_vip')))
       ],
       key=lambda x: (
           x.get('prioridad_free_cartelera', 0),
@@ -5209,8 +5254,31 @@ def ejecutar_sistema_automatico(api_token):
   else:
       top_4_vip_clientes = candidatos_vip_ordenados[:4]
 
-  # 🌐 BLOQUE 1: SUBIR A LA PÁGINA WEB (Corre cuando SUBIR_A_WEB = True, SIN enviar nada a Telegram)
-  if SUBIR_A_WEB:
+  # Si ya existía clientes_enviados_<fecha>.json bloqueado en la Web y ahora enviamos a Telegram,
+  # sincronizar para enviar EXACTAMENTE los mismos 3 FREE y 4 VIP que ven los usuarios en la App Web
+  arch_json_hoy = f"clientes_enviados_{fecha_jornada}.json"
+  if os.path.exists(arch_json_hoy) and ENVIAR_A_CLIENTES and not SUBIR_A_WEB:
+      try:
+          d_sync = json.load(open(arch_json_hoy, encoding="utf-8"))
+          mapa_proc_id = {str(p.get("id_partido")): p for p in partidos_vip_finales}
+          mapa_proc_nom = {f"{p['local']} vs {p['visitante']}".lower(): p for p in partidos_vip_finales}
+          f_sync, v_sync = [], []
+          for tc in d_sync.get("tarjetas_clientes", []):
+              p_match = mapa_proc_id.get(str(tc.get("id_partido", ""))) or mapa_proc_nom.get(str(tc.get("partido", "")).split(" (")[0].strip().lower())
+              if p_match:
+                  if tc.get("tipo_tarjeta") == "FREE" and len(f_sync) < 3:
+                      f_sync.append(p_match)
+                  elif tc.get("tipo_tarjeta") == "VIP" and len(v_sync) < 4:
+                      v_sync.append(p_match)
+          if len(f_sync) == 3:
+              top_3_free = f_sync
+          if len(v_sync) == 4:
+              top_4_vip_clientes = v_sync
+      except Exception:
+          pass
+
+  # 🌐 BLOQUE 1: REGISTRAR Y SUBIR A LA PÁGINA WEB (también guarda carpeta oficial si solo enviamos a clientes)
+  if SUBIR_A_WEB or ENVIAR_A_CLIENTES:
       for p_free in top_3_free:
           auto_registrar_selecciones_tarjetas(p_free, 'FREE', fecha_jornada)
       for p_vip in top_4_vip_clientes:
@@ -5220,47 +5288,118 @@ def ejecutar_sistema_automatico(api_token):
           rutas_pro_extra=[r_p for _, r_p in tarjetas_pro_extra_generadas]
       )
       try:
-          arch_j_comb = f"clientes_enviados_{fecha_jornada}.json"
-          if os.path.exists(arch_j_comb):
-              d_jc = json.load(open(arch_j_comb, encoding="utf-8"))
+          if os.path.exists(arch_json_hoy):
+              d_jc = json.load(open(arch_json_hoy, encoding="utf-8"))
               if info_doble:
                   d_jc["combinada_doble"] = info_doble
               if info_sniper:
                   d_jc["combinada_sniper"] = info_sniper
               if combinadas_exclusivas_pro:
                   d_jc["combinadas_exclusivas_pro"] = combinadas_exclusivas_pro
-              json.dump(d_jc, open(arch_j_comb, "w", encoding="utf-8"), ensure_ascii=False, indent=2)
+              json.dump(d_jc, open(arch_json_hoy, "w", encoding="utf-8"), ensure_ascii=False, indent=2)
       except Exception:
           pass
-      actualizar_webapp_github_automatico(fecha_jornada)
+      if SUBIR_A_WEB:
+          actualizar_webapp_github_automatico(fecha_jornada)
 
-  # 📲 BLOQUE 2: ENVIAR A CANALES DE TELEGRAM DE CLIENTES (Solo corre si ENVIAR_A_CLIENTES = True)
+  # 📲 BLOQUE 2: ENVIAR A CANALES DE TELEGRAM EN ORDEN DE PRIORIDAD (1º FREE 3/3 -> 2º VIP 4/4 -> 3º PRO)
+  # Enviar FREE y VIP ANTES que PRO evita que el volumen masivo de PRO agote el límite de Telegram (HTTP 429)
   if ENVIAR_A_CLIENTES:
-      # 1. CANAL PRO ($74.99): Recibe TODAS las tarjetas VIP (con estudio completo) + TODAS las tarjetas FREE de cada partido
-        for p in partidos_vip_finales:
+      print("\n" + "=" * 95)
+      print(f" 📲 INICIANDO ENTREGA VERIFICADA A CLIENTES: FREE ({len(top_3_free)}/3) -> VIP ({len(top_4_vip_clientes)}/4) -> PRO ({len(partidos_vip_finales)})")
+      print("=" * 95)
+
+      # --- 1. CANAL FREE: Envía EXACTAMENTE las 3 Tarjetas Gratuitas (idénticas a la Web) ---
+      enviados_free = 0
+      fallidos_free = []
+      for idx_f, p in enumerate(top_3_free[:3], start=1):
+          caption_free = (
+              f"🏆 <b>¡ANÁLISIS GRATUITO DE ÉLITE #{idx_f}/3! ({p['fecha']} - {p['hora']})</b> 🏆\n"
+              f"⚽️ <b>{p['local']} vs {p['visitante']}</b> ({p['liga_visual']}) ⚽️\n\n"
+              f"🤖 <i>¡Las 2 jugadas de mayor seguridad del encuentro!</i> 📈\n"
+              f"💎 <b>¿Quieres las cuotas altas y la Combinada VIP de hoy? Toca aquí:</b>\n"
+              f"👉 <a href='https://t.me/QuantBetSoporte_bot'>https://t.me/QuantBetSoporte_bot</a> 🚀"
+          )
+          if enviar_imagen_telegram(TOKEN_CARTERO, CHAT_ID_CLIENTES_FREE, p.get('ruta_free'), caption_free):
+              enviados_free += 1
+          else:
+              fallidos_free.append(f"{p['local']} vs {p['visitante']}")
+
+      if top_3_free:
+          mensaje_cta = (
+              "🔥 <b>¡ESTOS FUERON SOLO 3 REGALOS DE LA JORNADA!</b> 🔥\n\n"
+              "💎 <i>Las mejores cuotas del día y nuestras Combinadas Oficiales (Doble VIP y Sniper PRO) "
+              "ya fueron entregadas en nuestros canales privados.</i>\n\n"
+              "🌐 <b>Verifica nuestras auditorías diarias y desbloquea el acceso VIP en nuestra Web Oficial:</b>\n"
+              "👉 <a href='https://quantbet22.streamlit.app'>https://quantbet22.streamlit.app</a>\n"
+              "💬 <b>Soporte directo en Telegram:</b> <a href='https://t.me/QuantBetSoporte_bot'>https://t.me/QuantBetSoporte_bot</a>\n"
+              "🔞 <i>+18 | Análisis Estadístico Informativo. Modelos estadísticos aplicados al fútbol.</i>"
+          )
+          enviar_telegram(TOKEN_CARTERO, CHAT_ID_CLIENTES_FREE, mensaje_cta)
+          mensaje_gancho_diario = (
+              "🔥 <b>¡PRUEBA HOY EL CANAL VIP POR SOLO 1.00 USD!</b> 📉⚡\n\n"
+              "¿Quieres recibir hoy mismo las 4 Tarjetas VIP de cuota alta + la Combinada Doble y Triple Sniper sin cobros automáticos? 🧬\n\n"
+              "🎁 <b>PLANES DISPONIBLES (PROMOCIÓN HASTA EL 30 DE NOVIEMBRE):</b>\n"
+              "• 🔓 <b>Pase Diario VIP (1 Día / 24h):</b> Solo <b>1.00 USD</b>\n"
+              "• ⚡ <b>Pase 3 Días (Fin de Semana / Champions):</b> <b>4.99 USD</b>\n"
+              "• 💎 <b>Promo VIP 10 Días (Hasta 30 Nov):</b> <b>7.99 USD</b>\n"
+              "• 👑 <b>Promo PRO Cierre de Año (Todas las Ligas):</b> <b>49.99 USD</b> (Antes 74.99 USD)\n\n"
+              "🌐 <b>Actívalo en 1 clic en nuestra Web Oficial:</b>\n"
+              "👉 <a href='https://quantbet22.streamlit.app'>https://quantbet22.streamlit.app</a>\n\n"
+              "💬 <i>¿Prefieres pagar por Bizum, Nequi o USDT? Escríbenos aquí:</i> @QuantBetSoporte_bot 🚀"
+          )
+          enviar_telegram(TOKEN_CARTERO, CHAT_ID_CLIENTES_FREE, mensaje_gancho_diario)
+
+      # --- 2. CANAL VIP: Envía EXACTAMENTE las 4 Tarjetas VIP + Doble VIP + Triple Sniper VIP ---
+      enviados_vip = 0
+      fallidos_vip = []
+      for idx_v, p in enumerate(top_4_vip_clientes[:4], start=1):
+          caption_vip = (
+              f"💎 <b>SELECCIÓN VIP PREMIUM #{idx_v}/4 ({p['fecha']} - {p['hora']})</b> 💎\n"
+              f"🏟 <b>{p['local']} vs {p['visitante']}</b> ({p['liga_visual']})\n\n"
+              f"⚡ <i>Entradas seleccionadas por el Motor Quant (EV+).</i>\n"
+              f"💬 Soporte 24/7: <a href='https://t.me/QuantBetSoporte_bot'>https://t.me/QuantBetSoporte_bot</a>"
+          )
+          if enviar_imagen_telegram(TOKEN_CARTERO, CHAT_ID_CLIENTES_VIP, p.get('ruta_vip'), caption_vip):
+              enviados_vip += 1
+          else:
+              fallidos_vip.append(f"{p['local']} vs {p['visitante']}")
+
+      if ruta_img_doble:
+          enviar_imagen_telegram(
+              TOKEN_CARTERO,
+              CHAT_ID_CLIENTES_VIP,
+              ruta_img_doble,
+              f"🔥 <b>COMBINADA DOBLE INSTITUCIONAL VIP (Cuota > {info_doble['cuota_total']:.2f}x)</b>\n"
+              f"🛡️ <i>Efectividad con colchón: {info_doble['prob_protegida']:.1f}% | Combina estos 2 partidos distintos.</i>"
+          )
+
+      if ruta_img_sniper:
+          enviar_imagen_telegram(
+              TOKEN_CARTERO,
+              CHAT_ID_CLIENTES_VIP,
+              ruta_img_sniper,
+              f"🎯 <b>COMBINADA TRIPLE SNIPER VIP (Cuota > {info_sniper['cuota_total']:.2f}x)</b>\n"
+              f"🛡️ <i>Efectividad con protección: {info_sniper['prob_protegida']:.1f}% | 3 partidos seleccionados por el Motor Quant.</i>"
+          )
+
+      # --- 3. CANAL PRO: Recibe TODAS las tarjetas VIP (con estudio completo) + FREE + 5 Combinadas ---
+      enviados_pro = 0
+      for p in partidos_vip_finales:
           ruta_v = p.get('ruta_vip')
           ruta_f = p.get('ruta_free')
           if ruta_v and os.path.exists(str(ruta_v)):
               caption_pro_unificado = p.get('bloque_caption_pro') or p.get('bloque_texto', '')
-              enviar_imagen_telegram(
-                  TOKEN_CARTERO,
-                  CHAT_ID_CLIENTES_PRO,
-                  ruta_v,
-                  caption_pro_unificado
-              )
+              if enviar_imagen_telegram(TOKEN_CARTERO, CHAT_ID_CLIENTES_PRO, ruta_v, caption_pro_unificado):
+                  enviados_pro += 1
           if ruta_f and os.path.exists(str(ruta_f)):
               caption_free_pro = (
                   f"🟢 <b>TARJETA COMPLEMENTARIA FREE (2 JUGADAS DE SEGURIDAD)</b>\n"
                   f"🏟 <b>{p['local']} vs {p['visitante']}</b> ({p['fecha']} - {p['hora']})"
               )
-              enviar_imagen_telegram(
-                  TOKEN_CARTERO,
-                  CHAT_ID_CLIENTES_PRO,
-                  ruta_f,
-                  caption_free_pro
-              )
+              enviar_imagen_telegram(TOKEN_CARTERO, CHAT_ID_CLIENTES_PRO, ruta_f, caption_free_pro)
 
-        if ruta_img_doble:
+      if ruta_img_doble:
           enviar_imagen_telegram(
               TOKEN_CARTERO,
               CHAT_ID_CLIENTES_PRO,
@@ -5270,7 +5409,7 @@ def ejecutar_sistema_automatico(api_token):
               f"👉 Soporte 24/7: <a href='https://t.me/QuantBetSoporte_bot'>https://t.me/QuantBetSoporte_bot</a>"
           )
 
-        if ruta_img_sniper:
+      if ruta_img_sniper:
           enviar_imagen_telegram(
               TOKEN_CARTERO,
               CHAT_ID_CLIENTES_PRO,
@@ -5280,7 +5419,7 @@ def ejecutar_sistema_automatico(api_token):
               f"👉 Soporte 24/7: <a href='https://t.me/QuantBetSoporte_bot'>https://t.me/QuantBetSoporte_bot</a>"
           )
 
-        for t_pro_c, r_pro_c in tarjetas_pro_extra_generadas:
+      for t_pro_c, r_pro_c in tarjetas_pro_extra_generadas:
           enviar_imagen_telegram(
               TOKEN_CARTERO,
               CHAT_ID_CLIENTES_PRO,
@@ -5291,79 +5430,20 @@ def ejecutar_sistema_automatico(api_token):
               f"👉 Soporte 24/7: <a href='https://t.me/QuantBetSoporte_bot'>https://t.me/QuantBetSoporte_bot</a>"
           )
 
-        mensaje_cierre_pro = (
-      "🏁 <b>¡Escaneo completo entregado al Canal PRO!</b> ✅\n\n"
-      "🌐 <b>Sigue los resultados y la auditoría en vivo en nuestra Web Oficial:</b>\n"
-      "👉 <a href='https://quantbet22.streamlit.app'>https://quantbet22.streamlit.app</a>\n"
-      "💬 <b>Soporte Oficial 24/7:</b> <a href='https://t.me/QuantBetSoporte_bot'>https://t.me/QuantBetSoporte_bot</a>\n"
-      "🔞 <i>+18 | Opera con gestión de riesgo de Kelly y responsabilidad.</i>"
- )
-        enviar_telegram(TOKEN_CARTERO, CHAT_ID_CLIENTES_PRO, mensaje_cierre_pro)
-          # 2. CANAL FREE: Envía solo los 3 Partidazos Gratuitos
-        for p in top_3_free:
-              caption_free = (
-              f"🏆 <b>¡ANÁLISIS GRATUITO DE ÉLITE! ({p['fecha']} - {p['hora']})</b> 🏆\n"
-              f"⚽️ <b>{p['local']} vs {p['visitante']}</b> ({p['liga_visual']}) ⚽️\n\n"
-              f"🤖 <i>¡Las 2 jugadas de mayor seguridad del encuentro!</i> 📈\n"
-              f"💎 <b>¿Quieres las cuotas altas y la Combinada VIP de hoy? Toca aquí:</b>\n"
-              f"👉 <a href='https://t.me/QuantBetSoporte_bot'>https://t.me/QuantBetSoporte_bot</a> 🚀"
-          )
-              enviar_imagen_telegram(TOKEN_CARTERO, CHAT_ID_CLIENTES_FREE, p.get('ruta_free'), caption_free)
-
-        if top_3_free:
-          mensaje_cta = (
-         "🔥 <b>¡ESTOS FUERON SOLO 3 REGALOS DE LA JORNADA!</b> 🔥\n\n"
-         "💎 <i>Las mejores cuotas del día y nuestras Combinadas Oficiales (Doble VIP y Sniper PRO) "
-         "ya fueron entregadas en nuestros canales privados.</i>\n\n"
-         "🌐 <b>Verifica nuestras auditorías diarias y desbloquea el acceso VIP en nuestra Web Oficial:</b>\n"
-         "👉 <a href='https://quantbet22.streamlit.app'>https://quantbet22.streamlit.app</a>\n"
-         "💬 <b>Soporte directo en Telegram:</b> <a href='https://t.me/QuantBetSoporte_bot'>https://t.me/QuantBetSoporte_bot</a>\n"
-         "🔞 <i>+18 | Análisis Estadístico Informativo. Modelos estadísticos aplicados al fútbol.</i>"
-     )
-          enviar_telegram(TOKEN_CARTERO, CHAT_ID_CLIENTES_FREE, mensaje_cta)
-          # Mensaje automático diario de conversión al Pase VIP de 10 Días
-          mensaje_gancho_diario = (
-          "🔥 <b>¡PRUEBA HOY EL CANAL VIP POR SOLO 1.00 USD!</b> 📉⚡\n\n"
-          "¿Quieres recibir hoy mismo las 4 Tarjetas VIP de cuota alta + la Combinada Doble sin cobros automáticos? 🧬\n\n"
-          "🎁 <b>PLANES DISPONIBLES (PROMOCIÓN HASTA EL 30 DE NOVIEMBRE):</b>\n"
-          "• 🔓 <b>Pase Diario VIP (1 Día / 24h):</b> Solo <b>1.00 USD</b>\n"
-          "• ⚡ <b>Pase 3 Días (Fin de Semana / Champions):</b> <b>4.99 USD</b>\n"
-          "• 💎 <b>Promo VIP 10 Días (Hasta 30 Nov):</b> <b>7.99 USD</b>\n"
-          "• 👑 <b>Promo PRO Cierre de Año (Todas las Ligas):</b> <b>49.99 USD</b> (Antes 74.99 USD)\n\n"
-          "🌐 <b>Actívalo en 1 clic en nuestra Web Oficial:</b>\n"
-          "👉 <a href='https://quantbet22.streamlit.app'>https://quantbet22.streamlit.app</a>\n\n"
-          "💬 <i>¿Prefieres pagar por Bizum, Nequi o USDT? Escríbenos aquí:</i> @QuantBetSoporte_bot 🚀"
+      mensaje_cierre_pro = (
+          "🏁 <b>¡Escaneo completo entregado al Canal PRO!</b> ✅\n\n"
+          "🌐 <b>Sigue los resultados y la auditoría en vivo en nuestra Web Oficial:</b>\n"
+          "👉 <a href='https://quantbet22.streamlit.app'>https://quantbet22.streamlit.app</a>\n"
+          "💬 <b>Soporte Oficial 24/7:</b> <a href='https://t.me/QuantBetSoporte_bot'>https://t.me/QuantBetSoporte_bot</a>\n"
+          "🔞 <i>+18 | Opera con gestión de riesgo de Kelly y responsabilidad.</i>"
       )
-          enviar_telegram(TOKEN_CARTERO, CHAT_ID_CLIENTES_FREE, mensaje_gancho_diario)
+      enviar_telegram(TOKEN_CARTERO, CHAT_ID_CLIENTES_PRO, mensaje_cierre_pro)
 
-      # 3. CANAL VIP ($24.99): Envía las 4 Tarjetas VIP + Combinada Doble
-        for idx_v, p in enumerate(top_4_vip_clientes, start=1):
-          if p.get('ruta_vip'):
-              caption_vip = (
-                  f"💎 <b>SELECCIÓN VIP PREMIUM #{idx_v}/4 ({p['fecha']} - {p['hora']})</b> 💎\n"
-                  f"🏟 <b>{p['local']} vs {p['visitante']}</b> ({p['liga_visual']})\n\n"
-                  f"⚡ <i>Entradas seleccionadas por el Motor Quant (EV+).</i>\n"
-                  f"💬 Soporte 24/7: <a href='https://t.me/QuantBetSoporte_bot'>https://t.me/QuantBetSoporte_bot</a>"
-              )
-              enviar_imagen_telegram(TOKEN_CARTERO, CHAT_ID_CLIENTES_VIP, p.get('ruta_vip'), caption_vip)
-
-        if ruta_img_doble:
-          enviar_imagen_telegram(
-              TOKEN_CARTERO,
-              CHAT_ID_CLIENTES_VIP,
-              ruta_img_doble,
-              f"🔥 <b>COMBINADA DOBLE INSTITUCIONAL VIP (Cuota > {info_doble['cuota_total']:.2f}x)</b>\n"
-              f"🛡️ <i>Efectividad con colchón: {info_doble['prob_protegida']:.1f}% | Combina estos 2 partidos distintos.</i>"
-          )
-
-        if ruta_img_sniper:
-          enviar_imagen_telegram(
-              TOKEN_CARTERO,
-              CHAT_ID_CLIENTES_VIP,
-              ruta_img_sniper,
-              f"🎯 <b>COMBINADA TRIPLE SNIPER VIP (Cuota > {info_sniper['cuota_total']:.2f}x)</b>\n"
-              f"🛡️ <i>Efectividad con protección: {info_sniper['prob_protegida']:.1f}% | 3 partidos seleccionados por el Motor Quant.</i>"
-          )
+      print("=" * 95)
+      print(f" 📬 REPORTE VERIFICADO TELEGRAM: FREE {enviados_free}/{len(top_3_free[:3])} | VIP {enviados_vip}/{len(top_4_vip_clientes[:4])} | PRO {enviados_pro}/{len(partidos_vip_finales)}")
+      if fallidos_free or fallidos_vip:
+          print(f" ⚠️ FALLIDOS -> FREE: {fallidos_free} | VIP: {fallidos_vip}")
+      print("=" * 95)
 
   # Guardar las imágenes de descartes únicamente en la carpeta del PC (sin spamear Telegram)
   for p in partidos_descartes_finales:
