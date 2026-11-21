@@ -95,11 +95,11 @@ PERFILES_BASE_LIGAS = {
         "notas": "Ritmo medio-alto."
     },
     "turquia": {
-        "nombre": "Süper Lig Turquía", "bloqueada_ok": False, "activa_clientes": True,
+        "nombre": "Süper Lig Turquía (DESACTIVADA)", "bloqueada_ok": True, "activa_clientes": False,
         "mu_h": 1.58, "mu_a": 1.18, "rho_dc": -0.095, "xi_decay": 0.14, "kappa_bayes": 4.5,
         "phi_corners": 1.52, "phi_faltas": 1.88, "phi_remates": 1.40, "phi_tarjetas": 1.38,
         "peso_mercado_1x2": 0.64, "peso_mercado_goles": 0.50, "entropia_max_ganador": 0.935,
-        "notas": "Localías intensas y alta fricción."
+        "notas": "ELIMINADA de escaneo y clientes (solo clubes turcos si juegan UEFA)."
     },
     "arabia_saudita": {
         "nombre": "Saudi Pro League", "bloqueada_ok": False, "activa_clientes": True,
@@ -397,71 +397,90 @@ def entropia_shannon_1x2(p_h, p_d, p_a):
     return round(h / math.log(3.0), 4)
 
 
-def estimar_rho_mle_liga(df_liga, mu_h, mu_a):
+def estimar_rho_mle_liga(df_liga, mu_h, mu_a, rho_prior=-0.10):
     """
-    Maximiza la log-verosimilitud de Dixon-Coles ℓ(ρ) buscando el cero de su
-    derivada analítica dℓ/dρ = Σ (∂τ/∂ρ) / τ(ρ) = 0 sobre los marcadores reales de la liga.
+    Máxima Verosimilitud Penalizada (MAP) de Dixon-Coles (1997) condicionada a las tasas
+    esperadas POR EQUIPO (λ_H,k, λ_A,k) de la liga, resolviendo:
+      d/dρ [ Σ log τ(x_k, y_k; λ_H,k, λ_A,k, ρ)  -  (ρ - ρ_prior)² / (2 σ²) ] = 0
+    Evita el sesgo positivo de usar una sola media homogénea para toda la liga.
     """
     if df_liga is None or df_liga.empty or "FTHG" not in df_liga.columns or "FTAG" not in df_liga.columns:
-        return -0.10
+        return round(float(rho_prior), 4)
 
-    pares = []
-    for _, r in df_liga[["FTHG", "FTAG"]].dropna().tail(400).iterrows():
+    sub = df_liga.dropna(subset=["FTHG", "FTAG"]).tail(380).copy()
+    if len(sub) < 30:
+        return round(float(rho_prior), 4)
+
+    # Estimar ataque/defensa empíricos por equipo en esta liga para obtener (λ_H,k, λ_A,k) reales
+    tiene_eq = ("HomeTeam" in sub.columns) and ("AwayTeam" in sub.columns)
+    atq_h_m, def_h_m, atq_a_m, def_a_m = {}, {}, {}, {}
+    if tiene_eq:
+        for eq, grp in sub.groupby("HomeTeam"):
+            atq_h_m[eq] = (float(grp["FTHG"].sum()) + 4.0 * mu_h) / (len(grp) + 4.0) / max(mu_h, 0.4)
+            def_h_m[eq] = (float(grp["FTAG"].sum()) + 4.0 * mu_a) / (len(grp) + 4.0) / max(mu_a, 0.4)
+        for eq, grp in sub.groupby("AwayTeam"):
+            atq_a_m[eq] = (float(grp["FTAG"].sum()) + 4.0 * mu_a) / (len(grp) + 4.0) / max(mu_a, 0.4)
+            def_a_m[eq] = (float(grp["FTHG"].sum()) + 4.0 * mu_h) / (len(grp) + 4.0) / max(mu_h, 0.4)
+
+    obs = []
+    for _, r in sub.iterrows():
         try:
             x, y = int(float(r["FTHG"])), int(float(r["FTAG"]))
             if x <= 1 and y <= 1:
-                pares.append((x, y))
+                if tiene_eq:
+                    ht, at = r["HomeTeam"], r["AwayTeam"]
+                    lh = max(0.35, min(3.2, mu_h * atq_h_m.get(ht, 1.0) * def_a_m.get(at, 1.0)))
+                    la = max(0.25, min(2.8, mu_a * atq_a_m.get(at, 1.0) * def_h_m.get(ht, 1.0)))
+                else:
+                    lh, la = mu_h, mu_a
+                obs.append((x, y, lh, la))
         except Exception:
             continue
-    if len(pares) < 25:
-        return -0.10
+    if len(obs) < 25:
+        return round(float(rho_prior), 4)
 
-    def _derivada_ll(rho):
-        grad = 0.0
-        for x, y in pares:
+    sigma2 = 0.055 ** 2  # Regularización Bayesiana suave hacia la física Dixon-Coles de la liga
+
+    def _derivada_map(rho):
+        grad = -(rho - float(rho_prior)) / sigma2
+        for x, y, lh, la in obs:
             if x == 0 and y == 0:
-                tau = 1.0 - (mu_h * mu_a * rho)
-                dtau = -(mu_h * mu_a)
+                tau, dtau = 1.0 - (lh * la * rho), -(lh * la)
             elif x == 1 and y == 0:
-                tau = 1.0 + (mu_a * rho)
-                dtau = mu_a
+                tau, dtau = 1.0 + (la * rho), la
             elif x == 0 and y == 1:
-                tau = 1.0 + (mu_h * rho)
-                dtau = mu_h
-            else:  # 1-1
-                tau = 1.0 - rho
-                dtau = -1.0
+                tau, dtau = 1.0 + (lh * rho), lh
+            else:
+                tau, dtau = 1.0 - rho, -1.0
             if tau <= 0.05:
                 return -1e6 if dtau > 0 else 1e6
             grad += dtau / tau
         return grad
 
-    # Bisección sobre la derivada dℓ/dρ = 0 en el rango estable [-0.20, 0.03]
-    lo, hi = -0.20, 0.03
-    g_lo, g_hi = _derivada_ll(lo), _derivada_ll(hi)
+    lo, hi = -0.19, -0.01
+    g_lo, g_hi = _derivada_map(lo), _derivada_map(hi)
     if g_lo * g_hi > 0:
-        # El máximo está en uno de los extremos o es monótono; elegir por evaluación directa de ℓ(ρ)
-        mejor_rho, mejor_ll = -0.10, -1e18
-        for step in range(-20, 4):
+        mejor_rho, mejor_val = float(rho_prior), -1e18
+        for step in range(-19, 0):
             rh = step / 100.0
-            ll = 0.0
+            val = -((rh - float(rho_prior)) ** 2) / (2.0 * sigma2)
             ok = True
-            for x, y in pares:
-                if x == 0 and y == 0: tau = 1.0 - mu_h * mu_a * rh
-                elif x == 1 and y == 0: tau = 1.0 + mu_a * rh
-                elif x == 0 and y == 1: tau = 1.0 + mu_h * rh
+            for x, y, lh, la in obs:
+                if x == 0 and y == 0: tau = 1.0 - lh * la * rh
+                elif x == 1 and y == 0: tau = 1.0 + la * rh
+                elif x == 0 and y == 1: tau = 1.0 + lh * rh
                 else: tau = 1.0 - rh
                 if tau <= 0.05:
                     ok = False
                     break
-                ll += math.log(tau)
-            if ok and ll > mejor_ll:
-                mejor_ll, mejor_rho = ll, rh
+                val += math.log(tau)
+            if ok and val > mejor_val:
+                mejor_val, mejor_rho = val, rh
         return round(mejor_rho, 4)
 
     for _ in range(24):
         mid = (lo + hi) / 2.0
-        g_mid = _derivada_ll(mid)
+        g_mid = _derivada_map(mid)
         if g_lo * g_mid <= 0:
             hi, g_hi = mid, g_mid
         else:
@@ -531,7 +550,7 @@ def calibrar_ligas_desde_datos(df_europa=None, ruta_auditoria="auditoria_apuesta
             if len(sub_g) >= 25:
                 mu_h_new = round(max(0.95, min(2.10, float(sub_g["FTHG"].mean()))), 3)
                 mu_a_new = round(max(0.70, min(1.75, float(sub_g["FTAG"].mean()))), 3)
-                rho_new = estimar_rho_mle_liga(df_lg, mu_h_new, mu_a_new)
+                rho_new = estimar_rho_mle_liga(df_lg, mu_h_new, mu_a_new, rho_prior=PERFILES_BASE_LIGAS.get(lk, {}).get("rho_dc", -0.10))
                 cfg["mu_h"] = mu_h_new
                 cfg["mu_a"] = mu_a_new
                 cfg["gamma_localia"] = round(math.log(mu_h_new / max(mu_a_new, 0.3)), 4)
