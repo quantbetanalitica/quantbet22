@@ -17,6 +17,14 @@ import requests
 from generador_imagenes import generar_captura_automatica, generar_tarjeta_combinada
 from bot_soporte import ejecutar_centro_operaciones, reparar_y_leer_csv_auditoria
 from generador_videos_redes import generar_paquete_redes_sociales
+from motor_matematico_ligas import (
+    obtener_perfil_liga,
+    calcular_lambdas_log_lineal_liga,
+    integral_gamma_poisson_over,
+    entropia_shannon_1x2,
+    calibrar_ligas_desde_datos,
+    cargar_calibracion_ligas,
+)
 
 # Forzar codificación UTF-8 en consola de Windows para visualización perfecta de Emojis
 if os.name == "nt":
@@ -33,8 +41,8 @@ logging.basicConfig(
 )
 
 MODO_PRUEBAS = False
-ENVIAR_A_CLIENTES = False  # ⚠️ INTERRUPTOR TELEGRAM CLIENTES: True = envía tarjetas a canales FREE, VIP y PRO
-SUBIR_A_WEB = False        # 🌐 INTERRUPTOR PÁGINA WEB: True = sube los partidos del día y la auditoría a quantbet22.streamlit.app
+ENVIAR_A_CLIENTES = True  # ⚠️ INTERRUPTOR TELEGRAM CLIENTES: True = envía tarjetas a canales FREE, VIP y PRO
+SUBIR_A_WEB = True        # 🌐 INTERRUPTOR PÁGINA WEB: True = sube los partidos del día y la auditoría a quantbet22.streamlit.app
 ACTIVAR_BOT_AL_FINALIZAR = False  # En False termina el script al instante tras crear los videos
 
 # 📅 Si quieres adelantar el trabajo de mañana o del fin de semana, pon aquí la fecha (ej. "2026-10-27")
@@ -683,7 +691,7 @@ def guardar_tarjetas_en_carpeta_clientes(fecha_jornada, top_4_vip, top_3_free, r
   no se sobreescriba si se corre el script varias veces durante la tarde/noche.
   """
   archivo_json_oficial = f"clientes_enviados_{fecha_jornada}.json"
-  if os.path.exists(archivo_json_oficial) and not ENVIAR_A_CLIENTES:
+  if os.path.exists(archivo_json_oficial) and not ENVIAR_A_CLIENTES and "--recalcular" not in sys.argv:
     try:
       data_previa = json.load(open(archivo_json_oficial, encoding="utf-8"))
       vips_previas = [x for x in data_previa.get("tarjetas_clientes", []) if x.get("tipo_tarjeta") == "VIP"]
@@ -1138,7 +1146,7 @@ def evaluar_mercado_universal(mercado, goles_h, goles_a, g_ht, nombre_local="", 
     if goles_totales >= 3:
       return True
     elif goles_totales == 2:
-      return "Mitad"
+      return "Mitad Perdida"
     return False
   elif "asiatico > 2.75" in m_norm or "asiático > 2.75" in m_low:
     if goles_totales >= 4:
@@ -1281,8 +1289,12 @@ def resolver_apuestas_pendientes(api_token):
               icono_res = "✅"
             elif ganada == "Mitad":
               df.at[idx, "Estado"] = "Mitad Devuelta"
-              df.at[idx, "Retorno_COP"] = round(stake * 1.0, 2)
+              df.at[idx, "Retorno_COP"] = round(stake * ((1.0 + cuota_compra) / 2.0), 2)
               icono_res = "✅"
+            elif ganada == "Mitad Perdida":
+              df.at[idx, "Estado"] = "Perdida"
+              df.at[idx, "Retorno_COP"] = round(stake * 0.5, 2)
+              icono_res = "❌"
             else:
               df.at[idx, "Estado"] = "Perdida"
               df.at[idx, "Retorno_COP"] = 0.0
@@ -2567,6 +2579,173 @@ def calcular_prob_over_y_ev(lambda_val, linea):
   return prob_over, cuota_justa, cuota_min_ev
 
 
+def calcular_prob_over_negbin(mu, linea, phi=1.50):
+  """Distribución Binomial Negativa exacta (Var = phi * mu) para métricas sobredispersas
+  (Faltas, Córners, Remates y Tarjetas). Evita que Poisson infle líneas agresivas."""
+  if mu is None or mu <= 0:
+    return None, None, None
+  k_max = int(math.floor(linea))
+  if phi <= 1.02:
+    return calcular_prob_over_y_ev(mu, linea)
+  r = float(mu) / (float(phi) - 1.0)
+  p = 1.0 / float(phi)
+  q = 1.0 - p
+  p_under = 0.0
+  for k in range(k_max + 1):
+    log_pmf = (
+        math.lgamma(k + r) - math.lgamma(k + 1) - math.lgamma(r)
+        + r * math.log(p) + k * math.log(q)
+    )
+    p_under += math.exp(log_pmf)
+  prob_over = min(92.0, max(4.0, (1.0 - p_under) * 100.0))
+  cuota_justa = (100.0 / prob_over) if prob_over > 0 else 0
+  margen = obtener_margen_ev_dinamico(prob_over)
+  cuota_min_ev = max(1.10, cuota_justa * margen) if cuota_justa > 0 else 0
+  return round(prob_over, 2), cuota_justa, cuota_min_ev
+
+
+def resolver_reparto_lambdas_mercado_1x2(tot_goles, c1, cx, c2, rho=-0.10):
+  """Resuelve por bisección el reparto exacto (share_local) implícito en las cuotas reales 1X2
+  de la casa de apuestas dentro de la matriz Dixon-Coles, para anclar l_local_mat y l_vis_mat
+  ANTES de calcular 1X, X2, Combos 1X/X2+O1.5, BTTS y Goles por equipo."""
+  try:
+    c1, cx, c2 = float(c1), float(cx), float(c2)
+    if c1 <= 1.01 or cx <= 1.01 or c2 <= 1.01:
+      return None
+  except Exception:
+    return None
+  inv1, invx, inv2 = 1.0 / c1, 1.0 / cx, 1.0 / c2
+  s_inv = inv1 + invx + inv2
+  objetivo_diff = (inv1 - inv2) / s_inv  # (P_H - P_A) real sin margen de la casa
+
+  lo, hi = 0.14, 0.86
+  for _ in range(22):
+    mid = (lo + hi) / 2.0
+    lh = max(0.18, tot_goles * mid)
+    la = max(0.18, tot_goles * (1.0 - mid))
+    ph = pa = stot = 0.0
+    for i in range(7):
+      pi = poisson_prob(lh, i)
+      for j in range(7):
+        p_ij = max(0.0, pi * poisson_prob(la, j) * dixon_coles_adjustment(i, j, lh, la, rho))
+        stot += p_ij
+        if i > j:
+          ph += p_ij
+        elif j > i:
+          pa += p_ij
+    diff_mid = (ph - pa) / max(stot, 1e-9)
+    if diff_mid < objetivo_diff:
+      lo = mid
+    else:
+      hi = mid
+  return round((lo + hi) / 2.0, 4)
+
+
+_STANDINGS_MEMORIA_LIGA = {}
+
+def obtener_tabla_posiciones_liga_con_cache(liga_key):
+  """Descarga y guarda en caché diario (ESPN Standings API - 100% gratis) la tabla de posiciones
+  REAL de la temporada actual (ranking, puntos por partido, goles a favor/contra reales) para todas las ligas."""
+  global _STANDINGS_MEMORIA_LIGA
+  if MODO_PRUEBAS:
+    return {}
+  if liga_key in _STANDINGS_MEMORIA_LIGA:
+    return _STANDINGS_MEMORIA_LIGA[liga_key]
+
+  mapa_slugs_standings = {
+      "españa": "esp.1", "españa_2": "esp.2", "inglaterra": "eng.1",
+      "italia": "ita.1", "alemania": "ger.1", "francia": "fra.1",
+      "portugal": "por.1", "holanda": "ned.1", "turquia": "tur.1",
+      "arabia_saudita": "ksa.1", "brasil": "bra.1", "argentina": "arg.1",
+      "colombia": "col.1", "mexico": "mex.1", "usa": "usa.1",
+      "UEFA CHAMPIONS LEAGUE": "uefa.champions", "UEFA EUROPA LEAGUE": "uefa.europa",
+  }
+  slug = mapa_slugs_standings.get(liga_key)
+  if not slug:
+    _STANDINGS_MEMORIA_LIGA[liga_key] = {}
+    return {}
+
+  arch_st = f"cache_standings_ligas_{datetime.now().strftime('%Y-%m-%d')}.json"
+  cache_all = {}
+  if os.path.exists(arch_st):
+    try:
+      with open(arch_st, "r", encoding="utf-8") as f:
+        cache_all = json.load(f) or {}
+      if liga_key in cache_all:
+        _STANDINGS_MEMORIA_LIGA[liga_key] = cache_all[liga_key]
+        return cache_all[liga_key]
+    except Exception:
+      cache_all = {}
+
+  tabla_eq = {}
+  try:
+    r = requests.get(f"https://site.api.espn.com/apis/v2/sports/soccer/{slug}/standings", timeout=4.5)
+    if r.status_code == 200:
+      data = r.json() or {}
+      grupos = data.get("children") or [data]
+      entradas_tot = []
+      for gr in grupos:
+        ents = ((gr.get("standings") or {}).get("entries")) or []
+        entradas_tot.extend(ents)
+      n_tot = max(1, len(entradas_tot))
+      for idx_e, ent in enumerate(entradas_tot, start=1):
+        tm = ent.get("team") or {}
+        nom_t = str(tm.get("displayName") or tm.get("name") or "").strip()
+        if not nom_t:
+          continue
+        st_map = {}
+        for st_i in (ent.get("stats") or []):
+          k_s = str(st_i.get("name") or "").lower()
+          try:
+            st_map[k_s] = float(st_i.get("value"))
+          except Exception:
+            pass
+        pj = max(1.0, float(st_map.get("gamesplayed", 0.0) or 0.0))
+        pts = float(st_map.get("points", 0.0) or 0.0)
+        gf = float(st_map.get("pointsfor", 0.0) or 0.0)
+        ga = float(st_map.get("pointsagainst", 0.0) or 0.0)
+        rk = int(st_map.get("rank", idx_e) or idx_e)
+        if pj >= 2.0:
+          clave_n = normalizar_nombre_club(nom_t)
+          tabla_eq[clave_n] = {
+              "nombre": nom_t,
+              "pos": rk,
+              "n_equipos": n_tot,
+              "pj": int(pj),
+              "ppg": round(pts / pj, 3),
+              "gf_pg": round(gf / pj, 3),
+              "ga_pg": round(ga / pj, 3),
+              "gd_pg": round((gf - ga) / pj, 3),
+          }
+  except Exception:
+    pass
+
+  _STANDINGS_MEMORIA_LIGA[liga_key] = tabla_eq
+  cache_all[liga_key] = tabla_eq
+  try:
+    with open(arch_st, "w", encoding="utf-8") as f:
+      json.dump(cache_all, f, ensure_ascii=False)
+  except Exception:
+    pass
+  return tabla_eq
+
+
+def buscar_equipo_en_tabla_real(nombre_eq, tabla_liga):
+  if not tabla_liga or not nombre_eq:
+    return None
+  n_busq = normalizar_nombre_club(traductor_nombres.get(nombre_eq, nombre_eq))
+  if n_busq in tabla_liga:
+    return tabla_liga[n_busq]
+  toks_b = _tokens_match_cuotas(nombre_eq)
+  for k_t, val_t in tabla_liga.items():
+    if k_t in n_busq or n_busq in k_t:
+      return val_t
+    toks_t = _tokens_match_cuotas(k_t)
+    if toks_b and toks_t and (bool(toks_b & toks_t) or any(a[:5] == b[:5] for a in toks_b for b in toks_t if len(a) >= 5 and len(b) >= 5)):
+      return val_t
+  return None
+
+
 def calcular_total_asiatico(lambda_val, linea_asiatica):
   if linea_asiatica == 2.25:
     p_over2, _, _ = calcular_prob_over_y_ev(lambda_val, 2.0)
@@ -2944,6 +3123,57 @@ def motor_quant_institucional(
   media_l_c = float(media_l_c) if media_l_c is not None else 1.16
   media_v_a = float(media_v_a) if media_v_a is not None else 1.12
   media_v_c = float(media_v_c) if media_v_c is not None else 1.18
+
+  # INTEGRACIÓN DE CLASIFICACIÓN REAL DE LA TEMPORADA ACTUAL (2026-27) PARA TODAS LAS LIGAS
+  tabla_liga_actual = {} if (es_champions_femenina or es_seleccion_nacional) else obtener_tabla_posiciones_liga_con_cache(liga_key)
+  st_loc_real = buscar_equipo_en_tabla_real(local, tabla_liga_actual)
+  st_vis_real = buscar_equipo_en_tabla_real(visitante, tabla_liga_actual)
+
+  if st_loc_real and st_loc_real.get("pj", 0) >= 3:
+      # Si el club NO estaba en CSV, manda 100% su rendimiento real actual (NO el 1.24/1.16 ciego!)
+      peso_st_l = 0.85 if d_l.empty else 0.38
+      media_l_a = round((media_l_a * (1.0 - peso_st_l)) + (max(0.45, st_loc_real["gf_pg"] * 1.08) * peso_st_l), 3)
+      media_l_c = round((media_l_c * (1.0 - peso_st_l)) + (max(0.42, st_loc_real["ga_pg"] * 0.92) * peso_st_l), 3)
+  if st_vis_real and st_vis_real.get("pj", 0) >= 3:
+      peso_st_v = 0.85 if d_v.empty else 0.38
+      media_v_a = round((media_v_a * (1.0 - peso_st_v)) + (max(0.40, st_vis_real["gf_pg"] * 0.93) * peso_st_v), 3)
+      media_v_c = round((media_v_c * (1.0 - peso_st_v)) + (max(0.45, st_vis_real["ga_pg"] * 1.07) * peso_st_v), 3)
+
+  # PERFIL MATEMÁTICO INDEPENDIENTE DE ESTA LIGA (Aislado de selecciones y otras ligas)
+  cfg_liga_propia = obtener_perfil_liga(liga_key, is_america=is_america)
+  n_ef_muestra_partido = 10.0
+  usando_modelo_log_lineal_liga = False
+
+  if not es_seleccion_nacional and not es_champions_femenina:
+      gf_l_ser = d_l["FTHG"].dropna().tolist() if (not d_l.empty and "FTHG" in d_l.columns) else []
+      gc_l_ser = d_l["FTAG"].dropna().tolist() if (not d_l.empty and "FTAG" in d_l.columns) else []
+      gf_v_ser = d_v["FTAG"].dropna().tolist() if (not d_v.empty and "FTAG" in d_v.columns) else []
+      gc_v_ser = d_v["FTHG"].dropna().tolist() if (not d_v.empty and "FTHG" in d_v.columns) else []
+
+      if gf_l_ser or gf_v_ser or st_loc_real or st_vis_real:
+          res_ll = calcular_lambdas_log_lineal_liga(
+              liga_key, gf_l_ser, gc_l_ser, gf_v_ser, gc_v_ser,
+              is_america=is_america, st_loc_real=st_loc_real, st_vis_real=st_vis_real
+          )
+          l_local = res_ll["l_local"]
+          l_vis = res_ll["l_vis"]
+          media_l_a = res_ll["gf_h_post"]
+          media_l_c = res_ll["gc_h_post"]
+          media_v_a = res_ll["gf_a_post"]
+          media_v_c = res_ll["gc_a_post"]
+          n_ef_muestra_partido = max(2.0, min(res_ll["n_ef_local"], res_ll["n_ef_vis"]) + (4.0 if (st_loc_real and st_vis_real) else 0.0))
+          usando_modelo_log_lineal_liga = True
+
+  # Calidad real de información disponible para el partido (evita operar partidos a ciegas)
+  tiene_cuotas_casa_1x2 = bool(cuotas_bp and isinstance(cuotas_bp.get("1"), (int, float)) and isinstance(cuotas_bp.get("2"), (int, float)))
+  tiene_csv_ambos = (not d_l.empty) and (not d_v.empty)
+  tiene_tabla_ambos = bool(st_loc_real and st_vis_real)
+  if tiene_csv_ambos or (tiene_tabla_ambos and tiene_cuotas_casa_1x2):
+      calidad_datos = "ALTA"
+  elif tiene_cuotas_casa_1x2 or tiene_tabla_ambos or (not d_l.empty) or (not d_v.empty) or es_seleccion_nacional:
+      calidad_datos = "MEDIA"
+  else:
+      calidad_datos = "BAJA"
 
   # MEMORIA H2H DIRECTA DE ÚLTIMOS 14 DÍAS (Ajusta revanchas seguidas en Colombia / Copas)
   h2h_reciente_goles = None
@@ -3538,16 +3768,21 @@ def motor_quant_institucional(
       "internacional": 0.94
   }
   
-  peso_liga = FACTORES_LIGA.get(liga_key, 0.93 if is_america else 0.98)
-
   porosidad_defensiva = media_l_c_pura + media_v_c_pura
-  if liga_key == "arabia_saudita":
-      if porosidad_defensiva >= 2.32 and media_l_c_pura >= 1.12 and media_v_c_pura >= 1.12:
-          peso_liga = 0.99
-      elif media_l_c_pura <= 1.02 or media_v_c_pura <= 1.02:
-          peso_liga = 0.86
-
-  tot_goles = (l_local + l_vis) * peso_liga * factor_contextual * factor_derbi
+  if usando_modelo_log_lineal_liga:
+      # El modelo log-lineal YA incorpora μ_H y μ_A propios de esta liga: NO volver a multiplicar por FACTORES_LIGA
+      # (solo suavizamos el factor contextual a la mitad para no romper la calibración de liga)
+      factor_ctx_suave = 1.0 + ((factor_contextual - 1.0) * 0.45)
+      factor_derbi_suave = 0.94 if es_derbi else 1.00
+      tot_goles = (l_local + l_vis) * factor_ctx_suave * factor_derbi_suave
+  else:
+      peso_liga = FACTORES_LIGA.get(liga_key, 0.93 if is_america else 0.98)
+      if liga_key == "arabia_saudita":
+          if porosidad_defensiva >= 2.32 and media_l_c_pura >= 1.12 and media_v_c_pura >= 1.12:
+              peso_liga = 0.99
+          elif media_l_c_pura <= 1.02 or media_v_c_pura <= 1.02:
+              peso_liga = 0.86
+      tot_goles = (l_local + l_vis) * peso_liga * factor_contextual * factor_derbi
   
   if es_copa_nacional_latam:
     tot_goles = round(max(1.65, tot_goles * 0.92), 2)
@@ -3574,7 +3809,7 @@ def motor_quant_institucional(
   if lambda_goles_casa is not None:
     # En Champions Femenina (sin CSV histórico femenino) la línea real de Kambi/ESPN manda al 82%;
     # en ligas con CSV histórico completo pesa 38%, anclando la proyección sin exagerar goles en duelos cerrados
-    peso_casa_g = 0.82 if es_champions_femenina else (0.70 if (d_l.empty and d_v.empty) else 0.38)
+    peso_casa_g = 0.82 if es_champions_femenina else (0.72 if (d_l.empty and d_v.empty) else float(cfg_liga_propia.get('peso_mercado_goles', 0.45)))
     tot_goles = round((tot_goles * (1.0 - peso_casa_g)) + (lambda_goles_casa * peso_casa_g), 2)
     techo_g_real = max(3.35, min(5.50, lambda_goles_casa * 1.03))
     tot_goles = round(max(1.70, min(techo_g_real, tot_goles)), 2)
@@ -3622,19 +3857,36 @@ def motor_quant_institucional(
   cuota_05_2t = (100 / p_05_2t) if p_05_2t > 0 else 0
   c_min_05_2t = max(1.12, cuota_05_2t * obtener_margen_ev_dinamico(p_05_2t))
 
-  if tot_goles < 2.25: 
-      rho_dinamico = -0.18
-  elif tot_goles < 2.60: 
-      rho_dinamico = -0.13
-  elif tot_goles < 3.00: 
-      rho_dinamico = -0.08
-  else: 
-      rho_dinamico = -0.03
+  # Parámetro ρ de Dixon-Coles calibrado por Máxima Verosimilitud (MLE) propio de ESTA liga
+  rho_base_liga = float(cfg_liga_propia.get("rho_dc", -0.10))
+  ajuste_rho_vol = -0.025 if tot_goles < 2.20 else (0.025 if tot_goles > 3.10 else 0.0)
+  rho_dinamico = round(max(-0.22, min(0.03, rho_base_liga + ajuste_rho_vol)), 4)
+
+  # Ajuste continuo por fuerza real en tabla actual (PPG y diferencia de goles) cuando ambos clubes tienen clasificación
+  if st_loc_real and st_vis_real and st_loc_real.get("pj", 0) >= 4 and st_vis_real.get("pj", 0) >= 4:
+      delta_ppg = float(st_loc_real["ppg"]) - float(st_vis_real["ppg"])
+      delta_gd = float(st_loc_real["gd_pg"]) - float(st_vis_real["gd_pg"])
+      empuje_tabla = max(-0.22, min(0.22, (delta_ppg * 0.14) + (delta_gd * 0.08)))
+      l_local = max(0.35, l_local * (1.0 + empuje_tabla))
+      l_vis = max(0.35, l_vis * (1.0 - empuje_tabla))
 
   suma_l_cruda = max(l_local + l_vis, 0.2)
   escala_contextual = tot_goles / suma_l_cruda
   l_local_mat = l_local * escala_contextual
   l_vis_mat = l_vis * escala_contextual
+
+  # ANCLAJE DIRECTO DE LAMBDAS CON CUOTAS REALES 1X2 DE LA CASA ANTES DE DIXON-COLES
+  # (Asegura que 1X, X2, Victoria, Combo 1X/X2+O1.5, BTTS y Goles Equipo NUNCA contradigan la realidad del mercado)
+  if cuotas_bp and isinstance(cuotas_bp.get("1"), (int, float)) and isinstance(cuotas_bp.get("X"), (int, float)) and isinstance(cuotas_bp.get("2"), (int, float)):
+      share_mkt = resolver_reparto_lambdas_mercado_1x2(tot_goles, cuotas_bp["1"], cuotas_bp["X"], cuotas_bp["2"], rho=rho_dinamico)
+      if share_mkt is not None:
+          share_mod = l_local_mat / max(tot_goles, 0.2)
+          peso_base_1x2 = float(cfg_liga_propia.get("peso_mercado_1x2", 0.60))
+          peso_ancla = max(0.76, peso_base_1x2) if (d_l.empty or d_v.empty) else peso_base_1x2
+          share_final = (share_mod * (1.0 - peso_ancla)) + (share_mkt * peso_ancla)
+          share_final = max(0.14, min(0.86, share_final))
+          l_local_mat = round(tot_goles * share_final, 3)
+          l_vis_mat = round(tot_goles * (1.0 - share_final), 3)
 
   matriz_prob = {}
   suma_comprobacion = 0.0
@@ -3677,13 +3929,15 @@ def motor_quant_institucional(
               p_combo_1x_o15_mat += p_norm
           if j >= i:
               p_combo_x2_o15_mat += p_norm
-      if g_tot > 2.0: 
+      # En Asiático > 2.25 con 2 goles exactos se PIERDE media apuesta (NO es medio acierto!)
+      # Por eso p_over2_mat solo cuenta victorias limpias (>=3) + 15% de valor residual por devolución parcial en 2
+      if g_tot >= 3:
           p_over2_mat += p_norm
       elif g_tot == 2:
-          p_over2_mat += (p_norm * 0.50)
-      if g_tot > 2.5: 
+          p_over2_mat += (p_norm * 0.15)
+      if g_tot > 2.5:
           p_over25_mat += p_norm
-      if g_tot > 3.0: 
+      if g_tot >= 4:
           p_over3_mat += p_norm
       elif g_tot == 3:
           p_over3_mat += (p_norm * 0.50)
@@ -3769,7 +4023,7 @@ def motor_quant_institucional(
     p_d_bp = (inv_x / suma_inv) * 100.0
     p_a_bp = (inv_2 / suma_inv) * 100.0
     # En ligas con alta rotación de plantillas o paridad (Segunda, Arabia, Latam) la casa absorbe lesiones/fichajes en vivo -> 68% peso mercado
-    peso_mercado_1x2 = 0.68 if liga_key in ("españa_2", "arabia_saudita", "brasil", "colombia", "argentina", "mexico", "usa") else 0.58
+    peso_mercado_1x2 = float(cfg_liga_propia.get("peso_mercado_1x2", 0.60))
     p_h = (p_h * (1.0 - peso_mercado_1x2)) + (p_h_bp * peso_mercado_1x2)
     p_d = (p_d * (1.0 - peso_mercado_1x2)) + (p_d_bp * peso_mercado_1x2)
     p_a = (p_a * (1.0 - peso_mercado_1x2)) + (p_a_bp * peso_mercado_1x2)
@@ -3781,6 +4035,7 @@ def motor_quant_institucional(
   p_h = (p_h / suma_1x2) * 100.0
   p_d = (p_d / suma_1x2) * 100.0
   p_a = (p_a / suma_1x2) * 100.0
+  entropia_1x2 = entropia_shannon_1x2(p_h, p_d, p_a)
 
   cuota_asig225 = (100 / p_asig225) if p_asig225 > 0 else 0
   c_min_asig225 = max(1.10, cuota_asig225 * obtener_margen_ev_dinamico(p_asig225))
@@ -3953,9 +4208,15 @@ def motor_quant_institucional(
   if es_asedio_contra_bloque_bajo_eu or ataque_debil < 0.88:
       lambda_75_adj *= 0.88  # En cerrojo de un solo lado (Benfica-Alverca 1-0), frena la línea alta >7.5
 
-  p_tiros55, cuota_tiros55, c_min_tiros55 = calcular_prob_over_y_ev(tot_tiros, 5.5)
-  p_tiros65, cuota_tiros65, c_min_tiros65 = calcular_prob_over_y_ev(lambda_65_adj, 6.5)
-  p_tiros75, cuota_tiros75, c_min_tiros75 = calcular_prob_over_y_ev(lambda_75_adj, 7.5)
+  # Sobredispersión empírica φ propia de ESTA liga + Integral Gamma-Poisson de incertidumbre muestral
+  phi_rem_lg = float(cfg_liga_propia.get("phi_remates", 1.36)) + min(0.28, 1.0 / max(3.5, n_ef_muestra_partido + 3.0))
+  phi_fal_lg = float(cfg_liga_propia.get("phi_faltas", 1.80)) + min(0.32, 1.2 / max(3.5, n_ef_muestra_partido + 3.0))
+  phi_cor_lg = float(cfg_liga_propia.get("phi_corners", 1.48)) + min(0.28, 1.0 / max(3.5, n_ef_muestra_partido + 3.0))
+  phi_tar_lg = float(cfg_liga_propia.get("phi_tarjetas", 1.30)) + min(0.22, 0.9 / max(3.5, n_ef_muestra_partido + 3.0))
+
+  p_tiros55, cuota_tiros55, c_min_tiros55 = calcular_prob_over_negbin(tot_tiros, 5.5, phi=phi_rem_lg)
+  p_tiros65, cuota_tiros65, c_min_tiros65 = calcular_prob_over_negbin(lambda_65_adj, 6.5, phi=phi_rem_lg)
+  p_tiros75, cuota_tiros75, c_min_tiros75 = calcular_prob_over_negbin(lambda_75_adj, 7.5, phi=phi_rem_lg)
 
   # Ingeniería inversa: las casas de apuestas abren en >6.5 o >7.5; desactivar >5.5 para no ofrecer menos tiros que la casa
   p_tiros55 = min(p_tiros55 or 0.0, 52.0)
@@ -4004,11 +4265,12 @@ def motor_quant_institucional(
         l_vip = min(abiertas, key=lambda kv: abs(kv[1] - 1.50))[0]
     return round(l_free, 1), round(l_vip, 1)
 
-  linea_faltas_free, linea_faltas_vip = _elegir_linea_dinamica(tot_faltas, over_f_bp, 2.3, 0.8, 16.5, 25.5)
-  p_faltas_free, _, c_min_faltas_free = calcular_prob_over_y_ev(tot_faltas, linea_faltas_free)
-  p_faltas_vip, _, c_min_faltas_vip = calcular_prob_over_y_ev(tot_faltas, linea_faltas_vip)
-  p_faltas21, cuota_faltas21, c_min_faltas21 = calcular_prob_over_y_ev(tot_faltas, 21.5)
-  p_faltas22, cuota_faltas22, c_min_faltas22 = calcular_prob_over_y_ev(tot_faltas, 22.5)
+  # Colchón de seguridad real en Faltas (offset 3.5 FREE / 2.0 VIP, cap 23.5/24.5) + Binomial Negativa (phi=phi_fal_lg)
+  linea_faltas_free, linea_faltas_vip = _elegir_linea_dinamica(tot_faltas, over_f_bp, 3.5, 2.0, 16.5, 23.5)
+  p_faltas_free, _, c_min_faltas_free = calcular_prob_over_negbin(tot_faltas, linea_faltas_free, phi=phi_fal_lg)
+  p_faltas_vip, _, c_min_faltas_vip = calcular_prob_over_negbin(tot_faltas, linea_faltas_vip, phi=phi_fal_lg)
+  p_faltas21, cuota_faltas21, c_min_faltas21 = calcular_prob_over_negbin(tot_faltas, 21.5, phi=phi_fal_lg)
+  p_faltas22, cuota_faltas22, c_min_faltas22 = calcular_prob_over_negbin(tot_faltas, 22.5, phi=phi_fal_lg)
 
   nombre_dom_corn = None
   p_dom_corn = None
@@ -4067,8 +4329,8 @@ def motor_quant_institucional(
       p_dom_corn = p_c_vis45
       c_min_dom_corn = c_min_c_vis45
 
-  p_c75, cuota_c75, c_min_c75 = calcular_prob_over_y_ev(tot_corn, 7.5)
-  p_c85, cuota_c85, c_min_c85 = calcular_prob_over_y_ev(tot_corn, 8.5)
+  p_c75, cuota_c75, c_min_c75 = calcular_prob_over_negbin(tot_corn, 7.5, phi=phi_cor_lg)
+  p_c85, cuota_c85, c_min_c85 = calcular_prob_over_negbin(tot_corn, 8.5, phi=phi_cor_lg)
 
   base_l = tarj_l if tarj_l is not None else (base_faltas_l / 4.8)
   base_v = tarj_v if tarj_v is not None else (base_faltas_v / 4.8)
@@ -4113,7 +4375,7 @@ def motor_quant_institucional(
   elif tot_tarj >= 4.8: 
       linea_tarj = 4.5
       
-  p_t35, cuota_t35, c_min_t35 = calcular_prob_over_y_ev(tot_tarj, linea_tarj)
+  p_t35, cuota_t35, c_min_t35 = calcular_prob_over_negbin(tot_tarj, linea_tarj, phi=phi_tar_lg)
 
   factor_seguridad_combo = 0.84 if es_choque_elites else 1.00
   p_combo_1x_over15 = min(p_combo_1x_o15_mat * 100.0 * factor_seguridad_combo, 85.0)
@@ -4142,21 +4404,21 @@ def motor_quant_institucional(
   if lam_c_casa is not None:
     peso_c_k = 0.75 if es_champions_femenina else 0.50
     tot_corn = round((tot_corn * (1.0 - peso_c_k)) + (lam_c_casa * peso_c_k), 2)
-    p_c75, cuota_c75, c_min_c75 = calcular_prob_over_y_ev(tot_corn, 7.5)
-    p_c85, cuota_c85, c_min_c85 = calcular_prob_over_y_ev(tot_corn, 8.5)
+    p_c75, cuota_c75, c_min_c75 = calcular_prob_over_negbin(tot_corn, 7.5, phi=phi_cor_lg)
+    p_c85, cuota_c85, c_min_c85 = calcular_prob_over_negbin(tot_corn, 8.5, phi=phi_cor_lg)
 
   over_r_bp = (cuotas_bp or {}).get("over_remates") or {}
   under_r_bp = (cuotas_bp or {}).get("under_remates") or {}
   lam_r_casa = inferir_lambda_desde_cuotas(over_r_bp, under_r_bp, lam_min=4.0, lam_max=18.0)
   if lam_r_casa is not None:
-    # Opta/Kambi suele ser mucho más preciso en Tiros a Puerta (ej. MLS Orlando vs Cincinnati -> 9.5 @ 1.43)
     tot_tiros = round((tot_tiros * 0.25) + (lam_r_casa * 0.75), 2)
-    p_tiros65, cuota_tiros65, c_min_tiros65 = calcular_prob_over_y_ev(tot_tiros, 6.5)
-    p_tiros75, cuota_tiros75, c_min_tiros75 = calcular_prob_over_y_ev(tot_tiros, 7.5)
+    p_tiros65, cuota_tiros65, c_min_tiros65 = calcular_prob_over_negbin(tot_tiros, 6.5, phi=phi_rem_lg)
+    p_tiros75, cuota_tiros75, c_min_tiros75 = calcular_prob_over_negbin(tot_tiros, 7.5, phi=phi_rem_lg)
 
-  linea_tiros_free, linea_tiros_vip = _elegir_linea_dinamica(tot_tiros, over_r_bp, 1.8, 0.8, 6.5, 13.5)
-  p_tiros_free, _, c_min_tiros_free = calcular_prob_over_y_ev(tot_tiros, linea_tiros_free)
-  p_tiros_vip, _, c_min_tiros_vip = calcular_prob_over_y_ev(tot_tiros, linea_tiros_vip)
+  # Colchón de seguridad real en Remates (offset 2.4 FREE / 1.4 VIP) + Binomial Negativa
+  linea_tiros_free, linea_tiros_vip = _elegir_linea_dinamica(tot_tiros, over_r_bp, 2.4, 1.4, 6.5, 12.5)
+  p_tiros_free, _, c_min_tiros_free = calcular_prob_over_negbin(tot_tiros, linea_tiros_free, phi=phi_rem_lg)
+  p_tiros_vip, _, c_min_tiros_vip = calcular_prob_over_negbin(tot_tiros, linea_tiros_vip, phi=phi_rem_lg)
 
   # Goles 1T y 2T con soporte para línea 1.5 (cuando la casa cierra 0.5 en partidos abiertos como Orlando vs Cincinnati)
   over_1t_bp = (cuotas_bp or {}).get("over_goles_1t") or {}
@@ -4310,6 +4572,15 @@ def motor_quant_institucional(
       "p_15_2t": p_15_2t,
       "c_min_15_2t": c_min_15_2t,
       "lambda_goles_casa": lambda_goles_casa,
+      "calidad_datos": calidad_datos,
+      "entropia_1x2": entropia_1x2,
+      "entropia_max_ganador": float(cfg_liga_propia.get("entropia_max_ganador", 0.935)),
+      "rho_liga": rho_dinamico,
+      "liga_activa_clientes": bool(cfg_liga_propia.get("activa_clientes", True)),
+      "liga_bloqueada_ok": bool(cfg_liga_propia.get("bloqueada_ok", False)),
+      "asimetria_ataque": round(asimetria_ataque, 3),
+      "pos_local": st_loc_real.get("pos") if st_loc_real else None,
+      "pos_visita": st_vis_real.get("pos") if st_vis_real else None,
       "cuotas_reales_casa": cuotas_reales_casa,
       "cuotas_bp": cuotas_bp if cuotas_bp else {"1": "N/A", "X": "N/A", "2": "N/A"},
   }
@@ -5009,9 +5280,11 @@ def ejecutar_sistema_automatico(api_token):
               max(res_m.get("p_faltas22", 0), res_m.get("p_t35", 0))
           ] if p is not None and p >= 65.0
       )
-      es_confiable = True
-      res_m['es_confiable'] = True
-      res_m['puntos_confluencia'] = max(2, puntos_confluencia)
+      # Filtro real de calidad de datos: si un partido no tiene CSV ni Clasificación ni Cuotas reales (BAJA),
+      # va directo a DESCARTES para no inventar pronósticos a ciegas en los ~60 partidos del día
+      es_confiable = (res_m.get("calidad_datos", "MEDIA") != "BAJA") and (not (res_m.get("es_partido_trampa") and puntos_confluencia < 2))
+      res_m['es_confiable'] = es_confiable
+      res_m['puntos_confluencia'] = puntos_confluencia
 
       semaforo_gen = "🟢" if (res_m["es_sniper"] or puntos_confluencia >= 3) else ("🟡" if puntos_confluencia == 2 else "🔴")
       txt_copa_tag = " 🏆 [INTL/COPA]" if res_m["es_copa"] else (" ⚔️ [DERBI]" if res_m["es_derbi"] else "")
@@ -5269,6 +5542,7 @@ def ejecutar_sistema_automatico(api_token):
   candidatos_clientes_limpios = [
       p for p in candidatos_clientes
       if not p.get("ya_empezo")
+      and p.get("liga_activa_clientes", True)
       and not any(isla in f"{p.get('local','')} {p.get('visitante','')}".lower() for isla in islas_excluidas_clientes)
   ]
   if len(candidatos_clientes_limpios) >= 7:
@@ -5329,7 +5603,7 @@ def ejecutar_sistema_automatico(api_token):
           pass
 
   # 🌐 BLOQUE 1: REGISTRAR Y SUBIR A LA PÁGINA WEB (también guarda carpeta oficial si solo enviamos a clientes)
-  if SUBIR_A_WEB or ENVIAR_A_CLIENTES:
+  if SUBIR_A_WEB or ENVIAR_A_CLIENTES or ("--recalcular" in sys.argv):
       for p_free in top_3_free:
           auto_registrar_selecciones_tarjetas(p_free, 'FREE', fecha_jornada)
       for p_vip in top_4_vip_clientes:
@@ -5359,6 +5633,18 @@ def ejecutar_sistema_automatico(api_token):
       print("\n" + "=" * 95)
       print(f" 📲 INICIANDO ENTREGA VERIFICADA A CLIENTES: FREE ({len(top_3_free)}/3) -> VIP ({len(top_4_vip_clientes)}/4) -> PRO ({len(partidos_vip_finales)})")
       print("=" * 95)
+      if "--notificar-actualizacion" in sys.argv:
+          aviso_of_v7 = (
+              f"🔄 <b>ACTUALIZACIÓN OFICIAL JORNADA {fecha_jornada} — MOTOR QUANT v7</b> ✅\n\n"
+              "Activamos nuestra nueva <b>calibración matemática independiente por liga</b> "
+              "(Integral Gamma-Poisson + Dixon-Coles MLE + Entropía de Shannon) antes del inicio de los partidos de hoy.\n\n"
+              "📌 <b>IMPORTANTE:</b> Las tarjetas que reciben a continuación son las <b>OFICIALES y DEFINITIVAS</b> "
+              "de la jornada (sincronizadas al 100% con nuestra Web <a href='https://quantbet22.streamlit.app'>quantbet22.streamlit.app</a>). 👇"
+          )
+          enviar_telegram(TOKEN_CARTERO, CHAT_ID_CLIENTES_FREE, aviso_of_v7)
+          enviar_telegram(TOKEN_CARTERO, CHAT_ID_CLIENTES_VIP, aviso_of_v7)
+          enviar_telegram(TOKEN_CARTERO, CHAT_ID_CLIENTES_PRO, aviso_of_v7)
+          time.sleep(1.5)
 
       # --- 1. CANAL FREE: Envía EXACTAMENTE las 3 Tarjetas Gratuitas (idénticas a la Web) ---
       enviados_free = 0
@@ -5594,7 +5880,8 @@ def actualizar_webapp_github_automatico(fecha_jornada=None):
       archivos.append(f"cache_partidos_{f_str}.json")
   archivos.extend([
       "app_quantbet.py", "auditoria_apuestas.csv", "cache_boxscore_ft.json",
-      "bot_soporte.py", "mercados_optimizados.py", "generador_videos_redes.py",
+      "bot_soporte.py", "mercados_optimizados.py", "motor_matematico_ligas.py",
+      "calibracion_ligas.json", "generador_videos_redes.py",
       "generador_imagenes.py", "auditoria_ayer.py",
       "Montserrat-VariableFont_wght.ttf", "RobotoMono-VariableFont_wght.ttf", "fondo de quant bet.jpg",
   ])
@@ -5662,12 +5949,34 @@ if __name__ == "__main__":
   _args_cli = [a.strip() for a in sys.argv[1:] if a.strip() and not a.strip().startswith("--")]
   fecha_cli = _args_cli[0] if _args_cli else FECHA_OBJETIVO_MANUAL.strip()
   fecha_obj = fecha_cli if fecha_cli else datetime.now().strftime("%Y-%m-%d")
+  if "--calibrar-ligas" in sys.argv:
+      print("\n[🧬 CALIBRADOR MATEMÁTICO POR LIGA] Ejecutando MLE Dixon-Coles + Momentos φ por liga (respetando ligas bloqueadas)...")
+      df_eu_cal = obtener_base_maestra_europa_csv()
+      cal_res, tabla_res = calibrar_ligas_desde_datos(df_eu_cal, ARCHIVO_CSV_AUDITORIA)
+      print(f"{'LIGA':<18} | {'ESTADO':<14} | {'μ_H':>5} | {'μ_A':>5} | {'ρ_MLE':>7} | {'φ_CORN':>6} | {'φ_FALT':>6}")
+      print("-" * 78)
+      for lk, est, mh, ma, rh, pc, pf in tabla_res:
+          print(f"{lk:<18} | {est:<14} | {mh:>5.2f} | {ma:>5.2f} | {rh:>7.4f} | {pc:>6.2f} | {pf:>6.2f}")
+      print("\n[✅] calibracion_ligas.json actualizado. Las ligas con bloqueada_ok=true no fueron modificadas.")
+      sys.exit(0)
   if "--solo-subir-web" in sys.argv:
       actualizar_webapp_github_automatico(fecha_obj)
       print("\n[✅] SINCRONIZACIÓN WEB COMPLETADA.")
       sys.exit(0)
+  if "--recalcular" in sys.argv:
+      print(f"\n[♻️ MODO --recalcular] Limpiando pendientes futuros de ({fecha_obj}) para recalcular los partidos con el Motor Quant v6 (sin tocar días ya jugados)...")
+      if os.path.exists(ARCHIVO_CSV_AUDITORIA):
+          try:
+              df_rec = pd.read_csv(ARCHIVO_CSV_AUDITORIA, dtype=str)
+              es_pend_dia = (df_rec["Fecha_Registro"].astype(str).str[:10] == fecha_obj) & (df_rec["Estado"].astype(str).str.strip() == "Pendiente")
+              borradas = int(es_pend_dia.sum())
+              if borradas > 0:
+                  df_rec[~es_pend_dia].to_csv(ARCHIVO_CSV_AUDITORIA, index=False)
+                  print(f"    🧹 {borradas} fila(s) pendientes de ({fecha_obj}) limpiadas del CSV.")
+          except Exception as e_rec:
+              print(f"    ⚠️ Aviso limpiando CSV: {e_rec}")
   ejecutar_sistema_automatico(MI_TOKEN)
-  if SUBIR_A_WEB or ENVIAR_A_CLIENTES:
+  if SUBIR_A_WEB or ENVIAR_A_CLIENTES or ("--recalcular" in sys.argv):
       actualizar_webapp_github_automatico(fecha_obj)
   else:
       print(f"\n[🔒 MODO PRIVADO SOLO PARA TI] No se publicó nada de ({fecha_obj}) en los canales ni en la Web.")
