@@ -4032,11 +4032,12 @@ def motor_quant_institucional(
           p_under25 = max(35.0, p_under25 * 0.76)
           p_under35 = max(40.0, p_under35 * 0.72)
   else:
-      cola_gamma_latam = 1.0 - sum(poisson_prob(tot_goles * 1.14, k) for k in range(4))
-      p_under35 = max(38.0, (p_under35 - (cola_gamma_latam * 100.0 * 0.65)) * 0.78)
-      if porosidad_defensiva >= 2.25 and tot_goles >= 2.35:
-          p_under25 = max(36.0, p_under25 * 0.76)
-          p_under35 = max(38.0, p_under35 * 0.75)
+      # Solo penalizar Under en Latam si el partido es realmente abierto (tot_goles >= 2.40);
+      # en partidos cerrados (ej. Cali vs Millonarios 0-0), respetar la probabilidad real Dixon-Coles de Under 3.5 / 2.5
+      if porosidad_defensiva >= 2.28 and tot_goles >= 2.40:
+          cola_gamma_latam = 1.0 - sum(poisson_prob(tot_goles * 1.12, k) for k in range(4))
+          p_under25 = max(36.0, p_under25 * 0.80)
+          p_under35 = max(42.0, (p_under35 - (cola_gamma_latam * 100.0 * 0.40)) * 0.85)
 
   p_15_match = p_over15_mat * 100
   p_25_match, _, c_min_25 = calcular_prob_over_y_ev(tot_goles, 2.5)
@@ -4066,9 +4067,11 @@ def motor_quant_institucional(
       p_asig225 = min(p_asig225, 52.0)
       p_05_ht = min(p_05_ht, 58.0)
       p_05_2t = min(p_05_2t, 63.0)
-  elif tot_goles >= 2.18 or asimetria_ataque >= 0.35 or es_seleccion_nacional or es_torneo_copa or es_amistoso_intl:
+  elif tot_goles >= 2.55 or es_amistoso_intl:
       p_under25 = min(p_under25, 52.0)
-      p_under35 = min(p_under35, 55.0)
+      p_under35 = min(p_under35, 58.0)
+  elif tot_goles >= 2.38:
+      p_under25 = min(p_under25, 56.0)
 
   if es_segunda_div or es_torneo_africa or es_david_vs_goliath or (ataque_debil < 0.80 and tot_goles < 2.38):
       p_15_match = min(p_15_match, 66.5)
@@ -4230,9 +4233,9 @@ def motor_quant_institucional(
       "portugal":       {"tiros_eq": 3.85, "faltas_eq": 12.6, "conv_tiros": 0.97},
       "turquia":        {"tiros_eq": 4.00, "faltas_eq": 12.3, "conv_tiros": 0.98},
       "arabia_saudita": {"tiros_eq": 4.05, "faltas_eq": 10.3, "conv_tiros": 0.99},
-      "brasil":         {"tiros_eq": 3.60, "faltas_eq": 12.6, "conv_tiros": 0.94},
-      "argentina":      {"tiros_eq": 3.35, "faltas_eq": 13.0, "conv_tiros": 0.91},
-      "colombia":       {"tiros_eq": 3.45, "faltas_eq": 12.8, "conv_tiros": 0.92},
+      "brasil":         {"tiros_eq": 3.60, "faltas_eq": 11.6, "conv_tiros": 0.94},
+      "argentina":      {"tiros_eq": 3.35, "faltas_eq": 11.9, "conv_tiros": 0.91},
+      "colombia":       {"tiros_eq": 3.45, "faltas_eq": 11.5, "conv_tiros": 0.92},
       "mexico":         {"tiros_eq": 3.95, "faltas_eq": 11.6, "conv_tiros": 0.98},
       "usa":            {"tiros_eq": 4.30, "faltas_eq": 11.2, "conv_tiros": 1.04},
       "internacional":  {"tiros_eq": 3.70, "faltas_eq": 11.4, "conv_tiros": 0.95},
@@ -4307,8 +4310,13 @@ def motor_quant_institucional(
       base_faltas_v = (float(faltas_real_v) * 0.75) + (base_faltas_v * 0.25)
   tot_faltas = (base_faltas_l + base_faltas_v) + (factor_arb * 1.2)
   if es_torneo_copa: 
-      tot_faltas += (1.2 if es_copa_nacional_latam else 0.8)
-  tot_faltas = round(max(17.5, min(29.5, tot_faltas)), 2)
+      tot_faltas += (0.8 if es_copa_nacional_latam else 0.5)
+  # Acoplamiento físico Goles <-> Faltas (partido abierto con goles fluye más y tiene menos faltas; ej. Bucaramanga 2-2)
+  if tot_goles >= 2.65:
+      tot_faltas *= 0.91
+  elif tot_goles <= 2.15:
+      tot_faltas *= 1.03
+  tot_faltas = round(max(16.5, min(27.0, tot_faltas)), 2)
   if es_champions_femenina:
     # Fútbol femenino (UWCL): muchas menos faltas (media real 13.5 - 16.5) y ritmo más limpio que masculino
     tot_faltas = round(max(12.5, min(16.8, tot_faltas * 0.70)), 2)
@@ -4341,8 +4349,8 @@ def motor_quant_institucional(
         l_vip = min(abiertas, key=lambda kv: abs(kv[1] - 1.50))[0]
     return round(l_free, 1), round(l_vip, 1)
 
-  # Colchón de seguridad real en Faltas (offset 3.5 FREE / 2.0 VIP, cap 23.5/24.5) + Binomial Negativa (phi=phi_fal_lg)
-  linea_faltas_free, linea_faltas_vip = _elegir_linea_dinamica(tot_faltas, over_f_bp, 3.5, 2.0, 16.5, 23.5)
+  # Colchón de seguridad real en Faltas (offset 4.0 FREE / 2.5 VIP, cap 21.5 FREE / 22.5 VIP sin Kambi) + Binomial Negativa
+  linea_faltas_free, linea_faltas_vip = _elegir_linea_dinamica(tot_faltas, over_f_bp, 4.0, 2.5, 16.5, 21.5)
   p_faltas_free, _, c_min_faltas_free = calcular_prob_over_negbin(tot_faltas, linea_faltas_free, phi=phi_fal_lg)
   p_faltas_vip, _, c_min_faltas_vip = calcular_prob_over_negbin(tot_faltas, linea_faltas_vip, phi=phi_fal_lg)
   p_faltas21, cuota_faltas21, c_min_faltas21 = calcular_prob_over_negbin(tot_faltas, 21.5, phi=phi_fal_lg)
@@ -4388,9 +4396,12 @@ def motor_quant_institucional(
       base_corn_v = round(base_corn_v * 0.78, 2)
       tot_corn = round(max(6.4, min(8.9, (base_corn_l + base_corn_v) + (tiros_desviados_a_corner * 0.25))), 2)
   else:
+      # En partidos cerrados (tot_goles <= 2.25) hay menos llegadas a línea de fondo -> menos córners
+      if tot_goles <= 2.25 and not es_asedio_contra_bloque_bajo_eu:
+          tot_corn *= 0.90
       if tot_corn > 9.6:
           tot_corn = 9.6 + ((tot_corn - 9.6) * 0.45)
-      tot_corn = round(max(7.4, tot_corn), 2)
+      tot_corn = round(max(5.8, tot_corn), 2)
 
   p_c_loc45, _, c_min_c_loc45 = calcular_prob_over_y_ev(base_corn_l, 4.5)
   p_c_vis45, _, c_min_c_vis45 = calcular_prob_over_y_ev(base_corn_v, 4.5)
