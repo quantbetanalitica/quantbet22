@@ -272,7 +272,7 @@ CHAT_ID_AUDITORIAS_PRIVADO = "1491740882"
 LIGAS_OFICIALES_IDS = {
     140, 143, 141, 39, 45, 48, 135, 137, 78, 81, 61, 66,
     128, 130, 530, 239, 240, 533, 712, 307, 71, 73, 94, 96,
-    88, 90, 144, 203, 206, 197, 179, 2, 3, 848, 13, 11
+    88, 90, 144, 197, 179, 2, 3, 848, 13, 11
 }
 
 GIGANTES_TIER_1_MUNDIAL = [
@@ -1135,6 +1135,7 @@ def publicar_auditoria_nocturna_canal_free(fecha_auditar=None, enviar_a_clientes
     if not fecha_auditar:
         fecha_auditar = ahora_esp.strftime("%Y-%m-%d") if modo_horario == "noche" else (ahora_esp - timedelta(days=1)).strftime("%Y-%m-%d")
     headers = {"x-apisports-key": API_KEY_RESPALDO_AYER}
+    # Refrescar fecha_auditar + día siguiente (madrugada Sudamérica) y resolver TODAS las apuestas pendientes (FREE, VIP y PRO)
     m.obtener_datos_api_partidos(fecha_auditar, headers, forzar_refresco=True)
     m.resolver_apuestas_pendientes(API_KEY_RESPALDO_AYER)
 
@@ -1201,6 +1202,23 @@ def publicar_auditoria_nocturna_canal_free(fecha_auditar=None, enviar_a_clientes
         print(f"✅ Imagen + texto de auditoría ({fecha_auditar} | {modo_horario}) enviada a Bot de Auditorías, Canal FREE y Canal VIP.")
     else:
         print(f"✅ Imagen + texto de auditoría ({fecha_auditar} | {modo_horario}) enviada en MODO PRIVADO solo a tu Bot de Auditorías y Chat Privado.")
+
+    # En cierre matutino, enviar también tu Auditoría Completa del 100% de la jornada a tu Bot Privado de Auditorías
+    if modo_horario == "manana":
+        try:
+            fecha_sig_aud = (datetime.strptime(fecha_auditar, "%Y-%m-%d") + timedelta(days=1)).strftime("%Y-%m-%d")
+            m.auditar_todos_los_partidos_fecha_bot_auditorias(
+                fecha_sig_aud, m.obtener_ligas_permitidas_oficiales(), headers, API_KEY_RESPALDO_AYER
+            )
+        except Exception as e_aud2:
+            print(f"⚠️ Aviso en Auditoría Completa privada: {e_aud2}")
+
+    # Si corre desde tu PC (fuera de GitHub Actions), subir automáticamente auditoria_apuestas.csv y boxscores a la Web App
+    if not os.getenv("GITHUB_ACTIONS"):
+        try:
+            m.actualizar_webapp_github_automatico(fecha_auditar)
+        except Exception as e_sync:
+            print(f"⚠️ Aviso sincronizando auditoría con la Web App: {e_sync}")
 
 
 
