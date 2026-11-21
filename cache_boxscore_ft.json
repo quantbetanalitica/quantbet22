@@ -208,5 +208,19 @@
     "yellow_total": null,
     "cards_total": null,
     "has_stats": false
+  },
+  "401934690": {
+    "corners_home": 2.0,
+    "corners_away": 2.0,
+    "corners_total": 4.0,
+    "shots_on_target_home": 5.0,
+    "shots_on_target_away": 4.0,
+    "shots_on_target_total": 9.0,
+    "fouls_home": 9.0,
+    "fouls_away": 5.0,
+    "fouls_total": 14.0,
+    "yellow_total": 10.0,
+    "cards_total": 11.0,
+    "has_stats": true
   }
 }
