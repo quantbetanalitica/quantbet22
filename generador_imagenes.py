@@ -379,8 +379,9 @@ def generar_captura_automatica(res_m, tipo_filtro="DESCARTES"):
     es_colombia_o_argentina = is_america and ("COLOMBIA" in liga_vis or "ARGENTINA" in liga_vis)
     es_cerrojo_estricto_latam = es_colombia_o_argentina and tot_goles <= 1.88
 
-    if tot_corn >= 10.1:
-        p_c95, c_c95 = _prob_poisson_over(tot_corn, 9.5)
+    # Solo ofrecer Córners > 9.5 si el partido proyecta >= 11.4 córners (colchón real, evita el fallo de Troyes 3-1)
+    if tot_corn >= 11.4:
+        p_c95, c_c95 = _prob_poisson_over(tot_corn * 0.96, 9.5)
         lineas_corners_dinamicas = [
             ("Córners > 8.5", res_m.get('p_c85'), res_m.get('c_min_c85')),
             ("Córners > 9.5", p_c95, c_c95),
@@ -600,24 +601,46 @@ def generar_captura_automatica(res_m, tipo_filtro="DESCARTES"):
             except Exception:
                 pass
 
+        # Gate de Córners > 8.5 / Faltas altas: exigir colchón real (evitar fallos en líneas justas)
+        if nombre == "Córners > 8.5" and not over_corners_bp and tot_corn < 9.25:
+            continue
+        if nombre.startswith("Faltas Totales > "):
+            try:
+                lin_f_chk = float(nombre.split(">")[1].strip())
+                if lin_f_chk >= 24.5 and (tot_faltas_val - lin_f_chk) < 2.2 and nombre not in cuotas_reales_casa:
+                    continue
+            except Exception:
+                pass
+        if nombre.startswith("Remates Puerta > ") and not over_remates_bp:
+            try:
+                lin_r_chk = float(nombre.split(">")[1].strip())
+                if lin_r_chk >= 7.5 and tot_tiros < 9.3:
+                    continue
+            except Exception:
+                pass
+
         if nombre == "Total Asiático > 2.25":
-            if tot_goles < 2.52 or tot_goles >= 3.55:
+            # En Asiático > 2.25 se requieren 3 goles para ganar limpio: exigir tot_goles >= 2.85
+            if tot_goles < 2.85 or tot_goles >= 3.65 or prob < 62.0:
                 continue
-            if over_goles_bp and ((2.5 not in over_goles_bp and "2.5" not in over_goles_bp) or float(over_goles_bp.get(2.5) or over_goles_bp.get("2.5") or 9.0) < 1.32):
+            if over_goles_bp and ((2.5 not in over_goles_bp and "2.5" not in over_goles_bp) or float(over_goles_bp.get(2.5) or over_goles_bp.get("2.5") or 9.0) > 1.85):
                 continue
         if nombre == "Total Asiático > 2.75":
-            if tot_goles < 2.78 or tot_goles >= 4.05:
+            if tot_goles < 3.10 or tot_goles >= 4.20 or prob < 60.0:
                 continue
-            if over_goles_bp and ((2.5 not in over_goles_bp and "2.5" not in over_goles_bp) or float(over_goles_bp.get(2.5) or over_goles_bp.get("2.5") or 9.0) < 1.26):
+            if over_goles_bp and ((2.5 not in over_goles_bp and "2.5" not in over_goles_bp) or float(over_goles_bp.get(2.5) or over_goles_bp.get("2.5") or 9.0) > 1.65):
                 continue
 
-        # Gate de Goles 1T / 2T contra líneas reales de Kambi (si la 2ª parte empieza en 1.5, NO sacar 0.5!)
+        # Gate estricto de mercados de 45 min (Gol 1T / Gol 2T): evitar cuotas trampa 1.18 (ej. Bayern 1-1 al descanso)
+        asim_atq_gi = float(res_m.get("asimetria_ataque") or 0.0)
         if nombre == "Gol en 1T":
+            if tipo_filtro == "FREE" and tot_goles < 3.05:
+                continue
             if over_1t_bp:
                 odd_1t05 = over_1t_bp.get(0.5) or over_1t_bp.get("0.5")
-                if odd_1t05 is None or float(odd_1t05) < (1.30 if tipo_filtro == "VIP" else 1.14):
+                if odd_1t05 is None or float(odd_1t05) < (1.32 if tipo_filtro == "VIP" else 1.20):
                     continue
-            elif tot_goles < 2.75 or tot_goles >= 3.50 or prob < 69.0 or riesgo_corto_dc >= 24.0:
+            elif tot_goles < 2.95 or tot_goles >= 3.65 or prob < 72.0 or riesgo_corto_dc >= 22.0:
                 continue
         if nombre == "Goles 1T > 1.5":
             if over_1t_bp:
@@ -627,18 +650,25 @@ def generar_captura_automatica(res_m, tipo_filtro="DESCARTES"):
             elif tot_goles < 3.60 or prob < 58.0:
                 continue
         if nombre == "Gol en 2do Tiempo":
+            if tipo_filtro == "FREE" and tot_goles < 3.05:
+                continue
+            if asim_atq_gi >= 0.85:
+                # Favorito abrumador puede sentenciar en 1T y dormir el 2T
+                continue
             if over_2t_bp:
                 odd_2t05 = over_2t_bp.get(0.5) or over_2t_bp.get("0.5")
-                if odd_2t05 is None or float(odd_2t05) < (1.30 if tipo_filtro == "VIP" else 1.14):
+                if odd_2t05 is None or float(odd_2t05) < (1.32 if tipo_filtro == "VIP" else 1.20):
                     continue
-            elif tot_goles < 2.65 or tot_goles >= 3.35 or prob < 70.0 or riesgo_corto_dc >= 25.0:
+            elif tot_goles < 2.90 or tot_goles >= 3.55 or prob < 73.0 or riesgo_corto_dc >= 23.0:
                 continue
         if nombre == "Goles 2do Tiempo > 1.5":
+            if asim_atq_gi >= 0.85:
+                continue
             if over_2t_bp:
                 odd_2t15 = over_2t_bp.get(1.5) or over_2t_bp.get("1.5")
-                if odd_2t15 is None or float(odd_2t15) < 1.25 or float(odd_2t15) > 2.15:
+                if odd_2t15 is None or float(odd_2t15) < 1.32 or float(odd_2t15) > 2.05:
                     continue
-            elif tot_goles < 3.25 or prob < 58.0:
+            elif tot_goles < 3.65 or prob < 62.0:
                 continue
 
         # 4. Regla #4 + CANDADO ESTRICTO CONTRA CUOTAS REALES DE LA CASA EN 1X2 / DOBLE OPORT. / COMBOS
@@ -648,8 +678,10 @@ def generar_captura_automatica(res_m, tipo_filtro="DESCARTES"):
             c1x_bp = cuotas_bp_all.get("1X") if isinstance(cuotas_bp_all.get("1X"), (int, float)) else None
             cx2_bp = cuotas_bp_all.get("X2") if isinstance(cuotas_bp_all.get("X2"), (int, float)) else None
 
-            # En derbis y choques de élites (Al Ahli vs Al Nassr, São Paulo vs Fluminense) prohibir 1X/X2/Victoria/Combo
-            if es_derbi or (vis_protegido and loc_protegido):
+            # En derbis, choques de élites o partidos de Entropía de Shannon muy alta (moneda al aire), prohibir 1X/X2/Victoria/Combo
+            entropia_p = float(res_m.get("entropia_1x2") or 0.0)
+            entropia_lim = float(res_m.get("entropia_max_ganador") or 0.935)
+            if es_derbi or (vis_protegido and loc_protegido) or (entropia_p >= entropia_lim):
                 continue
 
             if "Doble Oport. 1X" == nombre:
