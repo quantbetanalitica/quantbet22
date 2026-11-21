@@ -180,5 +180,33 @@
     "yellow_total": 4.0,
     "cards_total": 4.0,
     "has_stats": true
+  },
+  "401931821": {
+    "corners_home": null,
+    "corners_away": null,
+    "corners_total": null,
+    "shots_on_target_home": null,
+    "shots_on_target_away": null,
+    "shots_on_target_total": null,
+    "fouls_home": null,
+    "fouls_away": null,
+    "fouls_total": null,
+    "yellow_total": null,
+    "cards_total": null,
+    "has_stats": false
+  },
+  "401934708": {
+    "corners_home": null,
+    "corners_away": null,
+    "corners_total": null,
+    "shots_on_target_home": null,
+    "shots_on_target_away": null,
+    "shots_on_target_total": null,
+    "fouls_home": null,
+    "fouls_away": null,
+    "fouls_total": null,
+    "yellow_total": null,
+    "cards_total": null,
+    "has_stats": false
   }
 }
