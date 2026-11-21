@@ -27,7 +27,7 @@ def _df_limpio_w(data, *a, **kw):
         d = data.copy()
         mp = dict([(str(p).split(" (")[0].strip().lower(), str(p)) for p in d["Partido"] if "(" in str(p)])
         d["Partido"] = d["Partido"].apply(lambda x: mp.get(str(x).strip().lower(), str(x)) if "(" not in str(x) else str(x))
-        sub = [c for c in ["Partido", "Mercado"] if c in d.columns]
+        sub = [c for c in ["Fecha y Hora Fin", "Partido", "Mercado"] if c in d.columns]
         d = d.drop_duplicates(subset=sub, keep="last")
         return _orig_df_w(d, *a, **kw)
     return _orig_df_w(data, *a, **kw)
@@ -671,7 +671,8 @@ def _completar_dos_selecciones(lista_sels, tipo_t="VIP", mercados_ya_usados=None
 
 
 PARTIDOS_EXCLUIDOS = (
-    "calvo sotelo", "cd minera", "utebo", "amorebieta", "portugalete", "real union", "real unión"
+    "calvo sotelo", "cd minera", "utebo", "amorebieta", "portugalete", "real union", "real unión",
+    "turquía (süper lig)", "turquia (super lig)", "süper lig"
 )
 
 
@@ -744,9 +745,9 @@ def cargar_mapa_resultados_caches():
     for f_api in fechas_api:
         try:
             r_as = requests.get(
-                f"https://v3.football.api-sports.io/fixtures?date={f_api}",
+                f"https://v3.football.api-sports.io/fixtures?date={f_api}&timezone=Europe/Madrid",
                 headers={"x-apisports-key": API_SPORTS_KEY},
-                timeout=3.5
+                timeout=6.0
             )
             if r_as.status_code == 200:
                 resp_as = r_as.json().get("response") or []
@@ -764,7 +765,7 @@ def cargar_mapa_resultados_caches():
 
                     if loc_a and vis_a and len(f_iso_a) >= 16:
                         try:
-                            dt_i_a = datetime.strptime(f_iso_a[:19], "%Y-%m-%dT%H:%M:%S") + timedelta(hours=1)
+                            dt_i_a = datetime.strptime(f_iso_a[:19], "%Y-%m-%dT%H:%M:%S") if ("+01:00" in f_iso_a or "+02:00" in f_iso_a) else (datetime.strptime(f_iso_a[:19], "%Y-%m-%dT%H:%M:%S") + timedelta(hours=1))
                             dt_f_a = dt_i_a + timedelta(hours=1, minutes=55)
                             mapa_horas_fin[f"{loc_a} vs {vis_a}"] = dt_f_a.strftime("%H:%M")
                             mapa_dt_fin[f"{loc_a} vs {vis_a}"] = dt_f_a
@@ -804,7 +805,7 @@ def cargar_mapa_resultados_caches():
         "ger.1", "ger.dfb_pokal",
         "fra.1", "fra.coupe_de_france",
         "por.1", "por.taca.portugal",
-        "ned.1", "bel.1", "tur.1", "gre.1", "sco.1", "ksa.1",
+        "ned.1", "bel.1", "gre.1", "sco.1", "ksa.1",
         "col.1", "col.2", "col.copa",
         "arg.1", "arg.copa",
         "bra.1", "bra.copa_do_brasil",
@@ -918,8 +919,9 @@ def cargar_mapa_resultados_caches():
 def buscar_resultado_inteligente(mapa_ft, id_partido, duelo_str, dia_str=None):
     if id_partido and str(id_partido) in mapa_ft:
         return mapa_ft[str(id_partido)]
-    duelo_low = str(duelo_str).strip().lower()
-    if not dia_str and duelo_low in mapa_ft:
+    # Quitar el sufijo de liga "(Colombia (Primera A))" antes de comparar equipos
+    duelo_low = str(duelo_str).split(" (")[0].strip().lower()
+    if duelo_low in mapa_ft:
         return mapa_ft[duelo_low]
     if " vs " in duelo_low:
         l_busq, v_busq = duelo_low.split(" vs ", 1)
@@ -929,7 +931,9 @@ def buscar_resultado_inteligente(mapa_ft, id_partido, duelo_str, dia_str=None):
         if dia_str:
             try:
                 dt_d = datetime.strptime(dia_str, "%Y-%m-%d")
+                # Incluir día anterior (CRÍTICO para Sudamérica y madrugada: acaban a las 00:30-05:30 del día siguiente)
                 fechas_validas = {
+                    (dt_d - timedelta(days=1)).strftime("%Y-%m-%d"),
                     dia_str,
                     (dt_d + timedelta(days=1)).strftime("%Y-%m-%d"),
                 }
@@ -1075,13 +1079,12 @@ def obtener_resumen_auditoria():
                 tabla.at[idx, "CLV_Status"] = f"FT {gh}-{ga}"
                 continue
 
-            dt_fin_exacto = mapa_dt_fin.get(id_k) or mapa_dt_fin.get(part_k.lower())
+            part_k_sin_liga = part_k.split(" (")[0].strip().lower()
+            dt_fin_exacto = mapa_dt_fin.get(id_k) or mapa_dt_fin.get(part_k_sin_liga)
             if not dt_fin_exacto:
-                hora_fin_est = mapa_horas_fin.get(id_k) or mapa_horas_fin.get(part_k.lower()) or (h_reg_r if len(h_reg_r) == 5 and ":" in h_reg_r else "21:55")
+                hora_fin_est = mapa_horas_fin.get(id_k) or mapa_horas_fin.get(part_k_sin_liga) or (h_reg_r if len(h_reg_r) == 5 and ":" in h_reg_r else "21:55")
                 try:
                     dt_fin_exacto = datetime.strptime(f"{dia_r} {hora_fin_est}", "%Y-%m-%d %H:%M")
-                    if dt_fin_exacto.hour < 6 and (dt_fin_exacto + timedelta(days=1)) <= ahora_esp:
-                        dt_fin_exacto += timedelta(days=1)
                 except Exception:
                     dt_fin_exacto = ahora_esp
 
@@ -1651,31 +1654,36 @@ def renderizar_panel_en_vivo_silencioso():
         def _calcular_orden_y_etiqueta(r):
             dia_s = str(r.get("Dia", "2026-10-23")).strip()
             id_s = str(r.get("ID_Partido", "")).strip()
-            part_s = str(r.get("Partido", "")).strip().lower()
+            part_s = str(r.get("Partido", "")).split(" (")[0].strip().lower()
 
             dt_real = mapa_dt_fin.get(id_s) or mapa_dt_fin.get(part_s)
             if dt_real and dt_real <= ahora_esp_tabla:
                 return pd.Series([dt_real, f"{dt_real.strftime('%Y-%m-%d')} | 🏁 {dt_real.strftime('%H:%M')}h (FT)"])
 
-            hora_f = mapa_horas_fin.get(id_s) or mapa_horas_fin.get(part_s)
-            if not hora_f:
-                h_reg = str(r.get("Hora_Reg", "")).strip()
-                hora_f = h_reg if (len(h_reg) == 5 and ":" in h_reg and h_reg != "00:03") else "22:55"
+            h_reg = str(r.get("Hora_Reg", "")).strip()
+            if len(h_reg) == 5 and ":" in h_reg and h_reg != "00:03":
+                try:
+                    dt_b = datetime.strptime(f"{dia_s} {h_reg}", "%Y-%m-%d %H:%M")
+                    return pd.Series([dt_b, f"{dt_b.strftime('%Y-%m-%d')} | 🏁 {dt_b.strftime('%H:%M')}h (FT)"])
+                except Exception:
+                    pass
+
+            hora_f = mapa_horas_fin.get(id_s) or mapa_horas_fin.get(part_s) or "22:55"
             try:
                 dt_b = datetime.strptime(f"{dia_s} {hora_f}", "%Y-%m-%d %H:%M")
-                if dt_b.hour < 6 and (dt_b + timedelta(days=1)) <= ahora_esp_tabla:
-                    dt_b += timedelta(days=1)
             except Exception:
                 dt_b = ahora_esp_tabla
             return pd.Series([dt_b, f"{dt_b.strftime('%Y-%m-%d')} | 🏁 {dt_b.strftime('%H:%M')}h (FT)"])
 
         df_cajon = df_hist_live.copy()
         df_cajon[["Orden_Real", "Fecha y Hora Fin"]] = df_cajon.apply(_calcular_orden_y_etiqueta, axis=1)
-        df_cajon = df_cajon[df_cajon["Orden_Real"] <= ahora_esp_tabla].copy()
+        # Mantener SIEMPRE cualquier fila que ya tenga marcador final (FT) verificado, sin descartarla por desfase horario
+        ya_ft_mask = df_cajon["CLV_Status"].astype(str).str.contains("FT", case=False, na=False)
+        df_cajon = df_cajon[(df_cajon["Orden_Real"] <= ahora_esp_tabla) | ya_ft_mask].copy()
         df_cajon["Semáforo"] = df_cajon["Estado"].apply(lambda x: "🟢 ✅ GANADA" if str(x) in ["Ganada", "Mitad Devuelta"] else "🔴 ❌ PERDIDA")
         df_cajon["Marcador"] = df_cajon["CLV_Status"].astype(str).str.replace("AUDITADA ", "", regex=False)
         df_cajon["Cuota"] = df_cajon["Cuota_Compra"]
-        df_cajon["Clave_Unica"] = df_cajon["Dia"].astype(str) + "__" + df_cajon["Partido"].astype(str).str.lower().str.strip()
+        df_cajon["Clave_Unica"] = df_cajon["Dia"].astype(str) + "__" + df_cajon["Partido"].astype(str).str.split(" \(").str[0].str.lower().str.strip()
         mapa_orden_p = df_cajon.groupby("Clave_Unica")["Orden_Real"].max().to_dict()
         mapa_etq_p = df_cajon.sort_values("Orden_Real", ascending=False).groupby("Clave_Unica")["Fecha y Hora Fin"].first().to_dict()
         df_cajon["Orden_Real"] = df_cajon["Clave_Unica"].map(mapa_orden_p)
@@ -1684,8 +1692,23 @@ def renderizar_panel_en_vivo_silencioso():
         df_cajon = df_cajon.drop_duplicates(subset=["Clave_Unica", "Mercado"], keep="first")
         df_cajon = df_cajon.sort_values(by=["Orden_Real", "Clave_Unica", "Mercado"], ascending=[False, True, True])
 
-        vista_cajon = df_cajon[["Semáforo", "Fecha y Hora Fin", "Partido", "Mercado", "Cuota", "Marcador"]]
-        st.dataframe(vista_cajon, hide_index=True, height=450)
+        # Selector rápido por jornada futbolera (Europa + Sudamérica / madrugada unificadas) para inspeccionar el 100% del día
+        jornadas_tabla = sorted(df_cajon["Jornada_Futbol"].dropna().unique().tolist(), reverse=True) if "Jornada_Futbol" in df_cajon.columns else []
+        opciones_filtro = ["🌐 Todas las jornadas (Histórico Completo)"] + [f"📅 Jornada {jf} (Europa + Sudamérica/Madrugada)" for jf in jornadas_tabla[:15]]
+        sel_tabla = st.selectbox("🔎 Filtrar Auditoría Completa por Jornada:", opciones_filtro, index=0, key="filtro_jornada_cajon_completo")
+        if sel_tabla.startswith("📅 Jornada "):
+            jf_eleg = sel_tabla.replace("📅 Jornada ", "").split(" ")[0].strip()
+            df_mostrar = df_cajon[df_cajon["Jornada_Futbol"] == jf_eleg].copy()
+        else:
+            df_mostrar = df_cajon
+
+        n_part_unicos = df_mostrar[~df_mostrar["Mercado"].astype(str).str.startswith(("[VIP DOBLE]", "[PRO SNIPER]"))]["Clave_Unica"].nunique()
+        n_picks_m = len(df_mostrar)
+        n_ok_m = int(df_mostrar["Estado"].isin(["Ganada", "Mitad Devuelta"]).sum())
+        st.caption(f"📊 Mostrando **{n_part_unicos} partidos finalizados** ({n_ok_m}/{n_picks_m} selecciones acertadas • {round((n_ok_m / max(1, n_picks_m)) * 100.0, 1)}%).")
+
+        vista_cajon = df_mostrar[["Semáforo", "Fecha y Hora Fin", "Partido", "Mercado", "Cuota", "Marcador"]]
+        st.dataframe(vista_cajon, hide_index=True, height=520)
 
 
 renderizar_panel_en_vivo_silencioso()
