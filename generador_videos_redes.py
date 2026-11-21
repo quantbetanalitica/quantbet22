@@ -586,7 +586,7 @@ def evaluar_mercado_contra_resultado_real(merc, gh, ga, g_ht, es_sudamerica=Fals
         if m_un:
             return tot < float(m_un.group(1))
     elif "asiatico > 2.25" in m_norm:
-        return tot >= 2
+        return tot >= 3
     elif "asiatico > 2.75" in m_norm:
         return tot >= 3
     elif "btts" in m_low or "ambos marcan" in m_low:
