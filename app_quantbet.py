@@ -565,7 +565,7 @@ def evaluar_mercado_real(merc, gh, ga, g_ht, duelo_str="", stats_reales=None):
         if m_un:
             return tot < float(m_un.group(1))
     elif "Asiático > 2.25" in m:
-        return tot >= 2
+        return tot >= 3
     elif "Asiático > 2.75" in m:
         return tot >= 3
     elif "BTTS" in m or "Ambos Marcan" in m:
