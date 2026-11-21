@@ -1,6 +1,6 @@
 import shutil
 import csv
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 import difflib
 import json
 import logging
@@ -41,8 +41,8 @@ logging.basicConfig(
 )
 
 MODO_PRUEBAS = False
-ENVIAR_A_CLIENTES = True  # ⚠️ INTERRUPTOR TELEGRAM CLIENTES: True = envía tarjetas a canales FREE, VIP y PRO
-SUBIR_A_WEB = True        # 🌐 INTERRUPTOR PÁGINA WEB: True = sube los partidos del día y la auditoría a quantbet22.streamlit.app
+ENVIAR_A_CLIENTES = False  # ⚠️ INTERRUPTOR TELEGRAM CLIENTES: True = envía tarjetas a canales FREE, VIP y PRO
+SUBIR_A_WEB = False        # 🌐 INTERRUPTOR PÁGINA WEB: True = sube los partidos del día y la auditoría a quantbet22.streamlit.app
 ACTIVAR_BOT_AL_FINALIZAR = False  # En False termina el script al instante tras crear los videos
 
 # 📅 Si quieres adelantar el trabajo de mañana o del fin de semana, pon aquí la fecha (ej. "2026-10-27")
@@ -114,7 +114,7 @@ def _obtener_partidos_respaldo_espn(fecha, datos_previos=None):
         "col.1": 239, "col.copa": 533, "col.2": 240,
         "ksa.1": 307, "bra.1": 71, "bra.copa_do_brasil": 73,
         "por.1": 94, "por.taca.portugal": 96,
-        "ned.1": 88, "tur.1": 203, "mex.1": 262, "usa.1": 253,
+        "ned.1": 88, "mex.1": 262, "usa.1": 253,
         "uefa.champions": 2, "uefa.europa": 3, "uefa.europa.conf": 848,
         "conmebol.libertadores": 13, "conmebol.sudamericana": 11,
         # SELECCIONES MAYORES (EUROPA, SUDAMÉRICA, CONCACAF, ÁFRICA Y ASIA) + CHAMPIONS FEMENINA
@@ -1226,23 +1226,99 @@ def resolver_apuestas_pendientes(api_token):
   if pendientes.empty:
     return
 
+  ahora_esp_res = datetime.now(timezone.utc).replace(tzinfo=None) + timedelta(hours=1)
+
+  # Asegurar que las fechas recientes con partidos pendientes ya terminados tengan su caché FT actualizado (Europa + Sudamérica)
+  fechas_pend_refrescar = set()
+  for _, rp in pendientes.iterrows():
+    f_rs = str(rp.get("Fecha_Registro", "")).strip()
+    try:
+      dt_rp = datetime.strptime(f_rs[:16], "%Y-%m-%d %H:%M")
+      if dt_rp <= ahora_esp_res and (ahora_esp_res - dt_rp).days <= 3:
+        fechas_pend_refrescar.add(dt_rp.strftime("%Y-%m-%d"))
+        fechas_pend_refrescar.add((dt_rp - timedelta(days=1)).strftime("%Y-%m-%d"))
+    except Exception:
+      pass
+
+  if fechas_pend_refrescar and not MODO_PRUEBAS and api_token:
+    headers_res = {"x-apisports-key": api_token}
+    for f_rf in sorted(fechas_pend_refrescar):
+      try:
+        _descargar_partidos_un_dia_api(f_rf, headers_res, forzar_refresco=False)
+      except Exception:
+        pass
+
   mapa_cache_local = {}
+  indice_toks_local = []
   for arch in sorted(os.listdir(".")):
     if arch.startswith("cache_partidos_") and arch.endswith(".json"):
+      f_arch_r = arch.replace("cache_partidos_", "").replace(".json", "")
       try:
         with open(arch, "r", encoding="utf-8") as f:
-          for item_f in json.load(f):
+          for item_f in json.load(f) or []:
             est_f = item_f.get("fixture", {}).get("status", {}).get("short", "")
             if est_f in ["FT", "AET", "PEN"]:
               fid = str(item_f.get("fixture", {}).get("id", ""))
-              loc_n = item_f.get("teams", {}).get("home", {}).get("name", "").strip().lower()
-              vis_n = item_f.get("teams", {}).get("away", {}).get("name", "").strip().lower()
+              loc_raw_f = item_f.get("teams", {}).get("home", {}).get("name", "").strip()
+              vis_raw_f = item_f.get("teams", {}).get("away", {}).get("name", "").strip()
+              loc_n = loc_raw_f.lower()
+              vis_n = vis_raw_f.lower()
               if fid:
                 mapa_cache_local[fid] = item_f
               if loc_n and vis_n:
                 mapa_cache_local[f"{loc_n} vs {vis_n}"] = item_f
+                mapa_cache_local[f"{normalizar_nombre_club(loc_raw_f)} vs {normalizar_nombre_club(vis_raw_f)}"] = item_f
+                indice_toks_local.append((f_arch_r, _tokens_match_cuotas(loc_raw_f), _tokens_match_cuotas(vis_raw_f), item_f))
       except Exception:
         pass
+
+  def _buscar_fixture_ft_pendiente(id_p_b, part_nom_b, dia_ref_b):
+    if id_p_b and id_p_b in mapa_cache_local:
+      return mapa_cache_local[id_p_b]
+    p_low = part_nom_b.lower()
+    if p_low in mapa_cache_local:
+      return mapa_cache_local[p_low]
+    if " vs " in p_low:
+      lb, vb = p_low.split(" vs ", 1)
+      clave_n = f"{normalizar_nombre_club(lb)} vs {normalizar_nombre_club(vb)}"
+      if clave_n in mapa_cache_local:
+        return mapa_cache_local[clave_n]
+      tl, tv = _tokens_match_cuotas(lb), _tokens_match_cuotas(vb)
+      fechas_ok = None
+      if dia_ref_b and len(dia_ref_b) == 10:
+        try:
+          dt_ref = datetime.strptime(dia_ref_b, "%Y-%m-%d")
+          fechas_ok = {
+              (dt_ref - timedelta(days=1)).strftime("%Y-%m-%d"),
+              dia_ref_b,
+              (dt_ref + timedelta(days=1)).strftime("%Y-%m-%d"),
+          }
+        except Exception:
+          fechas_ok = None
+      if tl and tv:
+        for f_c, tl_c, tv_c, it_c in indice_toks_local:
+          if fechas_ok and f_c not in fechas_ok:
+            continue
+          ok_l = bool(tl & tl_c) or any(a[:4] == b[:4] for a in tl for b in tl_c if len(a) >= 4 and len(b) >= 4)
+          ok_v = bool(tv & tv_c) or any(a[:4] == b[:4] for a in tv for b in tv_c if len(a) >= 4 and len(b) >= 4)
+          if ok_l and ok_v:
+            return it_c
+    # Último recurso: consultar directamente por ID en API-Sports si el partido ya terminó y no estaba en caché
+    if id_p_b and id_p_b.isdigit() and api_token and not MODO_PRUEBAS:
+      try:
+        r_id = requests.get(
+            f"https://v3.football.api-sports.io/fixtures?id={id_p_b}",
+            headers={"x-apisports-key": api_token},
+            timeout=4.5
+        )
+        if r_id.status_code == 200:
+          rl = r_id.json().get("response") or []
+          if rl and str((rl[0].get("fixture") or {}).get("status", {}).get("short") or "") in ["FT", "AET", "PEN"]:
+            mapa_cache_local[id_p_b] = rl[0]
+            return rl[0]
+      except Exception:
+        pass
+    return None
 
   cambios = False
   recien_resueltas = []
@@ -1250,13 +1326,13 @@ def resolver_apuestas_pendientes(api_token):
   for idx, row in pendientes.iterrows():
     f_reg_str = str(row.get("Fecha_Registro", "")).strip()
     try:
-      if datetime.strptime(f_reg_str[:16], "%Y-%m-%d %H:%M") > datetime.now():
+      if datetime.strptime(f_reg_str[:16], "%Y-%m-%d %H:%M") > ahora_esp_res:
         continue
     except Exception:
       pass
     id_p = str(row["ID_Partido"]).strip()
     part_nom = str(row["Partido"]).split(" (")[0].strip()
-    fixture = mapa_cache_local.get(id_p)
+    fixture = _buscar_fixture_ft_pendiente(id_p, part_nom, f_reg_str[:10])
 
     try:
       if fixture:
@@ -4901,7 +4977,7 @@ def construir_combinadas_exclusivas_pro(lista_partidos, info_doble=None, info_sn
   return tarjetas_pro
 
 
-COPAS_NACIONALES_EUROPA = {143, 45, 48, 137, 81, 66, 96, 90, 206}
+COPAS_NACIONALES_EUROPA = {143, 45, 48, 137, 81, 66, 96, 90}
 _EQUIPOS_PRIMERA_EUROPA_CACHE = None
 
 def es_partido_copa_europa_profesional(liga_id, local_nom, vis_nom):
@@ -4957,7 +5033,7 @@ def obtener_ligas_permitidas_oficiales():
       71: ("BRASIL (SERIE A)", "brasil"), 73: ("BRASIL (COPA DO BRASIL)", "brasil"),
       94: ("PORTUGAL (PRIMEIRA LIGA)", "portugal"), 96: ("PORTUGAL (TAÇA DE PORTUGAL)", "portugal"),
       88: ("PAÍSES BAJOS (EREDIVISIE)", "holanda"), 90: ("PAÍSES BAJOS (KNVB BEKER)", "holanda"),
-      203: ("TURQUÍA (SÜPER LIG)", "turquia"), 206: ("TURQUÍA (COPA)", "turquia"),
+      # Turquía eliminada
       262: ("MÉXICO (LIGA MX)", "mexico"), 253: ("USA (MLS)", "usa"),
       2: ("UEFA CHAMPIONS LEAGUE", "UEFA CHAMPIONS LEAGUE"), 3: ("UEFA EUROPA LEAGUE", "UEFA EUROPA LEAGUE"),
       848: ("UEFA CONFERENCE LEAGUE", "UEFA CONFERENCE LEAGUE"), 13: ("COPA LIBERTADORES", "COPA LIBERTADORES"),
@@ -5000,7 +5076,7 @@ def ejecutar_sistema_automatico(api_token):
       71: ("BRASIL (SERIE A)", "brasil"), 73: ("BRASIL (COPA DO BRASIL)", "brasil"),
       94: ("PORTUGAL (PRIMEIRA LIGA)", "portugal"), 96: ("PORTUGAL (TAÇA DE PORTUGAL)", "portugal"),
       88: ("PAÍSES BAJOS (EREDIVISIE)", "holanda"), # 90: ("PAÍSES BAJOS (KNVB BEKER)", "holanda"),
-      203: ("TURQUÍA (SÜPER LIG)", "turquia"), # 206: ("TURQUÍA (COPA)", "turquia"),
+      # Turquía eliminada
       262: ("MÉXICO (LIGA MX)", "mexico"), 253: ("USA (MLS)", "usa"),
       2: ("UEFA CHAMPIONS LEAGUE", "UEFA CHAMPIONS LEAGUE"), 3: ("UEFA EUROPA LEAGUE", "UEFA EUROPA LEAGUE"),
       848: ("UEFA CONFERENCE LEAGUE", "UEFA CONFERENCE LEAGUE"), 13: ("COPA LIBERTADORES", "COPA LIBERTADORES"),
@@ -5271,18 +5347,18 @@ def ejecutar_sistema_automatico(api_token):
       puntos_confluencia = sum(
           1 for p in [
               max(res_m["p_1x"], res_m["p_x2"]),
-              max(res_m["p_15_match"], res_m.get("p_under25", 0)),
+              max(res_m["p_15_match"], res_m.get("p_under25", 0), res_m.get("p_under35", 0)),
               res_m["p_btts"],
               res_m["p_asig225"],
               res_m.get("p_05_2t"),
               res_m.get("p_c75"),
-              res_m.get("p_tiros65"),
-              max(res_m.get("p_faltas22", 0), res_m.get("p_t35", 0))
-          ] if p is not None and p >= 65.0
+              max(res_m.get("p_tiros_free") or 0, res_m.get("p_tiros65") or 0),
+              max(res_m.get("p_faltas_free") or 0, res_m.get("p_faltas22") or 0, res_m.get("p_t35") or 0)
+          ] if p is not None and p >= 60.0
       )
-      # Filtro real de calidad de datos: si un partido no tiene CSV ni Clasificación ni Cuotas reales (BAJA),
-      # va directo a DESCARTES para no inventar pronósticos a ciegas en los ~60 partidos del día
-      es_confiable = (res_m.get("calidad_datos", "MEDIA") != "BAJA") and (not (res_m.get("es_partido_trampa") and puntos_confluencia < 2))
+      # Filtro real de calidad de datos: solo manda a DESCARTES partidos sin datos reales (BAJA)
+      # Los partidos cerrados con datos reales (ej. Colombia/Argentina) SÍ generan tarjetas y auditoría
+      es_confiable = (res_m.get("calidad_datos", "MEDIA") != "BAJA")
       res_m['es_confiable'] = es_confiable
       res_m['puntos_confluencia'] = puntos_confluencia
 
@@ -5369,7 +5445,7 @@ def ejecutar_sistema_automatico(api_token):
           res_m['seleccion_free'] = res_m_copia.get('seleccion_free', [])
           res_m['ruta_free'] = ruta_final_free
 
-          if SUBIR_A_WEB or ENVIAR_A_CLIENTES or os.path.exists(f"clientes_enviados_{fecha_jornada}.json"):
+          if SUBIR_A_WEB or ENVIAR_A_CLIENTES or ("--recalcular" in sys.argv) or os.path.exists(f"clientes_enviados_{fecha_jornada}.json"):
               auto_registrar_selecciones_tarjetas(res_m, "VIP", fecha_jornada)
               auto_registrar_selecciones_tarjetas(res_m, "FREE", fecha_jornada)
 
@@ -5963,16 +6039,93 @@ if __name__ == "__main__":
       actualizar_webapp_github_automatico(fecha_obj)
       print("\n[✅] SINCRONIZACIÓN WEB COMPLETADA.")
       sys.exit(0)
+  if "--recuperar-jornada" in sys.argv:
+      print(f"\n[🔧 RECUPERADOR DE JORNADA {fecha_obj}] Reconstruyendo partidos faltantes o incompletos (Europa + Sudamérica/Madrugada) con FT y Boxscore reales...")
+      hdrs_rec = {"x-apisports-key": MI_TOKEN}
+      ligas_of = obtener_ligas_permitidas_oficiales()
+      dt_r_base = datetime.strptime(fecha_obj, "%Y-%m-%d")
+      ini_v_r = dt_r_base + timedelta(hours=7)
+      fin_v_r = dt_r_base + timedelta(days=1, hours=6, minutes=59)
+      partidos_dia_r = obtener_datos_api_partidos(fecha_obj, hdrs_rec, forzar_refresco=True)
+      df_csv_r = limpiar_registros_automaticos_csv()
+      cuotas_r = {}
+      agregados_r = 0
+      for p_r in partidos_dia_r:
+          try:
+              lid_r = p_r.get("league", {}).get("id")
+              if lid_r not in ligas_of:
+                  continue
+              loc_r = p_r["teams"]["home"]["name"].strip()
+              vis_r = p_r["teams"]["away"]["name"].strip()
+              if es_seleccion_juvenil_o_femenina(loc_r, vis_r, p_r.get("league", {}).get("name", ""), lid_r):
+                  continue
+              if not es_partido_copa_europa_profesional(lid_r, loc_r, vis_r):
+                  continue
+              f_iso_r = str(p_r["fixture"]["date"])
+              dt_p_r = datetime.strptime(f_iso_r[:19], "%Y-%m-%dT%H:%M:%S") if ("+01:00" in f_iso_r or "+02:00" in f_iso_r) else (datetime.strptime(f_iso_r[:19], "%Y-%m-%dT%H:%M:%S") + timedelta(hours=1))
+              if not (ini_v_r <= dt_p_r <= fin_v_r):
+                  continue
+              est_r = str(p_r["fixture"]["status"]["short"])
+              if est_r not in ["FT", "AET", "PEN"]:
+                  continue
+              id_pr = str(p_r["fixture"]["id"])
+              lv_r, lk_r = ligas_of[lid_r]
+              p_nom_r = f"{loc_r} vs {vis_r} ({lv_r.title()})"
+              ya_v = ya_f = 0
+              if not df_csv_r.empty:
+                  m_match = (df_csv_r["ID_Partido"].astype(str) == id_pr) | (df_csv_r["Partido"].astype(str).str.split(" \(").str[0].str.lower().str.strip() == f"{loc_r} vs {vis_r}".lower())
+                  sub_r = df_csv_r[m_match]
+                  ya_v = int(sub_r["Mercado"].astype(str).str.startswith("[VIP]").sum())
+                  ya_f = int(sub_r["Mercado"].astype(str).str.startswith("[FREE]").sum())
+              if ya_v >= 2 and ya_f >= 2:
+                  continue
+              res_r = motor_quant_institucional(
+                  lv_r, lk_r, loc_r, vis_r, p_r["teams"]["home"]["id"], p_r["teams"]["away"]["id"],
+                  id_pr, dt_p_r.strftime("%Y-%m-%d"), dt_p_r.strftime("%H:%M"),
+                  arbitro=p_r["fixture"].get("referee"), api_token=MI_TOKEN, cuotas_bp=cuotas_r
+              )
+              if not res_r:
+                  continue
+              generar_captura_automatica(res_r, "VIP")
+              generar_captura_automatica(res_r, "FREE")
+              if ya_v < 2:
+                  auto_registrar_selecciones_tarjetas(res_r, "VIP", fecha_obj)
+                  agregados_r += 1
+              if ya_f < 2:
+                  auto_registrar_selecciones_tarjetas(res_r, "FREE", fecha_obj)
+                  agregados_r += 1
+              df_csv_r = limpiar_registros_automaticos_csv()
+              print(f"    ✅ Recuperado: {p_nom_r} (VIP faltaba={ya_v < 2}, FREE faltaba={ya_f < 2})")
+          except Exception as e_rk:
+              continue
+      resolver_apuestas_pendientes(MI_TOKEN)
+      actualizar_webapp_github_automatico(fecha_obj)
+      print(f"\n[✅] RECUPERACIÓN COMPLETADA ({agregados_r} bloques VIP/FREE restaurados y auditados con FT/Boxscore reales).")
+      sys.exit(0)
   if "--recalcular" in sys.argv:
-      print(f"\n[♻️ MODO --recalcular] Limpiando pendientes futuros de ({fecha_obj}) para recalcular los partidos con el Motor Quant v6 (sin tocar días ya jugados)...")
+      print(f"\n[♻️ MODO --recalcular] Limpiando SOLO pendientes de la ventana futbolera de ({fecha_obj} 07:00 -> +1d 08:55) sin tocar la madrugada de ayer...")
       if os.path.exists(ARCHIVO_CSV_AUDITORIA):
           try:
               df_rec = pd.read_csv(ARCHIVO_CSV_AUDITORIA, dtype=str)
-              es_pend_dia = (df_rec["Fecha_Registro"].astype(str).str[:10] == fecha_obj) & (df_rec["Estado"].astype(str).str.strip() == "Pendiente")
-              borradas = int(es_pend_dia.sum())
+              dt_obj_f = datetime.strptime(fecha_obj, "%Y-%m-%d")
+              ini_limp = dt_obj_f + timedelta(hours=7)
+              fin_limp = dt_obj_f + timedelta(days=1, hours=8, minutes=55)
+              def _en_ventana_limpieza(row_l):
+                  if str(row_l.get("Estado", "")).strip() != "Pendiente":
+                      return False
+                  # También limpiar cualquier partido pendiente de Turquía (liga eliminada)
+                  if "turqu" in str(row_l.get("Partido", "")).lower():
+                      return True
+                  try:
+                      dt_r = datetime.strptime(str(row_l.get("Fecha_Registro", ""))[:16], "%Y-%m-%d %H:%M")
+                      return ini_limp <= dt_r <= fin_limp
+                  except Exception:
+                      return False
+              mask_limp = df_rec.apply(_en_ventana_limpieza, axis=1)
+              borradas = int(mask_limp.sum())
               if borradas > 0:
-                  df_rec[~es_pend_dia].to_csv(ARCHIVO_CSV_AUDITORIA, index=False)
-                  print(f"    🧹 {borradas} fila(s) pendientes de ({fecha_obj}) limpiadas del CSV.")
+                  df_rec[~mask_limp].to_csv(ARCHIVO_CSV_AUDITORIA, index=False)
+                  print(f"    🧹 {borradas} fila(s) pendientes de la jornada ({fecha_obj}) limpiadas (madrugada de ayer intacta).")
           except Exception as e_rec:
               print(f"    ⚠️ Aviso limpiando CSV: {e_rec}")
   ejecutar_sistema_automatico(MI_TOKEN)
