@@ -719,9 +719,9 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-10-28 20:20:50,1550176,Venezia vs Inter (Italia - Serie A),[VIP] Tarjetas > 4.5,1.74,1.74,68.0,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,8700.0,AUDITADA FT 0-2
 2026-10-28 20:20:50,1550176,Venezia vs Inter (Italia - Serie A),[FREE] Faltas Totales > 21.5,1.18,1.18,84.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 0-2
 2026-10-28 20:20:50,1550176,Venezia vs Inter (Italia - Serie A),[FREE] Gol en 2do Tiempo,1.18,1.18,81.2,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 0-2
-2026-10-28 20:21:15,1644382,Trival Valderas vs Leganes (Copa del Rey),[VIP] Tarjetas > 3.5,1.45,PENDIENTE_CLV,70.5,🟢 [LUZ VERDE / ALTO VALOR],1200.0,Pendiente,0.0,AUDITANDO
-2026-10-28 20:21:15,1644382,Trival Valderas vs Leganes (Copa del Rey),[FREE] Faltas Totales > 21.5,1.23,PENDIENTE_CLV,77.4,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
-2026-10-28 20:21:15,1644382,Trival Valderas vs Leganes (Copa del Rey),[FREE] Gol en 2do Tiempo,1.31,PENDIENTE_CLV,72.6,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
+2026-10-28 20:21:15,1644382,Trival Valderas vs Leganes (Copa del Rey),[VIP] Tarjetas > 3.5,1.45,1.45,70.5,🟢 [LUZ VERDE / ALTO VALOR],1200.0,Ganada,1740.0,AUDITADA FT 0-1
+2026-10-28 20:21:15,1644382,Trival Valderas vs Leganes (Copa del Rey),[FREE] Faltas Totales > 21.5,1.23,1.23,77.4,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,615.0,AUDITADA FT 0-1
+2026-10-28 20:21:15,1644382,Trival Valderas vs Leganes (Copa del Rey),[FREE] Gol en 2do Tiempo,1.31,1.31,72.6,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,655.0,AUDITADA FT 0-1
 2026-10-28 20:21:17,1640575,Manchester City vs Brighton (EFL Cup),[FREE] Gol en 2do Tiempo,1.18,1.18,83.2,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 2-2
 2026-10-28 20:21:17,1640575,Manchester City vs Brighton (EFL Cup),[FREE] Remates Puerta > 6.5,1.18,1.18,84.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 2-2
 2026-10-28 20:21:23,1550171,Genoa vs Juventus (Italia - Serie A),[VIP] Gol en 2do Tiempo,1.38,1.38,81.1,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Perdida,0.0,AUDITADA FT 2-0
@@ -3342,3 +3342,31 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-11-21 23:25:00,401931814,Vitória de Guimaraes vs Braga (Portugal (Taça De Portugal)),[VIP] Combo X2 + O1.5,1.5,PENDIENTE_CLV,72.4,🟢 [LUZ VERDE / ALTO VALOR],4300.0,Pendiente,0.0,AUDITANDO
 2026-11-21 23:25:00,401931814,Vitória de Guimaraes vs Braga (Portugal (Taça De Portugal)),[FREE] Córners Braga > 4.5,1.22,PENDIENTE_CLV,77.8,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
 2026-11-21 23:25:00,401931814,Vitória de Guimaraes vs Braga (Portugal (Taça De Portugal)),[FREE] Over 1.5 Goles,1.18,PENDIENTE_CLV,78.3,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
+2026-11-21 01:55:00,401933760,Vélez Sarsfield vs Belgrano (Córdoba) (Argentina (Liga Profesional)),[VIP] Faltas Totales > 21.5,1.72,1.72,66.5,🟢 [VALOR ALTO / OPERABLE],5000.0,Ganada,8600.0,AUDITADA FT 2-2
+2026-11-21 01:55:00,401933760,Vélez Sarsfield vs Belgrano (Córdoba) (Argentina (Liga Profesional)),[VIP] Córners > 8.5,1.48,1.48,73.5,🟢 [LUZ VERDE / ALTO VALOR],4600.0,Ganada,6808.0,AUDITADA FT 2-2
+2026-11-21 01:55:00,401933760,Vélez Sarsfield vs Belgrano (Córdoba) (Argentina (Liga Profesional)),[FREE] Over 1.5 Goles,1.25,1.25,76.2,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,625.0,AUDITADA FT 2-2
+2026-11-21 01:55:00,401933760,Vélez Sarsfield vs Belgrano (Córdoba) (Argentina (Liga Profesional)),[FREE] Faltas Totales > 20.5,1.28,1.28,65.2,🟢 [VALOR ALTO / OPERABLE],500.0,Ganada,640.0,AUDITADA FT 2-2
+2026-11-21 00:25:00,401934708,Independiente Medellín vs Independiente Santa Fe (Colombia (Primera A)),[VIP] Tarjetas > 3.5,1.65,1.65,66.5,🟢 [VALOR ALTO / OPERABLE],3700.0,Ganada,6105.0,AUDITADA FT 1-0
+2026-11-21 00:25:00,401934708,Independiente Medellín vs Independiente Santa Fe (Colombia (Primera A)),[VIP] Faltas Totales > 23.5,1.69,1.69,66.5,🟢 [VALOR ALTO / OPERABLE],4500.0,Ganada,7605.0,AUDITADA FT 1-0
+2026-11-21 00:25:00,401934708,Independiente Medellín vs Independiente Santa Fe (Colombia (Primera A)),[FREE] Remates Puerta > 6.5,1.28,1.28,58.3,🟢 [VALOR ALTO / OPERABLE],500.0,Ganada,640.0,AUDITADA FT 1-0
+2026-11-21 00:25:00,401934708,Independiente Medellín vs Independiente Santa Fe (Colombia (Primera A)),[FREE] Córners > 7.5,1.28,1.28,70.4,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,640.0,AUDITADA FT 1-0
+2026-11-21 02:30:00,401934690,Atlético Bucaramanga vs América de Cali (Colombia (Primera A)),[VIP] Faltas Totales > 24.5,1.5,1.50,68.0,🟢 [LUZ VERDE / ALTO VALOR],1000.0,Perdida,0.0,AUDITADA FT 2-2
+2026-11-21 02:30:00,401934690,Atlético Bucaramanga vs América de Cali (Colombia (Primera A)),[VIP] Córners > 8.5,1.48,1.48,73.5,🟢 [LUZ VERDE / ALTO VALOR],4600.0,Perdida,0.0,AUDITADA FT 2-2
+2026-11-21 02:30:00,401934690,Atlético Bucaramanga vs América de Cali (Colombia (Primera A)),[FREE] Remates Puerta > 6.5,1.28,1.28,59.9,🟢 [VALOR ALTO / OPERABLE],500.0,Ganada,640.0,AUDITADA FT 2-2
+2026-11-21 02:30:00,401934690,Atlético Bucaramanga vs América de Cali (Colombia (Primera A)),[FREE] Faltas Totales > 23.5,1.28,1.28,73.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 2-2
+2026-11-21 04:35:00,401934707,Deportivo Cali vs Millonarios (Colombia (Primera A)),[VIP] Faltas Totales > 22.5,1.73,1.73,66.5,🟢 [VALOR ALTO / OPERABLE],5000.0,Ganada,8650.0,AUDITADA FT 0-0
+2026-11-21 04:35:00,401934707,Deportivo Cali vs Millonarios (Colombia (Primera A)),[VIP] Córners > 8.5,1.48,1.48,73.5,🟢 [LUZ VERDE / ALTO VALOR],4600.0,Perdida,0.0,AUDITADA FT 0-0
+2026-11-21 04:35:00,401934707,Deportivo Cali vs Millonarios (Colombia (Primera A)),[FREE] Faltas Totales > 21.5,1.28,1.28,64.6,🟢 [VALOR ALTO / OPERABLE],500.0,Ganada,640.0,AUDITADA FT 0-0
+2026-11-21 04:35:00,401934707,Deportivo Cali vs Millonarios (Colombia (Primera A)),[FREE] Córners > 7.5,1.19,1.19,74.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 0-0
+2026-11-21 03:55:00,401877054,Puebla vs Atlético de San Luis (México (Liga Mx)),[VIP] Faltas Totales > 21.5,1.72,1.72,66.5,🟢 [VALOR ALTO / OPERABLE],5000.0,Ganada,8600.0,AUDITADA FT 1-1
+2026-11-21 03:55:00,401877054,Puebla vs Atlético de San Luis (México (Liga Mx)),[VIP] Córners > 8.5,1.73,1.73,66.5,🟢 [VALOR ALTO / OPERABLE],5000.0,Ganada,8650.0,AUDITADA FT 1-1
+2026-11-21 03:55:00,401877054,Puebla vs Atlético de San Luis (México (Liga Mx)),[FREE] Doble Oport. 1X,1.18,1.18,78.7,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 1-1
+2026-11-21 03:55:00,401877054,Puebla vs Atlético de San Luis (México (Liga Mx)),[FREE] Over 1.5 Goles,1.23,1.23,77.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,615.0,AUDITADA FT 1-1
+2026-11-21 05:55:00,401877053,FC Juárez vs Atlas (México (Liga Mx)),[VIP] Faltas Totales > 24.5,1.61,1.61,66.5,🟢 [VALOR ALTO / OPERABLE],2900.0,Ganada,4669.0,AUDITADA FT 3-3
+2026-11-21 05:55:00,401877053,FC Juárez vs Atlas (México (Liga Mx)),[VIP] Córners > 8.5,1.48,1.48,73.5,🟢 [LUZ VERDE / ALTO VALOR],4600.0,Ganada,6808.0,AUDITADA FT 3-3
+2026-11-21 05:55:00,401877053,FC Juárez vs Atlas (México (Liga Mx)),[FREE] Doble Oport. 1X,1.18,1.18,80.1,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 3-3
+2026-11-21 05:55:00,401877053,FC Juárez vs Atlas (México (Liga Mx)),[FREE] Over 1.5 Goles,1.23,1.23,77.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,615.0,AUDITADA FT 3-3
+2026-11-21 06:05:00,401877052,Tijuana vs Atlante (México (Liga Mx)),[VIP] Faltas Totales > 23.5,1.78,1.78,66.5,🟢 [VALOR ALTO / OPERABLE],5000.0,Ganada,8900.0,AUDITADA FT 1-0
+2026-11-21 06:05:00,401877052,Tijuana vs Atlante (México (Liga Mx)),[VIP] Córners > 8.5,1.48,1.48,73.5,🟢 [LUZ VERDE / ALTO VALOR],4600.0,Ganada,6808.0,AUDITADA FT 1-0
+2026-11-21 06:05:00,401877052,Tijuana vs Atlante (México (Liga Mx)),[FREE] Over 1.5 Goles,1.23,1.23,77.2,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 1-0
+2026-11-21 06:05:00,401877052,Tijuana vs Atlante (México (Liga Mx)),[FREE] Faltas Totales > 21.5,1.28,1.28,68.3,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,640.0,AUDITADA FT 1-0
