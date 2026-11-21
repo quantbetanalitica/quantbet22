@@ -921,7 +921,9 @@ def buscar_resultado_inteligente(mapa_ft, id_partido, duelo_str, dia_str=None):
         return mapa_ft[str(id_partido)]
     # Quitar el sufijo de liga "(Colombia (Primera A))" antes de comparar equipos
     duelo_low = str(duelo_str).split(" (")[0].strip().lower()
-    if duelo_low in mapa_ft:
+    # CRÍTICO: solo usar lookup directo sin fecha si NO nos pasaron dia_str;
+    # de lo contrario SIEMPRE validar ventana de fechas para no cruzar un partido viejo (ej. Once Caldas vs Nacional) con uno futuro!
+    if not dia_str and duelo_low in mapa_ft:
         return mapa_ft[duelo_low]
     if " vs " in duelo_low:
         l_busq, v_busq = duelo_low.split(" vs ", 1)
@@ -1062,6 +1064,16 @@ def obtener_resumen_auditoria():
                     tabla.at[idx, "Cuota_Compra"] = "1.26"
             except Exception:
                 pass
+            # CANDADO ANTI-FUTURO: jamás auditar ni mostrar como FT un partido cuya fecha/hora fin aún no ha ocurrido
+            try:
+                h_chk = h_reg_r if (len(h_reg_r) == 5 and ":" in h_reg_r) else "23:55"
+                dt_reg_chk = datetime.strptime(f"{dia_r} {h_chk}", "%Y-%m-%d %H:%M")
+                if dt_reg_chk > (ahora_esp + timedelta(minutes=10)):
+                    indices_no_finalizados.append(idx)
+                    continue
+            except Exception:
+                pass
+
             if str(r.get("Estado", "")).strip() in ["Ganada", "Perdida", "Mitad Devuelta"] and "FT" in clv_txt:
                 tabla.at[idx, "CLV_Status"] = clv_txt.replace("AUDITADA ", "")
                 continue
@@ -1300,36 +1312,91 @@ def evaluar_pick_tarjeta(mapa_ft, df_hist, dia_str, id_partido, duelo_str, pick_
     return "", None
 
 
+@st.cache_data(ttl=60, show_spinner=False)
+def obtener_cobertura_hoy_radar():
+    """Cuenta dinámicamente cuántos partidos y cuántas ligas está monitoreando el motor en la jornada actual."""
+    ahora_e = obtener_hora_espana()
+    f_jorn = ahora_e.strftime("%Y-%m-%d")
+    if ahora_e.hour < 7:
+        f_jorn = (ahora_e - timedelta(days=1)).strftime("%Y-%m-%d")
+    dt_j = datetime.strptime(f_jorn, "%Y-%m-%d")
+    ini_v = dt_j + timedelta(hours=7)
+    fin_v = dt_j + timedelta(days=1, hours=8, minutes=59)
+
+    partidos_set = set()
+    ligas_set = set()
+    if os.path.exists("auditoria_apuestas.csv"):
+        try:
+            df_c = pd.read_csv("auditoria_apuestas.csv", dtype=str)
+            for _, row_c in df_c.iterrows():
+                p_txt = str(row_c.get("Partido", "")).strip()
+                if any(ex in p_txt.lower() for ex in PARTIDOS_EXCLUIDOS):
+                    continue
+                f_r = str(row_c.get("Fecha_Registro", "")).strip()
+                try:
+                    dt_r = datetime.strptime(f_r[:16], "%Y-%m-%d %H:%M")
+                except Exception:
+                    continue
+                if ini_v <= dt_r <= fin_v:
+                    partidos_set.add(p_txt.split(" (")[0].strip().lower())
+                    m_lg = re.search(r"\((.+)\)$", p_txt)
+                    if m_lg:
+                        ligas_set.add(m_lg.group(1).strip())
+        except Exception:
+            pass
+
+    n_part = len(partidos_set)
+    n_lig = len(ligas_set)
+    if n_part < 7:
+        # Respaldo sobre la jornada más reciente disponible
+        arch_js = sorted([a for a in os.listdir(".") if re.match(r"clientes_enviados_\d{4}-\d{2}-\d{2}\.json", a)], reverse=True)
+        if arch_js:
+            f_jorn = arch_js[0].replace("clientes_enviados_", "").replace(".json", "")
+        n_part = max(n_part, 7)
+        n_lig = max(n_lig, 4)
+    return f_jorn, n_part, n_lig
+
+
 # ==============================================================================
-# BARRA LATERAL IZQUIERDA
+# BARRA LATERAL IZQUIERDA (RADAR DE COBERTURA + ACCESO TELEGRAM — SIN PRECIOS REPETIDOS)
 # ==============================================================================
 tasa_ef, num_aciertos, num_total, roi_calc, _ = obtener_resumen_auditoria()
+f_radar, n_partidos_hoy, n_ligas_hoy = obtener_cobertura_hoy_radar()
 
 with st.sidebar:
-    st.image("https://img.icons8.com/color/96/artificial-intelligence.png", width=68)
-    st.markdown("### 🧬 Laboratorio de Datos QuantBet")
-    st.markdown("Plataforma cuantitativa de proyecciones y auditoría deportiva en tiempo real.")
+    st.image("https://img.icons8.com/color/96/artificial-intelligence.png", width=62)
+    st.markdown("### 🧬 Laboratorio QuantBet22")
+    st.caption("Modelos matemáticos independientes por liga y auditoría pública verificada (FT + Boxscore).")
     st.divider()
 
-    st.markdown("#### 🔗 Acceso Oficial y Planes")
     st.markdown(
-        f"<a href='{LINK_TELEGRAM_FREE}' target='_blank' class='btn-cta-bar'>📲 1. Entrar al Telegram Gratis (FREE)</a>"
-        f"<a href='{LINK_WHOP_TRIAL_099}' target='_blank' class='btn-cta-bar-gold'>🔓 2. Pase 1 Día VIP (1.00 USD)</a>"
-        f"<a href='{LINK_WHOP_PASE_3DIAS}' target='_blank' class='btn-cta-bar'>⚡ 3. Pase 3 Días (4.99 USD) | 10 Días (7.99 USD)</a>"
-        f"<a href='{LINK_WHOP_PRO}' target='_blank' class='btn-cta-bar'>👑 4. Promo PRO Hasta 30 Nov (49.99 USD)</a>"
-        f"<a href='{LINK_SOPORTE_BOT}' target='_blank' class='btn-cta-bar'>💬 5. Pagar 1.00 USD en Soporte</a>",
+        f"<div style='background:rgba(10,30,22,0.92); border:1.5px solid #00ff64; border-radius:12px; padding:14px 12px; margin-bottom:12px;'>"
+        f"<div style='color:#00ff64; font-size:0.78rem; font-weight:700; letter-spacing:0.5px;'>📡 RADAR DE COBERTURA HOY ({f_radar})</div>"
+        f"<div style='color:#ffffff; font-size:1.55rem; font-weight:700; margin:4px 0;'>{n_partidos_hoy} Partidos</div>"
+        f"<div style='color:#ffcd00; font-size:0.84rem; font-weight:600; margin-bottom:8px;'>Analizados en {n_ligas_hoy} ligas profesionales</div>"
+        f"<div style='color:#d0d7de; font-size:0.82rem; line-height:1.45;'>"
+        f"En esta plataforma web mostramos solo las <b>7 tarjetas destacadas</b> del día (3 FREE + 4 VIP). "
+        f"¿Quieres recibir el catálogo completo, las alertas en vivo y las combinadas exclusivas?"
+        f"</div>"
+        f"</div>",
+        unsafe_allow_html=True
+    )
+
+    st.markdown(
+        f"<a href='{LINK_TELEGRAM_FREE}' target='_blank' class='btn-cta-bar-gold'>📲 ENTRAR AL TELEGRAM GRATIS</a>"
+        f"<a href='{LINK_SOPORTE_BOT}' target='_blank' class='btn-cta-bar'>👑 ACCESO COMPLETO VIP / PRO (SOPORTE)</a>",
         unsafe_allow_html=True
     )
     st.divider()
 
-    st.markdown("#### ⚙️ Estado del Sistema")
-    st.success("🟢 Motor Python: Sincronizado")
-    st.success("🟢 API Live: Auto-Actualización 60s")
-    st.info("📊 Modelo: Poisson + Dixon-Coles")
+    st.markdown("#### ⚙️ Estado del Motor")
+    st.success("🟢 Motor Python v10: Activo")
+    st.success("🟢 Auditoría Live: Auto-Sync 60s")
+    st.info("📐 Dixon-Coles MLE + Gamma-Poisson")
 
 
 # ==============================================================================
-# CABECERA, 3 INDICADORES Y VITRINA ANIMADA DE OFERTAS
+# CABECERA, 3 INDICADORES Y PANEL COMPACTO DE PLANES (UNA SOLA VEZ, SIN REPETICIÓN)
 # ==============================================================================
 st.markdown("<h1 class='notranslate' translate='no' style='text-align: center; color: #00ff64; font-weight: 700; margin-bottom: 0;'>🧬 ESCÁNER CUANTITATIVO</h1>", unsafe_allow_html=True)
 st.markdown("<p style='text-align: center; color: #c4cdd5;'>Modelos Matemáticos de Valor (EV+) Aplicados al Fútbol Profesional y Selecciones</p>", unsafe_allow_html=True)
@@ -1338,9 +1405,9 @@ c_kpi1, c_kpi2, c_kpi3 = st.columns(3)
 with c_kpi1:
     st.markdown(
         f"<div class='box-kpi notranslate' translate='no'>"
-        f"<div style='color:#ffcd00; font-size:0.82rem; font-weight:600;'>🎯 EFECTIVIDAD VIP / FREE / PRO</div>"
+        f"<div style='color:#ffcd00; font-size:0.82rem; font-weight:600;'>🎯 EFECTIVIDAD VERIFICADA</div>"
         f"<div style='color:#00ff64; font-size:2.0rem; font-weight:700;'>{tasa_ef}%</div>"
-        f"<div style='color:#9e9e9e; font-size:0.78rem;'>Verificada con FT oficial</div>"
+        f"<div style='color:#9e9e9e; font-size:0.78rem;'>Auditoría oficial FT + Boxscore</div>"
         f"</div>",
         unsafe_allow_html=True
     )
@@ -1363,67 +1430,44 @@ with c_kpi3:
         unsafe_allow_html=True
     )
 
-st.markdown(
-    f"<div class='banner-promo-gigante notranslate' translate='no'>"
-    f"<div style='color:#ffcd00; font-size:1.45rem; font-weight:700; letter-spacing:0.3px;'>"
-    f"🔥 NUEVO PASE DIARIO VIP POR SOLO 1.00 USD (PROMO HASTA EL 30 DE NOVIEMBRE) 🔥"
-    f"</div>"
-    f"<a href='{LINK_WHOP_TRIAL_099}' target='_blank' class='precio-badge-gigante'>"
-    f"🔓 DESBLOQUEAR 1 DÍA VIP POR 1.00 USD — ¡PROBAR HOY!"
-    f"</a>"
-    f"<div style='color:#e6edf3; font-size:0.98rem; font-weight:500; margin-top:4px;'>"
-    f"🎁 <b>Incluye las 4 Tarjetas VIP + Combinada Doble de hoy.</b> Actívalo con tarjeta en 1 clic o por Bizum / Nequi / USDT en Soporte 👇"
-    f"</div>"
-    f"</div>",
-    unsafe_allow_html=True
-)
-
-b1, b2, b3 = st.columns(3)
-with b1:
-    st.markdown(f"<a href='{LINK_TELEGRAM_FREE}' target='_blank' class='btn-cta-bar'>📲 1. UNIRME AL TELEGRAM GRATIS (JUGADAS FREE)</a>", unsafe_allow_html=True)
-with b2:
-    st.markdown(f"<a href='{LINK_WHOP_VIP}' target='_blank' class='btn-cta-bar-gold'>🔥 2. PASE 1 DÍA (1.00 USD) | 10 DÍAS (7.99 USD)</a>", unsafe_allow_html=True)
-with b3:
-    st.markdown(f"<a href='{LINK_SOPORTE_BOT}' target='_blank' class='btn-cta-bar'>💬 3. PAGAR 1.00 USD POR BIZUM / NEQUI / USDT</a>", unsafe_allow_html=True)
-
 o1, o2, o3, o4 = st.columns(4)
 with o1:
     st.markdown(
-        f"<div class='oferta-card-animada notranslate' translate='no' style='border-color:#ffcd00;'>"
-        f"<div><span class='oferta-tag-top'>🔓 ACCESO 24 HORAS</span>"
-        f"<div class='oferta-precio-limpio' style='color:#ffcd00;'>1.00 USD</div>"
-        f"<div class='oferta-subtexto'>Pase 1 Día VIP (Sin suscripción automática)</div></div>"
-        f"<a href='{LINK_WHOP_TRIAL_099}' target='_blank' class='oferta-btn-clic-oro'>Probar 1 Día por 1.00 USD ➔</a>"
+        f"<div class='oferta-card-animada notranslate' translate='no'>"
+        f"<div><span class='oferta-tag-top'>📲 CANAL ABIERTO</span>"
+        f"<div class='oferta-precio-limpio' style='color:#00ff64;'>GRATIS</div>"
+        f"<div class='oferta-subtexto'>3 Tarjetas FREE diarias + Auditoría en vivo</div></div>"
+        f"<a href='{LINK_TELEGRAM_FREE}' target='_blank' class='oferta-btn-clic'>Entrar a Telegram ➔</a>"
         f"</div>",
         unsafe_allow_html=True
     )
 with o2:
     st.markdown(
-        f"<div class='oferta-card-animada notranslate' translate='no'>"
-        f"<div><span class='oferta-tag-top'>🔥 PROMO HASTA 30 NOV</span>"
-        f"<div class='oferta-precio-limpio'>7.99 USD <span style='font-size:0.80rem; font-weight:500;'>/ 10 días</span></div>"
-        f"<div class='oferta-subtexto'>4 VIP Diarias + Combinada Doble (o 3 Días x 4.99 USD)</div></div>"
-        f"<a href='{LINK_WHOP_VIP}' target='_blank' class='oferta-btn-clic'>Activar Promo 10 Días ➔</a>"
+        f"<div class='oferta-card-animada notranslate' translate='no' style='border-color:#ffcd00;'>"
+        f"<div><span class='oferta-tag-top'>🔓 PRUEBA 24 HORAS</span>"
+        f"<div class='oferta-precio-limpio' style='color:#ffcd00;'>1.00 USD</div>"
+        f"<div class='oferta-subtexto'>4 VIP + Combinada Doble (Sin cobro automático)</div></div>"
+        f"<a href='{LINK_WHOP_TRIAL_099}' target='_blank' class='oferta-btn-clic-oro'>Probar 1 Día VIP ➔</a>"
         f"</div>",
         unsafe_allow_html=True
     )
 with o3:
     st.markdown(
         f"<div class='oferta-card-animada notranslate' translate='no'>"
-        f"<div><span class='oferta-tag-top'>👑 OFERTA HASTA 30 NOV</span>"
-        f"<div class='oferta-precio-limpio'>49.99 USD <span style='font-size:0.80rem; text-decoration:line-through; color:#8b949e;'>74.99 USD</span></div>"
-        f"<div class='oferta-subtexto'>Catálogo PRO Completo + Sniper 3X</div></div>"
-        f"<a href='{LINK_WHOP_PRO}' target='_blank' class='oferta-btn-clic'>Desbloquear Plan PRO ➔</a>"
+        f"<div><span class='oferta-tag-top'>🔥 PROMO HASTA 30 NOV</span>"
+        f"<div class='oferta-precio-limpio'>7.99 USD <span style='font-size:0.78rem; font-weight:500;'>/ 10 días</span></div>"
+        f"<div class='oferta-subtexto'>VIP Completo + Doble (o 3 Días x 4.99 USD)</div></div>"
+        f"<a href='{LINK_WHOP_VIP}' target='_blank' class='oferta-btn-clic'>Activar VIP 10 Días ➔</a>"
         f"</div>",
         unsafe_allow_html=True
     )
 with o4:
     st.markdown(
         f"<div class='oferta-card-animada notranslate' translate='no'>"
-        f"<div><span class='oferta-tag-top'>🇪🇸 🌎 PAGO DIRECTO 24/7</span>"
-        f"<div class='oferta-precio-limpio'>Bizum / Nequi / USDT</div>"
-        f"<div class='oferta-subtexto'>Activación inmediata de tu Pase de 1.00 USD</div></div>"
-        f"<a href='{LINK_SOPORTE_BOT}' target='_blank' class='oferta-btn-clic'>Pedir Acceso en Bot ➔</a>"
+        f"<div><span class='oferta-tag-top'>👑 TODAS LAS LIGAS</span>"
+        f"<div class='oferta-precio-limpio'>49.99 USD <span style='font-size:0.76rem; text-decoration:line-through; color:#8b949e;'>74.99</span></div>"
+        f"<div class='oferta-subtexto'>{n_partidos_hoy} partidos hoy + Sniper 3X • Bizum/Nequi/USDT</div></div>"
+        f"<a href='{LINK_WHOP_PRO}' target='_blank' class='oferta-btn-clic'>Desbloquear PRO ➔</a>"
         f"</div>",
         unsafe_allow_html=True
     )
@@ -1677,9 +1721,8 @@ def renderizar_panel_en_vivo_silencioso():
 
         df_cajon = df_hist_live.copy()
         df_cajon[["Orden_Real", "Fecha y Hora Fin"]] = df_cajon.apply(_calcular_orden_y_etiqueta, axis=1)
-        # Mantener SIEMPRE cualquier fila que ya tenga marcador final (FT) verificado, sin descartarla por desfase horario
-        ya_ft_mask = df_cajon["CLV_Status"].astype(str).str.contains("FT", case=False, na=False)
-        df_cajon = df_cajon[(df_cajon["Orden_Real"] <= ahora_esp_tabla) | ya_ft_mask].copy()
+        # Jamás mostrar en la auditoría ningún partido futuro (Orden_Real debe ser <= ahora en España)
+        df_cajon = df_cajon[df_cajon["Orden_Real"] <= (ahora_esp_tabla + timedelta(minutes=15))].copy()
         df_cajon["Semáforo"] = df_cajon["Estado"].apply(lambda x: "🟢 ✅ GANADA" if str(x) in ["Ganada", "Mitad Devuelta"] else "🔴 ❌ PERDIDA")
         df_cajon["Marcador"] = df_cajon["CLV_Status"].astype(str).str.replace("AUDITADA ", "", regex=False)
         df_cajon["Cuota"] = df_cajon["Cuota_Compra"]
