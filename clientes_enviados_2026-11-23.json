@@ -1,0 +1,313 @@
+{
+  "fecha": "2026-11-23",
+  "tarjetas_clientes": [
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "401879237",
+      "hora": "21:00",
+      "partido": "Brentford vs Everton (Inglaterra (Premier))",
+      "selecciones": [
+        {
+          "mercado": "Córners > 8.5",
+          "prob": 59.6,
+          "cuota": 1.71
+        },
+        {
+          "mercado": "Gol en 2do Tiempo",
+          "prob": 76.2,
+          "cuota": 1.38
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "401883110",
+      "hora": "20:30",
+      "partido": "Ceuta vs Almería (España (Segunda))",
+      "selecciones": [
+        {
+          "mercado": "Tarjetas > 3.5",
+          "prob": 61.6,
+          "cuota": 1.66
+        },
+        {
+          "mercado": "Gol en 1T",
+          "prob": 71.8,
+          "cuota": 1.42
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "401933728",
+      "hora": "02:00",
+      "partido": "St. Louis CITY SC vs LAFC (Usa (Mls))",
+      "selecciones": [
+        {
+          "mercado": "Ambos Marcan (BTTS)",
+          "prob": 70.4,
+          "cuota": 1.5
+        },
+        {
+          "mercado": "Faltas Totales > 18.5",
+          "prob": 65.6,
+          "cuota": 1.55
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "401841326",
+      "hora": "00:00",
+      "partido": "Botafogo vs São Paulo (Brasil (Serie A))",
+      "selecciones": [
+        {
+          "mercado": "Faltas Totales > 22.5",
+          "prob": 71.5,
+          "cuota": 1.43
+        },
+        {
+          "mercado": "Gol en 2do Tiempo",
+          "prob": 74.0,
+          "cuota": 1.38
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "FREE",
+      "id_partido": "401882802",
+      "hora": "21:00",
+      "partido": "Levante vs Elche (España (Laliga))",
+      "selecciones": [
+        {
+          "mercado": "Gol en 2do Tiempo",
+          "prob": 80.4,
+          "cuota": 1.18
+        },
+        {
+          "mercado": "Remates Puerta > 6.5",
+          "prob": 69.8,
+          "cuota": 1.28
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "FREE",
+      "id_partido": "401875009",
+      "hora": "20:45",
+      "partido": "Monza vs Fiorentina (Italia (Serie A))",
+      "selecciones": [
+        {
+          "mercado": "Over 1.5 Goles",
+          "prob": 81.9,
+          "cuota": 1.18
+        },
+        {
+          "mercado": "Faltas Totales > 19.5",
+          "prob": 71.0,
+          "cuota": 1.28
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "FREE",
+      "id_partido": "401841323",
+      "hora": "23:30",
+      "partido": "Internacional vs Vitória (Brasil (Serie A))",
+      "selecciones": [
+        {
+          "mercado": "Córners Internacional > 4.5",
+          "prob": 86.5,
+          "cuota": 1.18
+        },
+        {
+          "mercado": "Over 1.5 Goles",
+          "prob": 75.1,
+          "cuota": 1.26
+        }
+      ]
+    }
+  ],
+  "combinada_doble": {
+    "selecciones": [
+      {
+        "partido": "Monza vs Fiorentina",
+        "hora": "20:45",
+        "mercado": "Gol en 2do Tiempo",
+        "prob": 83.26553799943142,
+        "cuota": 1.36,
+        "score_elite": 18
+      },
+      {
+        "partido": "Levante vs Elche",
+        "hora": "21:00",
+        "mercado": "Over 1.5 Goles",
+        "prob": 81.50899975184602,
+        "cuota": 1.36,
+        "score_elite": 18
+      }
+    ],
+    "cuota_total": 1.85,
+    "prob_directa": 67.9,
+    "prob_protegida": 82.4
+  },
+  "combinada_sniper": {
+    "selecciones": [
+      {
+        "partido": "Levante vs Elche",
+        "hora": "21:00",
+        "mercado": "Gol en 2do Tiempo",
+        "prob": 80.42296093106792,
+        "cuota": 1.44,
+        "score_elite": 18
+      },
+      {
+        "partido": "Internacional vs Vitória",
+        "hora": "23:30",
+        "mercado": "Doble Oport. 1X",
+        "prob": 79.34051462567851,
+        "cuota": 1.44,
+        "score_elite": 28
+      },
+      {
+        "partido": "Brentford vs Everton",
+        "hora": "21:00",
+        "mercado": "Doble Oport. 1X",
+        "prob": 74.86361332238779,
+        "cuota": 1.52,
+        "score_elite": 18
+      }
+    ],
+    "cuota_total": 3.15,
+    "prob_directa": 47.8,
+    "prob_protegida": 71.8
+  },
+  "combinadas_exclusivas_pro": [
+    {
+      "clave": "cuadruple_elite_pro",
+      "titulo": "CUÁDRUPLE ÉLITE PRO",
+      "subtitulo": "EXCLUSIVO PRO: 4 PARTIDOS DE ALTA CONFLUENCIA",
+      "sufijo": "CUADRUPLE_ELITE_PRO",
+      "stake": "Invertir el 1% de tu capital (Alto Retorno)",
+      "selecciones": [
+        {
+          "partido": "Internacional vs Vitória",
+          "hora": "23:30",
+          "mercado": "Córners Internacional > 4.5",
+          "prob": 90.0367599512954,
+          "cuota": 1.38,
+          "score_elite": 28,
+          "nuevo": true
+        },
+        {
+          "partido": "Monza vs Fiorentina",
+          "hora": "20:45",
+          "mercado": "Over 1.5 Goles",
+          "prob": 81.87926655006731,
+          "cuota": 1.4,
+          "score_elite": 18,
+          "nuevo": true
+        },
+        {
+          "partido": "Gimnasia La Plata vs Newell's Old Boys",
+          "hora": "21:00",
+          "mercado": "Doble Oport. 1X",
+          "prob": 81.40759017778417,
+          "cuota": 1.4,
+          "score_elite": 8,
+          "nuevo": true
+        },
+        {
+          "partido": "Botafogo vs São Paulo",
+          "hora": "00:00",
+          "mercado": "Over 1.5 Goles",
+          "prob": 73.6498278645129,
+          "cuota": 1.53,
+          "score_elite": 28,
+          "nuevo": true
+        }
+      ],
+      "cuota_total": 4.14,
+      "prob_directa": 44.2,
+      "prob_protegida": 70.2
+    },
+    {
+      "clave": "especial_ritmo_pro",
+      "titulo": "ESPECIAL RITMO PRO",
+      "subtitulo": "EXCLUSIVO PRO: CÓRNERS Y REMATES (3 PARTIDOS)",
+      "sufijo": "RITMO_CORNERS_PRO",
+      "stake": "Invertir del 1% al 2% de tu capital (Ritmo Puro)",
+      "selecciones": [
+        {
+          "partido": "Internacional vs Vitória",
+          "hora": "23:30",
+          "mercado": "Córners Internacional > 4.5",
+          "prob": 90.0367599512954,
+          "cuota": 1.38,
+          "score_elite": 28,
+          "nuevo": true
+        },
+        {
+          "partido": "Brentford vs Everton",
+          "hora": "21:00",
+          "mercado": "Córners > 7.5",
+          "prob": 69.94,
+          "cuota": 1.59,
+          "score_elite": 18,
+          "nuevo": true
+        },
+        {
+          "partido": "Levante vs Elche",
+          "hora": "21:00",
+          "mercado": "Remates Puerta > 6.5",
+          "prob": 69.76,
+          "cuota": 1.59,
+          "score_elite": 18,
+          "nuevo": true
+        }
+      ],
+      "cuota_total": 3.49,
+      "prob_directa": 43.9,
+      "prob_protegida": 67.9
+    },
+    {
+      "clave": "especial_valor_pro",
+      "titulo": "ESPECIAL VALOR PRO",
+      "subtitulo": "EXCLUSIVO PRO: TÁCTICA, FRICCIÓN Y EV+ (3 PARTIDOS)",
+      "sufijo": "VALOR_TACTICO_PRO",
+      "stake": "Invertir del 1% al 2% de tu capital (Valor EV+)",
+      "selecciones": [
+        {
+          "partido": "Monza vs Fiorentina",
+          "hora": "20:45",
+          "mercado": "Over 1.5 Goles",
+          "prob": 81.87926655006731,
+          "cuota": 1.4,
+          "score_elite": 18,
+          "nuevo": true
+        },
+        {
+          "partido": "Gimnasia La Plata vs Newell's Old Boys",
+          "hora": "21:00",
+          "mercado": "Doble Oport. 1X",
+          "prob": 81.40759017778417,
+          "cuota": 1.4,
+          "score_elite": 8,
+          "nuevo": true
+        },
+        {
+          "partido": "Levante vs Elche",
+          "hora": "21:00",
+          "mercado": "Doble Oport. 1X",
+          "prob": 75.8452754278388,
+          "cuota": 1.49,
+          "score_elite": 18,
+          "nuevo": true
+        }
+      ],
+      "cuota_total": 2.92,
+      "prob_directa": 50.6,
+      "prob_protegida": 74.6
+    }
+  ]
+}
