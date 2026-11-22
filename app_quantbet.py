@@ -533,6 +533,8 @@ def obtener_estado_minuto_en_vivo(mapa_ft, dia_str, hora_ini_str, id_partido, du
             min_txt = "90+' (Recta Final)"
         return True, f"EN JUEGO • ⏱️ {min_txt}"
 
+    if ahora_esp > dt_fin:
+        return False, "🔄 VERIFICANDO RESULTADO FINAL (FT)..."
     return False, f"⏳ POR JUGAR ({hora_ini_str}h ESP)"
 
 
@@ -690,7 +692,12 @@ PARTIDOS_EXCLUIDOS = (
 )
 
 
-@st.cache_data(ttl=55, show_spinner=False)
+@st.cache_resource
+def _memoria_persistente_ft_web():
+    return {"mapa": {}, "indice": [], "horas_fin": {}, "dt_fin": {}}
+
+
+@st.cache_data(ttl=180, show_spinner=False)
 def cargar_mapa_resultados_caches():
     mapa = {}
     indice_rapido = []
@@ -810,25 +817,21 @@ def cargar_mapa_resultados_caches():
         except Exception:
             pass
 
-    fechas_ymd = [(ahora_esp - timedelta(days=d)).strftime("%Y%m%d") for d in range(3, -1, -1)]
+    # Consultar solo últimos 2 días (ayer y hoy) en ligas activas para evitar bloqueos/timeouts en la nube
+    fechas_ymd = [(ahora_esp - timedelta(days=d)).strftime("%Y%m%d") for d in range(2, -1, -1)]
     endpoints = [
         "uefa.champions", "uefa.europa", "uefa.europa.conf", "uefa.wchampions",
         "esp.1", "esp.2", "esp.copa_del_rey",
         "eng.1", "eng.fa", "eng.league_cup",
         "ita.1", "ita.coppa_italia",
         "ger.1", "ger.dfb_pokal",
-        "fra.1", "fra.coupe_de_france",
-        "por.1", "por.taca.portugal",
+        "fra.1", "por.1", "por.taca.portugal",
         "ned.1", "bel.1", "gre.1", "sco.1", "ksa.1",
         "col.1", "col.2", "col.copa",
-        "arg.1", "arg.copa",
-        "bra.1", "bra.copa_do_brasil",
-        "mex.1", "usa.1", "ecu.1",
+        "arg.1", "arg.copa", "bra.1", "bra.copa_do_brasil",
+        "mex.1", "usa.1",
         "conmebol.libertadores", "conmebol.sudamericana",
-        "fifa.world", "uefa.euro", "uefa.euroq", "conmebol.america", "uefa.nations",
-        "concacaf.gold", "concacaf.nations.league", "fifa.worldq.conmebol", "fifa.worldq.uefa",
-        "fifa.worldq.concacaf", "fifa.worldq.caf", "fifa.worldq.afc",
-        "caf.nations", "caf.nations_qual", "afc.cup", "afc.cupq", "fifa.friendly"
+        "uefa.nations", "fifa.friendly"
     ]
     tareas = [(ep, ymd) for ymd in fechas_ymd for ep in endpoints]
 
@@ -922,9 +925,30 @@ def cargar_mapa_resultados_caches():
     except Exception:
         pass
 
-    mapa["_indice_rapido"] = indice_rapido
-    mapa["_horas_fin"] = mapa_horas_fin
-    mapa["_dt_fin"] = mapa_dt_fin
+    # Fusión con memoria persistente del servidor: un marcador FT ya detectado NUNCA se pierde por un timeout posterior
+    mem_ft = _memoria_persistente_ft_web()
+    for k_m, v_m in mapa.items():
+        if not str(k_m).startswith("_"):
+            mem_ft["mapa"][k_m] = v_m
+    for k_m, v_m in mem_ft["mapa"].items():
+        if k_m not in mapa:
+            mapa[k_m] = v_m
+
+    claves_idx_vistos = {(f_i, frozenset(tl_i), frozenset(tv_i)) for f_i, tl_i, tv_i, _ in mem_ft["indice"]}
+    for item_i in indice_rapido:
+        k_idx = (item_i[0], frozenset(item_i[1]), frozenset(item_i[2]))
+        if k_idx not in claves_idx_vistos:
+            mem_ft["indice"].append(item_i)
+            claves_idx_vistos.add(k_idx)
+    if len(mem_ft["indice"]) > 2500:
+        mem_ft["indice"] = mem_ft["indice"][-2500:]
+
+    mem_ft["horas_fin"].update(mapa_horas_fin)
+    mem_ft["dt_fin"].update(mapa_dt_fin)
+
+    mapa["_indice_rapido"] = list(mem_ft["indice"])
+    mapa["_horas_fin"] = dict(mem_ft["horas_fin"])
+    mapa["_dt_fin"] = dict(mem_ft["dt_fin"])
     mapa["_en_vivo"] = mapa_en_vivo
     mapa["_indice_vivo"] = indice_vivo
     return mapa
@@ -966,7 +990,7 @@ def buscar_resultado_inteligente(mapa_ft, id_partido, duelo_str, dia_str=None):
     return None
 
 
-@st.cache_data(ttl=55, show_spinner=False)
+@st.cache_data(ttl=120, show_spinner=False)
 def obtener_resumen_auditoria():
     mapa_ft = cargar_mapa_resultados_caches()
     mapa_horas_fin = mapa_ft.get("_horas_fin", {})
@@ -1010,8 +1034,14 @@ def obtener_resumen_auditoria():
                     info_ft = buscar_resultado_inteligente(mapa_ft, id_tc, part_tc, f_dia)
                     if not info_ft:
                         continue
-                    if not tabla.empty and part_tc.lower() in set(tabla["Partido"].astype(str).str.lower().str.strip()):
-                        continue
+                    if not tabla.empty:
+                        ya_res_en_csv = tabla[
+                            (tabla["Partido"].astype(str).str.lower().str.strip() == part_tc.lower())
+                            & (tabla["Estado"].astype(str).isin(["Ganada", "Perdida", "Mitad Devuelta"]))
+                            & (tabla["Fecha_Registro"].astype(str).str[:10].isin({f_dia, (datetime.strptime(f_dia, "%Y-%m-%d") + timedelta(days=1)).strftime("%Y-%m-%d")}))
+                        ]
+                        if len(ya_res_en_csv) >= 2:
+                            continue
                     gh_l, ga_l, ght_l = info_ft
                     tipo_t = str(tc.get("tipo_tarjeta", "VIP")).strip()
                     ya_usados = usados_por_partido.setdefault(part_tc.lower(), set())
@@ -1494,7 +1524,7 @@ st.divider()
 # ==============================================================================
 # PANEL EN VIVO CON ACTUALIZACIÓN SILENCIOSA EN SEGUNDO PLANO CADA 60 SEGUNDOS
 # ==============================================================================
-@st.fragment(run_every=60)
+@st.fragment(run_every=120)
 def renderizar_panel_en_vivo_silencioso():
     mapa_ft_live = cargar_mapa_resultados_caches()
     _, _, _, _, df_hist_live = obtener_resumen_auditoria()
