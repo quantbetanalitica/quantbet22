@@ -1160,6 +1160,20 @@ def evaluar_mercado_universal(mercado, goles_h, goles_a, g_ht, nombre_local="", 
     return goles_h >= goles_a and goles_totales >= 2
   elif "combo x2 + o1.5" in m_low:
     return goles_a >= goles_h and goles_totales >= 2
+  elif "combo 1x + u3.5" in m_low:
+    return goles_h >= goles_a and goles_totales <= 3
+  elif "combo 1x + u4.5" in m_low:
+    return goles_h >= goles_a and goles_totales <= 4
+  elif "combo x2 + u3.5" in m_low:
+    return goles_a >= goles_h and goles_totales <= 3
+  elif "sin empate" in m_low or "dnb" in m_low:
+    if goles_h == goles_a:
+      return "Nula"
+    if "local" in m_low or (loc_norm and loc_norm[:5] in m_norm):
+      return goles_h > goles_a
+    if "visita" in m_low or (vis_norm and vis_norm[:5] in m_norm):
+      return goles_a > goles_h
+    return False
   elif "1x" in m_low and "combo" not in m_low:
     return goles_h >= goles_a
   elif "x2" in m_low and "combo" not in m_low:
@@ -1363,6 +1377,10 @@ def resolver_apuestas_pendientes(api_token):
               df.at[idx, "Estado"] = "Ganada"
               df.at[idx, "Retorno_COP"] = round(stake * cuota_compra, 2)
               icono_res = "✅"
+            elif ganada == "Nula":
+              df.at[idx, "Estado"] = "Mitad Devuelta"
+              df.at[idx, "Retorno_COP"] = round(stake, 2)
+              icono_res = "⚪"
             elif ganada == "Mitad":
               df.at[idx, "Estado"] = "Mitad Devuelta"
               df.at[idx, "Retorno_COP"] = round(stake * ((1.0 + cuota_compra) / 2.0), 2)
@@ -2101,6 +2119,18 @@ def _parsear_ofertas_kambi(bet_offers, info_evento):
             info_evento["X2"] = o_dec
       continue
 
+    # 2B. Apuesta Sin Empate (Draw No Bet / Empate no acción)
+    if any(k in crit_lbl or k in tipo_low for k in ("draw no bet", "sin empate", "empate no acci", "empate no v")):
+      if not any(h in crit_lbl for h in ("1st", "2nd", "1.ª", "2.ª", "half", "parte", "tiempo")) and len(outcomes) >= 2:
+        try:
+          o0, o1 = outcomes[0].get("odds"), outcomes[1].get("odds")
+          if o0 and o1:
+            info_evento["dnb_local"] = round(float(o0) / 1000.0, 2)
+            info_evento["dnb_visita"] = round(float(o1) / 1000.0, 2)
+        except Exception:
+          pass
+      continue
+
     # 3. Ambos Marcan (BTTS)
     if "both teams to score" in crit_lbl or "ambos equipos marcan" in crit_lbl or "ambos marcan" in crit_lbl:
       if not any(h in crit_lbl for h in ("1st", "2nd", "1.ª", "2.ª", "half", "parte", "tiempo")):
@@ -2237,7 +2267,7 @@ def inferir_lambda_desde_cuotas(over_dict, under_dict=None, lam_min=0.8, lam_max
 
 def _crear_info_cuotas_vacio():
   return {
-      "1": "N/A", "X": "N/A", "2": "N/A", "1X": None, "X2": None, "btts_si": None,
+      "1": "N/A", "X": "N/A", "2": "N/A", "1X": None, "X2": None, "dnb_local": None, "dnb_visita": None, "btts_si": None,
       "over25": None, "fuente": "modelo",
       "over_goles": {}, "under_goles": {},
       "over_goles_1t": {}, "under_goles_1t": {},
@@ -2353,7 +2383,7 @@ def enriquecer_mercados_evento_kambi(info_evento):
         for campo in campos_dict:
           d_raw = guardado.get(campo) or {}
           info_evento[campo] = {float(k): float(v) for k, v in d_raw.items()}
-        for sc in ("over25", "1X", "X2", "btts_si"):
+        for sc in ("over25", "1X", "X2", "dnb_local", "dnb_visita", "btts_si"):
           if guardado.get(sc) is not None:
             info_evento[sc] = float(guardado[sc])
         info_evento["detallado"] = True
@@ -2376,6 +2406,8 @@ def enriquecer_mercados_evento_kambi(info_evento):
           "over25": info_evento.get("over25"),
           "1X": info_evento.get("1X"),
           "X2": info_evento.get("X2"),
+          "dnb_local": info_evento.get("dnb_local"),
+          "dnb_visita": info_evento.get("dnb_visita"),
           "btts_si": info_evento.get("btts_si"),
       }
       for campo in campos_dict:
@@ -2731,10 +2763,13 @@ def obtener_tabla_posiciones_liga_con_cache(liga_key):
   mapa_slugs_standings = {
       "españa": "esp.1", "españa_2": "esp.2", "inglaterra": "eng.1",
       "italia": "ita.1", "alemania": "ger.1", "francia": "fra.1",
-      "portugal": "por.1", "holanda": "ned.1", "turquia": "tur.1",
+      "portugal": "por.1", "holanda": "ned.1", "belgica": "bel.1",
+      "grecia": "gre.1", "escocia": "sco.1", "turquia": "tur.1",
       "arabia_saudita": "ksa.1", "brasil": "bra.1", "argentina": "arg.1",
       "colombia": "col.1", "mexico": "mex.1", "usa": "usa.1",
       "UEFA CHAMPIONS LEAGUE": "uefa.champions", "UEFA EUROPA LEAGUE": "uefa.europa",
+      "UEFA CONFERENCE LEAGUE": "uefa.europa.conf",
+      "COPA LIBERTADORES": "conmebol.libertadores", "COPA SUDAMERICANA": "conmebol.sudamericana",
   }
   slug = mapa_slugs_standings.get(liga_key)
   if not slug:
@@ -3240,13 +3275,29 @@ def motor_quant_institucional(
           n_ef_muestra_partido = max(2.0, min(res_ll["n_ef_local"], res_ll["n_ef_vis"]) + (4.0 if (st_loc_real and st_vis_real) else 0.0))
           usando_modelo_log_lineal_liga = True
 
-  # Calidad real de información disponible para el partido (evita operar partidos a ciegas)
+  # Calidad real de información disponible en 4 capas (CSV + Tabla Standings + Historial API/ESPN + Cuotas Kambi/ESPN)
+  # Ningún equipo de 1ª División ni torneo continental puede caer en descartes teniendo sus datos reales o perfil de liga.
   tiene_cuotas_casa_1x2 = bool(cuotas_bp and isinstance(cuotas_bp.get("1"), (int, float)) and isinstance(cuotas_bp.get("2"), (int, float)))
+  tiene_cuotas_casa_goles = bool(cuotas_bp and ((cuotas_bp.get("over_goles") or {}) or cuotas_bp.get("over25")))
   tiene_csv_ambos = (not d_l.empty) and (not d_v.empty)
   tiene_tabla_ambos = bool(st_loc_real and st_vis_real)
-  if tiene_csv_ambos or (tiene_tabla_ambos and tiene_cuotas_casa_1x2):
+  tiene_tabla_alguno = bool(st_loc_real or st_vis_real)
+  tiene_hist_api_l = not (abs(float(media_l_a) - 1.24) < 1e-4 and abs(float(media_l_c) - 1.16) < 1e-4)
+  tiene_hist_api_v = not (abs(float(media_v_a) - 1.24) < 1e-4 and abs(float(media_v_c) - 1.16) < 1e-4)
+  es_primera_div_o_continental = liga_key in {
+      "españa", "inglaterra", "italia", "alemania", "francia", "portugal", "holanda",
+      "belgica", "grecia", "escocia", "colombia", "argentina", "brasil", "mexico",
+      "usa", "arabia_saudita", "europa", "internacional",
+      "UEFA CHAMPIONS LEAGUE", "UEFA EUROPA LEAGUE", "UEFA CONFERENCE LEAGUE",
+      "COPA LIBERTADORES", "COPA SUDAMERICANA",
+  }
+  if tiene_csv_ambos or (tiene_tabla_ambos and (tiene_cuotas_casa_1x2 or tiene_cuotas_casa_goles)) or (tiene_hist_api_l and tiene_hist_api_v and tiene_cuotas_casa_1x2):
       calidad_datos = "ALTA"
-  elif tiene_cuotas_casa_1x2 or tiene_tabla_ambos or (not d_l.empty) or (not d_v.empty) or es_seleccion_nacional:
+  elif (
+      tiene_cuotas_casa_1x2 or tiene_cuotas_casa_goles or tiene_tabla_alguno
+      or (not d_l.empty) or (not d_v.empty) or tiene_hist_api_l or tiene_hist_api_v
+      or es_seleccion_nacional or es_primera_div_o_continental
+  ):
       calidad_datos = "MEDIA"
   else:
       calidad_datos = "BAJA"
@@ -3979,6 +4030,9 @@ def motor_quant_institucional(
   p_over3_mat = 0.0
   p_combo_1x_o15_mat = 0.0
   p_combo_x2_o15_mat = 0.0
+  p_combo_1x_u35_mat = 0.0
+  p_combo_1x_u45_mat = 0.0
+  p_combo_x2_u35_mat = 0.0
 
   for i in range(7):
       for j in range(7):
@@ -4000,6 +4054,13 @@ def motor_quant_institucional(
           p_under25_mat += p_norm
       if g_tot < 3.5:
           p_under35_mat += p_norm
+      if g_tot <= 3:
+          if i >= j:
+              p_combo_1x_u35_mat += p_norm
+          if j >= i:
+              p_combo_x2_u35_mat += p_norm
+      if g_tot <= 4 and i >= j:
+          p_combo_1x_u45_mat += p_norm
       if g_tot > 1.5: 
           p_over15_mat += p_norm
           if i >= j:
@@ -4474,6 +4535,27 @@ def motor_quant_institucional(
   cuota_justa_combo_x2 = (100 / p_combo_x2_over15) if p_combo_x2_over15 > 0 else 0
   c_min_combo_x2 = max(1.12, cuota_justa_combo_x2 * obtener_margen_ev_dinamico(p_combo_x2_over15))
 
+  # Combos Defensivos Dixon-Coles (1X + Menos de 3.5 / 4.5 y X2 + Menos de 3.5)
+  p_combo_1x_u35 = min(84.0, round(p_combo_1x_u35_mat * 100.0, 1))
+  c_min_combo_1x_u35 = round(max(1.18, (100.0 / max(p_combo_1x_u35, 1.0)) * obtener_margen_ev_dinamico(p_combo_1x_u35)), 2)
+  p_combo_1x_u45 = min(87.0, round(p_combo_1x_u45_mat * 100.0, 1))
+  c_min_combo_1x_u45 = round(max(1.14, (100.0 / max(p_combo_1x_u45, 1.0)) * obtener_margen_ev_dinamico(p_combo_1x_u45)), 2)
+  p_combo_x2_u35 = min(82.0, round(p_combo_x2_u35_mat * 100.0, 1))
+  c_min_combo_x2_u35 = round(max(1.22, (100.0 / max(p_combo_x2_u35, 1.0)) * obtener_margen_ev_dinamico(p_combo_x2_u35)), 2)
+
+  # Apuesta Sin Empate (Draw No Bet) exacta: P(H) / (P(H) + P(A))
+  denom_dnb = max(1.0, p_h + p_a)
+  p_dnb_local = round(min(89.0, (p_h / denom_dnb) * 100.0), 1)
+  p_dnb_visita = round(min(89.0, (p_a / denom_dnb) * 100.0), 1)
+  c_min_dnb_local = round(max(1.14, (100.0 / max(p_dnb_local, 1.0)) * obtener_margen_ev_dinamico(p_dnb_local)), 2)
+  c_min_dnb_visita = round(max(1.16, (100.0 / max(p_dnb_visita, 1.0)) * obtener_margen_ev_dinamico(p_dnb_visita)), 2)
+
+  # Goles por Equipo (> 0.5 y > 1.5) exactos desde lambdas Dixon-Coles
+  p_loc_o05, _, c_min_loc_o05 = calcular_prob_over_y_ev(l_local_mat, 0.5)
+  p_vis_o05, _, c_min_vis_o05 = calcular_prob_over_y_ev(l_vis_mat, 0.5)
+  p_loc_o15, _, c_min_loc_o15 = calcular_prob_over_y_ev(l_local_mat, 1.5)
+  p_vis_o15, _, c_min_vis_o15 = calcular_prob_over_y_ev(l_vis_mat, 1.5)
+
   nombre_arbitro_final = (
       arbitro if (arbitro and str(arbitro).lower() not in ["none", "null", "", "nan"]) else "No Asignado"
   )
@@ -4558,6 +4640,46 @@ def motor_quant_institucional(
     cuotas_reales_casa[f"Victoria {local[:12]}"] = round(float(cuotas_bp["1"]), 2)
   if isinstance((cuotas_bp or {}).get("2"), (int, float)):
     cuotas_reales_casa[f"Victoria {visitante[:12]}"] = round(float(cuotas_bp["2"]), 2)
+  # Apuesta Sin Empate (DNB): cuota directa Kambi o derivada exacta de 1X2 real cuando Kambi abrió 1X2
+  c1_k = (cuotas_bp or {}).get("1")
+  cx_k = (cuotas_bp or {}).get("X")
+  c2_k = (cuotas_bp or {}).get("2")
+  if (cuotas_bp or {}).get("dnb_local"):
+    cuotas_reales_casa[f"Sin Empate {local[:12]}"] = round(float(cuotas_bp["dnb_local"]), 2)
+  elif isinstance(c1_k, (int, float)) and isinstance(cx_k, (int, float)) and float(cx_k) > 1.05:
+    c_dnb_l_der = round(max(1.12, float(c1_k) * (1.0 - (1.0 / float(cx_k)))), 2)
+    cuotas_reales_casa[f"Sin Empate {local[:12]}"] = c_dnb_l_der
+  if (cuotas_bp or {}).get("dnb_visita"):
+    cuotas_reales_casa[f"Sin Empate {visitante[:12]}"] = round(float(cuotas_bp["dnb_visita"]), 2)
+  elif isinstance(c2_k, (int, float)) and isinstance(cx_k, (int, float)) and float(cx_k) > 1.05:
+    c_dnb_v_der = round(max(1.12, float(c2_k) * (1.0 - (1.0 / float(cx_k)))), 2)
+    cuotas_reales_casa[f"Sin Empate {visitante[:12]}"] = c_dnb_v_der
+  # Bet Builder Combos (disponibles en Kambi/BetPlay cuando 1X/X2 y Goles están abiertos)
+  if (cuotas_bp or {}).get("1X"):
+    if 1.5 in ((cuotas_bp or {}).get("over_goles") or {}):
+      cuotas_reales_casa["Combo 1X + O1.5"] = round(max(1.24, min(2.15, (100.0 / max(p_combo_1x_over15, 1.0)) * 0.94)), 2)
+    if 3.5 in ((cuotas_bp or {}).get("under_goles") or {}) or 2.5 in ((cuotas_bp or {}).get("under_goles") or {}):
+      cuotas_reales_casa["Combo 1X + U3.5"] = round(max(1.28, min(2.10, (100.0 / max(p_combo_1x_u35, 1.0)) * 0.94)), 2)
+      cuotas_reales_casa["Combo 1X + U4.5"] = round(max(1.18, min(1.85, (100.0 / max(p_combo_1x_u45, 1.0)) * 0.94)), 2)
+  if (cuotas_bp or {}).get("X2"):
+    if 1.5 in ((cuotas_bp or {}).get("over_goles") or {}):
+      cuotas_reales_casa["Combo X2 + O1.5"] = round(max(1.28, min(2.20, (100.0 / max(p_combo_x2_over15, 1.0)) * 0.94)), 2)
+    if 3.5 in ((cuotas_bp or {}).get("under_goles") or {}) or 2.5 in ((cuotas_bp or {}).get("under_goles") or {}):
+      cuotas_reales_casa["Combo X2 + U3.5"] = round(max(1.32, min(2.15, (100.0 / max(p_combo_x2_u35, 1.0)) * 0.94)), 2)
+  # Goles por equipo > 0.5 / > 1.5 derivados solo si Kambi abrió Goles Totales y 1X2 (si Kambi ya dio la cuota exacta, se respeta!)
+  if (cuotas_bp or {}).get("over_goles") and isinstance(c1_k, (int, float)):
+    k_lo05 = f"Goles {local[:12]} > 0.5"
+    k_vi05 = f"Goles {visitante[:12]} > 0.5"
+    k_lo15 = f"Goles {local[:12]} > 1.5"
+    k_vi15 = f"Goles {visitante[:12]} > 1.5"
+    if k_lo05 not in cuotas_reales_casa and p_loc_o05:
+      cuotas_reales_casa[k_lo05] = round(max(1.14, min(2.05, (94.0 / max(p_loc_o05, 1.0)))), 2)
+    if k_vi05 not in cuotas_reales_casa and p_vis_o05:
+      cuotas_reales_casa[k_vi05] = round(max(1.16, min(2.15, (94.0 / max(p_vis_o05, 1.0)))), 2)
+    if k_lo15 not in cuotas_reales_casa and p_loc_o15 and p_loc_o15 >= 56.0:
+      cuotas_reales_casa[k_lo15] = round(max(1.30, min(2.15, (94.0 / max(p_loc_o15, 1.0)))), 2)
+    if k_vi15 not in cuotas_reales_casa and p_vis_o15 and p_vis_o15 >= 56.0:
+      cuotas_reales_casa[k_vi15] = round(max(1.32, min(2.20, (94.0 / max(p_vis_o15, 1.0)))), 2)
 
   return {
       "id_partido": id_partido,
@@ -4610,6 +4732,26 @@ def motor_quant_institucional(
       "c_min_combo_1x": c_min_combo_1x,
       "p_combo_x2_over15": p_combo_x2_over15,
       "c_min_combo_x2": c_min_combo_x2,
+      "p_combo_1x_u35": p_combo_1x_u35,
+      "c_min_combo_1x_u35": c_min_combo_1x_u35,
+      "p_combo_1x_u45": p_combo_1x_u45,
+      "c_min_combo_1x_u45": c_min_combo_1x_u45,
+      "p_combo_x2_u35": p_combo_x2_u35,
+      "c_min_combo_x2_u35": c_min_combo_x2_u35,
+      "p_dnb_local": p_dnb_local,
+      "c_min_dnb_local": c_min_dnb_local,
+      "p_dnb_visita": p_dnb_visita,
+      "c_min_dnb_visita": c_min_dnb_visita,
+      "p_loc_o05": p_loc_o05,
+      "c_min_loc_o05": c_min_loc_o05,
+      "p_vis_o05": p_vis_o05,
+      "c_min_vis_o05": c_min_vis_o05,
+      "p_loc_o15": p_loc_o15,
+      "c_min_loc_o15": c_min_loc_o15,
+      "p_vis_o15": p_vis_o15,
+      "c_min_vis_o15": c_min_vis_o15,
+      "l_local_mat": round(float(l_local_mat), 3),
+      "l_vis_mat": round(float(l_vis_mat), 3),
       "es_sniper": es_sniper_over15,
       "tot_tiros": tot_tiros,
       "p_tiros55": p_tiros55,
@@ -5397,46 +5539,53 @@ def ejecutar_sistema_automatico(api_token):
       )
 
       def _sem_item(p_val):
-          if p_val is None: return "🔴"
-          return "🟢" if p_val >= 68.0 else ("🟡" if p_val >= 58.0 else "🔴")
+          if p_val is None: return "⚪"
+          return "🟢" if p_val >= 65.0 else ("🟡" if p_val >= 54.0 else "⚪")
 
-      txt_corn75_compra = f"{_sem_item(res_m['p_c75'])} {res_m['p_c75']:.1f}% ➔ Comprar > {res_m['c_min_c75']:.2f}" if res_m["tot_corn"] is not None else "Sin Datos"
-      txt_corn_compra = f"{_sem_item(res_m['p_c85'])} {res_m['p_c85']:.1f}% ➔ Comprar > {res_m['c_min_c85']:.2f}" if res_m["tot_corn"] is not None else "Sin Datos"
-      txt_tarj_compra = f"{_sem_item(res_m['p_t35'])} {res_m['p_t35']:.1f}% ➔ Comprar > {res_m['c_min_t35']:.2f}" if res_m["tot_tarj"] is not None else "Sin Datos"
       txt_bp_1 = f"{cuotas_bp['1']}" if isinstance(cuotas_bp["1"], float) else "Consenso Global"
-      txt_tiros65 = f"{_sem_item(res_m.get('p_tiros65'))} {res_m['p_tiros65']:.1f}% ➔ Comprar > {res_m['c_min_tiros65']:.2f}" if res_m.get('p_tiros65') is not None else "Sin Datos"
-      txt_faltas22 = f"{_sem_item(res_m.get('p_faltas22'))} {res_m['p_faltas22']:.1f}% ➔ Comprar > {res_m['c_min_faltas22']:.2f}" if res_m.get('p_faltas22') is not None else "Sin Datos"
-      txt_dom_goles = f"\n🚩 <b>{res_m['nombre_dom_goles']}:</b> {_sem_item(res_m['p_dom_goles'])} {res_m['p_dom_goles']:.1f}% ➔ Comprar > {res_m['c_min_dom_goles']:.2f}" if res_m.get("nombre_dom_goles") else ""
-      txt_dom_corn = f"\n🚩 <b>{res_m['nombre_dom_corn']}:</b> {_sem_item(res_m['p_dom_corn'])} {res_m['p_dom_corn']:.1f}% ➔ Comprar > {res_m['c_min_dom_corn']:.2f}" if res_m.get("nombre_dom_corn") else ""
+      crc_m = res_m.get("cuotas_reales_casa") or {}
+      # Matriz Inteligente: muestra PRIMERO los mercados de MAYOR EFECTIVIDAD Y VALOR (🟢/🟡) sin llenar la pantalla de puntos rojos por lados opuestos
+      items_evaluados = [
+          ("🏠", f"Victoria {res_m['local'][:12]}", res_m.get("p_h"), crc_m.get(f"Victoria {res_m['local'][:12]}") or res_m.get("cuota_h")),
+          ("✈️", f"Victoria {res_m['visitante'][:12]}", res_m.get("p_a"), crc_m.get(f"Victoria {res_m['visitante'][:12]}") or res_m.get("cuota_a")),
+          ("🛡️", f"Sin Empate {res_m['local'][:12]}", res_m.get("p_dnb_local"), crc_m.get(f"Sin Empate {res_m['local'][:12]}") or res_m.get("c_min_dnb_local")),
+          ("🛡️", f"Sin Empate {res_m['visitante'][:12]}", res_m.get("p_dnb_visita"), crc_m.get(f"Sin Empate {res_m['visitante'][:12]}") or res_m.get("c_min_dnb_visita")),
+          ("🛡️", "Doble Oport. 1X", res_m.get("p_1x"), crc_m.get("Doble Oport. 1X") or res_m.get("c_min_1x")),
+          ("🛡️", "Doble Oport. X2", res_m.get("p_x2"), crc_m.get("Doble Oport. X2") or res_m.get("c_min_x2")),
+          ("⚽", "Over 1.5 Goles", res_m.get("p_15_match"), crc_m.get("Over 1.5 Goles") or res_m.get("c_min_15")),
+          ("⚽", "Over 2.5 Goles", res_m.get("p_25_match"), crc_m.get("Over 2.5 Goles") or res_m.get("c_min_25")),
+          ("🛡️", "Under 2.5 Goles", res_m.get("p_under25"), crc_m.get("Total Menos de 2.5 (Under)") or res_m.get("c_min_under25")),
+          ("🛡️", "Under 3.5 Goles", res_m.get("p_under35"), crc_m.get("Total Menos de 3.5 (Under)") or res_m.get("c_min_under35")),
+          ("⚽", "Asiático > 2.25", res_m.get("p_asig225"), res_m.get("c_min_asig225")),
+          ("🥅", "Ambos Marcan (BTTS)", res_m.get("p_btts"), crc_m.get("Ambos Marcan (BTTS)") or res_m.get("c_min_btts")),
+          ("⚡", "Gol en 1T (O 0.5)", res_m.get("p_05_ht"), crc_m.get("Gol en 1T") or res_m.get("c_min_05_ht")),
+          ("🔥", "Gol en 2T (O 0.5)", res_m.get("p_05_2t"), crc_m.get("Gol en 2do Tiempo") or res_m.get("c_min_05_2t")),
+          ("🧩", "Combo 1X + O1.5", res_m.get("p_combo_1x_over15"), crc_m.get("Combo 1X + O1.5") or res_m.get("c_min_combo_1x")),
+          ("🧩", "Combo 1X + U3.5", res_m.get("p_combo_1x_u35"), crc_m.get("Combo 1X + U3.5") or res_m.get("c_min_combo_1x_u35")),
+          ("🧩", "Combo X2 + O1.5", res_m.get("p_combo_x2_over15"), crc_m.get("Combo X2 + O1.5") or res_m.get("c_min_combo_x2")),
+          ("🎯", f"Remates > {res_m.get('linea_tiros_free', 6.5)}", res_m.get("p_tiros_free") or res_m.get("p_tiros65"), res_m.get("c_min_tiros_free") or res_m.get("c_min_tiros65")),
+          ("🚩", "Córners > 7.5", res_m.get("p_c75"), crc_m.get("Córners > 7.5") or res_m.get("c_min_c75")),
+          ("🟨", f"Tarjetas > {res_m['linea_tarj']}", res_m.get("p_t35"), crc_m.get(f"Tarjetas > {res_m['linea_tarj']}") or res_m.get("c_min_t35")),
+      ]
+      if res_m.get("nombre_dom_goles") and res_m.get("p_dom_goles"):
+          items_evaluados.append(("⚽", res_m["nombre_dom_goles"], res_m["p_dom_goles"], crc_m.get(res_m["nombre_dom_goles"]) or res_m["c_min_dom_goles"]))
+      if res_m.get("nombre_dom_corn") and res_m.get("p_dom_corn"):
+          items_evaluados.append(("🚩", res_m["nombre_dom_corn"], res_m["p_dom_corn"], crc_m.get(res_m["nombre_dom_corn"]) or res_m["c_min_dom_corn"]))
+
+      items_validos = [(ic, nm, float(pr), float(cu)) for ic, nm, pr, cu in items_evaluados if pr is not None and cu is not None and float(pr) >= 54.0]
+      items_validos.sort(key=lambda x: x[2], reverse=True)
+      lineas_top = [f"{ic} <b>{nm}:</b> {_sem_item(pr)} {pr:.1f}% ➔ > {cu:.2f}" for ic, nm, pr, cu in items_validos[:10]]
+      bloque_top_txt = "\n".join(lineas_top) if lineas_top else "⚖️ Partido parejo: operar con stake moderado en tarjeta oficial."
 
       bloque_partido = (
           f"📅 {res_m['fecha'][5:]} ⏰ <b>{res_m['hora']}</b> | {semaforo_gen}{txt_copa_tag}\n"
           f"🏟 <b>{res_m['local']} vs {res_m['visitante']}</b>\n"
           f"📍 <i>{res_m['liga_visual']}</i>\n"
-          f"🚦 <b>Semáforo de Riesgo:</b> {veredicto_resumen} ({puntos_confluencia}/4 EV+)\n"
-          f"🧭 <i>Semáforo PRO: 🟢 Apostar (≥68%) | 🟡 Moderado (58-67%) | 🔴 Evitar (&lt;58%)</i>\n"
-          f"📐 <b>Consenso:</b> {txt_bp_1} | <b>Cuota Justa Modelo:</b> {res_m['cuota_h']:.2f}\n"
+          f"🚦 <b>Semáforo:</b> {veredicto_resumen} | xG: <b>{res_m['tot_goles']:.2f}</b>\n"
+          f"🧭 <i>🟢 Alta Probabilidad (≥65%) | 🟡 Valor Táctico (54-64%)</i>\n"
+          f"📐 <b>Cuota Casa 1X2:</b> {txt_bp_1} | <b>Modelo:</b> {res_m['cuota_h']:.2f}\n"
           f"━━━━━━━━━━━━━━━━━━━━\n"
-          f"🏠 <b>Victoria Local:</b> {_sem_item(res_m['p_h'])} {res_m['p_h']:.1f}% ➔ Comprar > {res_m['cuota_h']:.2f}\n"
-          f"🤝 <b>Empate:</b> {_sem_item(res_m['p_d'])} {res_m['p_d']:.1f}% ➔ Comprar > {res_m['cuota_d']:.2f}\n"
-          f"✈️ <b>Victoria Visita:</b> {_sem_item(res_m['p_a'])} {res_m['p_a']:.1f}% ➔ Comprar > {res_m['cuota_a']:.2f}\n"
-          f"🛡️ <b>Doble Oport. 1X:</b> {_sem_item(res_m['p_1x'])} {res_m['p_1x']:.1f}% ➔ Comprar > {res_m['c_min_1x']:.2f}\n"
-          f"🛡️ <b>Doble Oport. X2:</b> {_sem_item(res_m['p_x2'])} {res_m['p_x2']:.1f}% ➔ Comprar > {res_m['c_min_x2']:.2f}\n"
-          f"⚽ <b>Over 1.5 Goles:</b> {_sem_item(res_m['p_15_match'])} {res_m['p_15_match']:.1f}% ➔ Comprar > {res_m['c_min_15']:.2f}\n"
-          f"🛡️ <b>Under 2.5 Goles:</b> {_sem_item(res_m['p_under25'])} {res_m['p_under25']:.1f}% ➔ Comprar > {res_m['c_min_under25']:.2f}\n"
-          f"⚽ <b>Asiático > 2.25:</b> {_sem_item(res_m['p_asig225'])} {res_m['p_asig225']:.1f}% ➔ Comprar > {res_m['c_min_asig225']:.2f}\n"
-          f"⚽ <b>Asiático > 2.75:</b> {_sem_item(res_m['p_asig275'])} {res_m['p_asig275']:.1f}% ➔ Comprar > {res_m['c_min_asig275']:.2f}\n"
-          f"🥅 <b>Ambos Marcan (BTTS):</b> {_sem_item(res_m['p_btts'])} {res_m['p_btts']:.1f}% ➔ Comprar > {res_m['c_min_btts']:.2f}\n"
-          f"⚡ <b>Gol en 1T (O 0.5):</b> {_sem_item(res_m['p_05_ht'])} {res_m['p_05_ht']:.1f}% ➔ Comprar > {res_m['c_min_05_ht']:.2f}\n"
-          f"🔥 <b>Gol en 2T (O 0.5):</b> {_sem_item(res_m['p_05_2t'])} {res_m['p_05_2t']:.1f}% ➔ Comprar > {res_m['c_min_05_2t']:.2f}"
-          f"{txt_dom_goles}{txt_dom_corn}\n"
-          f"🎯 <b>Remates > 6.5:</b> {txt_tiros65}\n"
-          f"⚠️ <b>Faltas > 22.5:</b> {txt_faltas22}\n"
-          f"🚩 <b>Córners > 7.5:</b> {txt_corn75_compra}\n"
-          f"🚩 <b>Córners > 8.5:</b> {txt_corn_compra}\n"
-          f"🟨 <b>Tarjetas > {res_m['linea_tarj']}:</b> {txt_tarj_compra}\n"
-          f"🧩 <b>Combo 1X + O1.5:</b> {_sem_item(res_m['p_combo_1x_over15'])} {res_m['p_combo_1x_over15']:.1f}% ➔ Comprar > {res_m['c_min_combo_1x']:.2f}\n"
-          f"🧩 <b>Combo X2 + O1.5:</b> {_sem_item(res_m['p_combo_x2_over15'])} {res_m['p_combo_x2_over15']:.1f}% ➔ Comprar > {res_m['c_min_combo_x2']:.2f}"
+          f"{bloque_top_txt}"
       )
       res_m['bloque_texto'] = bloque_partido
       res_m['bloque_caption_pro'] = bloque_partido.replace(" ➔ Comprar > ", " ➔ >").replace("Consenso Casas (BetPlay/Bet365):", "Consenso:")
@@ -5889,21 +6038,9 @@ def ejecutar_sistema_automatico(api_token):
           print(f" ⚠️ FALLIDOS -> FREE: {fallidos_free} | VIP: {fallidos_vip}")
       print("=" * 95)
 
-  # Guardar las imágenes de descartes únicamente en la carpeta del PC (sin spamear Telegram)
-  for p in ([] if "--solo-videos" in sys.argv else partidos_descartes_finales):
-      p_copia_desc = dict(p)
-      p_copia_desc['fecha'] = fecha_jornada
-      ruta_temporal_desc = generar_captura_automatica(p_copia_desc, "DESCARTES")
-      # auto_registrar_selecciones_tarjetas(p_copia_desc, "DESCARTES", fecha_jornada)
-      if ruta_temporal_desc and os.path.exists(ruta_temporal_desc):
-          loc_clean = "".join([c for c in p['local'] if c.isalnum() or c in " "]).rstrip().replace(" ", "_")
-          vis_clean = "".join([c for c in p['visitante'] if c.isalnum() or c in " "]).rstrip().replace(" ", "_")
-          hora_clean = p['hora'].replace(":", "")
-          directorio_base = f"Alertas_Quant_{fecha_jornada}"
-          dir_desc = os.path.join(directorio_base, "3_DESCARTES")
-          os.makedirs(dir_desc, exist_ok=True)
-          ruta_final_desc = os.path.join(dir_desc, f"{hora_clean}_{loc_clean}_vs_{vis_clean}_DESCARTES.jpg")
-          shutil.move(ruta_temporal_desc, ruta_final_desc)
+  # Carpeta 3_DESCARTES eliminada permanentemente: los encuentros sin datos suficientes se omiten sin ensuciar el directorio
+  if partidos_descartes_finales:
+      print(f"[i] {len(partidos_descartes_finales)} partido(s) sin historial ni cuotas suficientes omitidos automáticamente (carpeta 3_DESCARTES desactivada).")
 
   print(f"\n[+] 🏁 Escaneo de partidos y envío de tarjetas finalizado con éxito.\n")
 
