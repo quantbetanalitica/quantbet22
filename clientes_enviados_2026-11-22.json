@@ -1,0 +1,313 @@
+{
+  "fecha": "2026-11-22",
+  "tarjetas_clientes": [
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "401875008",
+      "hora": "12:30",
+      "partido": "Juventus vs Venezia (Italia (Serie A))",
+      "selecciones": [
+        {
+          "mercado": "Combo 1X + O1.5",
+          "prob": 67.2,
+          "cuota": 1.52
+        },
+        {
+          "mercado": "Faltas Totales > 20.5",
+          "prob": 61.8,
+          "cuota": 1.65
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "401874989",
+      "hora": "18:00",
+      "partido": "AC Milan vs Frosinone (Italia (Serie A))",
+      "selecciones": [
+        {
+          "mercado": "Córners > 8.5",
+          "prob": 60.9,
+          "cuota": 1.67
+        },
+        {
+          "mercado": "Gol en 2do Tiempo",
+          "prob": 77.0,
+          "cuota": 1.38
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "401875001",
+      "hora": "20:45",
+      "partido": "Atalanta vs Internazionale (Italia (Serie A))",
+      "selecciones": [
+        {
+          "mercado": "Faltas Totales > 17.5",
+          "prob": 60.9,
+          "cuota": 1.68
+        },
+        {
+          "mercado": "Gol en 2do Tiempo",
+          "prob": 76.3,
+          "cuota": 1.38
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "401882803",
+      "hora": "21:00",
+      "partido": "Getafe vs Atlético Madrid (España (Laliga))",
+      "selecciones": [
+        {
+          "mercado": "Tarjetas > 3.5",
+          "prob": 58.2,
+          "cuota": 1.75
+        },
+        {
+          "mercado": "Faltas Totales > 21.5",
+          "prob": 63.8,
+          "cuota": 1.6
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "FREE",
+      "id_partido": "401878755",
+      "hora": "17:30",
+      "partido": "Liverpool vs Manchester United (Inglaterra (Premier))",
+      "selecciones": [
+        {
+          "mercado": "Remates Puerta > 6.5",
+          "prob": 64.0,
+          "cuota": 1.28
+        },
+        {
+          "mercado": "Total Menos de 3.5 (Under)",
+          "prob": 79.6,
+          "cuota": 1.18
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "FREE",
+      "id_partido": "401882804",
+      "hora": "14:00",
+      "partido": "Barcelona vs Villarreal (España (Laliga))",
+      "selecciones": [
+        {
+          "mercado": "Córners Barcelona > 4.5",
+          "prob": 86.5,
+          "cuota": 1.18
+        },
+        {
+          "mercado": "Remates Puerta > 6.5",
+          "prob": 71.1,
+          "cuota": 1.28
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "FREE",
+      "id_partido": "401882800",
+      "hora": "16:15",
+      "partido": "Racing Santander vs Real Sociedad (España (Laliga))",
+      "selecciones": [
+        {
+          "mercado": "Faltas Totales > 21.5",
+          "prob": 67.3,
+          "cuota": 1.28
+        },
+        {
+          "mercado": "Córners > 8.5",
+          "prob": 61.2,
+          "cuota": 1.28
+        }
+      ]
+    }
+  ],
+  "combinada_doble": {
+    "selecciones": [
+      {
+        "partido": "Barcelona vs Villarreal",
+        "hora": "14:00",
+        "mercado": "Doble Oport. 1X",
+        "prob": 84.75687243707608,
+        "cuota": 1.36,
+        "score_elite": 68
+      },
+      {
+        "partido": "Torreense vs Benfica",
+        "hora": "21:45",
+        "mercado": "Doble Oport. X2",
+        "prob": 84.61817236473162,
+        "cuota": 1.36,
+        "score_elite": 20
+      }
+    ],
+    "cuota_total": 1.85,
+    "prob_directa": 71.7,
+    "prob_protegida": 86.2
+  },
+  "combinada_sniper": {
+    "selecciones": [
+      {
+        "partido": "Marseille vs Le Mans",
+        "hora": "20:45",
+        "mercado": "Over 1.5 Goles",
+        "prob": 81.33449695896945,
+        "cuota": 1.44,
+        "score_elite": 18
+      },
+      {
+        "partido": "Racing Santander vs Real Sociedad",
+        "hora": "16:15",
+        "mercado": "Gol en 2do Tiempo",
+        "prob": 81.26543551357332,
+        "cuota": 1.44,
+        "score_elite": 68
+      },
+      {
+        "partido": "Torreense vs Benfica",
+        "hora": "21:45",
+        "mercado": "Over 1.5 Goles",
+        "prob": 81.08721880762239,
+        "cuota": 1.44,
+        "score_elite": 20
+      }
+    ],
+    "cuota_total": 2.99,
+    "prob_directa": 53.6,
+    "prob_protegida": 77.6
+  },
+  "combinadas_exclusivas_pro": [
+    {
+      "clave": "cuadruple_elite_pro",
+      "titulo": "CUÁDRUPLE ÉLITE PRO",
+      "subtitulo": "EXCLUSIVO PRO: 4 PARTIDOS DE ALTA CONFLUENCIA",
+      "sufijo": "CUADRUPLE_ELITE_PRO",
+      "stake": "Invertir el 1% de tu capital (Alto Retorno)",
+      "selecciones": [
+        {
+          "partido": "Barcelona vs Villarreal",
+          "hora": "14:00",
+          "mercado": "Córners Barcelona > 4.5",
+          "prob": 90.8639416127571,
+          "cuota": 1.38,
+          "score_elite": 68,
+          "nuevo": true
+        },
+        {
+          "partido": "Juventus vs Venezia",
+          "hora": "12:30",
+          "mercado": "Doble Oport. 1X",
+          "prob": 84.47541084274951,
+          "cuota": 1.4,
+          "score_elite": 53,
+          "nuevo": true
+        },
+        {
+          "partido": "Werder Bremen vs Hamburg SV",
+          "hora": "17:30",
+          "mercado": "Over 1.5 Goles",
+          "prob": 83.63380707892948,
+          "cuota": 1.4,
+          "score_elite": 18,
+          "nuevo": true
+        },
+        {
+          "partido": "Racing Santander vs Real Sociedad",
+          "hora": "16:15",
+          "mercado": "Over 1.5 Goles",
+          "prob": 83.26217465797143,
+          "cuota": 1.4,
+          "score_elite": 68,
+          "nuevo": true
+        }
+      ],
+      "cuota_total": 3.79,
+      "prob_directa": 53.5,
+      "prob_protegida": 79.5
+    },
+    {
+      "clave": "especial_ritmo_pro",
+      "titulo": "ESPECIAL RITMO PRO",
+      "subtitulo": "EXCLUSIVO PRO: CÓRNERS Y REMATES (3 PARTIDOS)",
+      "sufijo": "RITMO_CORNERS_PRO",
+      "stake": "Invertir del 1% al 2% de tu capital (Ritmo Puro)",
+      "selecciones": [
+        {
+          "partido": "Barcelona vs Villarreal",
+          "hora": "14:00",
+          "mercado": "Córners Barcelona > 4.5",
+          "prob": 90.8639416127571,
+          "cuota": 1.38,
+          "score_elite": 68,
+          "nuevo": true
+        },
+        {
+          "partido": "Torreense vs Benfica",
+          "hora": "21:45",
+          "mercado": "Córners Benfica > 4.5",
+          "prob": 78.7296390605909,
+          "cuota": 1.38,
+          "score_elite": 20,
+          "nuevo": true
+        },
+        {
+          "partido": "Liverpool vs Manchester United",
+          "hora": "17:30",
+          "mercado": "Córners > 7.5",
+          "prob": 78.2,
+          "cuota": 1.38,
+          "score_elite": 104,
+          "nuevo": true
+        }
+      ],
+      "cuota_total": 2.63,
+      "prob_directa": 55.9,
+      "prob_protegida": 79.9
+    },
+    {
+      "clave": "especial_valor_pro",
+      "titulo": "ESPECIAL VALOR PRO",
+      "subtitulo": "EXCLUSIVO PRO: TÁCTICA, FRICCIÓN Y EV+ (3 PARTIDOS)",
+      "sufijo": "VALOR_TACTICO_PRO",
+      "stake": "Invertir del 1% al 2% de tu capital (Valor EV+)",
+      "selecciones": [
+        {
+          "partido": "Juventus vs Venezia",
+          "hora": "12:30",
+          "mercado": "Doble Oport. 1X",
+          "prob": 84.47541084274951,
+          "cuota": 1.4,
+          "score_elite": 53,
+          "nuevo": true
+        },
+        {
+          "partido": "Werder Bremen vs Hamburg SV",
+          "hora": "17:30",
+          "mercado": "Over 1.5 Goles",
+          "prob": 83.63380707892948,
+          "cuota": 1.4,
+          "score_elite": 18,
+          "nuevo": true
+        },
+        {
+          "partido": "Racing Santander vs Real Sociedad",
+          "hora": "16:15",
+          "mercado": "Over 1.5 Goles",
+          "prob": 83.26217465797143,
+          "cuota": 1.4,
+          "score_elite": 68,
+          "nuevo": true
+        }
+      ],
+      "cuota_total": 2.74,
+      "prob_directa": 58.8,
+      "prob_protegida": 82.0
+    }
+  ]
+}
