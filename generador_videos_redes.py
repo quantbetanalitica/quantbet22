@@ -622,6 +622,20 @@ def evaluar_mercado_contra_resultado_real(merc, gh, ga, g_ht, es_sudamerica=Fals
         return gh >= ga and tot >= 2
     elif "combo x2 + o1.5" in m_low:
         return ga >= gh and tot >= 2
+    elif "combo 1x + u3.5" in m_low:
+        return gh >= ga and tot <= 3
+    elif "combo 1x + u4.5" in m_low:
+        return gh >= ga and tot <= 4
+    elif "combo x2 + u3.5" in m_low:
+        return ga >= gh and tot <= 3
+    elif "sin empate" in m_low or "dnb" in m_low:
+        if gh == ga:
+            return True
+        if "local" in m_low or (loc_n and loc_n[:5] in m_norm):
+            return gh > ga
+        if "visita" in m_low or (vis_n and vis_n[:5] in m_norm):
+            return ga > gh
+        return False
     elif "1x" in m_low:
         return gh >= ga
     elif "x2" in m_low:
@@ -1533,7 +1547,99 @@ def enviar_video_y_mensajes_separados_telegram(token, chat_id, ruta_video, dict_
         pass
 
 
-def guardar_archivos_individuales_y_json(carpeta_videos, prefijo_num, ruta_mp4, dict_copys, cola_json, fecha_jornada):
+HORA_FIJA_VIDEO_1_PREVIO = "21:30"   # Slot oficial #1: día previo 21:30 ESP (15:30 COL)
+HORA_FIJA_VIDEO_1_RESCATE = "10:30"  # Rescate si ya pasó 21:30 del día previo (nunca publicar a las 02:00 AM)
+HORA_FIJA_VIDEO_2_DIA = "14:00"      # Slot oficial #2: día del partido 14:00 ESP (08:00 COL)
+MARGEN_MIN_ANTES_PARTIDO_MIN = 120   # Nunca publicar un vídeo con menos de 2h antes del pitazo inicial
+
+
+def _dt_inicio_partido_real(p_obj, fecha_jornada):
+    """Devuelve el datetime exacto (hora España) del inicio del partido, tratando 00:00-06:59 como madrugada del día siguiente."""
+    f_str = str(p_obj.get("fecha") or fecha_jornada).strip()[:10]
+    h_str = str(p_obj.get("hora") or "20:00").strip()[:5]
+    try:
+        dt_p = datetime.strptime(f"{f_str} {h_str}", "%Y-%m-%d %H:%M")
+        if f_str == str(fecha_jornada) and dt_p.hour < 7:
+            dt_p += timedelta(days=1)
+        return dt_p
+    except Exception:
+        return datetime.strptime(f"{fecha_jornada} 20:00", "%Y-%m-%d %H:%M")
+
+
+def _redondear_15_min(dt_val, hacia_arriba=True):
+    if hacia_arriba:
+        m = ((dt_val.minute // 15) + (1 if dt_val.minute % 15 else 0)) * 15
+        if m >= 60:
+            return (dt_val + timedelta(hours=1)).replace(minute=0, second=0, microsecond=0)
+        return dt_val.replace(minute=m, second=0, microsecond=0)
+    else:
+        m = (dt_val.minute // 15) * 15
+        return dt_val.replace(minute=m, second=0, microsecond=0)
+
+
+def calcular_horarios_fijos_2_videos(p1, p2, fecha_jornada, ahora_ref=None):
+    """
+    Motor ÚNICO de programación para TikTok, Meta (FB+IG) y YouTube Shorts:
+      - Horarios FIJOS oficiales:
+          * Video #1 (partido más temprano): Día previo a las 21:30 ESP (rescate 10:30 ESP si ya es día del partido).
+          * Video #2 (partido más tardío):   Día del partido a las 14:00 ESP.
+      - Regla de Hora del Partido:
+          * Ningún vídeo se programa después ni a menos de 2h del inicio de su partido.
+          * Si el Partido #2 empieza antes de las 16:00 ESP, se adelanta automáticamente a (inicio - 3h, mínimo 10:30 ESP).
+          * Jamás programa de madrugada (00:00-09:59) salvo que el usuario pase explícitamente --ahora al subir.
+    """
+    ahora = ahora_ref if ahora_ref is not None else datetime.now()
+    dt_jorn = datetime.strptime(str(fecha_jornada), "%Y-%m-%d")
+    dt_prev = dt_jorn - timedelta(days=1)
+
+    dt_ko_1 = _dt_inicio_partido_real(p1, fecha_jornada)
+    dt_ko_2 = _dt_inicio_partido_real(p2, fecha_jornada)
+
+    # --- SLOT #1 (Fijo: 21:30 del día previo; si ya pasó -> rescate fijo 10:30 del día del partido) ---
+    h1_p, m1_p = map(int, HORA_FIJA_VIDEO_1_PREVIO.split(":"))
+    dt_pub_1 = dt_prev.replace(hour=h1_p, minute=m1_p, second=0, microsecond=0)
+    if dt_pub_1 < ahora + timedelta(minutes=25):
+        h1_r, m1_r = map(int, HORA_FIJA_VIDEO_1_RESCATE.split(":"))
+        dt_pub_1 = dt_jorn.replace(hour=h1_r, minute=m1_r, second=0, microsecond=0)
+        if dt_pub_1 < ahora + timedelta(minutes=25):
+            dt_pub_1 = _redondear_15_min(ahora + timedelta(minutes=30), hacia_arriba=True)
+
+    # Verificar margen antes del inicio del Partido #1 (>= 2h antes si es posible)
+    tope_ko_1 = dt_ko_1 - timedelta(minutes=MARGEN_MIN_ANTES_PARTIDO_MIN)
+    if dt_pub_1 > tope_ko_1:
+        cand_1 = _redondear_15_min(dt_ko_1 - timedelta(hours=3), hacia_arriba=False)
+        if cand_1 >= ahora + timedelta(minutes=25):
+            dt_pub_1 = cand_1
+        elif tope_ko_1 >= ahora + timedelta(minutes=25):
+            dt_pub_1 = _redondear_15_min(tope_ko_1, hacia_arriba=False)
+
+    # --- SLOT #2 (Fijo: 14:00 del día del partido; si el partido es temprano <16:00 -> adelantar 3h antes) ---
+    h2_d, m2_d = map(int, HORA_FIJA_VIDEO_2_DIA.split(":"))
+    dt_pub_2 = dt_jorn.replace(hour=h2_d, minute=m2_d, second=0, microsecond=0)
+    tope_ko_2 = dt_ko_2 - timedelta(minutes=MARGEN_MIN_ANTES_PARTIDO_MIN)
+    if dt_pub_2 > tope_ko_2:
+        cand_2 = _redondear_15_min(dt_ko_2 - timedelta(hours=3), hacia_arriba=False)
+        # Si ambos caen en la mañana del día del partido, garantizar separación >= 60 min
+        if cand_2 <= dt_pub_1 + timedelta(minutes=45) and dt_pub_1.date() == cand_2.date():
+            cand_2 = _redondear_15_min(min(tope_ko_2, dt_pub_1 + timedelta(hours=1)), hacia_arriba=False)
+        if cand_2 >= ahora + timedelta(minutes=25):
+            dt_pub_2 = cand_2
+        elif tope_ko_2 >= ahora + timedelta(minutes=25):
+            dt_pub_2 = _redondear_15_min(tope_ko_2, hacia_arriba=False)
+
+    if dt_pub_2 < ahora + timedelta(minutes=25):
+        dt_pub_2 = _redondear_15_min(max(ahora + timedelta(minutes=30), dt_pub_1 + timedelta(minutes=45)), hacia_arriba=True)
+
+    # Nunca publicar Video #2 antes o pegado a Video #1 si caen en el mismo día
+    if dt_pub_2 <= dt_pub_1 + timedelta(minutes=30):
+        dt_sep = _redondear_15_min(dt_pub_1 + timedelta(hours=1), hacia_arriba=True)
+        if dt_sep <= dt_ko_2 - timedelta(minutes=45):
+            dt_pub_2 = dt_sep
+
+    return dt_pub_1, dt_pub_2
+
+
+def guardar_archivos_individuales_y_json(carpeta_videos, prefijo_num, ruta_mp4, dict_copys, cola_json, fecha_jornada, dt_pub_fijo=None, fecha_partido="", hora_partido="", ruta_miniatura=""):
     s = chr(10)
     aviso_18 = s + "📊 Ciencia de Datos y Modelos Matemáticos aplicados al Fútbol Profesional."
     for k_red in ["tiktok", "instagram", "youtube_descripcion", "facebook"]:
@@ -1553,27 +1659,25 @@ def guardar_archivos_individuales_y_json(carpeta_videos, prefijo_num, ruta_mp4, 
     with open(os.path.join(dir_txts, "4_FACEBOOK_REELS.txt"), "w", encoding="utf-8") as f:
         f.write(dict_copys["facebook"])
 
-    ahora = datetime.now()
-    dt_jorn = datetime.strptime(fecha_jornada, "%Y-%m-%d")
-    if prefijo_num == 1:
-        dt_dia_1 = dt_jorn - timedelta(days=1)
-        if dt_dia_1.date() < ahora.date():
-            dt_dia_1 = ahora
-        dt_objetivo = dt_dia_1.replace(hour=21, minute=30, second=0, microsecond=0)
+    if dt_pub_fijo is not None:
+        dt_objetivo = dt_pub_fijo
     else:
-        dt_dia_2 = dt_jorn if dt_jorn.date() >= ahora.date() else ahora
-        dt_objetivo = dt_dia_2.replace(hour=14, minute=0, second=0, microsecond=0)
+        dt_jorn = datetime.strptime(fecha_jornada, "%Y-%m-%d")
+        dt_objetivo = (dt_jorn - timedelta(days=1)).replace(hour=21, minute=30, second=0, microsecond=0) if prefijo_num == 1 else dt_jorn.replace(hour=14, minute=0, second=0, microsecond=0)
 
     hora_str_24 = dt_objetivo.strftime("%H:%M")
-    horario_dinamico = f"{dt_objetivo.strftime('%Y-%m-%d')} {hora_str_24} (España) - VIDEO #{prefijo_num} (TOP CARTELERA #{prefijo_num})"
+    horario_dinamico = f"{dt_objetivo.strftime('%Y-%m-%d')} {hora_str_24} (España) - VIDEO #{prefijo_num} (Partido: {hora_partido or 'N/D'}h ESP)"
 
     cola_json.append({
         "fecha_publicacion": dt_objetivo.strftime("%Y-%m-%d"),
         "orden_video": prefijo_num,
         "hora_24h": hora_str_24,
+        "fecha_partido": str(fecha_partido or fecha_jornada),
+        "hora_partido": str(hora_partido or ""),
         "horario_objetivo_espana": horario_dinamico,
         "titulo_interno": dict_copys["titulo_interno"],
         "ruta_video_mp4": os.path.abspath(ruta_mp4),
+        "ruta_miniatura": os.path.abspath(ruta_miniatura) if ruta_miniatura and os.path.exists(ruta_miniatura) else "",
         "redes": {
             "tiktok": {"descripcion": dict_copys["tiktok"], "estado": "pendiente"},
             "instagram": {"descripcion": dict_copys["instagram"], "estado": "pendiente"},
@@ -2502,14 +2606,16 @@ def renderizar_video_broadcast_4_escenas(slides_4, segmentos_4, ruta_mp4_salida,
     wav_port = os.path.join(carpeta_tmp, f"_{pref}_sil0.wav")
     mp4_port = os.path.join(carpeta_tmp, f"_{pref}_port0.mp4")
     temporales.extend([wav_port, mp4_port])
-    subprocess.run([ffmpeg_exe, "-y", "-f", "lavfi", "-i", "anullsrc=r=44100:cl=stereo", "-t", "0.35", "-acodec", "pcm_s16le", wav_port], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    # Portada limpia inicial de 0.55s (16 frames sin subtítulos) -> garantiza miniatura perfecta en Frame 0 y t=0.5s en TikTok, IG, FB y YT Shorts
+    dur_portada_cover = 0.55
+    subprocess.run([ffmpeg_exe, "-y", "-f", "lavfi", "-i", "anullsrc=r=44100:cl=stereo", "-t", f"{dur_portada_cover:.2f}", "-acodec", "pcm_s16le", wav_port], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     subprocess.run([
-        ffmpeg_exe, "-y", "-loop", "1", "-t", "0.35", "-i", os.path.abspath(slides_4[0]),
+        ffmpeg_exe, "-y", "-loop", "1", "-t", f"{dur_portada_cover:.2f}", "-i", os.path.abspath(slides_4[0]),
         "-vf", "fps=30,scale=1080:1920,format=yuv420p", "-pix_fmt", "yuv420p",
         "-c:v", "libx264", "-profile:v", "high", "-level", "4.0", "-preset", "fast", "-crf", "19", "-an",
         os.path.abspath(mp4_port)
     ], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-    clips_escena.append((mp4_port, 0.35))
+    clips_escena.append((mp4_port, dur_portada_cover))
     audios_wav.append(wav_port)
 
     total_segs = len(segmentos_4)
@@ -2659,24 +2765,34 @@ def generar_paquete_redes_sociales(fecha_jornada, partidos_vip, partidos_descart
             vistos_vid.add(clave_v)
             pool_cartelera.append(p_cand)
 
-    # Preferir partidos que todavía NO hayan empezado (si hay al menos 2 pendientes en la cartelera)
+    # Preferir partidos con al menos 90 minutos de margen antes del pitazo inicial
+    ahora_sel_v = datetime.now()
+    con_margen = [
+        p for p in pool_cartelera
+        if not p.get("ya_empezo") and (_dt_inicio_partido_real(p, fecha_jornada) >= ahora_sel_v + timedelta(minutes=90))
+    ]
     por_jugar = [p for p in pool_cartelera if not p.get("ya_empezo")]
-    base_ranking = por_jugar if len(por_jugar) >= 2 else pool_cartelera
+    base_ranking = con_margen if len(con_margen) >= 2 else (por_jugar if len(por_jugar) >= 2 else pool_cartelera)
     todos_ordenados = sorted(base_ranking, key=puntaje_cartelera_video, reverse=True)
 
     print("    📋 [TOP 6 CARTELERA GLOBAL PARA VÍDEOS] (Prioridad: Real Madrid > Barcelona > Millonarios > Top 2 Mundial):")
     for idx_r, p_r in enumerate(todos_ordenados[:6], start=1):
         print(f"       #{idx_r} ({puntaje_cartelera_video(p_r):7.1f} pts) | {p_r.get('hora', '')}h | {p_r.get('local')} vs {p_r.get('visitante')} ({p_r.get('liga_visual')})")
 
-    # SIEMPRE los 2 mejores partidos globales de la cartelera (sin cuota forzada de Liga MX / América)
+    # SIEMPRE los 2 mejores partidos globales de la cartelera, ordenados por hora REAL de inicio:
+    # el que juega primero va al Slot #1 (publicación más temprana), el que juega más tarde va al Slot #2
     partido_1 = todos_ordenados[0]
     partido_2 = todos_ordenados[1] if len(todos_ordenados) > 1 else partido_1
 
     par_cronologico = sorted(
         [partido_1, partido_2],
-        key=lambda x: (str(x.get("fecha", "")), str(x.get("hora", "20:45")))
+        key=lambda x: _dt_inicio_partido_real(x, fecha_jornada)
     )
     partido_1, partido_2 = par_cronologico[0], par_cronologico[1]
+    dt_pub_1, dt_pub_2 = calcular_horarios_fijos_2_videos(partido_1, partido_2, fecha_jornada, ahora_ref=ahora_sel_v)
+    print(f"    🕒 [HORARIOS FIJOS COORDINADOS CON PITAZO INICIAL]:")
+    print(f"       • Video #1 [{partido_1.get('local')} vs {partido_1.get('visitante')} | Juega {partido_1.get('hora')}h] -> Publicar: {dt_pub_1.strftime('%Y-%m-%d %H:%M')}h ESP")
+    print(f"       • Video #2 [{partido_2.get('local')} vs {partido_2.get('visitante')} | Juega {partido_2.get('hora')}h] -> Publicar: {dt_pub_2.strftime('%Y-%m-%d %H:%M')}h ESP")
 
     ahora_esp_vid = datetime.now(timezone.utc).replace(tzinfo=None) + timedelta(hours=1)
     modo_aud_vid = "noche" if ahora_esp_vid.hour >= 21 else "manana"
@@ -2728,11 +2844,11 @@ def generar_paquete_redes_sociales(fecha_jornada, partidos_vip, partidos_descart
         }
 
     pares_videos = [
-        (1, partido_1, "2_AUDITORIA_21PM", "21:30 (España - Día Previo) - VIDEO #1: PARTIDAZO ESTELAR #1", "01_VIDEO_2130_PRO"),
-        (2, partido_2, "1_ESTRELLA_10AM", "14:00 (España - Día Partido) - VIDEO #2: PARTIDAZO ESTELAR #2", "02_VIDEO_1400_PRO"),
+        (1, partido_1, "2_AUDITORIA_21PM", f"{dt_pub_1.strftime('%Y-%m-%d %H:%M')}h (España) - VIDEO #1 (Juega {partido_1.get('hora', '')}h)", "01_VIDEO_2130_PRO", dt_pub_1),
+        (2, partido_2, "1_ESTRELLA_10AM", f"{dt_pub_2.strftime('%Y-%m-%d %H:%M')}h (España) - VIDEO #2 (Juega {partido_2.get('hora', '')}h)", "02_VIDEO_1400_PRO", dt_pub_2),
     ]
 
-    for num_v, p_vid, tipo_copy, etiqueta_hor, pref_arch in pares_videos:
+    for num_v, p_vid, tipo_copy, etiqueta_hor, pref_arch, dt_pub_v in pares_videos:
         try:
             datos_v = _construir_datos_video(p_vid)
             loc_v, vis_v = datos_v["local"], datos_v["visitante"]
@@ -2784,13 +2900,22 @@ def generar_paquete_redes_sociales(fecha_jornada, partidos_vip, partidos_descart
                 ),
             ]
 
-            mp4_out = os.path.join(carpeta_videos, f"{pref_arch}_{limpiar_hashtag(loc_v)[1:]}_{limpiar_hashtag(vis_v)[1:]}.mp4")
+            slug_par = f"{limpiar_hashtag(loc_v)[1:]}_{limpiar_hashtag(vis_v)[1:]}"
+            ruta_mini_out = os.path.join(carpeta_videos, f"0{num_v}_MINIATURA_{slug_par}.jpg")
+            import shutil as _sh_min
+            _sh_min.copy2(s1, ruta_mini_out)
+
+            mp4_out = os.path.join(carpeta_videos, f"{pref_arch}_{slug_par}.mp4")
             renderizar_video_broadcast_4_escenas([s1, s2, s3, s4], segmentos_4, mp4_out, carpeta_videos)
 
             dict_v = generar_diccionario_copys_por_red(tipo_copy, p_vid, tasa_real)
             dict_v["horario"] = etiqueta_hor
-            dict_v["titulo_interno"] = f"VIDEO {num_v} ({'21:30' if num_v == 1 else '14:00'}) - {loc_v.upper()} VS {vis_v.upper()} ({tasa_real})"
-            guardar_archivos_individuales_y_json(carpeta_videos, num_v, mp4_out, dict_v, cola_json, fecha_jornada)
+            dict_v["titulo_interno"] = f"VIDEO {num_v} ({dt_pub_v.strftime('%H:%M')}) - {loc_v.upper()} VS {vis_v.upper()}"
+            guardar_archivos_individuales_y_json(
+                carpeta_videos, num_v, mp4_out, dict_v, cola_json, fecha_jornada,
+                dt_pub_fijo=dt_pub_v, fecha_partido=p_vid.get("fecha", fecha_jornada),
+                hora_partido=p_vid.get("hora", ""), ruta_miniatura=ruta_mini_out
+            )
             print(f"    ✅ Video #{num_v} Broadcast Pro v3 [{loc_v} vs {vis_v}] creado: {mp4_out}")
 
             if token_privado and chat_id_privado:
