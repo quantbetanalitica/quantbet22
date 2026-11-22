@@ -3142,26 +3142,26 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-11-22 01:55:00,401877051,Santos vs León (México (Liga Mx)),[VIP] Córners > 8.5,1.48,1.48,73.0,🟢 [LUZ VERDE / ALTO VALOR],4200.0,Ganada,6216.0,AUDITADA FT 1-2
 2026-11-22 01:55:00,401877051,Santos vs León (México (Liga Mx)),[FREE] Faltas Totales > 21.5,1.28,1.28,67.8,🟢 [VALOR ALTO / OPERABLE],500.0,Ganada,640.0,AUDITADA FT 1-2
 2026-11-22 01:55:00,401877051,Santos vs León (México (Liga Mx)),[FREE] Tarjetas > 3.5,1.28,1.28,62.7,🟢 [VALOR ALTO / OPERABLE],500.0,Perdida,0.0,AUDITADA FT 1-2
-2026-11-22 01:55:00,401933739,Inter Miami CF vs Columbus Crew (Usa (Mls)),[VIP] Córners Inter Miami CF > 4.5,1.4,PENDIENTE_CLV,73.1,🟢 [LUZ VERDE / ALTO VALOR],1400.0,Pendiente,0.0,AUDITANDO
-2026-11-22 01:55:00,401933739,Inter Miami CF vs Columbus Crew (Usa (Mls)),[VIP] Remates Puerta > 7.5,1.61,PENDIENTE_CLV,66.5,🟢 [VALOR ALTO / OPERABLE],2900.0,Pendiente,0.0,AUDITANDO
-2026-11-22 01:55:00,401933739,Inter Miami CF vs Columbus Crew (Usa (Mls)),[FREE] Gol en 2do Tiempo,1.18,PENDIENTE_CLV,82.8,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
-2026-11-22 01:55:00,401933739,Inter Miami CF vs Columbus Crew (Usa (Mls)),[FREE] Doble Oport. 1X,1.23,PENDIENTE_CLV,77.4,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
-2026-11-22 02:55:00,401841325,Chapecoense vs Cruzeiro (Brasil (Serie A)),[VIP] Tarjetas > 4.5,1.58,PENDIENTE_CLV,66.5,🟢 [VALOR ALTO / OPERABLE],2200.0,Pendiente,0.0,AUDITANDO
-2026-11-22 02:55:00,401841325,Chapecoense vs Cruzeiro (Brasil (Serie A)),[VIP] Faltas Totales > 26.5,1.45,PENDIENTE_CLV,70.2,🟢 [LUZ VERDE / ALTO VALOR],1000.0,Pendiente,0.0,AUDITANDO
-2026-11-22 02:55:00,401841325,Chapecoense vs Cruzeiro (Brasil (Serie A)),[FREE] Faltas Totales > 25.5,1.24,PENDIENTE_CLV,76.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
-2026-11-22 02:55:00,401841325,Chapecoense vs Cruzeiro (Brasil (Serie A)),[FREE] Córners Cruzeiro > 4.5,1.28,PENDIENTE_CLV,71.4,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
-2026-11-22 03:55:00,401877049,Pumas UNAM vs Monterrey (México (Liga Mx)),[VIP] Remates Puerta > 8.5,1.64,PENDIENTE_CLV,66.5,🟢 [VALOR ALTO / OPERABLE],3500.0,Pendiente,0.0,AUDITANDO
-2026-11-22 03:55:00,401877049,Pumas UNAM vs Monterrey (México (Liga Mx)),[VIP] Faltas Totales > 26.5,1.78,PENDIENTE_CLV,66.5,🟢 [VALOR ALTO / OPERABLE],5000.0,Pendiente,0.0,AUDITANDO
-2026-11-22 03:55:00,401877049,Pumas UNAM vs Monterrey (México (Liga Mx)),[FREE] Over 1.5 Goles,1.23,PENDIENTE_CLV,77.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
-2026-11-22 03:55:00,401877049,Pumas UNAM vs Monterrey (México (Liga Mx)),[FREE] Córners > 7.5,1.28,PENDIENTE_CLV,71.9,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
-2026-11-22 04:10:00,401934689,Once Caldas vs Atlético Nacional (Colombia (Primera A)),[VIP] Tarjetas > 3.5,1.63,PENDIENTE_CLV,66.5,🟢 [VALOR ALTO / OPERABLE],3300.0,Pendiente,0.0,AUDITANDO
-2026-11-22 04:10:00,401934689,Once Caldas vs Atlético Nacional (Colombia (Primera A)),[VIP] Córners > 8.5,1.48,PENDIENTE_CLV,73.5,🟢 [LUZ VERDE / ALTO VALOR],4600.0,Pendiente,0.0,AUDITANDO
-2026-11-22 04:10:00,401934689,Once Caldas vs Atlético Nacional (Colombia (Primera A)),[FREE] Faltas Totales > 21.5,1.28,PENDIENTE_CLV,67.4,🟢 [VALOR ALTO / OPERABLE],500.0,Pendiente,0.0,AUDITANDO
-2026-11-22 04:10:00,401934689,Once Caldas vs Atlético Nacional (Colombia (Primera A)),[FREE] Remates Puerta > 6.5,1.28,PENDIENTE_CLV,59.3,🟢 [VALOR ALTO / OPERABLE],500.0,Pendiente,0.0,AUDITANDO
-2026-11-22 05:55:00,401877048,Tigres UANL vs América (México (Liga Mx)),[VIP] Remates Puerta > 8.5,1.64,PENDIENTE_CLV,66.5,🟢 [VALOR ALTO / OPERABLE],3500.0,Pendiente,0.0,AUDITANDO
-2026-11-22 05:55:00,401877048,Tigres UANL vs América (México (Liga Mx)),[VIP] Córners > 8.5,1.7,PENDIENTE_CLV,66.5,🟢 [VALOR ALTO / OPERABLE],4700.0,Pendiente,0.0,AUDITANDO
-2026-11-22 05:55:00,401877048,Tigres UANL vs América (México (Liga Mx)),[FREE] Gol en 2do Tiempo,1.18,PENDIENTE_CLV,80.3,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
-2026-11-22 05:55:00,401877048,Tigres UANL vs América (México (Liga Mx)),[FREE] Faltas Totales > 24.5,1.28,PENDIENTE_CLV,66.4,🟢 [VALOR ALTO / OPERABLE],500.0,Pendiente,0.0,AUDITANDO
+2026-11-22 01:55:00,401933739,Inter Miami CF vs Columbus Crew (Usa (Mls)),[VIP] Córners Inter Miami CF > 4.5,1.4,1.40,73.1,🟢 [LUZ VERDE / ALTO VALOR],1400.0,Perdida,0.0,AUDITADA FT 0-3
+2026-11-22 01:55:00,401933739,Inter Miami CF vs Columbus Crew (Usa (Mls)),[VIP] Remates Puerta > 7.5,1.61,1.61,66.5,🟢 [VALOR ALTO / OPERABLE],2900.0,Ganada,4669.0,AUDITADA FT 0-3
+2026-11-22 01:55:00,401933739,Inter Miami CF vs Columbus Crew (Usa (Mls)),[FREE] Gol en 2do Tiempo,1.18,1.18,82.8,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 0-3
+2026-11-22 01:55:00,401933739,Inter Miami CF vs Columbus Crew (Usa (Mls)),[FREE] Doble Oport. 1X,1.23,1.23,77.4,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 0-3
+2026-11-22 02:55:00,401841325,Chapecoense vs Cruzeiro (Brasil (Serie A)),[VIP] Tarjetas > 4.5,1.58,1.58,66.5,🟢 [VALOR ALTO / OPERABLE],2200.0,Perdida,0.0,AUDITADA FT 1-2
+2026-11-22 02:55:00,401841325,Chapecoense vs Cruzeiro (Brasil (Serie A)),[VIP] Faltas Totales > 26.5,1.45,1.45,70.2,🟢 [LUZ VERDE / ALTO VALOR],1000.0,Perdida,0.0,AUDITADA FT 1-2
+2026-11-22 02:55:00,401841325,Chapecoense vs Cruzeiro (Brasil (Serie A)),[FREE] Faltas Totales > 25.5,1.24,1.24,76.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,620.0,AUDITADA FT 1-2
+2026-11-22 02:55:00,401841325,Chapecoense vs Cruzeiro (Brasil (Serie A)),[FREE] Córners Cruzeiro > 4.5,1.28,1.28,71.4,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,640.0,AUDITADA FT 1-2
+2026-11-22 03:55:00,401877049,Pumas UNAM vs Monterrey (México (Liga Mx)),[VIP] Remates Puerta > 8.5,1.64,1.64,66.5,🟢 [VALOR ALTO / OPERABLE],3500.0,Ganada,5740.0,AUDITADA FT 0-2
+2026-11-22 03:55:00,401877049,Pumas UNAM vs Monterrey (México (Liga Mx)),[VIP] Faltas Totales > 26.5,1.78,1.78,66.5,🟢 [VALOR ALTO / OPERABLE],5000.0,Ganada,8900.0,AUDITADA FT 0-2
+2026-11-22 03:55:00,401877049,Pumas UNAM vs Monterrey (México (Liga Mx)),[FREE] Over 1.5 Goles,1.23,1.23,77.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,615.0,AUDITADA FT 0-2
+2026-11-22 03:55:00,401877049,Pumas UNAM vs Monterrey (México (Liga Mx)),[FREE] Córners > 7.5,1.28,1.28,71.9,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,640.0,AUDITADA FT 0-2
+2026-11-22 04:10:00,401934689,Once Caldas vs Atlético Nacional (Colombia (Primera A)),[VIP] Tarjetas > 3.5,1.63,1.63,66.5,🟢 [VALOR ALTO / OPERABLE],3300.0,Ganada,5379.0,AUDITADA FT 0-0
+2026-11-22 04:10:00,401934689,Once Caldas vs Atlético Nacional (Colombia (Primera A)),[VIP] Córners > 8.5,1.48,1.48,73.5,🟢 [LUZ VERDE / ALTO VALOR],4600.0,Ganada,6808.0,AUDITADA FT 0-0
+2026-11-22 04:10:00,401934689,Once Caldas vs Atlético Nacional (Colombia (Primera A)),[FREE] Faltas Totales > 21.5,1.28,1.28,67.4,🟢 [VALOR ALTO / OPERABLE],500.0,Ganada,640.0,AUDITADA FT 0-0
+2026-11-22 04:10:00,401934689,Once Caldas vs Atlético Nacional (Colombia (Primera A)),[FREE] Remates Puerta > 6.5,1.28,1.28,59.3,🟢 [VALOR ALTO / OPERABLE],500.0,Perdida,0.0,AUDITADA FT 0-0
+2026-11-22 05:55:00,401877048,Tigres UANL vs América (México (Liga Mx)),[VIP] Remates Puerta > 8.5,1.64,1.64,66.5,🟢 [VALOR ALTO / OPERABLE],3500.0,Perdida,0.0,AUDITADA FT 1-0
+2026-11-22 05:55:00,401877048,Tigres UANL vs América (México (Liga Mx)),[VIP] Córners > 8.5,1.7,1.70,66.5,🟢 [VALOR ALTO / OPERABLE],4700.0,Ganada,7990.0,AUDITADA FT 1-0
+2026-11-22 05:55:00,401877048,Tigres UANL vs América (México (Liga Mx)),[FREE] Gol en 2do Tiempo,1.18,1.18,80.3,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 1-0
+2026-11-22 05:55:00,401877048,Tigres UANL vs América (México (Liga Mx)),[FREE] Faltas Totales > 24.5,1.28,1.28,66.4,🟢 [VALOR ALTO / OPERABLE],500.0,Ganada,640.0,AUDITADA FT 1-0
 2026-11-21 13:25:00,401888247,Genclerbirligi vs Gaziantep FK (Turquía (Süper Lig)),[VIP] Tarjetas > 3.5,1.65,1.65,66.5,🟢 [VALOR ALTO / OPERABLE],3700.0,Perdida,0.0,AUDITADA FT 1-0
 2026-11-21 13:25:00,401888247,Genclerbirligi vs Gaziantep FK (Turquía (Süper Lig)),[VIP] Faltas Totales > 24.5,1.56,1.56,66.5,🟢 [VALOR ALTO / OPERABLE],1700.0,Ganada,2652.0,AUDITADA FT 1-0
 2026-11-21 13:25:00,401888247,Genclerbirligi vs Gaziantep FK (Turquía (Süper Lig)),[FREE] Over 1.5 Goles,1.18,1.18,78.1,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 1-0
@@ -3370,115 +3370,115 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-11-21 06:05:00,401877052,Tijuana vs Atlante (México (Liga Mx)),[VIP] Córners > 8.5,1.48,1.48,73.5,🟢 [LUZ VERDE / ALTO VALOR],4600.0,Ganada,6808.0,AUDITADA FT 1-0
 2026-11-21 06:05:00,401877052,Tijuana vs Atlante (México (Liga Mx)),[FREE] Over 1.5 Goles,1.23,1.23,77.2,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 1-0
 2026-11-21 06:05:00,401877052,Tijuana vs Atlante (México (Liga Mx)),[FREE] Faltas Totales > 21.5,1.28,1.28,68.3,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,640.0,AUDITADA FT 1-0
-2026-11-22 14:10:00,401875545,FC Twente vs Willem II (Países Bajos (Eredivisie)),[VIP] Combo 1X + O1.5,1.5,PENDIENTE_CLV,70.9,🟢 [LUZ VERDE / ALTO VALOR],3200.0,Pendiente,0,AUDITANDO
-2026-11-22 14:10:00,401875545,FC Twente vs Willem II (Países Bajos (Eredivisie)),[VIP] Córners FC Twente > 4.5,1.39,PENDIENTE_CLV,73.5,🟢 [LUZ VERDE / ALTO VALOR],1400.0,Pendiente,0,AUDITANDO
-2026-11-22 14:10:00,401875545,FC Twente vs Willem II (Países Bajos (Eredivisie)),[FREE] Over 1.5 Goles,1.18,PENDIENTE_CLV,80.6,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0,AUDITANDO
-2026-11-22 14:10:00,401875545,FC Twente vs Willem II (Países Bajos (Eredivisie)),[FREE] Remates Puerta > 6.5,1.28,PENDIENTE_CLV,71.1,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0,AUDITANDO
-2026-11-22 14:25:00,401875008,Juventus vs Venezia (Italia (Serie A)),[VIP] Combo 1X + O1.5,1.52,PENDIENTE_CLV,67.2,🟢 [VALOR ALTO / OPERABLE],1000.0,Pendiente,0,AUDITANDO
-2026-11-22 14:25:00,401875008,Juventus vs Venezia (Italia (Serie A)),[VIP] Faltas Totales > 20.5,1.65,PENDIENTE_CLV,61.8,🟢 [VALOR ALTO / OPERABLE],800.0,Pendiente,0,AUDITANDO
-2026-11-22 14:25:00,401875008,Juventus vs Venezia (Italia (Serie A)),[FREE] Over 1.5 Goles,1.24,PENDIENTE_CLV,76.8,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0,AUDITANDO
-2026-11-22 14:25:00,401875008,Juventus vs Venezia (Italia (Serie A)),[FREE] Córners Juventus > 4.5,1.28,PENDIENTE_CLV,74.1,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0,AUDITANDO
-2026-11-22 15:55:00,401882804,Barcelona vs Villarreal (España (Laliga)),[VIP] Faltas Totales > 17.5,1.64,PENDIENTE_CLV,62.2,🟢 [VALOR ALTO / OPERABLE],800.0,Pendiente,0,AUDITANDO
-2026-11-22 15:55:00,401882804,Barcelona vs Villarreal (España (Laliga)),[VIP] Gol en 1T,1.38,PENDIENTE_CLV,77.6,🟢 [LUZ VERDE / ALTO VALOR],4700.0,Pendiente,0,AUDITANDO
-2026-11-22 15:55:00,401882804,Barcelona vs Villarreal (España (Laliga)),[FREE] Córners Barcelona > 4.5,1.18,PENDIENTE_CLV,86.5,🟢 [LUZ VERDE / ALTO VALOR],2900.0,Pendiente,0,AUDITANDO
-2026-11-22 15:55:00,401882804,Barcelona vs Villarreal (España (Laliga)),[FREE] Remates Puerta > 6.5,1.28,PENDIENTE_CLV,71.1,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0,AUDITANDO
-2026-11-22 15:55:00,401882300,Córdoba vs Real Oviedo (España (Segunda)),[VIP] Córners > 8.5,1.58,PENDIENTE_CLV,64.8,🟢 [VALOR ALTO / OPERABLE],1000.0,Pendiente,0,AUDITANDO
-2026-11-22 15:55:00,401882300,Córdoba vs Real Oviedo (España (Segunda)),[VIP] Tarjetas > 3.5,1.74,PENDIENTE_CLV,58.5,🟢 [VALOR ALTO / OPERABLE],600.0,Pendiente,0,AUDITANDO
-2026-11-22 15:55:00,401882300,Córdoba vs Real Oviedo (España (Segunda)),[FREE] Gol en 2do Tiempo,1.28,PENDIENTE_CLV,73.7,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0,AUDITANDO
-2026-11-22 15:55:00,401882300,Córdoba vs Real Oviedo (España (Segunda)),[FREE] Faltas Totales > 19.5,1.28,PENDIENTE_CLV,69.8,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0,AUDITANDO
-2026-11-22 16:25:00,401875547,Ajax Amsterdam vs ADO Den Haag (Países Bajos (Eredivisie)),[VIP] Combo 1X + O1.5,1.5,PENDIENTE_CLV,68.3,🟢 [LUZ VERDE / ALTO VALOR],1200.0,Pendiente,0,AUDITANDO
-2026-11-22 16:25:00,401875547,Ajax Amsterdam vs ADO Den Haag (Países Bajos (Eredivisie)),[VIP] Ambos Marcan (BTTS),1.7,PENDIENTE_CLV,62.3,🟢 [VALOR ALTO / OPERABLE],2100.0,Pendiente,0,AUDITANDO
-2026-11-22 16:25:00,401875547,Ajax Amsterdam vs ADO Den Haag (Países Bajos (Eredivisie)),[FREE] Gol en 1T,1.18,PENDIENTE_CLV,83.8,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0,AUDITANDO
-2026-11-22 16:25:00,401875547,Ajax Amsterdam vs ADO Den Haag (Países Bajos (Eredivisie)),[FREE] Córners Ajax Amsterdam > 4.5,1.18,PENDIENTE_CLV,79.4,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0,AUDITANDO
-2026-11-22 16:25:00,401875540,Sparta Rotterdam vs AZ Alkmaar (Países Bajos (Eredivisie)),[VIP] Remates Puerta > 8.5,1.69,PENDIENTE_CLV,60.5,🟢 [VALOR ALTO / OPERABLE],800.0,Pendiente,0,AUDITANDO
-2026-11-22 16:25:00,401875540,Sparta Rotterdam vs AZ Alkmaar (Países Bajos (Eredivisie)),[VIP] Faltas Totales > 17.5,1.66,PENDIENTE_CLV,61.3,🟢 [VALOR ALTO / OPERABLE],700.0,Pendiente,0,AUDITANDO
-2026-11-22 16:25:00,401875540,Sparta Rotterdam vs AZ Alkmaar (Países Bajos (Eredivisie)),[FREE] Over 1.5 Goles,1.18,PENDIENTE_CLV,80.6,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0,AUDITANDO
-2026-11-22 16:25:00,401875540,Sparta Rotterdam vs AZ Alkmaar (Países Bajos (Eredivisie)),[FREE] Córners AZ Alkmaar > 4.5,1.28,PENDIENTE_CLV,74.1,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0,AUDITANDO
-2026-11-22 16:55:00,401875047,Bologna vs Udinese (Italia (Serie A)),[VIP] Ambos Marcan (BTTS),1.79,PENDIENTE_CLV,60.4,🟢 [VALOR ALTO / OPERABLE],2600.0,Pendiente,0,AUDITANDO
-2026-11-22 16:55:00,401875047,Bologna vs Udinese (Italia (Serie A)),[VIP] Gol en 1T,1.41,PENDIENTE_CLV,72.3,🟢 [LUZ VERDE / ALTO VALOR],1200.0,Pendiente,0,AUDITANDO
-2026-11-22 16:55:00,401875047,Bologna vs Udinese (Italia (Serie A)),[FREE] Faltas Totales > 19.5,1.28,PENDIENTE_CLV,71.6,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0,AUDITANDO
-2026-11-22 16:55:00,401875047,Bologna vs Udinese (Italia (Serie A)),[FREE] Remates Puerta > 6.5,1.28,PENDIENTE_CLV,60.2,🟢 [VALOR ALTO / OPERABLE],500.0,Pendiente,0,AUDITANDO
-2026-11-22 16:55:00,401874960,Sassuolo vs Genoa (Italia (Serie A)),[VIP] Faltas Totales > 17.5,1.64,PENDIENTE_CLV,62.2,🟢 [VALOR ALTO / OPERABLE],800.0,Pendiente,0,AUDITANDO
-2026-11-22 16:55:00,401874960,Sassuolo vs Genoa (Italia (Serie A)),[VIP] Total Menos de 2.5 (Under),1.82,PENDIENTE_CLV,56.0,🟡 [MODERADO / VIGILAR],500.0,Pendiente,0,AUDITANDO
-2026-11-22 16:55:00,401874960,Sassuolo vs Genoa (Italia (Serie A)),[FREE] Córners > 6.5,1.28,PENDIENTE_CLV,59.0,🟢 [VALOR ALTO / OPERABLE],500.0,Pendiente,0,AUDITANDO
-2026-11-22 16:55:00,401876397,Paris FC vs Angers (Francia (Ligue 1)),[VIP] Combo 1X + O1.5,1.5,PENDIENTE_CLV,70.6,🟢 [LUZ VERDE / ALTO VALOR],2900.0,Pendiente,0,AUDITANDO
-2026-11-22 16:55:00,401876397,Paris FC vs Angers (Francia (Ligue 1)),[FREE] Gol en 1T,1.18,PENDIENTE_CLV,79.8,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0,AUDITANDO
-2026-11-22 16:55:00,401876397,Paris FC vs Angers (Francia (Ligue 1)),[FREE] Remates Puerta > 6.5,1.28,PENDIENTE_CLV,63.0,🟢 [VALOR ALTO / OPERABLE],500.0,Pendiente,0,AUDITANDO
-2026-11-22 16:55:00,401931812,Gil Vicente vs Olhanense (Portugal (Taça De Portugal)),[VIP] Faltas Totales > 22.5,1.44,PENDIENTE_CLV,71.0,🟢 [LUZ VERDE / ALTO VALOR],1300.0,Pendiente,0,AUDITANDO
-2026-11-22 16:55:00,401931812,Gil Vicente vs Olhanense (Portugal (Taça De Portugal)),[VIP] Combo 1X + O1.5,1.5,PENDIENTE_CLV,68.2,🟢 [LUZ VERDE / ALTO VALOR],1200.0,Pendiente,0,AUDITANDO
-2026-11-22 16:55:00,401931812,Gil Vicente vs Olhanense (Portugal (Taça De Portugal)),[FREE] Over 1.5 Goles,1.28,PENDIENTE_CLV,74.3,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0,AUDITANDO
-2026-11-22 16:55:00,401931812,Gil Vicente vs Olhanense (Portugal (Taça De Portugal)),[FREE] Córners Gil Vicente > 4.5,1.18,PENDIENTE_CLV,79.9,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0,AUDITANDO
-2026-11-22 16:55:00,401931811,Vianense vs Rio Ave (Portugal (Taça De Portugal)),[VIP] Córners > 8.5,1.7,PENDIENTE_CLV,60.0,🟢 [VALOR ALTO / OPERABLE],700.0,Pendiente,0,AUDITANDO
-2026-11-22 16:55:00,401931811,Vianense vs Rio Ave (Portugal (Taça De Portugal)),[VIP] Faltas Totales > 21.5,1.68,PENDIENTE_CLV,60.6,🟢 [VALOR ALTO / OPERABLE],700.0,Pendiente,0,AUDITANDO
-2026-11-22 16:55:00,401931811,Vianense vs Rio Ave (Portugal (Taça De Portugal)),[FREE] Tarjetas > 3.5,1.25,PENDIENTE_CLV,75.1,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0,AUDITANDO
-2026-11-22 16:55:00,401931811,Vianense vs Rio Ave (Portugal (Taça De Portugal)),[FREE] Gol en 2do Tiempo,1.28,PENDIENTE_CLV,66.2,🟢 [VALOR ALTO / OPERABLE],500.0,Pendiente,0,AUDITANDO
-2026-11-22 17:25:00,401884733,FC Augsburg vs Mainz (Alemania (Bundesliga)),[VIP] Ambos Marcan (BTTS),1.37,PENDIENTE_CLV,69.9,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0,AUDITANDO
-2026-11-22 17:25:00,401884733,FC Augsburg vs Mainz (Alemania (Bundesliga)),[VIP] Remates Puerta > 8.5,1.69,PENDIENTE_CLV,60.5,🟢 [VALOR ALTO / OPERABLE],800.0,Pendiente,0,AUDITANDO
-2026-11-22 17:25:00,401884733,FC Augsburg vs Mainz (Alemania (Bundesliga)),[FREE] Gol en 2do Tiempo,1.18,PENDIENTE_CLV,81.7,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0,AUDITANDO
-2026-11-22 17:25:00,401884733,FC Augsburg vs Mainz (Alemania (Bundesliga)),[FREE] Faltas Totales > 16.5,1.28,PENDIENTE_CLV,71.2,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0,AUDITANDO
-2026-11-22 17:55:00,401931810,SC Farense vs Fatima (Portugal (Taça De Portugal)),[VIP] Tarjetas > 3.5,1.38,PENDIENTE_CLV,77.4,🟢 [LUZ VERDE / ALTO VALOR],4500.0,Pendiente,0,AUDITANDO
-2026-11-22 17:55:00,401931810,SC Farense vs Fatima (Portugal (Taça De Portugal)),[VIP] Faltas Totales > 22.5,1.44,PENDIENTE_CLV,71.0,🟢 [LUZ VERDE / ALTO VALOR],1300.0,Pendiente,0,AUDITANDO
-2026-11-22 17:55:00,401931810,SC Farense vs Fatima (Portugal (Taça De Portugal)),[FREE] Córners SC Farense > 4.5,1.28,PENDIENTE_CLV,71.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0,AUDITANDO
-2026-11-22 17:55:00,401931810,SC Farense vs Fatima (Portugal (Taça De Portugal)),[FREE] Doble Oport. 1X,1.18,PENDIENTE_CLV,83.7,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0,AUDITANDO
-2026-11-22 18:10:00,401882800,Racing Santander vs Real Sociedad (España (Laliga)),[VIP] Total Asiático > 2.25,1.63,PENDIENTE_CLV,62.7,🟢 [VALOR ALTO / OPERABLE],900.0,Pendiente,0,AUDITANDO
-2026-11-22 18:10:00,401882800,Racing Santander vs Real Sociedad (España (Laliga)),[VIP] Remates Puerta > 8.5,1.69,PENDIENTE_CLV,60.3,🟢 [VALOR ALTO / OPERABLE],700.0,Pendiente,0,AUDITANDO
-2026-11-22 18:10:00,401882800,Racing Santander vs Real Sociedad (España (Laliga)),[FREE] Faltas Totales > 21.5,1.28,PENDIENTE_CLV,67.3,🟢 [VALOR ALTO / OPERABLE],500.0,Pendiente,0,AUDITANDO
-2026-11-22 18:10:00,401882800,Racing Santander vs Real Sociedad (España (Laliga)),[FREE] Córners > 8.5,1.28,PENDIENTE_CLV,61.2,🟢 [VALOR ALTO / OPERABLE],500.0,Pendiente,0,AUDITANDO
-2026-11-22 18:10:00,401882298,Sporting Gijón vs Las Palmas (España (Segunda)),[VIP] Gol en 1T,1.46,PENDIENTE_CLV,70.0,🟢 [LUZ VERDE / ALTO VALOR],1200.0,Pendiente,0,AUDITANDO
-2026-11-22 18:10:00,401882298,Sporting Gijón vs Las Palmas (España (Segunda)),[VIP] Faltas Totales > 18.5,1.71,PENDIENTE_CLV,59.8,🟢 [VALOR ALTO / OPERABLE],800.0,Pendiente,0,AUDITANDO
-2026-11-22 18:10:00,401882298,Sporting Gijón vs Las Palmas (España (Segunda)),[FREE] Gol en 2do Tiempo,1.18,PENDIENTE_CLV,80.1,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0,AUDITANDO
-2026-11-22 18:40:00,401875542,Go Ahead Eagles vs Fortuna Sittard (Países Bajos (Eredivisie)),[VIP] Over 2.5 Goles,1.67,PENDIENTE_CLV,61.0,🟢 [VALOR ALTO / OPERABLE],700.0,Pendiente,0,AUDITANDO
-2026-11-22 18:40:00,401875542,Go Ahead Eagles vs Fortuna Sittard (Países Bajos (Eredivisie)),[VIP] Remates Puerta > 8.5,1.69,PENDIENTE_CLV,60.5,🟢 [VALOR ALTO / OPERABLE],800.0,Pendiente,0,AUDITANDO
-2026-11-22 18:40:00,401875542,Go Ahead Eagles vs Fortuna Sittard (Países Bajos (Eredivisie)),[FREE] Córners Go Ahead Eagles > 4.5,1.18,PENDIENTE_CLV,79.3,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0,AUDITANDO
-2026-11-22 18:40:00,401875542,Go Ahead Eagles vs Fortuna Sittard (Países Bajos (Eredivisie)),[FREE] Gol en 2do Tiempo,1.18,PENDIENTE_CLV,82.8,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0,AUDITANDO
-2026-11-22 19:10:00,401876401,Lorient vs Stade Rennais (Francia (Ligue 1)),[VIP] Faltas Totales > 17.5,1.72,PENDIENTE_CLV,59.3,🟢 [VALOR ALTO / OPERABLE],700.0,Pendiente,0,AUDITANDO
-2026-11-22 19:10:00,401876401,Lorient vs Stade Rennais (Francia (Ligue 1)),[VIP] Gol en 2do Tiempo,1.38,PENDIENTE_CLV,79.9,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Pendiente,0,AUDITANDO
-2026-11-22 19:10:00,401876401,Lorient vs Stade Rennais (Francia (Ligue 1)),[FREE] Remates Puerta > 6.5,1.28,PENDIENTE_CLV,72.3,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0,AUDITANDO
-2026-11-22 19:10:00,401876401,Lorient vs Stade Rennais (Francia (Ligue 1)),[FREE] Córners > 7.5,1.28,PENDIENTE_CLV,60.4,🟢 [VALOR ALTO / OPERABLE],500.0,Pendiente,0,AUDITANDO
-2026-11-22 19:25:00,401878755,Liverpool vs Manchester United (Inglaterra (Premier)),[VIP] Córners > 8.5,1.47,PENDIENTE_CLV,69.2,🟢 [LUZ VERDE / ALTO VALOR],900.0,Pendiente,0,AUDITANDO
-2026-11-22 19:25:00,401878755,Liverpool vs Manchester United (Inglaterra (Premier)),[VIP] Faltas Totales > 17.5,1.56,PENDIENTE_CLV,65.3,🟢 [VALOR ALTO / OPERABLE],800.0,Pendiente,0,AUDITANDO
-2026-11-22 19:25:00,401878755,Liverpool vs Manchester United (Inglaterra (Premier)),[FREE] Remates Puerta > 6.5,1.28,PENDIENTE_CLV,64.0,🟢 [VALOR ALTO / OPERABLE],500.0,Pendiente,0,AUDITANDO
-2026-11-22 19:25:00,401878755,Liverpool vs Manchester United (Inglaterra (Premier)),[FREE] Total Menos de 3.5 (Under),1.18,PENDIENTE_CLV,79.6,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0,AUDITANDO
-2026-11-22 19:25:00,401884730,Werder Bremen vs Hamburg SV (Alemania (Bundesliga)),[VIP] Total Asiático > 2.25,1.59,PENDIENTE_CLV,64.3,🟢 [VALOR ALTO / OPERABLE],900.0,Pendiente,0,AUDITANDO
-2026-11-22 19:25:00,401884730,Werder Bremen vs Hamburg SV (Alemania (Bundesliga)),[VIP] Remates Puerta > 8.5,1.69,PENDIENTE_CLV,60.5,🟢 [VALOR ALTO / OPERABLE],800.0,Pendiente,0,AUDITANDO
-2026-11-22 19:25:00,401884730,Werder Bremen vs Hamburg SV (Alemania (Bundesliga)),[FREE] Faltas Totales > 18.5,1.28,PENDIENTE_CLV,71.9,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0,AUDITANDO
-2026-11-22 19:25:00,401884730,Werder Bremen vs Hamburg SV (Alemania (Bundesliga)),[FREE] Gol en 2do Tiempo,1.18,PENDIENTE_CLV,84.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0,AUDITANDO
-2026-11-22 19:55:00,401874989,AC Milan vs Frosinone (Italia (Serie A)),[VIP] Córners > 8.5,1.67,PENDIENTE_CLV,60.9,🟢 [VALOR ALTO / OPERABLE],600.0,Pendiente,0,AUDITANDO
-2026-11-22 19:55:00,401874989,AC Milan vs Frosinone (Italia (Serie A)),[VIP] Gol en 2do Tiempo,1.38,PENDIENTE_CLV,77.0,🟢 [LUZ VERDE / ALTO VALOR],4100.0,Pendiente,0,AUDITANDO
-2026-11-22 19:55:00,401874989,AC Milan vs Frosinone (Italia (Serie A)),[FREE] Faltas Totales > 21.5,1.24,PENDIENTE_CLV,76.7,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0,AUDITANDO
-2026-11-22 19:55:00,401874989,AC Milan vs Frosinone (Italia (Serie A)),[FREE] Remates Puerta > 6.5,1.28,PENDIENTE_CLV,61.4,🟢 [VALOR ALTO / OPERABLE],500.0,Pendiente,0,AUDITANDO
-2026-11-22 20:25:00,401882801,Osasuna vs Málaga (España (Laliga)),[VIP] Faltas Totales > 22.5,1.6,PENDIENTE_CLV,63.9,🟢 [VALOR ALTO / OPERABLE],900.0,Pendiente,0,AUDITANDO
-2026-11-22 20:25:00,401882801,Osasuna vs Málaga (España (Laliga)),[VIP] Córners > 8.5,1.64,PENDIENTE_CLV,62.1,🟢 [VALOR ALTO / OPERABLE],700.0,Pendiente,0,AUDITANDO
-2026-11-22 20:25:00,401882801,Osasuna vs Málaga (España (Laliga)),[FREE] Doble Oport. 1X,1.2,PENDIENTE_CLV,80.6,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0,AUDITANDO
-2026-11-22 20:25:00,401882801,Osasuna vs Málaga (España (Laliga)),[FREE] Gol en 2do Tiempo,1.28,PENDIENTE_CLV,66.4,🟢 [VALOR ALTO / OPERABLE],500.0,Pendiente,0,AUDITANDO
-2026-11-22 20:25:00,401883109,Girona vs Eibar (España (Segunda)),[VIP] Total Menos de 2.5 (Under),1.6,PENDIENTE_CLV,63.6,🟢 [VALOR ALTO / OPERABLE],700.0,Pendiente,0,AUDITANDO
-2026-11-22 20:25:00,401883109,Girona vs Eibar (España (Segunda)),[VIP] Faltas Totales > 19.5,1.63,PENDIENTE_CLV,62.6,🟢 [VALOR ALTO / OPERABLE],800.0,Pendiente,0,AUDITANDO
-2026-11-22 20:25:00,401883109,Girona vs Eibar (España (Segunda)),[FREE] Córners > 6.5,1.28,PENDIENTE_CLV,60.1,🟢 [VALOR ALTO / OPERABLE],500.0,Pendiente,0,AUDITANDO
-2026-11-22 20:25:00,401883109,Girona vs Eibar (España (Segunda)),[FREE] Tarjetas > 3.5,1.28,PENDIENTE_CLV,55.6,🟡 [MODERADO / VIGILAR],500.0,Pendiente,0,AUDITANDO
-2026-11-22 20:25:00,401883304,RC Celta Fortuna vs Real Valladolid (España (Segunda)),[VIP] Faltas Totales > 22.5,1.45,PENDIENTE_CLV,70.3,🟢 [LUZ VERDE / ALTO VALOR],1100.0,Pendiente,0,AUDITANDO
-2026-11-22 20:25:00,401883304,RC Celta Fortuna vs Real Valladolid (España (Segunda)),[VIP] Tarjetas > 3.5,1.59,PENDIENTE_CLV,64.0,🟢 [VALOR ALTO / OPERABLE],700.0,Pendiente,0,AUDITANDO
-2026-11-22 20:25:00,401883304,RC Celta Fortuna vs Real Valladolid (España (Segunda)),[FREE] Total Menos de 3.5 (Under),1.18,PENDIENTE_CLV,82.6,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0,AUDITANDO
-2026-11-22 20:25:00,401883304,RC Celta Fortuna vs Real Valladolid (España (Segunda)),[FREE] Córners > 7.5,1.28,PENDIENTE_CLV,56.0,🟡 [MODERADO / VIGILAR],500.0,Pendiente,0,AUDITANDO
-2026-11-22 20:55:00,401931804,Estrela vs Portimonense (Portugal (Taça De Portugal)),[VIP] Combo 1X + O1.5,1.51,PENDIENTE_CLV,67.5,🟢 [VALOR ALTO / OPERABLE],900.0,Pendiente,0,AUDITANDO
-2026-11-22 20:55:00,401931804,Estrela vs Portimonense (Portugal (Taça De Portugal)),[FREE] Over 1.5 Goles,1.25,PENDIENTE_CLV,75.9,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0,AUDITANDO
-2026-11-22 20:55:00,401931804,Estrela vs Portimonense (Portugal (Taça De Portugal)),[FREE] Doble Oport. 1X,1.18,PENDIENTE_CLV,84.6,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0,AUDITANDO
-2026-11-22 22:40:00,401875001,Atalanta vs Internazionale (Italia (Serie A)),[VIP] Faltas Totales > 17.5,1.68,PENDIENTE_CLV,60.9,🟢 [VALOR ALTO / OPERABLE],800.0,Pendiente,0,AUDITANDO
-2026-11-22 22:40:00,401875001,Atalanta vs Internazionale (Italia (Serie A)),[VIP] Gol en 2do Tiempo,1.38,PENDIENTE_CLV,76.3,🟢 [LUZ VERDE / ALTO VALOR],3500.0,Pendiente,0,AUDITANDO
-2026-11-22 22:40:00,401875001,Atalanta vs Internazionale (Italia (Serie A)),[FREE] Córners Atalanta > 4.5,1.28,PENDIENTE_CLV,71.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0,AUDITANDO
-2026-11-22 22:40:00,401875001,Atalanta vs Internazionale (Italia (Serie A)),[FREE] Over 1.5 Goles,1.28,PENDIENTE_CLV,71.6,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0,AUDITANDO
-2026-11-22 22:40:00,401876400,Marseille vs Le Mans (Francia (Ligue 1)),[VIP] Combo 1X + O1.5,1.5,PENDIENTE_CLV,67.8,🟢 [VALOR ALTO / OPERABLE],800.0,Pendiente,0,AUDITANDO
-2026-11-22 22:40:00,401876400,Marseille vs Le Mans (Francia (Ligue 1)),[VIP] Remates Puerta > 8.5,1.73,PENDIENTE_CLV,59.1,🟢 [VALOR ALTO / OPERABLE],800.0,Pendiente,0,AUDITANDO
-2026-11-22 22:40:00,401876400,Marseille vs Le Mans (Francia (Ligue 1)),[FREE] Gol en 1T,1.18,PENDIENTE_CLV,79.9,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0,AUDITANDO
-2026-11-22 22:40:00,401876400,Marseille vs Le Mans (Francia (Ligue 1)),[FREE] Faltas Totales > 18.5,1.28,PENDIENTE_CLV,70.6,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0,AUDITANDO
-2026-11-22 22:55:00,401882803,Getafe vs Atlético Madrid (España (Laliga)),[VIP] Tarjetas > 3.5,1.75,PENDIENTE_CLV,58.2,🟢 [VALOR ALTO / OPERABLE],600.0,Pendiente,0,AUDITANDO
-2026-11-22 22:55:00,401882803,Getafe vs Atlético Madrid (España (Laliga)),[VIP] Faltas Totales > 21.5,1.6,PENDIENTE_CLV,63.8,🟢 [VALOR ALTO / OPERABLE],900.0,Pendiente,0,AUDITANDO
-2026-11-22 22:55:00,401882803,Getafe vs Atlético Madrid (España (Laliga)),[FREE] Córners > 8.5,1.28,PENDIENTE_CLV,61.9,🟢 [VALOR ALTO / OPERABLE],500.0,Pendiente,0,AUDITANDO
-2026-11-22 22:55:00,401882803,Getafe vs Atlético Madrid (España (Laliga)),[FREE] Total Menos de 3.5 (Under),1.22,PENDIENTE_CLV,77.9,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0,AUDITANDO
-2026-11-22 22:55:00,401883111,Burgos vs Albacete (España (Segunda)),[VIP] Tarjetas > 3.5,1.76,PENDIENTE_CLV,58.0,🟢 [VALOR ALTO / OPERABLE],700.0,Pendiente,0,AUDITANDO
-2026-11-22 22:55:00,401883111,Burgos vs Albacete (España (Segunda)),[VIP] Faltas Totales > 22.5,1.43,PENDIENTE_CLV,71.3,🟢 [LUZ VERDE / ALTO VALOR],1100.0,Pendiente,0,AUDITANDO
-2026-11-22 22:55:00,401883111,Burgos vs Albacete (España (Segunda)),[FREE] Doble Oport. 1X,1.24,PENDIENTE_CLV,78.8,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0,AUDITANDO
-2026-11-22 22:55:00,401883111,Burgos vs Albacete (España (Segunda)),[FREE] Total Menos de 3.5 (Under),1.18,PENDIENTE_CLV,80.6,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0,AUDITANDO
-2026-11-22 23:40:00,401931822,Torreense vs Benfica (Portugal (Taça De Portugal)),[VIP] Gol en 1T,1.43,PENDIENTE_CLV,71.2,🟢 [LUZ VERDE / ALTO VALOR],1100.0,Pendiente,0,AUDITANDO
-2026-11-22 23:40:00,401931822,Torreense vs Benfica (Portugal (Taça De Portugal)),[VIP] Córners > 8.5,1.54,PENDIENTE_CLV,66.2,🟢 [VALOR ALTO / OPERABLE],900.0,Pendiente,0,AUDITANDO
-2026-11-22 23:40:00,401931822,Torreense vs Benfica (Portugal (Taça De Portugal)),[FREE] Over 1.5 Goles,1.18,PENDIENTE_CLV,81.1,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0,AUDITANDO
-2026-11-22 23:40:00,401931822,Torreense vs Benfica (Portugal (Taça De Portugal)),[FREE] Remates Puerta > 6.5,1.28,PENDIENTE_CLV,58.3,🟢 [VALOR ALTO / OPERABLE],500.0,Pendiente,0,AUDITANDO
+2026-11-22 14:10:00,401875545,FC Twente vs Willem II (Países Bajos (Eredivisie)),[VIP] Combo 1X + O1.5,1.5,PENDIENTE_CLV,70.9,🟢 [LUZ VERDE / ALTO VALOR],3200.0,Pendiente,0.0,AUDITANDO
+2026-11-22 14:10:00,401875545,FC Twente vs Willem II (Países Bajos (Eredivisie)),[VIP] Córners FC Twente > 4.5,1.39,PENDIENTE_CLV,73.5,🟢 [LUZ VERDE / ALTO VALOR],1400.0,Pendiente,0.0,AUDITANDO
+2026-11-22 14:10:00,401875545,FC Twente vs Willem II (Países Bajos (Eredivisie)),[FREE] Over 1.5 Goles,1.18,PENDIENTE_CLV,80.6,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
+2026-11-22 14:10:00,401875545,FC Twente vs Willem II (Países Bajos (Eredivisie)),[FREE] Remates Puerta > 6.5,1.28,PENDIENTE_CLV,71.1,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
+2026-11-22 14:25:00,401875008,Juventus vs Venezia (Italia (Serie A)),[VIP] Combo 1X + O1.5,1.52,PENDIENTE_CLV,67.2,🟢 [VALOR ALTO / OPERABLE],1000.0,Pendiente,0.0,AUDITANDO
+2026-11-22 14:25:00,401875008,Juventus vs Venezia (Italia (Serie A)),[VIP] Faltas Totales > 20.5,1.65,PENDIENTE_CLV,61.8,🟢 [VALOR ALTO / OPERABLE],800.0,Pendiente,0.0,AUDITANDO
+2026-11-22 14:25:00,401875008,Juventus vs Venezia (Italia (Serie A)),[FREE] Over 1.5 Goles,1.24,PENDIENTE_CLV,76.8,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
+2026-11-22 14:25:00,401875008,Juventus vs Venezia (Italia (Serie A)),[FREE] Córners Juventus > 4.5,1.28,PENDIENTE_CLV,74.1,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
+2026-11-22 15:55:00,401882804,Barcelona vs Villarreal (España (Laliga)),[VIP] Faltas Totales > 17.5,1.64,PENDIENTE_CLV,62.2,🟢 [VALOR ALTO / OPERABLE],800.0,Pendiente,0.0,AUDITANDO
+2026-11-22 15:55:00,401882804,Barcelona vs Villarreal (España (Laliga)),[VIP] Gol en 1T,1.38,PENDIENTE_CLV,77.6,🟢 [LUZ VERDE / ALTO VALOR],4700.0,Pendiente,0.0,AUDITANDO
+2026-11-22 15:55:00,401882804,Barcelona vs Villarreal (España (Laliga)),[FREE] Córners Barcelona > 4.5,1.18,PENDIENTE_CLV,86.5,🟢 [LUZ VERDE / ALTO VALOR],2900.0,Pendiente,0.0,AUDITANDO
+2026-11-22 15:55:00,401882804,Barcelona vs Villarreal (España (Laliga)),[FREE] Remates Puerta > 6.5,1.28,PENDIENTE_CLV,71.1,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
+2026-11-22 15:55:00,401882300,Córdoba vs Real Oviedo (España (Segunda)),[VIP] Córners > 8.5,1.58,PENDIENTE_CLV,64.8,🟢 [VALOR ALTO / OPERABLE],1000.0,Pendiente,0.0,AUDITANDO
+2026-11-22 15:55:00,401882300,Córdoba vs Real Oviedo (España (Segunda)),[VIP] Tarjetas > 3.5,1.74,PENDIENTE_CLV,58.5,🟢 [VALOR ALTO / OPERABLE],600.0,Pendiente,0.0,AUDITANDO
+2026-11-22 15:55:00,401882300,Córdoba vs Real Oviedo (España (Segunda)),[FREE] Gol en 2do Tiempo,1.28,PENDIENTE_CLV,73.7,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
+2026-11-22 15:55:00,401882300,Córdoba vs Real Oviedo (España (Segunda)),[FREE] Faltas Totales > 19.5,1.28,PENDIENTE_CLV,69.8,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
+2026-11-22 16:25:00,401875547,Ajax Amsterdam vs ADO Den Haag (Países Bajos (Eredivisie)),[VIP] Combo 1X + O1.5,1.5,PENDIENTE_CLV,68.3,🟢 [LUZ VERDE / ALTO VALOR],1200.0,Pendiente,0.0,AUDITANDO
+2026-11-22 16:25:00,401875547,Ajax Amsterdam vs ADO Den Haag (Países Bajos (Eredivisie)),[VIP] Ambos Marcan (BTTS),1.7,PENDIENTE_CLV,62.3,🟢 [VALOR ALTO / OPERABLE],2100.0,Pendiente,0.0,AUDITANDO
+2026-11-22 16:25:00,401875547,Ajax Amsterdam vs ADO Den Haag (Países Bajos (Eredivisie)),[FREE] Gol en 1T,1.18,PENDIENTE_CLV,83.8,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
+2026-11-22 16:25:00,401875547,Ajax Amsterdam vs ADO Den Haag (Países Bajos (Eredivisie)),[FREE] Córners Ajax Amsterdam > 4.5,1.18,PENDIENTE_CLV,79.4,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
+2026-11-22 16:25:00,401875540,Sparta Rotterdam vs AZ Alkmaar (Países Bajos (Eredivisie)),[VIP] Remates Puerta > 8.5,1.69,PENDIENTE_CLV,60.5,🟢 [VALOR ALTO / OPERABLE],800.0,Pendiente,0.0,AUDITANDO
+2026-11-22 16:25:00,401875540,Sparta Rotterdam vs AZ Alkmaar (Países Bajos (Eredivisie)),[VIP] Faltas Totales > 17.5,1.66,PENDIENTE_CLV,61.3,🟢 [VALOR ALTO / OPERABLE],700.0,Pendiente,0.0,AUDITANDO
+2026-11-22 16:25:00,401875540,Sparta Rotterdam vs AZ Alkmaar (Países Bajos (Eredivisie)),[FREE] Over 1.5 Goles,1.18,PENDIENTE_CLV,80.6,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
+2026-11-22 16:25:00,401875540,Sparta Rotterdam vs AZ Alkmaar (Países Bajos (Eredivisie)),[FREE] Córners AZ Alkmaar > 4.5,1.28,PENDIENTE_CLV,74.1,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
+2026-11-22 16:55:00,401875047,Bologna vs Udinese (Italia (Serie A)),[VIP] Ambos Marcan (BTTS),1.79,PENDIENTE_CLV,60.4,🟢 [VALOR ALTO / OPERABLE],2600.0,Pendiente,0.0,AUDITANDO
+2026-11-22 16:55:00,401875047,Bologna vs Udinese (Italia (Serie A)),[VIP] Gol en 1T,1.41,PENDIENTE_CLV,72.3,🟢 [LUZ VERDE / ALTO VALOR],1200.0,Pendiente,0.0,AUDITANDO
+2026-11-22 16:55:00,401875047,Bologna vs Udinese (Italia (Serie A)),[FREE] Faltas Totales > 19.5,1.28,PENDIENTE_CLV,71.6,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
+2026-11-22 16:55:00,401875047,Bologna vs Udinese (Italia (Serie A)),[FREE] Remates Puerta > 6.5,1.28,PENDIENTE_CLV,60.2,🟢 [VALOR ALTO / OPERABLE],500.0,Pendiente,0.0,AUDITANDO
+2026-11-22 16:55:00,401874960,Sassuolo vs Genoa (Italia (Serie A)),[VIP] Faltas Totales > 17.5,1.64,PENDIENTE_CLV,62.2,🟢 [VALOR ALTO / OPERABLE],800.0,Pendiente,0.0,AUDITANDO
+2026-11-22 16:55:00,401874960,Sassuolo vs Genoa (Italia (Serie A)),[VIP] Total Menos de 2.5 (Under),1.82,PENDIENTE_CLV,56.0,🟡 [MODERADO / VIGILAR],500.0,Pendiente,0.0,AUDITANDO
+2026-11-22 16:55:00,401874960,Sassuolo vs Genoa (Italia (Serie A)),[FREE] Córners > 6.5,1.28,PENDIENTE_CLV,59.0,🟢 [VALOR ALTO / OPERABLE],500.0,Pendiente,0.0,AUDITANDO
+2026-11-22 16:55:00,401876397,Paris FC vs Angers (Francia (Ligue 1)),[VIP] Combo 1X + O1.5,1.5,PENDIENTE_CLV,70.6,🟢 [LUZ VERDE / ALTO VALOR],2900.0,Pendiente,0.0,AUDITANDO
+2026-11-22 16:55:00,401876397,Paris FC vs Angers (Francia (Ligue 1)),[FREE] Gol en 1T,1.18,PENDIENTE_CLV,79.8,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
+2026-11-22 16:55:00,401876397,Paris FC vs Angers (Francia (Ligue 1)),[FREE] Remates Puerta > 6.5,1.28,PENDIENTE_CLV,63.0,🟢 [VALOR ALTO / OPERABLE],500.0,Pendiente,0.0,AUDITANDO
+2026-11-22 16:55:00,401931812,Gil Vicente vs Olhanense (Portugal (Taça De Portugal)),[VIP] Faltas Totales > 22.5,1.44,PENDIENTE_CLV,71.0,🟢 [LUZ VERDE / ALTO VALOR],1300.0,Pendiente,0.0,AUDITANDO
+2026-11-22 16:55:00,401931812,Gil Vicente vs Olhanense (Portugal (Taça De Portugal)),[VIP] Combo 1X + O1.5,1.5,PENDIENTE_CLV,68.2,🟢 [LUZ VERDE / ALTO VALOR],1200.0,Pendiente,0.0,AUDITANDO
+2026-11-22 16:55:00,401931812,Gil Vicente vs Olhanense (Portugal (Taça De Portugal)),[FREE] Over 1.5 Goles,1.28,PENDIENTE_CLV,74.3,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
+2026-11-22 16:55:00,401931812,Gil Vicente vs Olhanense (Portugal (Taça De Portugal)),[FREE] Córners Gil Vicente > 4.5,1.18,PENDIENTE_CLV,79.9,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
+2026-11-22 16:55:00,401931811,Vianense vs Rio Ave (Portugal (Taça De Portugal)),[VIP] Córners > 8.5,1.7,PENDIENTE_CLV,60.0,🟢 [VALOR ALTO / OPERABLE],700.0,Pendiente,0.0,AUDITANDO
+2026-11-22 16:55:00,401931811,Vianense vs Rio Ave (Portugal (Taça De Portugal)),[VIP] Faltas Totales > 21.5,1.68,PENDIENTE_CLV,60.6,🟢 [VALOR ALTO / OPERABLE],700.0,Pendiente,0.0,AUDITANDO
+2026-11-22 16:55:00,401931811,Vianense vs Rio Ave (Portugal (Taça De Portugal)),[FREE] Tarjetas > 3.5,1.25,PENDIENTE_CLV,75.1,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
+2026-11-22 16:55:00,401931811,Vianense vs Rio Ave (Portugal (Taça De Portugal)),[FREE] Gol en 2do Tiempo,1.28,PENDIENTE_CLV,66.2,🟢 [VALOR ALTO / OPERABLE],500.0,Pendiente,0.0,AUDITANDO
+2026-11-22 17:25:00,401884733,FC Augsburg vs Mainz (Alemania (Bundesliga)),[VIP] Ambos Marcan (BTTS),1.37,PENDIENTE_CLV,69.9,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
+2026-11-22 17:25:00,401884733,FC Augsburg vs Mainz (Alemania (Bundesliga)),[VIP] Remates Puerta > 8.5,1.69,PENDIENTE_CLV,60.5,🟢 [VALOR ALTO / OPERABLE],800.0,Pendiente,0.0,AUDITANDO
+2026-11-22 17:25:00,401884733,FC Augsburg vs Mainz (Alemania (Bundesliga)),[FREE] Gol en 2do Tiempo,1.18,PENDIENTE_CLV,81.7,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
+2026-11-22 17:25:00,401884733,FC Augsburg vs Mainz (Alemania (Bundesliga)),[FREE] Faltas Totales > 16.5,1.28,PENDIENTE_CLV,71.2,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
+2026-11-22 17:55:00,401931810,SC Farense vs Fatima (Portugal (Taça De Portugal)),[VIP] Tarjetas > 3.5,1.38,PENDIENTE_CLV,77.4,🟢 [LUZ VERDE / ALTO VALOR],4500.0,Pendiente,0.0,AUDITANDO
+2026-11-22 17:55:00,401931810,SC Farense vs Fatima (Portugal (Taça De Portugal)),[VIP] Faltas Totales > 22.5,1.44,PENDIENTE_CLV,71.0,🟢 [LUZ VERDE / ALTO VALOR],1300.0,Pendiente,0.0,AUDITANDO
+2026-11-22 17:55:00,401931810,SC Farense vs Fatima (Portugal (Taça De Portugal)),[FREE] Córners SC Farense > 4.5,1.28,PENDIENTE_CLV,71.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
+2026-11-22 17:55:00,401931810,SC Farense vs Fatima (Portugal (Taça De Portugal)),[FREE] Doble Oport. 1X,1.18,PENDIENTE_CLV,83.7,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
+2026-11-22 18:10:00,401882800,Racing Santander vs Real Sociedad (España (Laliga)),[VIP] Total Asiático > 2.25,1.63,PENDIENTE_CLV,62.7,🟢 [VALOR ALTO / OPERABLE],900.0,Pendiente,0.0,AUDITANDO
+2026-11-22 18:10:00,401882800,Racing Santander vs Real Sociedad (España (Laliga)),[VIP] Remates Puerta > 8.5,1.69,PENDIENTE_CLV,60.3,🟢 [VALOR ALTO / OPERABLE],700.0,Pendiente,0.0,AUDITANDO
+2026-11-22 18:10:00,401882800,Racing Santander vs Real Sociedad (España (Laliga)),[FREE] Faltas Totales > 21.5,1.28,PENDIENTE_CLV,67.3,🟢 [VALOR ALTO / OPERABLE],500.0,Pendiente,0.0,AUDITANDO
+2026-11-22 18:10:00,401882800,Racing Santander vs Real Sociedad (España (Laliga)),[FREE] Córners > 8.5,1.28,PENDIENTE_CLV,61.2,🟢 [VALOR ALTO / OPERABLE],500.0,Pendiente,0.0,AUDITANDO
+2026-11-22 18:10:00,401882298,Sporting Gijón vs Las Palmas (España (Segunda)),[VIP] Gol en 1T,1.46,PENDIENTE_CLV,70.0,🟢 [LUZ VERDE / ALTO VALOR],1200.0,Pendiente,0.0,AUDITANDO
+2026-11-22 18:10:00,401882298,Sporting Gijón vs Las Palmas (España (Segunda)),[VIP] Faltas Totales > 18.5,1.71,PENDIENTE_CLV,59.8,🟢 [VALOR ALTO / OPERABLE],800.0,Pendiente,0.0,AUDITANDO
+2026-11-22 18:10:00,401882298,Sporting Gijón vs Las Palmas (España (Segunda)),[FREE] Gol en 2do Tiempo,1.18,PENDIENTE_CLV,80.1,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
+2026-11-22 18:40:00,401875542,Go Ahead Eagles vs Fortuna Sittard (Países Bajos (Eredivisie)),[VIP] Over 2.5 Goles,1.67,PENDIENTE_CLV,61.0,🟢 [VALOR ALTO / OPERABLE],700.0,Pendiente,0.0,AUDITANDO
+2026-11-22 18:40:00,401875542,Go Ahead Eagles vs Fortuna Sittard (Países Bajos (Eredivisie)),[VIP] Remates Puerta > 8.5,1.69,PENDIENTE_CLV,60.5,🟢 [VALOR ALTO / OPERABLE],800.0,Pendiente,0.0,AUDITANDO
+2026-11-22 18:40:00,401875542,Go Ahead Eagles vs Fortuna Sittard (Países Bajos (Eredivisie)),[FREE] Córners Go Ahead Eagles > 4.5,1.18,PENDIENTE_CLV,79.3,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
+2026-11-22 18:40:00,401875542,Go Ahead Eagles vs Fortuna Sittard (Países Bajos (Eredivisie)),[FREE] Gol en 2do Tiempo,1.18,PENDIENTE_CLV,82.8,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
+2026-11-22 19:10:00,401876401,Lorient vs Stade Rennais (Francia (Ligue 1)),[VIP] Faltas Totales > 17.5,1.72,PENDIENTE_CLV,59.3,🟢 [VALOR ALTO / OPERABLE],700.0,Pendiente,0.0,AUDITANDO
+2026-11-22 19:10:00,401876401,Lorient vs Stade Rennais (Francia (Ligue 1)),[VIP] Gol en 2do Tiempo,1.38,PENDIENTE_CLV,79.9,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Pendiente,0.0,AUDITANDO
+2026-11-22 19:10:00,401876401,Lorient vs Stade Rennais (Francia (Ligue 1)),[FREE] Remates Puerta > 6.5,1.28,PENDIENTE_CLV,72.3,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
+2026-11-22 19:10:00,401876401,Lorient vs Stade Rennais (Francia (Ligue 1)),[FREE] Córners > 7.5,1.28,PENDIENTE_CLV,60.4,🟢 [VALOR ALTO / OPERABLE],500.0,Pendiente,0.0,AUDITANDO
+2026-11-22 19:25:00,401878755,Liverpool vs Manchester United (Inglaterra (Premier)),[VIP] Córners > 8.5,1.47,PENDIENTE_CLV,69.2,🟢 [LUZ VERDE / ALTO VALOR],900.0,Pendiente,0.0,AUDITANDO
+2026-11-22 19:25:00,401878755,Liverpool vs Manchester United (Inglaterra (Premier)),[VIP] Faltas Totales > 17.5,1.56,PENDIENTE_CLV,65.3,🟢 [VALOR ALTO / OPERABLE],800.0,Pendiente,0.0,AUDITANDO
+2026-11-22 19:25:00,401878755,Liverpool vs Manchester United (Inglaterra (Premier)),[FREE] Remates Puerta > 6.5,1.28,PENDIENTE_CLV,64.0,🟢 [VALOR ALTO / OPERABLE],500.0,Pendiente,0.0,AUDITANDO
+2026-11-22 19:25:00,401878755,Liverpool vs Manchester United (Inglaterra (Premier)),[FREE] Total Menos de 3.5 (Under),1.18,PENDIENTE_CLV,79.6,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
+2026-11-22 19:25:00,401884730,Werder Bremen vs Hamburg SV (Alemania (Bundesliga)),[VIP] Total Asiático > 2.25,1.59,PENDIENTE_CLV,64.3,🟢 [VALOR ALTO / OPERABLE],900.0,Pendiente,0.0,AUDITANDO
+2026-11-22 19:25:00,401884730,Werder Bremen vs Hamburg SV (Alemania (Bundesliga)),[VIP] Remates Puerta > 8.5,1.69,PENDIENTE_CLV,60.5,🟢 [VALOR ALTO / OPERABLE],800.0,Pendiente,0.0,AUDITANDO
+2026-11-22 19:25:00,401884730,Werder Bremen vs Hamburg SV (Alemania (Bundesliga)),[FREE] Faltas Totales > 18.5,1.28,PENDIENTE_CLV,71.9,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
+2026-11-22 19:25:00,401884730,Werder Bremen vs Hamburg SV (Alemania (Bundesliga)),[FREE] Gol en 2do Tiempo,1.18,PENDIENTE_CLV,84.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
+2026-11-22 19:55:00,401874989,AC Milan vs Frosinone (Italia (Serie A)),[VIP] Córners > 8.5,1.67,PENDIENTE_CLV,60.9,🟢 [VALOR ALTO / OPERABLE],600.0,Pendiente,0.0,AUDITANDO
+2026-11-22 19:55:00,401874989,AC Milan vs Frosinone (Italia (Serie A)),[VIP] Gol en 2do Tiempo,1.38,PENDIENTE_CLV,77.0,🟢 [LUZ VERDE / ALTO VALOR],4100.0,Pendiente,0.0,AUDITANDO
+2026-11-22 19:55:00,401874989,AC Milan vs Frosinone (Italia (Serie A)),[FREE] Faltas Totales > 21.5,1.24,PENDIENTE_CLV,76.7,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
+2026-11-22 19:55:00,401874989,AC Milan vs Frosinone (Italia (Serie A)),[FREE] Remates Puerta > 6.5,1.28,PENDIENTE_CLV,61.4,🟢 [VALOR ALTO / OPERABLE],500.0,Pendiente,0.0,AUDITANDO
+2026-11-22 20:25:00,401882801,Osasuna vs Málaga (España (Laliga)),[VIP] Faltas Totales > 22.5,1.6,PENDIENTE_CLV,63.9,🟢 [VALOR ALTO / OPERABLE],900.0,Pendiente,0.0,AUDITANDO
+2026-11-22 20:25:00,401882801,Osasuna vs Málaga (España (Laliga)),[VIP] Córners > 8.5,1.64,PENDIENTE_CLV,62.1,🟢 [VALOR ALTO / OPERABLE],700.0,Pendiente,0.0,AUDITANDO
+2026-11-22 20:25:00,401882801,Osasuna vs Málaga (España (Laliga)),[FREE] Doble Oport. 1X,1.2,PENDIENTE_CLV,80.6,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
+2026-11-22 20:25:00,401882801,Osasuna vs Málaga (España (Laliga)),[FREE] Gol en 2do Tiempo,1.28,PENDIENTE_CLV,66.4,🟢 [VALOR ALTO / OPERABLE],500.0,Pendiente,0.0,AUDITANDO
+2026-11-22 20:25:00,401883109,Girona vs Eibar (España (Segunda)),[VIP] Total Menos de 2.5 (Under),1.6,PENDIENTE_CLV,63.6,🟢 [VALOR ALTO / OPERABLE],700.0,Pendiente,0.0,AUDITANDO
+2026-11-22 20:25:00,401883109,Girona vs Eibar (España (Segunda)),[VIP] Faltas Totales > 19.5,1.63,PENDIENTE_CLV,62.6,🟢 [VALOR ALTO / OPERABLE],800.0,Pendiente,0.0,AUDITANDO
+2026-11-22 20:25:00,401883109,Girona vs Eibar (España (Segunda)),[FREE] Córners > 6.5,1.28,PENDIENTE_CLV,60.1,🟢 [VALOR ALTO / OPERABLE],500.0,Pendiente,0.0,AUDITANDO
+2026-11-22 20:25:00,401883109,Girona vs Eibar (España (Segunda)),[FREE] Tarjetas > 3.5,1.28,PENDIENTE_CLV,55.6,🟡 [MODERADO / VIGILAR],500.0,Pendiente,0.0,AUDITANDO
+2026-11-22 20:25:00,401883304,RC Celta Fortuna vs Real Valladolid (España (Segunda)),[VIP] Faltas Totales > 22.5,1.45,PENDIENTE_CLV,70.3,🟢 [LUZ VERDE / ALTO VALOR],1100.0,Pendiente,0.0,AUDITANDO
+2026-11-22 20:25:00,401883304,RC Celta Fortuna vs Real Valladolid (España (Segunda)),[VIP] Tarjetas > 3.5,1.59,PENDIENTE_CLV,64.0,🟢 [VALOR ALTO / OPERABLE],700.0,Pendiente,0.0,AUDITANDO
+2026-11-22 20:25:00,401883304,RC Celta Fortuna vs Real Valladolid (España (Segunda)),[FREE] Total Menos de 3.5 (Under),1.18,PENDIENTE_CLV,82.6,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
+2026-11-22 20:25:00,401883304,RC Celta Fortuna vs Real Valladolid (España (Segunda)),[FREE] Córners > 7.5,1.28,PENDIENTE_CLV,56.0,🟡 [MODERADO / VIGILAR],500.0,Pendiente,0.0,AUDITANDO
+2026-11-22 20:55:00,401931804,Estrela vs Portimonense (Portugal (Taça De Portugal)),[VIP] Combo 1X + O1.5,1.51,PENDIENTE_CLV,67.5,🟢 [VALOR ALTO / OPERABLE],900.0,Pendiente,0.0,AUDITANDO
+2026-11-22 20:55:00,401931804,Estrela vs Portimonense (Portugal (Taça De Portugal)),[FREE] Over 1.5 Goles,1.25,PENDIENTE_CLV,75.9,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
+2026-11-22 20:55:00,401931804,Estrela vs Portimonense (Portugal (Taça De Portugal)),[FREE] Doble Oport. 1X,1.18,PENDIENTE_CLV,84.6,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
+2026-11-22 22:40:00,401875001,Atalanta vs Internazionale (Italia (Serie A)),[VIP] Faltas Totales > 17.5,1.68,PENDIENTE_CLV,60.9,🟢 [VALOR ALTO / OPERABLE],800.0,Pendiente,0.0,AUDITANDO
+2026-11-22 22:40:00,401875001,Atalanta vs Internazionale (Italia (Serie A)),[VIP] Gol en 2do Tiempo,1.38,PENDIENTE_CLV,76.3,🟢 [LUZ VERDE / ALTO VALOR],3500.0,Pendiente,0.0,AUDITANDO
+2026-11-22 22:40:00,401875001,Atalanta vs Internazionale (Italia (Serie A)),[FREE] Córners Atalanta > 4.5,1.28,PENDIENTE_CLV,71.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
+2026-11-22 22:40:00,401875001,Atalanta vs Internazionale (Italia (Serie A)),[FREE] Over 1.5 Goles,1.28,PENDIENTE_CLV,71.6,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
+2026-11-22 22:40:00,401876400,Marseille vs Le Mans (Francia (Ligue 1)),[VIP] Combo 1X + O1.5,1.5,PENDIENTE_CLV,67.8,🟢 [VALOR ALTO / OPERABLE],800.0,Pendiente,0.0,AUDITANDO
+2026-11-22 22:40:00,401876400,Marseille vs Le Mans (Francia (Ligue 1)),[VIP] Remates Puerta > 8.5,1.73,PENDIENTE_CLV,59.1,🟢 [VALOR ALTO / OPERABLE],800.0,Pendiente,0.0,AUDITANDO
+2026-11-22 22:40:00,401876400,Marseille vs Le Mans (Francia (Ligue 1)),[FREE] Gol en 1T,1.18,PENDIENTE_CLV,79.9,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
+2026-11-22 22:40:00,401876400,Marseille vs Le Mans (Francia (Ligue 1)),[FREE] Faltas Totales > 18.5,1.28,PENDIENTE_CLV,70.6,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
+2026-11-22 22:55:00,401882803,Getafe vs Atlético Madrid (España (Laliga)),[VIP] Tarjetas > 3.5,1.75,PENDIENTE_CLV,58.2,🟢 [VALOR ALTO / OPERABLE],600.0,Pendiente,0.0,AUDITANDO
+2026-11-22 22:55:00,401882803,Getafe vs Atlético Madrid (España (Laliga)),[VIP] Faltas Totales > 21.5,1.6,PENDIENTE_CLV,63.8,🟢 [VALOR ALTO / OPERABLE],900.0,Pendiente,0.0,AUDITANDO
+2026-11-22 22:55:00,401882803,Getafe vs Atlético Madrid (España (Laliga)),[FREE] Córners > 8.5,1.28,PENDIENTE_CLV,61.9,🟢 [VALOR ALTO / OPERABLE],500.0,Pendiente,0.0,AUDITANDO
+2026-11-22 22:55:00,401882803,Getafe vs Atlético Madrid (España (Laliga)),[FREE] Total Menos de 3.5 (Under),1.22,PENDIENTE_CLV,77.9,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
+2026-11-22 22:55:00,401883111,Burgos vs Albacete (España (Segunda)),[VIP] Tarjetas > 3.5,1.76,PENDIENTE_CLV,58.0,🟢 [VALOR ALTO / OPERABLE],700.0,Pendiente,0.0,AUDITANDO
+2026-11-22 22:55:00,401883111,Burgos vs Albacete (España (Segunda)),[VIP] Faltas Totales > 22.5,1.43,PENDIENTE_CLV,71.3,🟢 [LUZ VERDE / ALTO VALOR],1100.0,Pendiente,0.0,AUDITANDO
+2026-11-22 22:55:00,401883111,Burgos vs Albacete (España (Segunda)),[FREE] Doble Oport. 1X,1.24,PENDIENTE_CLV,78.8,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
+2026-11-22 22:55:00,401883111,Burgos vs Albacete (España (Segunda)),[FREE] Total Menos de 3.5 (Under),1.18,PENDIENTE_CLV,80.6,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
+2026-11-22 23:40:00,401931822,Torreense vs Benfica (Portugal (Taça De Portugal)),[VIP] Gol en 1T,1.43,PENDIENTE_CLV,71.2,🟢 [LUZ VERDE / ALTO VALOR],1100.0,Pendiente,0.0,AUDITANDO
+2026-11-22 23:40:00,401931822,Torreense vs Benfica (Portugal (Taça De Portugal)),[VIP] Córners > 8.5,1.54,PENDIENTE_CLV,66.2,🟢 [VALOR ALTO / OPERABLE],900.0,Pendiente,0.0,AUDITANDO
+2026-11-22 23:40:00,401931822,Torreense vs Benfica (Portugal (Taça De Portugal)),[FREE] Over 1.5 Goles,1.18,PENDIENTE_CLV,81.1,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
+2026-11-22 23:40:00,401931822,Torreense vs Benfica (Portugal (Taça De Portugal)),[FREE] Remates Puerta > 6.5,1.28,PENDIENTE_CLV,58.3,🟢 [VALOR ALTO / OPERABLE],500.0,Pendiente,0.0,AUDITANDO
