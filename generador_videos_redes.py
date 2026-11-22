@@ -1151,7 +1151,7 @@ def crear_imagen_auditoria_vertical(fecha_hoy, ruta_csv="auditoria_apuestas.csv"
     # Pie CTA centrado y elegante
     y_cta = max(y + 16, 1320)
     draw.rounded_rectangle([(46, y_cta), (1034, y_cta + 172)], radius=26, fill=(22, 20, 12, 246), outline=c_oro, width=3)
-    t_c1 = "PASE DE PRUEBA VIP 24 HORAS  •  SOLO 1.00 USD"
+    t_c1 = "PASE DE PRUEBA VIP 24 HORAS  •  SOLO 1.00 EUR"
     t_c2 = "VER RESULTADOS EN VIVO EN QUANTBET22.STREAMLIT.APP"
     t_c3 = "@QUANTBET22  •  TRANSPARENCIA TOTAL EN PYTHON"
     f_c1 = _fuente_pro_ajustada(draw, t_c1, "bold", 32, 930, 20)
@@ -1210,12 +1210,12 @@ def publicar_auditoria_nocturna_canal_free(fecha_auditar=None, enviar_a_clientes
     caption_oficial_free = (
         f"{titulo_free}\n\n"
         f"{intro_free}\n\n"
-        f"🔥 <b>PRUEBA {cta_dia} EL CANAL VIP POR SOLO 1.00 USD (24H)</b>\n"
+        f"🔥 <b>PRUEBA {cta_dia} EL CANAL VIP POR SOLO 1.00 € (24H)</b>\n"
         f"✅ 4 Tarjetas VIP de cuota alta de {cta_dia.lower()} + Doble VIP + Triple Sniper.\n"
         "✅ Pago único por 1 día (sin cobros automáticos).\n"
-        "⏳ <i>Promo VIP 10 días ($7.99) y PRO solo hasta el 30 de noviembre.</i>\n\n"
+        "⏳ <i>Promo VIP 10 días (7.99 €) y PRO solo hasta el 30 de noviembre.</i>\n\n"
         "💳 <b>1. Tarjeta en 1 clic (Whop Oficial):</b>\n"
-        "👉 <a href='https://whop.com/youtube-d4c7/quantbet22-canal-vip/'>Activar Pase Diario ($1.00 USD)</a>\n"
+        "👉 <a href='https://whop.com/youtube-d4c7/quantbet22-canal-vip/'>Activar Pase Diario (1.00 €)</a>\n"
         "📲 <b>2. Bizum, Nequi o USDT:</b>\n"
         "👉 Escribe <b>\"PASE 1 DIA\"</b> aquí: @QuantBetSoporte_bot\n\n"
         "🌐 <b>Auditoría y resultados en vivo:</b>\n"
@@ -1227,7 +1227,7 @@ def publicar_auditoria_nocturna_canal_free(fecha_auditar=None, enviar_a_clientes
         "📈 <i>Recuerden mantener disciplina con el Stake de Kelly y consultar todas las estadísticas y combinadas auditadas en tiempo real en nuestra plataforma web:</i>\n"
         "🌐 👉 <a href='https://quantbet22.streamlit.app'>https://quantbet22.streamlit.app</a>\n\n"
         "👑 <b>¿Quieres dar el salto al Canal PRO (100% de las ligas + Combinada Triple Sniper 3X)?</b>\n"
-        "⏳ <i>Promo especial hasta el 30 DE NOVIEMBRE por solo 49.99 USD (Antes 74.99 USD):</i>\n"
+        "⏳ <i>Promo especial hasta el 30 DE NOVIEMBRE por solo 49.99 € (Antes 74.99 €):</i>\n"
         "👉 <a href='https://whop.com/youtube-d4c7/products/uantbet22-membresia-pro-avanzada/?ref=related_products'>Desbloquear Plan PRO aquí</a>\n"
         "💬 Soporte directo 24/7: @QuantBetSoporte_bot"
     )
