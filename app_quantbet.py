@@ -1461,7 +1461,7 @@ with o2:
     st.markdown(
         f"<div class='oferta-card-animada notranslate' translate='no' style='border-color:#ffcd00;'>"
         f"<div><span class='oferta-tag-top'>🔓 PRUEBA 24 HORAS</span>"
-        f"<div class='oferta-precio-limpio' style='color:#ffcd00;'>1.00 USD</div>"
+        f"<div class='oferta-precio-limpio' style='color:#ffcd00;'>1.00 €</div>"
         f"<div class='oferta-subtexto'>4 VIP + Combinada Doble (Sin cobro automático)</div></div>"
         f"<a href='{LINK_WHOP_TRIAL_099}' target='_blank' class='oferta-btn-clic-oro'>Probar 1 Día VIP ➔</a>"
         f"</div>",
@@ -1471,8 +1471,8 @@ with o3:
     st.markdown(
         f"<div class='oferta-card-animada notranslate' translate='no'>"
         f"<div><span class='oferta-tag-top'>🔥 PROMO HASTA 30 NOV</span>"
-        f"<div class='oferta-precio-limpio'>7.99 USD <span style='font-size:0.78rem; font-weight:500;'>/ 10 días</span></div>"
-        f"<div class='oferta-subtexto'>VIP Completo + Doble (o 3 Días x 4.99 USD)</div></div>"
+        f"<div class='oferta-precio-limpio'>7.99 € <span style='font-size:0.78rem; font-weight:500;'>/ 10 días</span></div>"
+        f"<div class='oferta-subtexto'>VIP Completo + Doble (o 3 Días x 4.99 €)</div></div>"
         f"<a href='{LINK_WHOP_VIP}' target='_blank' class='oferta-btn-clic'>Activar VIP 10 Días ➔</a>"
         f"</div>",
         unsafe_allow_html=True
@@ -1481,7 +1481,7 @@ with o4:
     st.markdown(
         f"<div class='oferta-card-animada notranslate' translate='no'>"
         f"<div><span class='oferta-tag-top'>👑 TODAS LAS LIGAS</span>"
-        f"<div class='oferta-precio-limpio'>49.99 USD <span style='font-size:0.76rem; text-decoration:line-through; color:#8b949e;'>74.99</span></div>"
+        f"<div class='oferta-precio-limpio'>49.99 € <span style='font-size:0.76rem; text-decoration:line-through; color:#8b949e;'>74.99</span></div>"
         f"<div class='oferta-subtexto'>{n_partidos_hoy} partidos hoy + Sniper 3X • Bizum/Nequi/USDT</div></div>"
         f"<a href='{LINK_WHOP_PRO}' target='_blank' class='oferta-btn-clic'>Desbloquear PRO ➔</a>"
         f"</div>",
@@ -1656,7 +1656,7 @@ def renderizar_panel_en_vivo_silencioso():
                         f"• <span class='badge-candado'>🔒 SELECCIÓN VIP #{idx_op}</span> &nbsp; "
                         f"Probabilidad Modelo: <b>{op.get('prob', 78.0)}%</b> ➔ Cuota VIP > <b>{c_vip_mostrar:.2f}</b> "
                         f"<a href='{LINK_WHOP_VIP}' target='_blank' class='btn-vip-inline'>"
-                        f"🔓 DESBLOQUEAR HOY POR 1.00 USD"
+                        f"🔓 DESBLOQUEAR HOY POR 1.00 €"
                         f"</a>"
                         f"</div>"
                     )
@@ -1674,9 +1674,9 @@ def renderizar_panel_en_vivo_silencioso():
 
         col_v1, col_v2 = st.columns(2)
         with col_v1:
-            st.markdown(f"<a href='{LINK_WHOP_VIP}' target='_blank' class='btn-cta-bar-gold'>🔥 ACTIVAR PASE VIP (1 DÍA 1.00 USD | 10 DÍAS 7.99 USD)</a>", unsafe_allow_html=True)
+            st.markdown(f"<a href='{LINK_WHOP_VIP}' target='_blank' class='btn-cta-bar-gold'>🔥 ACTIVAR PASE VIP (1 DÍA 1.00 € | 10 DÍAS 7.99 €)</a>", unsafe_allow_html=True)
         with col_v2:
-            st.markdown(f"<a href='{LINK_WHOP_PRO}' target='_blank' class='btn-cta-bar'>👑 PROMO PRO CIERRE DE AÑO: TODAS LAS LIGAS (49.99 USD)</a>", unsafe_allow_html=True)
+            st.markdown(f"<a href='{LINK_WHOP_PRO}' target='_blank' class='btn-cta-bar'>👑 PROMO PRO CIERRE DE AÑO: TODAS LAS LIGAS (49.99 €)</a>", unsafe_allow_html=True)
 
     st.divider()
 
@@ -1689,7 +1689,7 @@ def renderizar_panel_en_vivo_silencioso():
     with col_c:
         c_casa = st.number_input("Cuota en tu Casa", min_value=1.05, max_value=10.0, value=1.45, step=0.05)
     with col_k:
-        cap_usr = st.number_input("Tu Capital (USD)", min_value=10.0, max_value=10000000.0, value=100.0, step=10.0)
+        cap_usr = st.number_input("Tu Capital (EUR)", min_value=10.0, max_value=10000000.0, value=100.0, step=10.0)
 
     c_min_justa = round(100.0 / p_mod, 2)
     ventaja_ev = round(((p_mod / 100.0) * c_casa - 1.0) * 100.0, 1)
@@ -1698,7 +1698,7 @@ def renderizar_panel_en_vivo_silencioso():
         b_neto = c_casa - 1.0
         fraccion_k = max(0.0, (((b_neto * (p_mod / 100.0)) - (1.0 - (p_mod / 100.0))) / b_neto) * 0.25)
         monto_sugerido = round(min(cap_usr * 0.05, cap_usr * fraccion_k), 2)
-        st.success(f"🟢 ¡CUOTA CON VALOR POSITIVO (EV: +{ventaja_ev}%)! Cuota mínima justa: {c_min_justa} | Inversión sugerida (Kelly): {monto_sugerido} USD")
+        st.success(f"🟢 ¡CUOTA CON VALOR POSITIVO (EV: +{ventaja_ev}%)! Cuota mínima justa: {c_min_justa} | Inversión sugerida (Kelly): {monto_sugerido} €")
     else:
         st.error(f"🔴 CUOTA SIN VALOR ({ventaja_ev}%): La casa paga {c_casa} pero el riesgo exige mínimo {c_min_justa}. ¡No operar!")
 
