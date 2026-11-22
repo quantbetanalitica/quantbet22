@@ -73,9 +73,9 @@ def _limpiar_texto_redes_sociales(texto, modo="copy"):
     t = _re_vid.sub(r"(?i)\bCuota\s*>", "Índice >", t)
 
     if modo == "slide":
-        # Eliminar únicamente porcentajes (%) visibles en el vídeo, respetando la palabra VIP
+        # Eliminar porcentajes de promesas/efectividad (nunca romper barras limpias de probabilidad 1X2 tipo Opta)
+        t = _re_vid.sub(r"(?i)(?:efectividad|precisi[óo]n|aciertos?|ganadas?)\s*:?\s*\d+(?:[\.,]\d+)?%", "DATO VERIFICADO", t)
         t = _re_vid.sub(r"\(\s*\d+(?:[\.,]\d+)?%\s*\)", "", t)
-        t = _re_vid.sub(r"\d+(?:[\.,]\d+)?%", "Verificado", t)
     elif modo == "voz":
         t = t.replace("Puasón matemática", "Poison")
         t = t.replace("Puasón", "Poison")
@@ -83,9 +83,10 @@ def _limpiar_texto_redes_sociales(texto, modo="copy"):
         t = t.replace("Doble Oport.", "Doble Oportunidad")
         t = t.replace("Doble Oport ", "Doble Oportunidad ")
         t = t.replace("Over 1.5 Goles", "Más de 1.5 goles")
-        # Prohibir que la voz pronuncie porcentajes en el audio
-        t = _re_vid.sub(r"con\s+un\s+\d+\s+por\s+ciento\s+de\s+probabilidad(?:\s+matem[áa]tica)?", "con alta convergencia en el modelo", t, flags=_re_vid.I)
-        t = _re_vid.sub(r"\d+\s+por\s+ciento", "alta convergencia", t, flags=_re_vid.I)
+        # Evitar promesas de efectividad en audio manteniendo español 100% natural
+        t = _re_vid.sub(r"(?i)con\s+(?:un|una)\s+(?:probabilidad\s+estimada\s+del\s+)?\d+\s+por\s+ciento(?:\s+de\s+probabilidad(?:\s+matem[áa]tica)?)?", "con alta convergencia en el modelo", t)
+        t = _re_vid.sub(r"(?i)del\s+\d+\s+por\s+ciento", "de alta convergencia", t)
+        t = _re_vid.sub(r"(?i)\d+\s+por\s+ciento", "alta convergencia", t)
 
     return t
 
@@ -278,25 +279,24 @@ LIGAS_OFICIALES_IDS = {
 GIGANTES_TIER_1_MUNDIAL = [
     "real madrid", "barcelona", "atletico madrid", "manchester city", "manchester united",
     "liverpool", "arsenal", "chelsea", "tottenham", "bayern", "dortmund", "borussia dortmund",
-    "inter", "fc internazionale", "milan", "ac milan", "juventus", "paris saint germain", "paris sg", "psg",
+    "inter", "fc internazionale", "milan", "ac milan", "juventus", "napoli", "paris saint germain", "paris sg", "psg",
     "boca juniors", "river plate", "flamengo", "palmeiras", "millonarios", "atletico nacional",
-    "america de cali", "santa fe", "junior", "independiente medellin", "deportivo cali",
-    "corinthians", "sao paulo", "racing", "independiente", "club america", "guadalajara", "chivas", "cruz azul",
     "españa", "spain", "argentina", "brasil", "brazil", "francia", "france", "inglaterra", "england", "alemania", "germany", "portugal", "italia", "italy", "colombia", "uruguay", "paises bajos", "netherlands"
 ]
 
 GIGANTES_TIER_2_SECUNDARIO = [
-    "napoli", "roma", "lazio", "atalanta", "fiorentina", "bologna", "torino",
+    "roma", "lazio", "atalanta", "fiorentina", "bologna", "torino",
     "leverkusen", "leipzig", "stuttgart", "frankfurt", "aston villa", "newcastle",
     "everton", "west ham", "brighton", "fulham", "bournemouth", "sevilla", "real betis", "betis",
     "athletic", "real sociedad", "villarreal", "valencia", "girona", "celta", "osasuna",
-    "benfica", "sporting", "porto", "ajax", "psv", "feyenoord", "galatasaray", "fenerbahce",
-    "monaco", "marseille", "lyon", "lille", "gremio", "internacional", "botafogo", "fluminense",
+    "benfica", "sporting", "porto", "ajax", "psv", "feyenoord",
+    "monaco", "marseille", "lyon", "lille",
+    "america de cali", "santa fe", "junior", "independiente medellin", "deportivo cali",
+    "corinthians", "sao paulo", "racing", "independiente", "gremio", "internacional", "botafogo", "fluminense",
     "cruzeiro", "vasco", "san lorenzo", "velez", "estudiantes", "peñarol", "colo colo",
     "ldu quito", "independiente del valle", "olimpia", "tolima", "once caldas", "bucaramanga",
-    "pereira", "monterrey", "tigres", "pumas",
-    "belgica", "belgium", "croacia", "croatia", "marruecos", "morocco", "mexico", "usa", "ecuador", "paraguay", "chile", "suiza", "switzerland", "dinamarca", "denmark", "noruega", "norway", "suecia", "sweden", "turquia", "turkey",
-    "japon", "japan", "serbia", "grecia", "greece", "austria", "polonia", "poland", "escocia", "scotland", "ucrania", "ukraine", "rusia", "russia"
+    "belgica", "belgium", "croacia", "croatia", "marruecos", "morocco", "mexico", "usa", "ecuador", "paraguay", "chile", "suiza", "switzerland", "dinamarca", "denmark", "noruega", "norway", "suecia", "sweden",
+    "japon", "japan", "serbia", "grecia", "greece", "austria", "polonia", "poland", "escocia", "scotland", "ucrania", "ukraine"
 ]
 
 EQUIPOS_DESCONOCIDOS_PENALIZADOS = [
@@ -327,43 +327,70 @@ def _es_club_lista(nombre_eq, lista_clubes):
     return False
 
 
+def _es_filial_video(nombre_eq):
+    n = "".join(c for c in unicodedata.normalize("NFD", str(nombre_eq).lower()) if unicodedata.category(c) != "Mn")
+    return bool(re.search(r"(?:^|\s)(?:ii|iii|b|c|castilla|atletic|jong|reserves|u23|u21)(?:$|\s)", n))
+
+
 def puntaje_cartelera_video(p):
     loc = str(p.get("local", "")).lower()
     vis = str(p.get("visitante", "")).lower()
     liga = str(p.get("liga_visual", "")).upper()
+    loc_fil = _es_filial_video(loc)
+    vis_fil = _es_filial_video(vis)
 
-    pts = 0
-    # PRIORIDAD #1 ABSOLUTA: Siempre que juegue el Real Madrid, va de primero en el video
-    if "real madrid" in loc or "real madrid" in vis:
-        pts += 5000
+    pts = 0.0
+    # PRIORIDAD #1 ABSOLUTA EN VÍDEOS: Real Madrid, Barcelona y Millonarios (excluyendo filiales y Barcelona SC de Ecuador)
+    es_rm = ("real madrid" in loc and not loc_fil) or ("real madrid" in vis and not vis_fil)
+    es_fcb = (
+        ("barcelona" in loc and not loc_fil and "guayaquil" not in loc and "barcelona sc" not in loc and "ECUADOR" not in liga)
+        or ("barcelona" in vis and not vis_fil and "guayaquil" not in vis and "barcelona sc" not in vis and "ECUADOR" not in liga)
+    )
+    es_millos = ("millonarios" in loc) or ("millonarios" in vis)
 
-    loc_t1 = _es_club_lista(loc, GIGANTES_TIER_1_MUNDIAL)
-    vis_t1 = _es_club_lista(vis, GIGANTES_TIER_1_MUNDIAL)
-    loc_t2 = _es_club_lista(loc, GIGANTES_TIER_2_SECUNDARIO)
-    vis_t2 = _es_club_lista(vis, GIGANTES_TIER_2_SECUNDARIO)
+    if es_rm:
+        pts += 10000
+    if es_fcb:
+        pts += 9500
+    if es_millos:
+        pts += 9000
+
+    loc_t1 = (not loc_fil) and _es_club_lista(loc, GIGANTES_TIER_1_MUNDIAL)
+    vis_t1 = (not vis_fil) and _es_club_lista(vis, GIGANTES_TIER_1_MUNDIAL)
+    loc_t2 = (not loc_fil) and _es_club_lista(loc, GIGANTES_TIER_2_SECUNDARIO)
+    vis_t2 = (not vis_fil) and _es_club_lista(vis, GIGANTES_TIER_2_SECUNDARIO)
     tiene_desconocido = any(d in loc or d in vis for d in EQUIPOS_DESCONOCIDOS_PENALIZADOS)
 
     if loc_t1 and vis_t1:
-        pts += 220
+        pts += 260
     elif (loc_t1 and vis_t2) or (vis_t1 and loc_t2):
-        pts += 150
+        pts += 175
     elif loc_t2 and vis_t2:
-        pts += 115
+        pts += 120
     elif loc_t1 or vis_t1:
-        pts += 70
+        pts += 85
     elif loc_t2 or vis_t2:
-        pts += 35
+        pts += 40
 
     if p.get("es_derbi", False):
-        pts += 90
+        pts += 100
 
     if tiene_desconocido:
         pts -= 65
 
-    if any(lg in liga for lg in ["CHAMPIONS", "LALIGA", "PREMIER", "SERIE A", "BUNDESLIGA", "LIGUE 1", "MUNDIAL", "EUROCOPA", "COPA AMÉRICA", "NATIONS LEAGUE", "ELIMINATORIAS", "AMISTOSO INTERNACIONAL"]):
-     pts += 40
-    elif any(lg in liga for lg in ["EUROPA LEAGUE", "CONFERENCE", "COPA DEL REY", "FA CUP", "PRIMEIRA LIGA"]):
+    # Peso real de cartelera por competición (Europa Top 5 / Champions siempre por encima de Liga MX / MLS / Segunda)
+    if any(lg in liga for lg in ["UEFA CHAMPIONS", "MUNDIAL", "EUROCOPA", "COPA AMÉRICA"]):
+        pts += 120
+    elif any(lg in liga for lg in ["LALIGA", "PREMIER", "SERIE A", "BUNDESLIGA", "LIGUE 1"]) and "BRASIL" not in liga:
+        pts += 95
+    elif any(lg in liga for lg in ["LIBERTADORES", "EUROPA LEAGUE", "NATIONS LEAGUE", "ELIMINATORIAS"]):
+        pts += 65
+    elif any(lg in liga for lg in ["COLOMBIA (PRIMERA A)", "ARGENTINA (LIGA", "BRASIL (SERIE A)", "COPA DEL REY", "FA CUP"]):
+        pts += 45
+    elif any(lg in liga for lg in ["CONFERENCE", "SUDAMERICANA", "PRIMEIRA LIGA", "EREDIVISIE"]):
         pts += 25
+    elif any(lg in liga for lg in ["MÉXICO", "LIGA MX", "MLS", "USA", "SEGUNDA", "TORNEO BETPLAY"]):
+        pts -= 25
 
     pts += min(12.0, float(p.get("tot_goles", 2.5)) * 3.0)
     return pts
@@ -1408,66 +1435,63 @@ def generar_diccionario_copys_por_red(tipo_video, p_data, tasa_acierto="91.1%"):
     s = chr(10)
     ds = s + s
 
-    promo_txt = "🎁 1ª proyección abierta en nuestra Web y las otras 2 sin costo en nuestro Telegram (Enlace en el perfil)."
-    pregunta_gancho = f"¿Quién se lleva este {loc} vs {vis}? Déjalo en los comentarios 👇⚽"
+    pregunta_gancho = f"¿Cuál es tu marcador para {loc} vs {vis}? Déjalo en los comentarios 👇⚽"
+    corn_val_c = float(p_data.get("tot_corn") or 9.0)
 
     if tipo_video == "1_ESTRELLA_10AM":
         return {
-            "horario": "22:00 PM (España) - PARTIDAZO ESTELAR #2",
-            "titulo_interno": f"VIDEO 2 (22:00 PM) - {loc.upper()} VS {vis.upper()} ({p_data.get('hora', '')})",
+            "horario": "14:00 (España) - PREVIA ESTADÍSTICA #2",
+            "titulo_interno": f"VIDEO 2 (14:00) - {loc.upper()} VS {vis.upper()} ({p_data.get('hora', '')})",
             "tiktok": (
                 f"{pregunta_gancho} "
-                f"Nuestro modelo en Python proyecta {goles:.2f} goles esperados para {loc} vs {vis} ({liga}). "
-                f"{promo_txt} 👇" + ds +
-                f"{tag_loc} {tag_vis} {tag_liga} #futbol #cienciadedatos #analisistactico"
+                f"Previa estadística de {loc} vs {vis} ({liga}): ritmo estimado de {goles:.2f} goles esperados y {corn_val_c:.0f} córners según distribución de Poisson. "
+                f"¿Crees que será partido abierto o cerrado? 👇" + ds +
+                f"{tag_loc} {tag_vis} {tag_liga} #futbol #datosfutbol #analisistactico #cienciadedatos"
             ),
             "instagram": (
                 f"{pregunta_gancho}" + ds +
-                f"• Proyección ofensiva en Python: {goles:.2f} goles | Fricción: {faltas:.1f} faltas." + s +
-                f"• {promo_txt}" + ds +
-                f"👉 Toca el enlace de nuestra biografía para entrar a la Web y al Telegram 👇" + ds +
-                f"{tag_loc} {tag_vis} {tag_liga} #futbol #reels #cienciadedatos"
+                f"📊 Datos del partido ({liga}):" + s +
+                f"• Goles esperados (xG): {goles:.2f} | Córners estimados: {corn_val_c:.0f} | Fricción: {faltas:.1f} faltas." + ds +
+                f"Guarda este análisis para comprobar el resultado al final del partido. ⚽" + ds +
+                f"{tag_loc} {tag_vis} {tag_liga} #futbol #reels #datosfutbol #analisistactico"
             ),
-            "youtube_titulo": f"{loc} vs {vis} | Análisis Táctico {tag_loc} {tag_vis} {tag_liga} #shorts"[:98],
+            "youtube_titulo": f"{loc} vs {vis} | Previa Táctica y Datos {tag_loc} {tag_vis} {tag_liga} #shorts"[:98],
             "youtube_descripcion": (
-                f"{pregunta_gancho} Consulta el informe táctico interactivo de {loc} vs {vis} en nuestra plataforma web (Enlace en el perfil del canal). "
-                f"{promo_txt} 👇" + ds +
-                f"{tag_loc} {tag_vis} {tag_liga} #shorts #futbol #cienciadedatos #analisistactico"
+                f"{pregunta_gancho} Análisis estadístico previo de {loc} vs {vis} ({liga}) con modelo Poisson y Dixon-Coles: "
+                f"{goles:.2f} goles esperados y {corn_val_c:.0f} córners estimados." + ds +
+                f"{tag_loc} {tag_vis} {tag_liga} #shorts #futbol #datosfutbol #analisistactico"
             ),
             "facebook": (
-                f"{pregunta_gancho} Ya publicamos el informe táctico interactivo del {loc} vs {vis} ({goles:.2f} goles proyectados). "
-                f"{promo_txt} 👇" + ds +
-                f"{tag_loc} {tag_vis} {tag_liga} #futbol #reels #cienciadedatos"
+                f"{pregunta_gancho} Previa táctica del {loc} vs {vis} ({liga}): {goles:.2f} goles esperados y {corn_val_c:.0f} córners estimados según nuestro modelo estadístico." + ds +
+                f"{tag_loc} {tag_vis} {tag_liga} #futbol #reels #datosfutbol #analisistactico"
             ),
         }
 
     else:
         return {
-            "horario": "18:00 PM (España) - PARTIDAZO ESTELAR #1 + AUDITORÍA",
-            "titulo_interno": f"VIDEO 1 (18:00 PM) - {loc.upper()} VS {vis.upper()} ({tasa_acierto})",
+            "horario": "21:30 (España) - PREVIA ESTADÍSTICA #1",
+            "titulo_interno": f"VIDEO 1 (21:30) - {loc.upper()} VS {vis.upper()} ({p_data.get('hora', '')})",
             "tiktok": (
                 f"{pregunta_gancho} 📊⚽ "
-                f"Ya publicamos en nuestra plataforma web y en Telegram las proyecciones matemáticas para {loc} vs {vis}. "
-                f"{promo_txt} 👇" + ds +
-                f"{tag_loc} {tag_vis} {tag_liga} #futbol #cienciadedatos #analisistactico"
+                f"Analizamos {loc} vs {vis} ({liga}) con modelo Poisson: {goles:.2f} goles esperados y {corn_val_c:.0f} córners proyectados. "
+                f"¿Gana {loc}, empate o sorpresa de {vis}? Te leo abajo 👇" + ds +
+                f"{tag_loc} {tag_vis} {tag_liga} #futbol #datosfutbol #analisistactico #cienciadedatos"
             ),
             "instagram": (
-                f"{pregunta_gancho} 📈🧬" + ds +
-                f"🔓 El análisis matemático para {loc} vs {vis} ({liga}) ya está disponible en nuestra plataforma web." + s +
-                f"{promo_txt}" + ds +
-                f"👉 Consulta los datos tocando el enlace de nuestro perfil 👇" + ds +
-                f"{tag_loc} {tag_vis} {tag_liga} #futbol #reels #cienciadedatos"
+                f"{pregunta_gancho} 📈⚽" + ds +
+                f"Previa matemática de {loc} vs {vis} ({liga}):" + s +
+                f"• Goles esperados: {goles:.2f} | Córners: {corn_val_c:.0f} | Faltas: {faltas:.1f}" + ds +
+                f"Guarda este reel y comenta tu pronóstico de marcador antes del pitazo inicial." + ds +
+                f"{tag_loc} {tag_vis} {tag_liga} #futbol #reels #datosfutbol #analisistactico"
             ),
-            "youtube_titulo": f"{loc} vs {vis} | Proyección y Datos {tag_loc} {tag_vis} {tag_liga} #shorts"[:98],
+            "youtube_titulo": f"{loc} vs {vis} | Previa y Estadísticas {tag_loc} {tag_vis} {tag_liga} #shorts"[:98],
             "youtube_descripcion": (
-                f"{pregunta_gancho} Balance verificado y proyección táctica para {loc} vs {vis} disponible en nuestra plataforma web (Enlace en el perfil). {promo_txt} 👇" + ds +
-                f"{tag_loc} {tag_vis} {tag_liga} #shorts #futbol #cienciadedatos #analisistactico"
+                f"{pregunta_gancho} Previa estadística de {loc} vs {vis} ({liga}) basada en datos históricos, goles esperados ({goles:.2f}) y ritmo ofensivo." + ds +
+                f"{tag_loc} {tag_vis} {tag_liga} #shorts #futbol #datosfutbol #analisistactico"
             ),
             "facebook": (
-                f"{pregunta_gancho} Transparencia institucional y modelos de Poisson en tiempo real. "
-                f"Ya publicamos en nuestra plataforma web el informe táctico para el {loc} vs {vis}. "
-                f"{promo_txt} 👇" + ds +
-                f"{tag_loc} {tag_vis} {tag_liga} #futbol #reels #cienciadedatos"
+                f"{pregunta_gancho} Análisis de datos previo para {loc} vs {vis} ({liga}): {goles:.2f} goles esperados y {corn_val_c:.0f} córners estimados." + ds +
+                f"{tag_loc} {tag_vis} {tag_liga} #futbol #reels #datosfutbol #analisistactico"
             ),
         }
 
@@ -1511,7 +1535,7 @@ def enviar_video_y_mensajes_separados_telegram(token, chat_id, ruta_video, dict_
 
 def guardar_archivos_individuales_y_json(carpeta_videos, prefijo_num, ruta_mp4, dict_copys, cola_json, fecha_jornada):
     s = chr(10)
-    aviso_18 = s + "📊 📊 Ciencia de Datos y Modelos Matemáticos aplicados al Fútbol Profesional."
+    aviso_18 = s + "📊 Ciencia de Datos y Modelos Matemáticos aplicados al Fútbol Profesional."
     for k_red in ["tiktok", "instagram", "youtube_descripcion", "facebook"]:
         if "+18" not in dict_copys.get(k_red, ""):
             dict_copys[k_red] = dict_copys.get(k_red, "") + aviso_18
@@ -1558,7 +1582,7 @@ def guardar_archivos_individuales_y_json(carpeta_videos, prefijo_num, ruta_mp4, 
                 "descripcion": dict_copys["youtube_descripcion"],
                 "estado": "pendiente"
             },
-            "facebook": {"descripcion": f"{dict_copys['facebook']}\n\n🌐 App Oficial en vivo: https://quantbet22.streamlit.app/?src=facebook", "estado": "pendiente"}
+            "facebook": {"descripcion": dict_copys["facebook"], "estado": "pendiente"}
         }
     })
 
@@ -1627,11 +1651,11 @@ _C_PANEL_ALT = (19, 29, 46, 240)
 _C_BORDE_PRO = (54, 78, 108, 175)
 
 TITULARES_GANCHO_PRO = [
-    "¿TRAMPA EN EL PARTIDO?",
+    "LO QUE DICEN LOS DATOS",
     "DATO OCULTO DEL DÍA",
-    "LA CASA SE EQUIVOCA",
+    "RADIOGRAFÍA DEL PARTIDO",
     "NADIE ESTÁ VIENDO ESTO",
-    "ALERTA DEL ALGORITMO",
+    "MODELO POISSON AL DETALLE",
     "CLAVE TÁCTICA EN PYTHON",
 ]
 
@@ -1992,7 +2016,7 @@ def _pegar_medallon_pro(lienzo, escudo, cx, cy, radio=168, color_aro=_C_VERDE_PR
 
 def _dibujar_marca_sup_pro(lienzo, y=106):
     draw = ImageDraw.Draw(lienzo, "RGBA")
-    txt = "@QUANTBET22   •   LABORATORIO DE CIENCIA DE DATOS"
+    txt = "Q22 DATA LAB   •   ANALÍTICA DE FÚTBOL EN PYTHON"
     f_m = _fuente_pro("bold", 21)
     draw.text((_centrar_x_pro(draw, txt, f_m), y), txt, font=f_m, fill=(195, 212, 232, 215))
 
@@ -2060,7 +2084,7 @@ def _crear_escena_1_portada_pro(datos, esc_l, esc_v, titular_gancho, ruta_out):
     f_hook = _fuente_pro_ajustada(draw, titular_gancho.upper(), "bold", 64, 940, 34)
     draw.text((_centrar_x_pro(draw, titular_gancho.upper(), f_hook), 286), titular_gancho.upper(), font=f_hook, fill=_C_ORO_PRO)
 
-    sub_hook = "10.000 SIMULACIONES POISSON + LÍNEAS REALES"
+    sub_hook = "MODELO ESTADÍSTICO POISSON + DIXON-COLES"
     f_sh = _fuente_pro_ajustada(draw, sub_hook, "mono", 25, 920, 17)
     draw.text((_centrar_x_pro(draw, sub_hook, f_sh), 380), sub_hook, font=f_sh, fill=_C_GRIS_PRO)
 
@@ -2091,11 +2115,11 @@ def _crear_escena_1_portada_pro(datos, esc_l, esc_v, titular_gancho, ruta_out):
 
     draw.line([(160, 1112), (920, 1112)], fill=(255, 255, 255, 28), width=1)
 
-    txt_teaser = "QUÉDATE HASTA EL FINAL: 1 JUGADA ABIERTA GRATIS"
+    txt_teaser = "¿QUIÉN DOMINA SEGÚN LOS DATOS DEL PARTIDO?"
     f_ts = _fuente_pro_ajustada(draw, txt_teaser, "bold", 29, 880, 19)
     draw.text((_centrar_x_pro(draw, txt_teaser, f_ts), 1142), txt_teaser, font=f_ts, fill=_C_BLANCO_PRO)
 
-    txt_sub2 = "MÉTRICAS REALES  •  SIN HUMO  •  AUDITORÍA VERIFICADA"
+    txt_sub2 = "GOLES ESPERADOS  •  RITMO  •  PROBABILIDADES"
     f_s2 = _fuente_pro_ajustada(draw, txt_sub2, "mono", 21, 880, 15)
     draw.text((_centrar_x_pro(draw, txt_sub2, f_s2), 1204), txt_sub2, font=f_s2, fill=_C_ORO_PRO)
 
@@ -2157,16 +2181,16 @@ def _crear_historia_diaria_pro(datos, esc_l, esc_v, titular_gancho, ruta_out):
 
     # Tarjeta CTA elegante centrada (deja zona limpia abajo para sticker clicable)
     draw.rounded_rectangle([(72, 1236), (1008, 1418)], radius=28, fill=(10, 34, 24, 244), outline=_C_VERDE_PRO, width=3)
-    t_cta1 = "1ª JUGADA ABIERTA GRATIS EN NUESTRA WEB"
-    t_cta2 = "TOCA EL ENLACE DE ABAJO PARA VER TODA LA JORNADA"
+    t_cta1 = "PREVIA ESTADÍSTICA COMPLETA DEL PARTIDO"
+    t_cta2 = "¿CUÁL ES TU MARCADOR EXACTO? RESPONDE A ESTA HISTORIA"
     f_c1 = _fuente_pro_ajustada(draw, t_cta1, "bold", 31, 880, 19)
     f_c2 = _fuente_pro_ajustada(draw, t_cta2, "mono", 22, 880, 16)
     draw.text((_centrar_x_pro(draw, t_cta1, f_c1), 1276), t_cta1, font=f_c1, fill=_C_VERDE_PRO)
     draw.text((_centrar_x_pro(draw, t_cta2, f_c2), 1340), t_cta2, font=f_c2, fill=_C_BLANCO_PRO)
 
-    # Pie sutil
+    # Pie sutil 100% analítica deportiva
     f_pie = _fuente_pro("mono", 22)
-    pie_txt = "QUANTBET22.STREAMLIT.APP  •  @QUANTBET22"
+    pie_txt = "Q22 DATA LAB  •  ANALÍTICA DE FÚTBOL EN PYTHON"
     draw.text((_centrar_x_pro(draw, pie_txt, f_pie), 1676), pie_txt, font=f_pie, fill=(160, 176, 196, 195))
 
     lienzo.convert("RGB").save(ruta_out, quality=96)
@@ -2220,11 +2244,7 @@ def _crear_escena_2_metricas_pro(datos, esc_l, esc_v, ruta_out):
     draw.text((_centrar_x_pro(draw, "TARJETAS PROYECTADAS", _fuente_pro("mono", 20), 767), y3 + 96), "TARJETAS PROYECTADAS", font=_fuente_pro("mono", 20), fill=_C_GRIS_PRO)
     draw.text((_centrar_x_pro(draw, f"{datos['tot_tarj']:.1f} tarjetas", _fuente_pro("bold", 40), 767), y3 + 134), f"{datos['tot_tarj']:.1f} tarjetas", font=_fuente_pro("bold", 40), fill=_C_ORO_PRO)
 
-    f_raw = str(datos.get("fuente_cuotas") or "").strip().lower()
-    if not f_raw or f_raw == "modelo":
-        etq_fuente = "MODELO POISSON + DIXON-COLES"
-    else:
-        etq_fuente = f"CUOTAS REALES ({datos['fuente_cuotas'].upper()})"
+    etq_fuente = "MODELO POISSON + DIXON-COLES"
     ctx_txt = f"PERFIL: {datos['contexto'].upper()}  •  {etq_fuente}"
     f_ctx = _fuente_pro_ajustada(draw, ctx_txt, "mono", 21, 880, 15)
     draw.text((_centrar_x_pro(draw, ctx_txt, f_ctx), y3 + 240), ctx_txt, font=f_ctx, fill=_C_VERDE_PRO)
@@ -2234,54 +2254,96 @@ def _crear_escena_2_metricas_pro(datos, esc_l, esc_v, ruta_out):
 
 
 def _crear_escena_3_jugada_pro(datos, esc_l, esc_v, ruta_out):
-    """Escena 3 centrada y simétrica: Jugada #1 Abierta Gratis + Candado VIP (y=112..1295)."""
+    """Escena 3 100% segura para redes sociales: Tendencia estadística + Probabilidad 1X2 (analítica pura)."""
     lienzo = _crear_fondo_broadcast_pro()
-    y_bot = _dibujar_cabecera_pro(lienzo, esc_l, esc_v, datos["local"], datos["visitante"], datos["liga"], "SELECCIÓN DEL ALGORITMO QUANT", y_base=112)
+    y_bot = _dibujar_cabecera_pro(lienzo, esc_l, esc_v, datos["local"], datos["visitante"], datos["liga"], "PROBABILIDADES DEL MODELO ESTADÍSTICO", y_base=112)
+    draw = ImageDraw.Draw(lienzo, "RGBA")
+
+    # Tarjeta 1: Tendencia táctica principal con probabilidad % (sin cuotas decimales)
+    y1 = y_bot + 36
+    draw.rounded_rectangle([(64, y1), (1016, y1 + 372)], radius=30, fill=(9, 34, 24, 246), outline=_C_VERDE_PRO, width=4)
+
+    draw.rounded_rectangle([(240, y1 + 32), (840, y1 + 88)], radius=24, fill=_C_VERDE_PRO)
+    f_b1 = _fuente_pro("bold", 24)
+    draw.text((_centrar_x_pro(draw, "TENDENCIA PRINCIPAL DEL MODELO", f_b1), y1 + 46), "TENDENCIA PRINCIPAL DEL MODELO", font=f_b1, fill=(7, 18, 12, 255))
+
+    pick_txt = _limpiar_pick_visual_pro(datos["pick_abierto"]).upper()
+    pick_txt = pick_txt.replace("OVER ", "MÁS DE ").replace("UNDER ", "MENOS DE ")
+    f_pick = _fuente_pro_ajustada(draw, pick_txt, "bold", 54, 860, 26)
+    draw.text((_centrar_x_pro(draw, pick_txt, f_pick), y1 + 128), pick_txt, font=f_pick, fill=_C_BLANCO_PRO)
+
+    prob_est = float(datos.get("prob_abierta") or 74.5)
+    nivel_conf = "MUY ALTA" if prob_est >= 74.0 else ("ALTA" if prob_est >= 65.0 else "MODERADA")
+    prob_txt = f"CONFLUENCIA ESTADÍSTICA:  {nivel_conf}"
+    draw.rounded_rectangle([(210, y1 + 220), (870, y1 + 292)], radius=18, fill=(14, 24, 34, 230), outline=_C_VERDE_PRO, width=2)
+    f_pr = _fuente_pro_ajustada(draw, prob_txt, "mono", 32, 620, 20)
+    draw.text((_centrar_x_pro(draw, prob_txt, f_pr), y1 + 236), prob_txt, font=f_pr, fill=_C_VERDE_PRO)
+
+    nota_txt = "DATO CALCULADO CON HISTÓRICO DE LIGA + DIXON-COLES"
+    f_nt = _fuente_pro_ajustada(draw, nota_txt, "mono", 20, 880, 15)
+    draw.text((_centrar_x_pro(draw, nota_txt, f_nt), y1 + 318), nota_txt, font=f_nt, fill=_C_GRIS_PRO)
+
+    # Tarjeta 2: Probabilidades de Resultado (Local / Empate / Visitante) — estilo Opta / Google Win Probability
+    y2 = y1 + 404
+    draw.rounded_rectangle([(64, y2), (1016, y2 + 436)], radius=30, fill=_C_PANEL_PRO, outline=_C_BORDE_PRO, width=3)
+    f_tit2 = _fuente_pro("bold", 26)
+    draw.text((_centrar_x_pro(draw, "DISTRIBUCIÓN DE RESULTADO (MODELO 1X2)", f_tit2), y2 + 34), "DISTRIBUCIÓN DE RESULTADO (MODELO 1X2)", font=f_tit2, fill=_C_ORO_PRO)
+
+    p_h = float(datos.get("p_h") or 45.0)
+    p_d = float(datos.get("p_d") or 26.0)
+    p_a = float(datos.get("p_a") or 29.0)
+    filas_1x2 = [
+        (f"VICTORIA {datos['local'][:16].upper()}", p_h, _C_VERDE_PRO),
+        ("EMPATE", p_d, _C_ORO_PRO),
+        (f"VICTORIA {datos['visitante'][:16].upper()}", p_a, _C_AZUL_PRO),
+    ]
+    yb = y2 + 102
+    for lbl_b, val_b, col_b in filas_1x2:
+        f_lb = _fuente_pro_ajustada(draw, lbl_b, "bold", 24, 620, 17)
+        draw.text((112, yb), lbl_b, font=f_lb, fill=_C_BLANCO_PRO)
+        v_s = f"{val_b:.1f}%"
+        f_vb = _fuente_pro("mono", 26)
+        bb_v = draw.textbbox((0, 0), v_s, font=f_vb)
+        draw.text((968 - (bb_v[2] - bb_v[0]), yb - 2), v_s, font=f_vb, fill=col_b)
+        draw.rounded_rectangle([(112, yb + 38), (968, yb + 64)], radius=12, fill=(28, 38, 54, 235))
+        ancho_fill = max(32, int((968 - 112) * min(1.0, val_b / 100.0)))
+        draw.rounded_rectangle([(112, yb + 38), (112 + ancho_fill, yb + 64)], radius=12, fill=col_b)
+        yb += 100
+
+    lienzo.convert("RGB").save(ruta_out, quality=96)
+    return ruta_out
+
+
+def _crear_escena_4_debate_tactico_pro(datos, esc_l, esc_v, ruta_out):
+    """Escena 4 100% segura para TikTok/Reels/Shorts: Resumen táctico + Encuesta de marcador (evita sanciones por 'Información falsa')."""
+    lienzo = _crear_fondo_broadcast_pro(acento_izq=(0, 232, 118), acento_der=(56, 168, 255))
+    y_bot = _dibujar_cabecera_pro(lienzo, esc_l, esc_v, datos["local"], datos["visitante"], datos["liga"], "CLAVES TÁCTICAS DEL ENCUENTRO", y_base=112)
     draw = ImageDraw.Draw(lienzo, "RGBA")
 
     y1 = y_bot + 36
-    draw.rounded_rectangle([(64, y1), (1016, y1 + 412)], radius=30, fill=(9, 34, 24, 246), outline=_C_VERDE_PRO, width=4)
+    claves = [
+        ("RITMO DE GOLES (xG)", f"{datos['tot_goles']:.2f} goles proyectados", "Escenario " + ("abierto con llegadas" if datos["tot_goles"] >= 2.60 else "táctico y disputado"), _C_VERDE_PRO),
+        ("PRESIÓN POR BANDAS", f"{datos['tot_corn']:.1f} córners y {datos['tot_tiros']:.1f} remates", "Volumen estimado de ataque al área rival", _C_ORO_PRO),
+        ("INTENSIDAD Y DUELOS", f"{datos['tot_faltas']:.1f} faltas y {datos['tot_tarj']:.1f} tarjetas", f"Perfil del partido: {datos['contexto']}", _C_AZUL_PRO),
+    ]
+    for tit_k, val_k, desc_k, col_k in claves:
+        draw.rounded_rectangle([(64, y1), (1016, y1 + 178)], radius=24, fill=_C_PANEL_PRO, outline=col_k, width=2)
+        f_tk = _fuente_pro("bold", 22)
+        f_vk = _fuente_pro_ajustada(draw, val_k.upper(), "bold", 38, 860, 22)
+        f_dk = _fuente_pro_ajustada(draw, desc_k, "mono", 21, 860, 15)
+        draw.text((_centrar_x_pro(draw, tit_k, f_tk), y1 + 22), tit_k, font=f_tk, fill=col_k)
+        draw.text((_centrar_x_pro(draw, val_k.upper(), f_vk), y1 + 64), val_k.upper(), font=f_vk, fill=_C_BLANCO_PRO)
+        draw.text((_centrar_x_pro(draw, desc_k, f_dk), y1 + 126), desc_k, font=f_dk, fill=_C_GRIS_PRO)
+        y1 += 200
 
-    # Pill centrada arriba de la tarjeta verde
-    draw.rounded_rectangle([(290, y1 + 32), (790, y1 + 88)], radius=24, fill=_C_VERDE_PRO)
-    f_b1 = _fuente_pro("bold", 25)
-    draw.text((_centrar_x_pro(draw, "JUGADA #1 ABIERTA GRATIS", f_b1), y1 + 46), "JUGADA #1 ABIERTA GRATIS", font=f_b1, fill=(7, 18, 12, 255))
-
-    pick_txt = _limpiar_pick_visual_pro(datos["pick_abierto"]).upper()
-    f_pick = _fuente_pro_ajustada(draw, pick_txt, "bold", 56, 860, 28)
-    draw.text((_centrar_x_pro(draw, pick_txt, f_pick), y1 + 136), pick_txt, font=f_pick, fill=_C_BLANCO_PRO)
-
-    # Pill centrada de índice real
-    cuota_txt = f"ÍNDICE DE VALOR REAL:  > {datos['cuota_abierta']:.2f}"
-    draw.rounded_rectangle([(210, y1 + 234), (870, y1 + 306)], radius=18, fill=(14, 24, 34, 230), outline=_C_VERDE_PRO, width=2)
-    f_cuo = _fuente_pro_ajustada(draw, cuota_txt, "mono", 34, 620, 20)
-    draw.text((_centrar_x_pro(draw, cuota_txt, f_cuo), y1 + 250), cuota_txt, font=f_cuo, fill=_C_VERDE_PRO)
-
-    nota_txt = "GUARDA ESTE VÍDEO PARA CONSULTARLO ANTES DEL PARTIDO"
-    f_nt = _fuente_pro_ajustada(draw, nota_txt, "bold", 23, 880, 16)
-    draw.text((_centrar_x_pro(draw, nota_txt, f_nt), y1 + 344), nota_txt, font=f_nt, fill=_C_ORO_PRO)
-
-    # Tarjeta VIP centrada
-    y2 = y1 + 444
-    draw.rounded_rectangle([(64, y2), (1016, y2 + 398)], radius=30, fill=(24, 20, 11, 244), outline=_C_ORO_PRO, width=3)
-    _dibujar_candado_pro(draw, 540, y2 + 64, color=_C_ORO_PRO)
-
-    t_v1 = "JUGADA #2 GRATIS + 4 TARJETAS VIP"
-    f_v1 = _fuente_pro_ajustada(draw, t_v1, "bold", 34, 860, 22)
-    draw.text((_centrar_x_pro(draw, t_v1, f_v1), y2 + 124), t_v1, font=f_v1, fill=_C_ORO_PRO)
-
-    t_v2 = "Incluye Combinada Doble VIP + Triple Sniper PRO"
-    f_v2 = _fuente_pro_ajustada(draw, t_v2, "mono", 24, 860, 17)
-    draw.text((_centrar_x_pro(draw, t_v2, f_v2), y2 + 180), t_v2, font=f_v2, fill=_C_GRIS_PRO)
-
-    draw.rounded_rectangle([(112, y2 + 236), (968, y2 + 314)], radius=18, fill=(34, 42, 56, 225), outline=(255, 204, 0, 130), width=2)
-    t_oc = "VER GRATIS EN TELEGRAM Y APP WEB (LINK EN PERFIL)"
-    f_oc = _fuente_pro_ajustada(draw, t_oc, "bold", 25, 820, 17)
-    draw.text((_centrar_x_pro(draw, t_oc, f_oc), y2 + 260), t_oc, font=f_oc, fill=_C_BLANCO_PRO)
-
-    t_pase = "PASE DE PRUEBA VIP 24 HORAS DISPONIBLE EN LA WEB"
-    f_ps = _fuente_pro_ajustada(draw, t_pase, "bold", 24, 860, 16)
-    draw.text((_centrar_x_pro(draw, t_pase, f_ps), y2 + 340), t_pase, font=f_ps, fill=_C_VERDE_PRO)
+    # Tarjeta final de debate e interacción orgánica (100% permitida por TikTok)
+    draw.rounded_rectangle([(64, y1 + 12), (1016, y1 + 222)], radius=28, fill=(10, 34, 24, 244), outline=_C_VERDE_PRO, width=3)
+    f_q1 = _fuente_pro_ajustada(draw, "¿CUÁL ES TU MARCADOR EXACTO?", "bold", 38, 860, 24)
+    f_q2 = _fuente_pro_ajustada(draw, "DEJA TU PRONÓSTICO EN LOS COMENTARIOS", "bold", 25, 860, 18)
+    f_q3 = _fuente_pro("mono", 20)
+    draw.text((_centrar_x_pro(draw, "¿CUÁL ES TU MARCADOR EXACTO?", f_q1), y1 + 42), "¿CUÁL ES TU MARCADOR EXACTO?", font=f_q1, fill=_C_ORO_PRO)
+    draw.text((_centrar_x_pro(draw, "DEJA TU PRONÓSTICO EN LOS COMENTARIOS", f_q2), y1 + 106), "DEJA TU PRONÓSTICO EN LOS COMENTARIOS", font=f_q2, fill=_C_BLANCO_PRO)
+    draw.text((_centrar_x_pro(draw, "SÍGUENOS PARA MÁS ANÁLISIS DE FÚTBOL CON DATOS", f_q3), y1 + 162), "SÍGUENOS PARA MÁS ANÁLISIS DE FÚTBOL CON DATOS", font=f_q3, fill=_C_VERDE_PRO)
 
     lienzo.convert("RGB").save(ruta_out, quality=96)
     return ruta_out
@@ -2588,20 +2650,27 @@ def generar_paquete_redes_sociales(fecha_jornada, partidos_vip, partidos_descart
     if not partidos_vip and not partidos_descartes:
         return
 
-    todos_ordenados = sorted(partidos_vip, key=puntaje_cartelera_video, reverse=True)
-    for p_desc in sorted(partidos_descartes, key=puntaje_cartelera_video, reverse=True):
-        if p_desc not in todos_ordenados:
-            todos_ordenados.append(p_desc)
+    # Unificar toda la cartelera del día sin duplicados y rankear globalmente
+    pool_cartelera = []
+    vistos_vid = set()
+    for p_cand in list(partidos_vip or []) + list(partidos_descartes or []):
+        clave_v = (str(p_cand.get("local", "")).lower().strip(), str(p_cand.get("visitante", "")).lower().strip())
+        if clave_v not in vistos_vid:
+            vistos_vid.add(clave_v)
+            pool_cartelera.append(p_cand)
 
-    candidatos_europa = [p for p in todos_ordenados if not es_partido_de_america(p)]
-    candidatos_america = [p for p in todos_ordenados if es_partido_de_america(p)]
+    # Preferir partidos que todavía NO hayan empezado (si hay al menos 2 pendientes en la cartelera)
+    por_jugar = [p for p in pool_cartelera if not p.get("ya_empezo")]
+    base_ranking = por_jugar if len(por_jugar) >= 2 else pool_cartelera
+    todos_ordenados = sorted(base_ranking, key=puntaje_cartelera_video, reverse=True)
 
-    partido_1 = candidatos_europa[0] if candidatos_europa else todos_ordenados[0]
-    if candidatos_america and puntaje_cartelera_video(candidatos_america[0]) >= 100 and candidatos_america[0] != partido_1:
-        partido_2 = candidatos_america[0]
-    else:
-        restantes_eu = [p for p in candidatos_europa if p != partido_1]
-        partido_2 = restantes_eu[0] if restantes_eu else (todos_ordenados[1] if len(todos_ordenados) > 1 else partido_1)
+    print("    📋 [TOP 6 CARTELERA GLOBAL PARA VÍDEOS] (Prioridad: Real Madrid > Barcelona > Millonarios > Top 2 Mundial):")
+    for idx_r, p_r in enumerate(todos_ordenados[:6], start=1):
+        print(f"       #{idx_r} ({puntaje_cartelera_video(p_r):7.1f} pts) | {p_r.get('hora', '')}h | {p_r.get('local')} vs {p_r.get('visitante')} ({p_r.get('liga_visual')})")
+
+    # SIEMPRE los 2 mejores partidos globales de la cartelera (sin cuota forzada de Liga MX / América)
+    partido_1 = todos_ordenados[0]
+    partido_2 = todos_ordenados[1] if len(todos_ordenados) > 1 else partido_1
 
     par_cronologico = sorted(
         [partido_1, partido_2],
@@ -2633,7 +2702,7 @@ def generar_paquete_redes_sociales(fecha_jornada, partidos_vip, partidos_descart
         except Exception:
             h_col = "15:00"
         sels_f = p_obj.get("seleccion_free") or p_obj.get("seleccion_vip") or [("Over 1.5 Goles", 76.0, 1.24)]
-        pick_nom, _, pick_cuo = sels_f[0]
+        pick_nom, pick_prob, pick_cuo = sels_f[0]
         ctx_c = re.sub(r"[^\w\s/\-áéíóúÁÉÍÓÚñÑ]", "", str(p_obj.get("etiqueta_contexto", "Análisis Cuantitativo"))).strip()
         f_cuo = str((p_obj.get("cuotas_bp") or {}).get("fuente", "modelo")).replace("kambi:", "Kambi ")
         return {
@@ -2651,7 +2720,11 @@ def generar_paquete_redes_sociales(fecha_jornada, partidos_vip, partidos_descart
             "contexto": ctx_c or "Análisis Cuantitativo",
             "fuente_cuotas": f_cuo,
             "pick_abierto": str(pick_nom),
+            "prob_abierta": float(pick_prob),
             "cuota_abierta": float(pick_cuo),
+            "p_h": float(p_obj.get("p_h") or 45.0),
+            "p_d": float(p_obj.get("p_d") or 26.0),
+            "p_a": float(p_obj.get("p_a") or 29.0),
         }
 
     pares_videos = [
@@ -2677,9 +2750,9 @@ def generar_paquete_redes_sociales(fecha_jornada, partidos_vip, partidos_descart
             s1 = _crear_escena_1_portada_pro(datos_v, esc_l, esc_v, tit_v, os.path.join(carpeta_videos, f"_v{num_v}_01_portada.jpg"))
             s2 = _crear_escena_2_metricas_pro(datos_v, esc_l, esc_v, os.path.join(carpeta_videos, f"_v{num_v}_02_metricas.jpg"))
             s3 = _crear_escena_3_jugada_pro(datos_v, esc_l, esc_v, os.path.join(carpeta_videos, f"_v{num_v}_03_jugada.jpg"))
-            s4 = _crear_escena_4_auditoria_7_completa_pro(
-                datos_v, siete_tarjetas_aud, tasa_real, fecha_ayer_real, ac_14, tot_14,
-                os.path.join(carpeta_videos, f"_v{num_v}_04_auditoria7.jpg")
+            s4 = _crear_escena_4_debate_tactico_pro(
+                datos_v, esc_l, esc_v,
+                os.path.join(carpeta_videos, f"_v{num_v}_04_claves.jpg")
             )
 
             # Crear Historia Diaria dedicada (100% centrada en 1080x1920 con métricas y zona de enlace)
@@ -2688,26 +2761,26 @@ def generar_paquete_redes_sociales(fecha_jornada, partidos_vip, partidos_descart
                 _crear_historia_diaria_pro(datos_v, esc_l, esc_v, tit_v, ruta_historia_hoy)
 
             if num_v == 1:
-                intro_voz = f"Ojo con el partidazo entre {loc_v} y {vis_v} por {liga_hab}. Quédate hasta el final para ver la primera jugada abierta gratis."
+                intro_voz = f"Ojo con el partidazo entre {loc_v} y {vis_v} por {liga_hab}. Así lo analizan las matemáticas antes del pitazo inicial."
             else:
-                intro_voz = f"No operes a ciegas en este {loc_v} frente a {vis_v} por {liga_hab}. Quédate al final para guardar la jugada abierta gratis."
+                intro_voz = f"Previa táctica con datos reales para {loc_v} frente a {vis_v} por {liga_hab}. Mira lo que proyecta nuestro modelo."
 
             segmentos_4 = [
                 (
-                    f"Ojo con este duelo: {loc_v} vs {vis_v}.|Quédate al final para ver la jugada gratis.",
+                    f"Previa estadística: {loc_v} vs {vis_v}.|¿Quién domina según los datos?",
                     intro_voz,
                 ),
                 (
-                    f"Simulamos 10.000 escenarios en Python:|{datos_v['tot_goles']:.1f} goles esperados y {datos_v['tot_corn']:.0f} córners.",
-                    f"Nuestro modelo en Páiton simuló diez mil escenarios y detectó {g_hab} goles esperados y {c_hab} córners.",
+                    f"Modelo Poisson en Python:|{datos_v['tot_goles']:.1f} goles esperados y {datos_v['tot_corn']:.0f} córners.",
+                    f"El modelo estadístico en Páiton estima {g_hab} goles esperados y alrededor de {c_hab} córners en el partido.",
                 ),
                 (
-                    f"Jugada #1 abierta gratis: {pick_vis}.|La 2ª jugada y las VIP están en el perfil.",
-                    f"Aquí tienes nuestra primera jugada abierta gratis: {pick_voz}. Guarda este vídeo; la segunda jugada gratis y las tarjetas Bip ya están en el enlace del perfil.",
+                    f"Tendencia principal: {pick_vis}|Respaldada por histórico y Dixon-Coles.",
+                    f"La tendencia estadística más fuerte del encuentro apunta a {pick_voz}, respaldada por el histórico reciente y el modelo de Poison.",
                 ),
                 (
-                    f"Auditoría completa de ayer ({ac_14}/{tot_14} aciertos).|¿Quién gana? Deja tu marcador abajo.",
-                    f"Ahí tienes la auditoría completa de nuestras siete tarjetas oficiales de ayer con marcador final. ¿Quién se lleva este partido? Deja tu marcador abajo.",
+                    f"¿Cuál es tu marcador para este duelo?|Déjalo en los comentarios 👇",
+                    f"Ahí tienes las claves tácticas completas del partido. ¿Cuál es tu marcador para este {loc_v} contra {vis_v}? Déjalo en los comentarios y síguenos para más análisis.",
                 ),
             ]
 
