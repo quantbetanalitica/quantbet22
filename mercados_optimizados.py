@@ -630,8 +630,13 @@ def auto_registrar_selecciones_tarjetas(res_m, nivel="VIP", fecha_jornada=None):
   prefijo_nivel = f"[{nivel}]"
 
   if not df_actual.empty and "ID_Partido" in df_actual.columns and "Mercado" in df_actual.columns:
+    misma_fecha = df_actual["Fecha_Registro"].astype(str).str[:10].isin({
+        str(fecha_base)[:10],
+        str(marca_tiempo)[:10],
+        str(fecha_jornada or fecha_base)[:10],
+    }) if "Fecha_Registro" in df_actual.columns else True
     ya_registradas = df_actual[
-        ((df_actual["ID_Partido"].astype(str) == id_p) | (df_actual["Partido"].astype(str).str.lower() == partido_nombre.lower()))
+        ((df_actual["ID_Partido"].astype(str) == id_p) | ((df_actual["Partido"].astype(str).str.lower() == partido_nombre.lower()) & misma_fecha))
         & (df_actual["Mercado"].astype(str).str.startswith(prefijo_nivel))
     ]
     if len(ya_registradas) >= 2:
@@ -5880,7 +5885,7 @@ def ejecutar_sistema_automatico(api_token):
               json.dump(d_jc, open(arch_json_hoy, "w", encoding="utf-8"), ensure_ascii=False, indent=2)
       except Exception:
           pass
-      if SUBIR_A_WEB:
+      if SUBIR_A_WEB or ENVIAR_A_CLIENTES:
           actualizar_webapp_github_automatico(fecha_jornada)
 
   # 📲 BLOQUE 2: ENVIAR A CANALES DE TELEGRAM EN ORDEN DE PRIORIDAD (1º FREE 3/3 -> 2º VIP 4/4 -> 3º PRO)
@@ -6110,9 +6115,11 @@ def actualizar_webapp_github_automatico(fecha_jornada=None):
   hoy_dt = datetime.now()
   fechas_subir = {
       fecha_jornada,
+      (hoy_dt + timedelta(days=2)).strftime("%Y-%m-%d"),
       (hoy_dt + timedelta(days=1)).strftime("%Y-%m-%d"),
       hoy_dt.strftime("%Y-%m-%d"),
       (hoy_dt - timedelta(days=1)).strftime("%Y-%m-%d"),
+      (hoy_dt - timedelta(days=2)).strftime("%Y-%m-%d"),
   }
 
   # Prioridad #1: subir PRIMERO los JSON de clientes y la auditoría (los que alimentan la Web App)
@@ -6204,6 +6211,8 @@ if __name__ == "__main__":
       print("\n[✅] calibracion_ligas.json actualizado. Las ligas con bloqueada_ok=true no fueron modificadas.")
       sys.exit(0)
   if "--solo-subir-web" in sys.argv:
+      refrescar_caches_ft_jornada_anterior(datetime.now().strftime("%Y-%m-%d"), {"x-apisports-key": MI_TOKEN})
+      resolver_apuestas_pendientes(MI_TOKEN)
       actualizar_webapp_github_automatico(fecha_obj)
       print("\n[✅] SINCRONIZACIÓN WEB COMPLETADA.")
       sys.exit(0)
