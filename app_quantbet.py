@@ -1383,8 +1383,10 @@ with st.sidebar:
     )
 
     st.markdown(
+        f"<div class='notranslate' translate='no'>"
         f"<a href='{LINK_TELEGRAM_FREE}' target='_blank' class='btn-cta-bar-gold'>📲 ENTRAR AL TELEGRAM GRATIS</a>"
-        f"<a href='{LINK_SOPORTE_BOT}' target='_blank' class='btn-cta-bar'>👑 ACCESO COMPLETO VIP / PRO (SOPORTE)</a>",
+        f"<a href='{LINK_SOPORTE_BOT}' target='_blank' class='btn-cta-bar'>👑 ACCESO COMPLETO VIP / PRO (SOPORTE)</a>"
+        f"</div>",
         unsafe_allow_html=True
     )
     st.divider()
