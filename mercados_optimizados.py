@@ -41,8 +41,8 @@ logging.basicConfig(
 )
 
 MODO_PRUEBAS = False
-ENVIAR_A_CLIENTES = False  # ⚠️ INTERRUPTOR TELEGRAM CLIENTES: True = envía tarjetas a canales FREE, VIP y PRO
-SUBIR_A_WEB = False        # 🌐 INTERRUPTOR PÁGINA WEB: True = sube los partidos del día y la auditoría a quantbet22.streamlit.app
+ENVIAR_A_CLIENTES = True  # ⚠️ INTERRUPTOR TELEGRAM CLIENTES: True = envía tarjetas a canales FREE, VIP y PRO
+SUBIR_A_WEB = True        # 🌐 INTERRUPTOR PÁGINA WEB: True = sube los partidos del día y la auditoría a quantbet22.streamlit.app
 ACTIVAR_BOT_AL_FINALIZAR = False  # En False termina el script al instante tras crear los videos
 
 # 📅 Si quieres adelantar el trabajo de mañana o del fin de semana, pon aquí la fecha (ej. "2026-10-27")
@@ -3499,9 +3499,16 @@ def motor_quant_institucional(
           "dortmund", "borussia dortmund", "milan", "ac milan",
           "leverkusen", "napoli"
       ]
+      def _es_filial_o_b(nom_eq):
+          s_f = normalizar_nombre_club(nom_eq)
+          return bool(re.search(r"(?:^|\s)(?:ii|iii|b|c|castilla|atletic|jong|reserves|u23|u21)(?:$|\s)", s_f))
+
+      loc_es_filial = _es_filial_o_b(local)
+      vis_es_filial = _es_filial_o_b(visitante)
+
       campeones_ofensivos_europa = [
-          "galatasaray", "fenerbahce", "fenerbahçe", "sporting", "benfica", "porto",
-          "psv", "feyenoord", "ajax", "celtic", "rangers"
+          "galatasaray", "fenerbahce", "fenerbahçe", "sporting cp", "sp lisbon", "sporting lisbon",
+          "benfica", "porto", "psv", "feyenoord", "ajax", "celtic", "rangers"
       ]
       sub_elite_europa = [
           "braga", "chelsea", "manchester united",
@@ -3509,8 +3516,9 @@ def motor_quant_institucional(
           "lazio", "fiorentina", "bologna", "leipzig", "stuttgart", "frankfurt",
           "hoffenheim", "freiburg", "monaco", "marseille", "lille", "lyon", "nice", "lens",
           "rennes", "reims", "stade de reims", "montpellier", "strasbourg", "brest", "toulouse", "nantes",
-          "athletic", "real sociedad", "villarreal", "betis", "sevilla", "girona", "celta", "osasuna", "mallorca", "rayo",
-          "brighton", "west ham", "fulham", "bournemouth", "brentford", "crystal palace", "nottingham",
+          "athletic", "real sociedad", "villarreal", "betis", "sevilla", "valencia", "girona", "celta",
+          "osasuna", "mallorca", "rayo", "getafe", "espanyol", "alaves",
+          "brighton", "west ham", "fulham", "bournemouth", "brentford", "crystal palace", "nottingham", "everton", "wolves",
           "torino", "udinese", "genoa", "parma", "como", "monza", "cagliari",
           "mainz", "werder bremen", "wolfsburg", "gladbach", "augsburg", "union berlin",
           "az alkmaar", "twente", "utrecht", "club brugge", "anderlecht",
@@ -3520,11 +3528,12 @@ def motor_quant_institucional(
       ]
       clubes_roce_primera_esp2 = [
           "leganes", "valladolid", "las palmas", "almeria", "granada", "cadiz",
-          "espanyol", "elche", "levante", "oviedo", "sporting", "racing", "eibar", "zaragoza", "deportivo"
+          "espanyol", "elche", "levante", "oviedo", "sporting gijon", "racing", "eibar", "zaragoza", "deportivo"
       ]
 
-      loc_es_1a_eu = any(eq in local.lower() for eq in elite_europa + campeones_ofensivos_europa + sub_elite_europa)
-      vis_es_1a_eu = any(eq in visitante.lower() for eq in elite_europa + campeones_ofensivos_europa + sub_elite_europa)
+      # Un equipo filial (ej. Real Sociedad II, Barcelona B, Jong PSV) JAMÁS hereda estatus de 1ª División
+      loc_es_1a_eu = (not loc_es_filial) and any(eq in local.lower() for eq in elite_europa + campeones_ofensivos_europa + sub_elite_europa)
+      vis_es_1a_eu = (not vis_es_filial) and any(eq in visitante.lower() for eq in elite_europa + campeones_ofensivos_europa + sub_elite_europa)
 
       loc_es_primera = loc_es_1a_eu
       vis_es_primera = vis_es_1a_eu
@@ -3567,34 +3576,26 @@ def motor_quant_institucional(
           if any(b in vis_sa_n for b in big4_arabia):
               factor_v = max(factor_v, 1.18)
 
-      if any(eq in local.lower() for eq in elite_europa):
-          factor_l = 1.18
-      elif any(eq in local.lower() for eq in campeones_ofensivos_europa):
-          factor_l = max(factor_l, 1.16)
-      elif any(eq in local.lower() for eq in sub_elite_europa):
-          factor_l = max(factor_l, 1.13)
+      # Respetar jerarquía europea SIN regalar bonos falsos a equipos filiales (II / B)
+      # y sin sobre-inflar equipos de media tabla cuando ya tenemos el modelo log-lineal de liga
+      top_boost = 1.12 if usando_modelo_log_lineal_liga else 1.18
+      sub_boost = 1.05 if usando_modelo_log_lineal_liga else 1.12
 
-      if any(eq in visitante.lower() for eq in elite_europa):
-          factor_v = 1.18
-      elif any(eq in visitante.lower() for eq in campeones_ofensivos_europa):
-          factor_v = max(factor_v, 1.16)
-      elif any(eq in visitante.lower() for eq in sub_elite_europa):
-          factor_v = max(factor_v, 1.13)
+      if not loc_es_filial:
+          if any(eq in local.lower() for eq in elite_europa):
+              factor_l = max(factor_l, top_boost)
+          elif any(eq in local.lower() for eq in campeones_ofensivos_europa):
+              factor_l = max(factor_l, top_boost - 0.02)
+          elif any(eq in local.lower() for eq in sub_elite_europa):
+              factor_l = max(factor_l, sub_boost)
 
-
-      if any(eq in local.lower() for eq in elite_europa) and media_l_a_pura >= 1.35:
-          factor_l = 1.18
-      elif any(eq in local.lower() for eq in campeones_ofensivos_europa) and media_l_a_pura >= 1.40:
-          factor_l = max(factor_l, 1.16)
-      elif any(eq in local.lower() for eq in sub_elite_europa) and media_l_a_pura >= 1.25:
-          factor_l = max(factor_l, 1.12)
-
-      if any(eq in visitante.lower() for eq in elite_europa) and media_v_a_pura >= 1.30:
-          factor_v = 1.18
-      elif any(eq in visitante.lower() for eq in campeones_ofensivos_europa) and media_v_a_pura >= 1.35:
-          factor_v = max(factor_v, 1.16)
-      elif any(eq in visitante.lower() for eq in sub_elite_europa) and media_v_a_pura >= 1.20:
-          factor_v = max(factor_v, 1.12)
+      if not vis_es_filial:
+          if any(eq in visitante.lower() for eq in elite_europa):
+              factor_v = max(factor_v, top_boost)
+          elif any(eq in visitante.lower() for eq in campeones_ofensivos_europa):
+              factor_v = max(factor_v, top_boost - 0.02)
+          elif any(eq in visitante.lower() for eq in sub_elite_europa):
+              factor_v = max(factor_v, sub_boost)
 
   else:
       loc_norm_c = normalizar_nombre_club(local)
@@ -4513,14 +4514,24 @@ def motor_quant_institucional(
   p_15_ht, _, c_min_15_ht = calcular_prob_over_y_ev(lambda_1t, 1.5)
   p_15_2t, _, c_min_15_2t = calcular_prob_over_y_ev(lambda_2t_real, 1.5)
 
-  # Mapa de cuotas REALES de Kambi/BetPlay/ESPN por nombre de mercado exacto
+  # Mapa de cuotas REALES de Kambi/BetPlay/ESPN por nombre de mercado exacto (incluye Under Goles y Córners por Equipo)
   cuotas_reales_casa = {}
   for lin_g, odd_g in ((cuotas_bp or {}).get("over_goles") or {}).items():
     cuotas_reales_casa[f"Over {float(lin_g):.1f} Goles"] = round(float(odd_g), 2)
+  for lin_ug, odd_ug in ((cuotas_bp or {}).get("under_goles") or {}).items():
+    lf_u = float(lin_ug)
+    if abs(lf_u - 2.5) < 0.01:
+      cuotas_reales_casa["Total Menos de 2.5 (Under)"] = round(float(odd_ug), 2)
+    elif abs(lf_u - 3.5) < 0.01:
+      cuotas_reales_casa["Total Menos de 3.5 (Under)"] = round(float(odd_ug), 2)
   for lin_f, odd_f in over_f_bp.items():
     cuotas_reales_casa[f"Faltas Totales > {float(lin_f):.1f}"] = round(float(odd_f), 2)
   for lin_c, odd_c in over_c_bp.items():
     cuotas_reales_casa[f"Córners > {float(lin_c):.1f}"] = round(float(odd_c), 2)
+  for lin_cl, odd_cl in ((cuotas_bp or {}).get("over_corners_local") or {}).items():
+    cuotas_reales_casa[f"Córners {local[:15].strip()} > {float(lin_cl):.1f}"] = round(float(odd_cl), 2)
+  for lin_cv, odd_cv in ((cuotas_bp or {}).get("over_corners_visita") or {}).items():
+    cuotas_reales_casa[f"Córners {visitante[:15].strip()} > {float(lin_cv):.1f}"] = round(float(odd_cv), 2)
   for lin_r, odd_r in over_r_bp.items():
     cuotas_reales_casa[f"Remates Puerta > {float(lin_r):.1f}"] = round(float(odd_r), 2)
   for lin_t, odd_t in ((cuotas_bp or {}).get("over_tarjetas") or {}).items():
@@ -4666,8 +4677,12 @@ def motor_quant_institucional(
       "liga_activa_clientes": bool(cfg_liga_propia.get("activa_clientes", True)),
       "liga_bloqueada_ok": bool(cfg_liga_propia.get("bloqueada_ok", False)),
       "asimetria_ataque": round(asimetria_ataque, 3),
+      "ataque_debil": round(ataque_debil, 3),
       "pos_local": st_loc_real.get("pos") if st_loc_real else None,
       "pos_visita": st_vis_real.get("pos") if st_vis_real else None,
+      "base_corn_l": round(float(base_corn_l), 2),
+      "base_corn_v": round(float(base_corn_v), 2),
+      "kambi_detallado": bool((cuotas_bp or {}).get("detallado") or str((cuotas_bp or {}).get("fuente", "")).startswith("kambi:")),
       "cuotas_reales_casa": cuotas_reales_casa,
       "cuotas_bp": cuotas_bp if cuotas_bp else {"1": "N/A", "X": "N/A", "2": "N/A"},
   }
@@ -5131,7 +5146,7 @@ def ejecutar_sistema_automatico(api_token):
   refrescar_caches_ft_jornada_anterior(ahora_real.strftime("%Y-%m-%d"), headers)
   procesar_clics_pendientes()
   resolver_apuestas_pendientes(api_token)
-  if not es_fecha_futura:
+  if not es_fecha_futura and "--solo-videos" not in sys.argv:
       auditar_todos_los_partidos_fecha_bot_auditorias(fecha_jornada, ligas_permitidas, headers, api_token)
   else:
       print(f"\n[MODO PRE-ESCANEO PRIVADO] 🔭 Analizando fecha futura ({fecha_jornada}) con auditoría FT de hoy actualizada...")
@@ -5426,9 +5441,10 @@ def ejecutar_sistema_automatico(api_token):
       res_m['bloque_texto'] = bloque_partido
       res_m['bloque_caption_pro'] = bloque_partido.replace(" ➔ Comprar > ", " ➔ >").replace("Consenso Casas (BetPlay/Bet365):", "Consenso:")
 
-      teclado_general = construir_teclado_auditoria_general(res_m, memoria_botones)
-      guardar_memoria_botones(memoria_botones)
-      enviar_telegram(TOKEN_GENERAL, CHAT_ID_GENERAL, bloque_partido, reply_markup=teclado_general)
+      if "--solo-videos" not in sys.argv:
+          teclado_general = construir_teclado_auditoria_general(res_m, memoria_botones)
+          guardar_memoria_botones(memoria_botones)
+          enviar_telegram(TOKEN_GENERAL, CHAT_ID_GENERAL, bloque_partido, reply_markup=teclado_general)
 
       loc_clean = "".join([c for c in res_m['local'] if c.isalnum() or c in " "]).rstrip().replace(" ", "_")
       vis_clean = "".join([c for c in res_m['visitante'] if c.isalnum() or c in " "]).rstrip().replace(" ", "_")
@@ -5441,7 +5457,8 @@ def ejecutar_sistema_automatico(api_token):
           dir_vip = os.path.join(directorio_base, "1_VIP_PREMIUM")
           os.makedirs(dir_vip, exist_ok=True)
           ruta_final_vip = os.path.join(dir_vip, f"{hora_clean}_{loc_clean}_vs_{vis_clean}_VIP.jpg")
-          ruta_temporal_vip = generar_captura_automatica(res_m_copia, "VIP")
+          solo_vid_modo = "--solo-videos" in sys.argv
+          ruta_temporal_vip = generar_captura_automatica(res_m_copia, "VIP", guardar_imagen=(not solo_vid_modo))
           if ruta_temporal_vip and os.path.exists(ruta_temporal_vip):
            shutil.move(ruta_temporal_vip, ruta_final_vip)
           res_m['seleccion_vip'] = res_m_copia.get('seleccion_vip', [])
@@ -5450,7 +5467,7 @@ def ejecutar_sistema_automatico(api_token):
           dir_free = os.path.join(directorio_base, "2_FREE_SEGURO")
           os.makedirs(dir_free, exist_ok=True)
           ruta_final_free = os.path.join(dir_free, f"{hora_clean}_{loc_clean}_vs_{vis_clean}_FREE.jpg")
-          ruta_temporal_free = generar_captura_automatica(res_m_copia, "FREE")
+          ruta_temporal_free = generar_captura_automatica(res_m_copia, "FREE", guardar_imagen=(not solo_vid_modo))
           if ruta_temporal_free and os.path.exists(ruta_temporal_free):
               shutil.move(ruta_temporal_free, ruta_final_free)
           res_m['seleccion_free'] = res_m_copia.get('seleccion_free', [])
@@ -5560,8 +5577,9 @@ def ejecutar_sistema_automatico(api_token):
         f"🔥 <b>COMBINADA DOBLE INSTITUCIONAL VIP (Cuota > {info_doble['cuota_total']:.2f}x)</b>\n"
         f"🛡️ <b>Efectividad con Colchón:</b> {info_doble['prob_protegida']:.1f}%"
     )
-    enviar_imagen_telegram(TOKEN_VIP_PERSONAL, CHAT_ID_VIP_PERSONAL, ruta_img_doble, caption_doble_priv)
-    enviar_imagen_telegram(TOKEN_GENERAL, CHAT_ID_GENERAL, ruta_img_doble, caption_doble_priv)
+    if "--solo-videos" not in sys.argv:
+      enviar_imagen_telegram(TOKEN_VIP_PERSONAL, CHAT_ID_VIP_PERSONAL, ruta_img_doble, caption_doble_priv)
+      enviar_imagen_telegram(TOKEN_GENERAL, CHAT_ID_GENERAL, ruta_img_doble, caption_doble_priv)
 
   if info_sniper:
     print(f"\n [+] COMBINADA TRIPLE SNIPER VIP (Cuota > {info_sniper['cuota_total']:.2f}x | Efectividad con Protección: {info_sniper['prob_protegida']:.1f}%):")
@@ -5583,8 +5601,9 @@ def ejecutar_sistema_automatico(api_token):
         f"🎯 <b>COMBINADA TRIPLE SNIPER VIP (Cuota > {info_sniper['cuota_total']:.2f}x)</b>\n"
         f"🛡️ <b>Efectividad con Protección:</b> {info_sniper['prob_protegida']:.1f}%"
     )
-    enviar_imagen_telegram(TOKEN_VIP_PERSONAL, CHAT_ID_VIP_PERSONAL, ruta_img_sniper, caption_sniper_priv)
-    enviar_imagen_telegram(TOKEN_GENERAL, CHAT_ID_GENERAL, ruta_img_sniper, caption_sniper_priv)
+    if "--solo-videos" not in sys.argv:
+      enviar_imagen_telegram(TOKEN_VIP_PERSONAL, CHAT_ID_VIP_PERSONAL, ruta_img_sniper, caption_sniper_priv)
+      enviar_imagen_telegram(TOKEN_GENERAL, CHAT_ID_GENERAL, ruta_img_sniper, caption_sniper_priv)
 
   for t_pro in combinadas_exclusivas_pro:
     print(f"\n [+] 👑 EXCLUSIVA PRO: {t_pro['titulo']} (Cuota > {t_pro['cuota_total']:.2f}x | Protección: {t_pro['prob_protegida']:.1f}%):")
@@ -5606,8 +5625,9 @@ def ejecutar_sistema_automatico(api_token):
         f"👑 <b>EXCLUSIVA PRO: {t_pro['titulo']} (Cuota > {t_pro['cuota_total']:.2f}x)</b>\n"
         f"🛡️ <b>Efectividad con Protección:</b> {t_pro['prob_protegida']:.1f}%"
     )
-    enviar_imagen_telegram(TOKEN_VIP_PERSONAL, CHAT_ID_VIP_PERSONAL, r_pro_img, cap_pro_priv)
-    enviar_imagen_telegram(TOKEN_GENERAL, CHAT_ID_GENERAL, r_pro_img, cap_pro_priv)
+    if "--solo-videos" not in sys.argv:
+      enviar_imagen_telegram(TOKEN_VIP_PERSONAL, CHAT_ID_VIP_PERSONAL, r_pro_img, cap_pro_priv)
+      enviar_imagen_telegram(TOKEN_GENERAL, CHAT_ID_GENERAL, r_pro_img, cap_pro_priv)
 
   print("=" * 120 + "\n")
 
@@ -5870,7 +5890,7 @@ def ejecutar_sistema_automatico(api_token):
       print("=" * 95)
 
   # Guardar las imágenes de descartes únicamente en la carpeta del PC (sin spamear Telegram)
-  for p in partidos_descartes_finales:
+  for p in ([] if "--solo-videos" in sys.argv else partidos_descartes_finales):
       p_copia_desc = dict(p)
       p_copia_desc['fecha'] = fecha_jornada
       ruta_temporal_desc = generar_captura_automatica(p_copia_desc, "DESCARTES")
@@ -5888,7 +5908,7 @@ def ejecutar_sistema_automatico(api_token):
   print(f"\n[+] 🏁 Escaneo de partidos y envío de tarjetas finalizado con éxito.\n")
 
   ruta_cola_vid = os.path.join(f"Alertas_Quant_{fecha_jornada}", "4_VIDEOS_LISTOS_REDES", "cola_publicacion_redes.json")
-  forzar_rehacer_vid = "--rehacer-videos" in sys.argv
+  forzar_rehacer_vid = ("--rehacer-videos" in sys.argv) or ("--solo-videos" in sys.argv)
   fecha_aud_objetivo_hoy = (
       ahora_real.strftime("%Y-%m-%d")
       if ahora_real.hour >= 21
@@ -6084,7 +6104,7 @@ if __name__ == "__main__":
               p_nom_r = f"{loc_r} vs {vis_r} ({lv_r.title()})"
               ya_v = ya_f = 0
               if not df_csv_r.empty:
-                  m_match = (df_csv_r["ID_Partido"].astype(str) == id_pr) | (df_csv_r["Partido"].astype(str).str.split(" \(").str[0].str.lower().str.strip() == f"{loc_r} vs {vis_r}".lower())
+                  m_match = (df_csv_r["ID_Partido"].astype(str) == id_pr) | (df_csv_r["Partido"].astype(str).str.split(r" \(").str[0].str.lower().str.strip() == f"{loc_r} vs {vis_r}".lower())
                   sub_r = df_csv_r[m_match]
                   ya_v = int(sub_r["Mercado"].astype(str).str.startswith("[VIP]").sum())
                   ya_f = int(sub_r["Mercado"].astype(str).str.startswith("[FREE]").sum())
