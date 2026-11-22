@@ -41,8 +41,8 @@ logging.basicConfig(
 )
 
 MODO_PRUEBAS = False
-ENVIAR_A_CLIENTES = True  # ⚠️ INTERRUPTOR TELEGRAM CLIENTES: True = envía tarjetas a canales FREE, VIP y PRO
-SUBIR_A_WEB = True        # 🌐 INTERRUPTOR PÁGINA WEB: True = sube los partidos del día y la auditoría a quantbet22.streamlit.app
+ENVIAR_A_CLIENTES = False  # ⚠️ INTERRUPTOR TELEGRAM CLIENTES: True = envía tarjetas a canales FREE, VIP y PRO
+SUBIR_A_WEB = False        # 🌐 INTERRUPTOR PÁGINA WEB: True = sube los partidos del día y la auditoría a quantbet22.streamlit.app
 ACTIVAR_BOT_AL_FINALIZAR = False  # En False termina el script al instante tras crear los videos
 
 # 📅 Si quieres adelantar el trabajo de mañana o del fin de semana, pon aquí la fecha (ej. "2026-10-27")
@@ -5930,13 +5930,13 @@ def ejecutar_sistema_automatico(api_token):
           )
           enviar_telegram(TOKEN_CARTERO, CHAT_ID_CLIENTES_FREE, mensaje_cta)
           mensaje_gancho_diario = (
-              "🔥 <b>¡PRUEBA HOY EL CANAL VIP POR SOLO 1.00 USD!</b> 📉⚡\n\n"
+              "🔥 <b>¡PRUEBA HOY EL CANAL VIP POR SOLO 1.00 €!</b> 📉⚡\n\n"
               "¿Quieres recibir hoy mismo las 4 Tarjetas VIP de cuota alta + la Combinada Doble y Triple Sniper sin cobros automáticos? 🧬\n\n"
               "🎁 <b>PLANES DISPONIBLES (PROMOCIÓN HASTA EL 30 DE NOVIEMBRE):</b>\n"
-              "• 🔓 <b>Pase Diario VIP (1 Día / 24h):</b> Solo <b>1.00 USD</b>\n"
-              "• ⚡ <b>Pase 3 Días (Fin de Semana / Champions):</b> <b>4.99 USD</b>\n"
-              "• 💎 <b>Promo VIP 10 Días (Hasta 30 Nov):</b> <b>7.99 USD</b>\n"
-              "• 👑 <b>Promo PRO Cierre de Año (Todas las Ligas):</b> <b>49.99 USD</b> (Antes 74.99 USD)\n\n"
+              "• 🔓 <b>Pase Diario VIP (1 Día / 24h):</b> Solo <b>1.00 €</b>\n"
+              "• ⚡ <b>Pase 3 Días (Fin de Semana / Champions):</b> <b>4.99 €</b>\n"
+              "• 💎 <b>Promo VIP 10 Días (Hasta 30 Nov):</b> <b>7.99 €</b>\n"
+              "• 👑 <b>Promo PRO Cierre de Año (Todas las Ligas):</b> <b>49.99 €</b> (Antes 74.99 €)\n\n"
               "🌐 <b>Actívalo en 1 clic en nuestra Web Oficial:</b>\n"
               "👉 <a href='https://quantbet22.streamlit.app'>https://quantbet22.streamlit.app</a>\n\n"
               "💬 <i>¿Prefieres pagar por Bizum, Nequi o USDT? Escríbenos aquí:</i> @QuantBetSoporte_bot 🚀"
