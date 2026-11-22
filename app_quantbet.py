@@ -574,6 +574,20 @@ def evaluar_mercado_real(merc, gh, ga, g_ht, duelo_str="", stats_reales=None):
         return gh >= ga and tot >= 2
     elif "Combo X2 + O1.5" in m:
         return ga >= gh and tot >= 2
+    elif "Combo 1X + U3.5" in m:
+        return gh >= ga and tot <= 3
+    elif "Combo 1X + U4.5" in m:
+        return gh >= ga and tot <= 4
+    elif "Combo X2 + U3.5" in m:
+        return ga >= gh and tot <= 3
+    elif "sin empate" in m_low or "dnb" in m_low:
+        if gh == ga:
+            return True
+        if "local" in m_low or (loc_n and loc_n[:5] in m_norm):
+            return gh > ga
+        if "visita" in m_low or (vis_n and vis_n[:5] in m_norm):
+            return ga > gh
+        return False
     elif "1X" in m:
         return gh >= ga
     elif "X2" in m:
