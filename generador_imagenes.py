@@ -37,6 +37,10 @@ def es_visitante_protegido(nombre_visitante):
         if unicodedata.category(c) != "Mn"
     ).strip()
 
+    import re as _re_fil
+    if _re_fil.search(r"(?:^|\s)(?:ii|iii|b|c|castilla|atletic|jong|reserves|u23|u21)(?:$|\s)", v_norm):
+        return False
+
     falsos_gigantes = [
         "internacional de bogota", "internacional fc", "internacional palmira",
         "boca juniors de cali", "atletico fc", "real santander", "real cundinamarca", "real cartagena"
@@ -48,7 +52,7 @@ def es_visitante_protegido(nombre_visitante):
         "real madrid", "barcelona", "manchester city", "arsenal", "liverpool",
         "bayern", "inter", "paris sg", "psg", "paris saint germain", "juventus",
         "atletico madrid", "ath madrid", "dortmund", "borussia dortmund", "milan", "ac milan",
-        "leverkusen", "napoli", "sevilla", "betis", "athletic", "real sociedad",
+        "leverkusen", "napoli", "sevilla", "valencia", "betis", "athletic", "real sociedad",
         "villarreal", "sporting", "benfica", "porto", "braga", "chelsea",
         "manchester united", "tottenham", "aston villa", "newcastle", "roma",
         "atalanta", "lazio", "fiorentina", "bologna", "leipzig", "stuttgart",
@@ -86,10 +90,11 @@ def seleccionar_par_distinto_familia(lista_candidatos, excluidos=None, familias_
     def _puntaje_rotacion(item):
         nom, prob, _ = item
         fam = obtener_familia(nom)
-        penal_hist = 4.5 if nom in historial_reciente else 0.0
-        # Evitar que Córners y Tarjetas monopolicen las tarjetas cuando hay mercados tácticos fuertes
-        penal_familia = 3.2 if fam in {"corners", "tarjetas"} else 0.0
-        return prob - penal_hist - penal_familia
+        penal_hist = 8.5 if nom in historial_reciente else 0.0
+        # Evitar que Faltas, Córners y Tarjetas monopolicen las tarjetas frente a BTTS, 1T, 2T, Over 2.5, Combos y Remates
+        penal_familia = 7.0 if fam == "faltas" else (4.5 if fam in {"corners", "tarjetas"} else 0.0)
+        bono_tactico = (5.0 if nom == "Gol en 1T" else 3.5) if fam in {"btts", "tiempos", "combo", "remates"} else (2.0 if fam == "goles" else 0.0)
+        return prob + bono_tactico - penal_hist - penal_familia
 
     candidatos_rotados = sorted(lista_candidatos, key=_puntaje_rotacion, reverse=True)
 
@@ -107,12 +112,22 @@ def seleccionar_par_distinto_familia(lista_candidatos, excluidos=None, familias_
         if (fam == "corners" and "tarjetas" in familias_usadas) or (fam == "tarjetas" and "corners" in familias_usadas):
             if len(candidatos_rotados) > 3:
                 continue
-        if (fam == "combo" and ("goles" in familias_usadas or "tiempos" in familias_usadas or "ganador" in familias_usadas)) or (
-            fam in {"goles", "tiempos", "ganador"} and "combo" in familias_usadas
+        fams_ya_en_esta = {obtener_familia(x[0]) for x in seleccion}
+        if (fam == "combo" and ("goles" in fams_ya_en_esta or "tiempos" in fams_ya_en_esta or "ganador" in fams_ya_en_esta)) or (
+            fam in {"goles", "tiempos", "ganador"} and "combo" in fams_ya_en_esta
         ):
             continue
-        # Regla #1 Anti-Doble Castigo: no juntar Over 1.5 (goles) + Gol 1T/2T (tiempos) en el mismo partido si tot_goles < 2.95
-        if float(tot_goles or 2.5) < 2.95 and (
+        # Regla #1 Anti-Doble Castigo UNIVERSAL:
+        # 1) Dentro de la MISMA tarjeta JAMÁS mezclar `goles` + `tiempos` (evita doble rojo 0-0 / 1-0 como Aston Villa y Frankfurt)
+        # 2) Entre FREE y VIP, solo permitir `goles` + `tiempos` si tot_goles >= 3.35 (partido súper abierto)
+        if (fam == "goles" and "tiempos" in fams_ya_en_esta) or (fam == "tiempos" and "goles" in fams_ya_en_esta):
+            continue
+        if float(tot_goles or 2.5) < 3.05 and (
+            (fam == "btts" and ("goles" in fams_ya_en_esta or "tiempos" in fams_ya_en_esta))
+            or (fam in {"goles", "tiempos"} and "btts" in fams_ya_en_esta)
+        ):
+            continue
+        if float(tot_goles or 2.5) < 3.35 and (
             (fam == "goles" and "tiempos" in familias_usadas) or (fam == "tiempos" and "goles" in familias_usadas)
         ):
             continue
@@ -121,40 +136,47 @@ def seleccionar_par_distinto_familia(lista_candidatos, excluidos=None, familias_
         if len(seleccion) == 2:
             break
 
-    # Segundo pase: relaja exclusión de familias cruzadas salvo Córners y Tarjetas
+    # Segundo pase: prohíbe SIEMPRE repetir familia entre FREE y VIP y prohíbe colinealidad combo+goles o goles+tiempos
     if len(seleccion) < 2:
         fams_internas = {obtener_familia(x[0]) for x in seleccion}
         for m in candidatos_rotados:
             if m[0] in excluidos or m in seleccion:
                 continue
             fam = obtener_familia(m[0])
-            if float(tot_goles or 2.5) < 2.95 and (
-                (fam == "goles" and ("tiempos" in fams_internas or "tiempos" in familias_excluidas))
-                or (fam == "tiempos" and ("goles" in fams_internas or "goles" in familias_excluidas))
+            if fam in fams_internas or fam in familias_excluidas:
+                continue
+            if (fam == "goles" and "tiempos" in fams_internas) or (fam == "tiempos" and "goles" in fams_internas):
+                continue
+            if (fam == "combo" and ("goles" in fams_internas or "tiempos" in fams_internas or "ganador" in fams_internas)) or (
+                fam in {"goles", "tiempos", "ganador"} and "combo" in fams_internas
             ):
                 continue
-            if fam not in fams_internas and not (fam in {"corners", "faltas", "tarjetas", "tiempos", "goles"} and fam in familias_excluidas):
-                seleccion.append(m)
-                fams_internas.add(fam)
-                if len(seleccion) == 2:
-                    break
+            seleccion.append(m)
+            fams_internas.add(fam)
+            if len(seleccion) == 2:
+                break
 
-    # Tercer pase de emergencia: garantiza siempre 2 selecciones de distinta familia sin repetir picks de la otra tarjeta
+    # Tercer pase de emergencia: garantiza 2 selecciones de distinta familia, bloqueando SIEMPRE repetir faltas/corners/tarjetas/goles entre FREE y VIP
     if len(seleccion) < 2:
         fams_internas = {obtener_familia(x[0]) for x in seleccion}
         for m in lista_candidatos:
             if m in seleccion or m[0] in excluidos:
                 continue
             fam = obtener_familia(m[0])
-            if float(tot_goles or 2.5) < 2.95 and fam in {"goles", "tiempos"} and (
-                "goles" in fams_internas or "tiempos" in fams_internas or "goles" in familias_excluidas or "tiempos" in familias_excluidas
+            if fam in fams_internas:
+                continue
+            if fam in {"corners", "faltas", "tarjetas", "goles", "btts"} and fam in familias_excluidas:
+                continue
+            if (fam == "goles" and "tiempos" in fams_internas) or (fam == "tiempos" and "goles" in fams_internas):
+                continue
+            if (fam == "combo" and ("goles" in fams_internas or "tiempos" in fams_internas or "ganador" in fams_internas)) or (
+                fam in {"goles", "tiempos", "ganador"} and "combo" in fams_internas
             ):
                 continue
-            if fam not in fams_internas and not (fam in {"corners", "faltas"} and fam in familias_excluidas):
-                seleccion.append(m)
-                fams_internas.add(fam)
-                if len(seleccion) == 2:
-                    break
+            seleccion.append(m)
+            fams_internas.add(fam)
+            if len(seleccion) == 2:
+                break
 
     if registrar_memoria:
         for s in seleccion:
@@ -364,7 +386,7 @@ def _obtener_escudo_card(nombre_eq, logo_url=None, tam=120):
         return None
 
 
-def generar_captura_automatica(res_m, tipo_filtro="DESCARTES"):
+def generar_captura_automatica(res_m, tipo_filtro="DESCARTES", guardar_imagen=True):
 
     contexto = limpiar_emojis_fuente(res_m.get('etiqueta_contexto', 'ESTÁNDAR'))
     es_derbi = res_m.get('es_derbi', False)
@@ -466,6 +488,7 @@ def generar_captura_automatica(res_m, tipo_filtro="DESCARTES"):
         *lineas_tiros_dinamicas,
         *lineas_corners_dinamicas,
         (f"Tarjetas > {res_m.get('linea_tarj', 3.5)}", res_m.get('p_t35'), res_m.get('c_min_t35')),
+        *( [("Tarjetas > 3.5", *_prob_poisson_over(float(res_m.get('tot_tarj') or 4.5) * 0.92, 3.5))] if float(res_m.get('linea_tarj', 3.5)) >= 4.5 else [] ),
     ]
 
     if (res_m.get("p_h") or 0) >= 63.0:
@@ -476,6 +499,58 @@ def generar_captura_automatica(res_m, tipo_filtro="DESCARTES"):
         mercados_brutos.append((res_m["nombre_dom_goles"], res_m.get("p_dom_goles"), res_m.get("c_min_dom_goles")))
     if res_m.get("nombre_dom_corn") and (res_m.get("p_dom_corn") or 0) >= 64.0:
         mercados_brutos.append((res_m["nombre_dom_corn"], res_m.get("p_dom_corn"), res_m.get("c_min_dom_corn")))
+    # Inyectar TODAS las líneas reales abiertas en Kambi/BetPlay (Córners, Córners Equipo, Faltas, Remates, Tarjetas)
+    # para que el candado estricto de mercado abierto siempre pueda operar sobre lo que la casa realmente ofrece
+    nombres_ya_mb = {x[0] for x in mercados_brutos}
+    base_c_l_gi = float(res_m.get("base_corn_l") or (tot_corn * 0.52))
+    base_c_v_gi = float(res_m.get("base_corn_v") or (tot_corn * 0.48))
+    tot_tarj_gi = float(res_m.get("tot_tarj") or 3.8)
+    for nom_k, odd_k in cuotas_reales_casa.items():
+        if nom_k in nombres_ya_mb:
+            continue
+        try:
+            odd_kf = float(odd_k)
+            if odd_kf < 1.12 or odd_kf > 2.25:
+                continue
+            if nom_k.startswith("Córners > "):
+                lin_k = float(nom_k.split(">")[1].strip())
+                pk, _ = _prob_poisson_over(tot_corn, lin_k)
+                if pk:
+                    mercados_brutos.append((nom_k, pk, odd_kf))
+                    nombres_ya_mb.add(nom_k)
+            elif nom_k.startswith("Córners ") and " > " in nom_k:
+                lin_k = float(nom_k.split(">")[1].strip())
+                es_loc_ck = res_m["local"][:8].lower() in nom_k.lower()
+                pk, _ = _prob_poisson_over(base_c_l_gi if es_loc_ck else base_c_v_gi, lin_k)
+                if pk:
+                    mercados_brutos.append((nom_k, pk, odd_kf))
+                    nombres_ya_mb.add(nom_k)
+            elif nom_k.startswith("Faltas Totales > "):
+                lin_k = float(nom_k.split(">")[1].strip())
+                pk, _ = _prob_poisson_over(tot_faltas_val, lin_k)
+                if pk:
+                    mercados_brutos.append((nom_k, pk, odd_kf))
+                    nombres_ya_mb.add(nom_k)
+            elif nom_k.startswith("Remates Puerta > "):
+                lin_k = float(nom_k.split(">")[1].strip())
+                pk, _ = _prob_poisson_over(tot_tiros, lin_k)
+                if pk:
+                    mercados_brutos.append((nom_k, pk, odd_kf))
+                    nombres_ya_mb.add(nom_k)
+            elif nom_k.startswith("Tarjetas > "):
+                lin_k = float(nom_k.split(">")[1].strip())
+                pk, _ = _prob_poisson_over(tot_tarj_gi, lin_k)
+                if pk:
+                    mercados_brutos.append((nom_k, pk, odd_kf))
+                    nombres_ya_mb.add(nom_k)
+        except Exception:
+            continue
+
+    # CANDADO ESTRICTO DE MERCADO ABIERTO (CERO IMPROVISACIÓN):
+    # Si Kambi encontró el partido y tiene al menos 6 mercados reales abiertos, las tarjetas FREE/VIP
+    # SOLO pueden seleccionar mercados que existan de verdad en cuotas_reales_casa (cero cuotas inventadas).
+    fuente_bp_gi = str(cuotas_bp_all.get("fuente") or "").lower()
+    candado_mercado_real_kambi = (fuente_bp_gi.startswith("kambi:") or bool(res_m.get("kambi_detallado"))) and len(cuotas_reales_casa) >= 6
     # Goleador individual desactivado en tarjetas automáticas hasta auditar autores reales por evento
 
     mercados_ritmo = []
@@ -483,6 +558,8 @@ def generar_captura_automatica(res_m, tipo_filtro="DESCARTES"):
 
     for nombre, prob, cuota_orig in mercados_brutos:
         if prob is None or cuota_orig is None:
+            continue
+        if candado_mercado_real_kambi and nombre not in cuotas_reales_casa:
             continue
         # Si la casa de apuestas (BetPlay/Kambi) tiene cuota real abierta para este mercado exacto,
         # calibrar la probabilidad combinando nuestro Poisson con la probabilidad implícita sin margen de la casa
@@ -539,9 +616,11 @@ def generar_captura_automatica(res_m, tipo_filtro="DESCARTES"):
             if tipo_filtro == "VIP" and tot_goles >= 2.12:
                 continue
 
-        # 2. Prohibido recomendar Ambos Marcan (BTTS) cuando hay diferencia de nivel
+        # 2. Ambos Marcan (BTTS) calibrado por matemáticas reales (Poisson + Kambi):
+        #    Permitido en VIP si ambos equipos tienen gol (prob >= 57.5% y tot_goles >= 2.45), aunque exista favorito (ej. Nice vs PSG 2-3, Newcastle vs Arsenal 2-2)
         if nombre == "Ambos Marcan (BTTS)":
-            if tot_goles < 2.55 or prob < 66.5 or hay_favorito_claro:
+            ataque_min_btts = float(res_m.get("ataque_debil") or 0.95)
+            if tot_goles < 2.45 or prob < 57.5 or ataque_min_btts < 0.80:
                 continue
 
         # 3. Regla #3: Filtro Dixon-Coles exacto para Over 1.5 (si P(0-0)+P(1-0)+P(0-1) >= 27%, no priorizar Over 1.5)
@@ -570,9 +649,9 @@ def generar_captura_automatica(res_m, tipo_filtro="DESCARTES"):
                     if tot_goles >= 3.20 or (tipo_filtro == "VIP" and tot_goles >= 2.95):
                         continue
                 elif nombre == "Over 2.5 Goles":
-                    if tot_goles < 2.90 or prob < 62.0:
+                    if tot_goles < 2.70 or prob < 56.5:
                         continue
-                    if tipo_filtro == "FREE" and tot_goles < 3.30:
+                    if tipo_filtro == "FREE" and tot_goles < 3.25:
                         continue
                 elif nombre == "Over 3.5 Goles":
                     if tot_goles < 3.80 or prob < 58.0:
@@ -627,8 +706,7 @@ def generar_captura_automatica(res_m, tipo_filtro="DESCARTES"):
                 pass
 
         if nombre == "Total Asiático > 2.25":
-            # En Asiático > 2.25 se requieren 3 goles para ganar limpio: exigir tot_goles >= 2.85
-            if tot_goles < 2.85 or tot_goles >= 3.65 or prob < 62.0:
+            if tot_goles < 2.72 or tot_goles >= 3.65 or prob < 58.0:
                 continue
             if over_goles_bp and ((2.5 not in over_goles_bp and "2.5" not in over_goles_bp) or float(over_goles_bp.get(2.5) or over_goles_bp.get("2.5") or 9.0) > 1.85):
                 continue
@@ -638,35 +716,47 @@ def generar_captura_automatica(res_m, tipo_filtro="DESCARTES"):
             if over_goles_bp and ((2.5 not in over_goles_bp and "2.5" not in over_goles_bp) or float(over_goles_bp.get(2.5) or over_goles_bp.get("2.5") or 9.0) > 1.65):
                 continue
 
-        # Gate estricto de mercados de 45 min (Gol 1T / Gol 2T): evitar cuotas trampa 1.18 (ej. Bayern 1-1 al descanso)
+        # Gate calibrado de mercados de 45 min (Gol 1T / Gol 2T):
+        # Recupera la presencia real de Gol en 1T y Gol en 2T en partidos con ritmo (>= 2.55 goles y riesgo 0-0/1-0 < 27%),
+        # separando por cuota real: < 1.35 va a FREE y >= 1.35 va a VIP.
         asim_atq_gi = float(res_m.get("asimetria_ataque") or 0.0)
         if nombre == "Gol en 1T":
-            if tipo_filtro == "FREE" and tot_goles < 3.05:
+            if tot_goles < 2.55 or riesgo_corto_dc >= 26.5 or prob < 69.0:
                 continue
             if over_1t_bp:
                 odd_1t05 = over_1t_bp.get(0.5) or over_1t_bp.get("0.5")
-                if odd_1t05 is None or float(odd_1t05) < (1.32 if tipo_filtro == "VIP" else 1.20):
+                if odd_1t05 is None:
                     continue
-            elif tot_goles < 2.95 or tot_goles >= 3.65 or prob < 72.0 or riesgo_corto_dc >= 22.0:
+                odd_1t_f = float(odd_1t05)
+                if tipo_filtro == "VIP" and (odd_1t_f < 1.34 or odd_1t_f > 1.85):
+                    continue
+                if tipo_filtro == "FREE" and (odd_1t_f < 1.16 or odd_1t_f > 1.42):
+                    continue
+            elif tipo_filtro == "VIP" and tot_goles >= 3.15:
                 continue
         if nombre == "Goles 1T > 1.5":
             if over_1t_bp:
                 odd_1t15 = over_1t_bp.get(1.5) or over_1t_bp.get("1.5")
-                if odd_1t15 is None or float(odd_1t15) < 1.25 or float(odd_1t15) > 2.15:
+                if odd_1t15 is None or float(odd_1t15) < 1.35 or float(odd_1t15) > 2.15:
                     continue
-            elif tot_goles < 3.60 or prob < 58.0:
+            elif tot_goles < 3.45 or prob < 58.0:
                 continue
         if nombre == "Gol en 2do Tiempo":
-            if tipo_filtro == "FREE" and tot_goles < 3.05:
+            if tot_goles < 2.50 or riesgo_corto_dc >= 27.0 or prob < 71.0:
                 continue
-            if asim_atq_gi >= 0.85:
+            if asim_atq_gi >= 0.90:
                 # Favorito abrumador puede sentenciar en 1T y dormir el 2T
                 continue
             if over_2t_bp:
                 odd_2t05 = over_2t_bp.get(0.5) or over_2t_bp.get("0.5")
-                if odd_2t05 is None or float(odd_2t05) < (1.32 if tipo_filtro == "VIP" else 1.20):
+                if odd_2t05 is None:
                     continue
-            elif tot_goles < 2.90 or tot_goles >= 3.55 or prob < 73.0 or riesgo_corto_dc >= 23.0:
+                odd_2t_f = float(odd_2t05)
+                if tipo_filtro == "VIP" and (odd_2t_f < 1.34 or odd_2t_f > 1.80):
+                    continue
+                if tipo_filtro == "FREE" and (odd_2t_f < 1.14 or odd_2t_f > 1.38):
+                    continue
+            elif tipo_filtro == "VIP" and tot_goles >= 3.10:
                 continue
         if nombre == "Goles 2do Tiempo > 1.5":
             if asim_atq_gi >= 0.85:
@@ -692,6 +782,8 @@ def generar_captura_automatica(res_m, tipo_filtro="DESCARTES"):
                 continue
 
             if "Doble Oport. 1X" == nombre:
+                if tipo_filtro == "VIP" and res_m.get("calidad_datos") != "ALTA" and (c1_bp is None or c1_bp > 1.85):
+                    continue
                 if (c1x_bp is not None and (c1x_bp < 1.14 or c1x_bp > (1.62 if tipo_filtro == "VIP" else 1.38))):
                     continue
                 if (c1_bp is not None and (c1_bp < 1.28 or c1_bp > 2.25)) or (c2_bp is not None and c2_bp <= 2.90):
@@ -758,21 +850,26 @@ def generar_captura_automatica(res_m, tipo_filtro="DESCARTES"):
 
         mercados_ritmo.append((nombre, prob, cuota_orig))
 
-    # Ordenar por probabilidad + prioridad a mercados tácticos variados sobre Córners/Tarjetas
+    # Ordenar priorizando mercados tácticos de fútbol (BTTS, 1T, 2T, Over 2.5, Combos, Remates, Doble Oport.) sobre Faltas/Córners/Tarjetas
     todos_ordenados = sorted(
         mercados_ritmo + mercados_ganador_respaldo,
-        key=lambda x: (x[1] - (3.0 if obtener_familia(x[0]) in {"corners", "tarjetas"} else 0.0)),
+        key=lambda x: (
+            x[1]
+            + (3.5 if obtener_familia(x[0]) in {"btts", "tiempos", "combo", "remates"} else 0.0)
+            - (4.5 if obtener_familia(x[0]) in {"corners", "tarjetas", "faltas"} else 0.0)
+        ),
         reverse=True
     )
 
     exclusivos_vip_extremos = {
+        "Ambos Marcan (BTTS)", "Over 2.5 Goles", "Over 3.5 Goles",
         "Remates Puerta > 7.5", "Remates Puerta > 8.5", "Córners > 9.5",
         "Total Asiático > 2.25", "Total Asiático > 2.75", "Total Menos de 2.5 (Under)",
         "Combo 1X + O1.5", "Combo X2 + O1.5"
     }
     if float(over_goles_bp.get(4.5) or over_goles_bp.get("4.5") or 2.0) > 1.38:
         exclusivos_vip_extremos.add("Over 4.5 Goles")
-    if abs(linea_f_vip - linea_f_free) >= 0.5:
+    if abs(linea_f_vip - linea_f_free) >= 0.5 and float(cuotas_reales_casa.get(f"Faltas Totales > {linea_f_vip:.1f}", 1.45)) >= 1.35:
         exclusivos_vip_extremos.add(f"Faltas Totales > {linea_f_vip:.1f}")
     if abs(linea_t_vip - linea_t_free) >= 0.5:
         exclusivos_vip_extremos.add(f"Remates Puerta > {linea_t_vip:.1f}")
@@ -786,21 +883,27 @@ def generar_captura_automatica(res_m, tipo_filtro="DESCARTES"):
     if tot_corn >= 9.6:
         lineas_bajas_irreales.add("Córners > 7.5")
 
-    candidatos_free = [
-        (m[0], min(86.5, m[1]), calcular_cuota_real_casa(m[1], m[2], "FREE", m[0], cuotas_reales_casa))
-        for m in todos_ordenados
-        if m[0] not in exclusivos_vip_extremos and m[0] not in lineas_bajas_irreales and m[1] >= 62.0
-    ]
+    candidatos_free = []
+    for m in todos_ordenados:
+        if m[0] in exclusivos_vip_extremos or m[0] in lineas_bajas_irreales or m[1] < 60.0:
+            continue
+        cuo_f = calcular_cuota_real_casa(m[1], m[2], "FREE", m[0], cuotas_reales_casa)
+        if candado_mercado_real_kambi and (cuo_f < 1.13 or cuo_f > 1.44):
+            continue
+        candidatos_free.append((m[0], min(86.5, m[1]), cuo_f))
     if len(candidatos_free) < 2:
         candidatos_free = [
             (m[0], min(86.5, m[1]), calcular_cuota_real_casa(m[1], m[2], "FREE", m[0], cuotas_reales_casa))
             for m in todos_ordenados
             if m[0] not in exclusivos_vip_extremos
+            and (not candado_mercado_real_kambi or (1.12 <= calcular_cuota_real_casa(m[1], m[2], "FREE", m[0], cuotas_reales_casa) <= 1.52))
         ]
 
     # Familias ya usadas en la otra tarjeta del mismo partido (prohibido repetir Córners/Tarjetas y, si tot_goles < 2.95, goles <-> tiempos)
     fams_usadas_vip = {obtener_familia(m[0]) for m in res_m.get("seleccion_vip", [])}
-    if tot_goles < 2.95 and ("goles" in fams_usadas_vip or "tiempos" in fams_usadas_vip):
+    if tot_goles < 3.35 and ("goles" in fams_usadas_vip or "tiempos" in fams_usadas_vip):
+        fams_usadas_vip.update({"goles", "tiempos"})
+    if tot_goles < 2.75 and ("btts" in fams_usadas_vip):
         fams_usadas_vip.update({"goles", "tiempos"})
 
     top_2_free_base = seleccionar_par_distinto_familia(
@@ -817,7 +920,7 @@ def generar_captura_automatica(res_m, tipo_filtro="DESCARTES"):
     elif tipo_filtro == "VIP":
         nombres_usados_free = {m[0] for m in top_2_free_base}
         fams_usadas_free = {obtener_familia(m[0]) for m in top_2_free_base}
-        if tot_goles < 2.95 and ("goles" in fams_usadas_free or "tiempos" in fams_usadas_free):
+        if tot_goles < 3.35 and ("goles" in fams_usadas_free or "tiempos" in fams_usadas_free):
             fams_usadas_free.update({"goles", "tiempos"})
         colchones_bajos = {"Córners > 7.5", "Total Menos de 3.5 (Under)"}
         if abs(linea_f_vip - linea_f_free) >= 0.5:
@@ -826,15 +929,19 @@ def generar_captura_automatica(res_m, tipo_filtro="DESCARTES"):
             colchones_bajos.add(f"Remates Puerta > {linea_t_free:.1f}")
         excluidos_vip = nombres_usados_free.union(colchones_bajos)
 
-        candidatos_vip = [
-            (m[0], min(89.5, max(66.5, m[1])), calcular_cuota_real_casa(m[1], m[2], "VIP", m[0], cuotas_reales_casa))
-            for m in todos_ordenados
-            if m[1] >= 57.0 and m[0] not in excluidos_vip
-        ]
+        candidatos_vip = []
+        for m in todos_ordenados:
+            if m[1] < 57.0 or m[0] in excluidos_vip:
+                continue
+            cuo_v = calcular_cuota_real_casa(m[1], m[2], "VIP", m[0], cuotas_reales_casa)
+            # NUNCA poner una cuota < 1.35 en una tarjeta VIP (ej. Over 1.5 @ 1.28 o Gol 2T @ 1.20 son de FREE)
+            if cuo_v < 1.35:
+                continue
+            candidatos_vip.append((m[0], min(89.5, round(float(m[1]), 1)), cuo_v))
         candidatos_vip.sort(
             key=lambda x: (
                 obtener_familia(x[0]) not in fams_usadas_free,
-                obtener_familia(x[0]) not in {"corners", "tarjetas"},
+                obtener_familia(x[0]) not in {"corners", "tarjetas", "faltas"},
                 x[2] >= 1.40,
                 x[1]
             ),
@@ -935,11 +1042,15 @@ def generar_captura_automatica(res_m, tipo_filtro="DESCARTES"):
         for fam_sens in ("corners", "faltas", "tarjetas", "remates"):
             if fam_sens in fams_otra:
                 fams_actual.add(fam_sens)
-        if tot_goles < 2.95 and ("goles" in fams_actual or "tiempos" in fams_actual or "goles" in fams_otra or "tiempos" in fams_otra):
+        if tot_goles < 3.35 and ("goles" in fams_actual or "tiempos" in fams_actual or "goles" in fams_otra or "tiempos" in fams_otra):
             fams_actual.update({"goles", "tiempos"})
         es_fem_resp = ("WOMEN" in liga_vis) or ("FEMEN" in liga_vis)
         for r_m in respaldo_fams:
-            if float(r_m[1] or 0) < (57.0 if tipo_filtro == "VIP" else 61.0):
+            if candado_mercado_real_kambi and r_m[0] not in cuotas_reales_casa:
+                continue
+            if float(r_m[1] or 0) < (56.0 if tipo_filtro == "VIP" else 60.0):
+                continue
+            if tipo_filtro == "VIP" and float(r_m[2] or 0) < 1.35:
                 continue
             if es_fem_resp and ("Faltas" in r_m[0] or "Tarjetas" in r_m[0]) and r_m[0] not in cuotas_reales_casa:
                 continue
@@ -947,38 +1058,71 @@ def generar_captura_automatica(res_m, tipo_filtro="DESCARTES"):
                 continue
             if es_fem_resp and "Córners > 7.5" in r_m[0] and tot_corn < 7.8 and r_m[0] not in cuotas_reales_casa:
                 continue
-            if r_m[0] not in usados_actual and obtener_familia(r_m[0]) not in fams_actual:
+            fam_r = obtener_familia(r_m[0])
+            if (fam_r == "combo" and ("goles" in fams_actual or "tiempos" in fams_actual)) or (fam_r in {"goles", "tiempos"} and "combo" in fams_actual):
+                continue
+            if r_m[0] not in usados_actual and fam_r not in fams_actual and fam_r not in fams_otra:
                 top_2.append(r_m)
                 fams_actual.add(obtener_familia(r_m[0]))
             if len(top_2) == 2:
                 break
 
-        # Pase final coherente con el Guion de Partido (jamás contradecir un Under en VIP con Gol 2T / Over 1.5 en FREE!)
+        # Pase final coherente con el Guion de Partido (nunca 1 sola selección, nunca contradecir Under, nunca VIP < 1.35, nunca solapar familia FREE/VIP)
         if len(top_2) < 2:
             fams_misma_tarjeta = {obtener_familia(m[0]) for m in top_2}
             hay_under_otra = any("Menos de" in str(m[0]) or "Under" in str(m[0]) for m in otra_sel)
             lvl_em = tipo_filtro if tipo_filtro in ("FREE", "VIP") else "FREE"
+            emergencia = [
+                (f"Remates Puerta > {linea_t_vip if lvl_em == 'VIP' else linea_t_free:.1f}",
+                 round(float((p_tv_m if lvl_em == "VIP" else p_tf_m) or 0.0), 1),
+                 calcular_cuota_real_casa(float((p_tv_m if lvl_em == "VIP" else p_tf_m) or 65.0), (c_tv_m if lvl_em == "VIP" else c_tf_m), lvl_em, f"Remates Puerta > {linea_t_vip if lvl_em == 'VIP' else linea_t_free:.1f}", cuotas_reales_casa)),
+                ("Córners > 8.5" if lvl_em == "VIP" else ("Córners > 7.5" if tot_corn >= 8.2 else "Córners > 6.5"),
+                 round(float((res_m.get("p_c85") if lvl_em == "VIP" else (res_m.get("p_c75") if tot_corn >= 8.2 else (_prob_poisson_over(tot_corn * 0.94, 6.5)[0] or 0.0))) or 0.0), 1),
+                 calcular_cuota_real_casa(float((res_m.get("p_c85") if lvl_em == "VIP" else (res_m.get("p_c75") if tot_corn >= 8.2 else 64.0)) or 64.0), (res_m.get("c_min_c85") if lvl_em == "VIP" else res_m.get("c_min_c75")), lvl_em, "Córners > 8.5" if lvl_em == "VIP" else ("Córners > 7.5" if tot_corn >= 8.2 else "Córners > 6.5"), cuotas_reales_casa)),
+                (f"Tarjetas > {3.5 if lvl_em == 'FREE' else res_m.get('linea_tarj', 3.5)}",
+                 round(float((_prob_poisson_over(float(res_m.get('tot_tarj') or 4.5) * 0.92, 3.5)[0] if (lvl_em == 'FREE' and float(res_m.get('linea_tarj', 3.5)) >= 4.5) else res_m.get("p_t35")) or 0.0), 1),
+                 calcular_cuota_real_casa(float(res_m.get("p_t35") or 62.0), res_m.get("c_min_t35"), lvl_em, f"Tarjetas > {3.5 if lvl_em == 'FREE' else res_m.get('linea_tarj', 3.5)}", cuotas_reales_casa)),
+                (f"Faltas Totales > {linea_f_vip if lvl_em == 'VIP' else linea_f_free:.1f}",
+                 round(float((p_f_vip if lvl_em == "VIP" else p_f_free) or 0.0), 1),
+                 calcular_cuota_real_casa(float((p_f_vip if lvl_em == "VIP" else p_f_free) or 62.0), (c_f_vip if lvl_em == "VIP" else c_f_free), lvl_em, f"Faltas Totales > {linea_f_vip if lvl_em == 'VIP' else linea_f_free:.1f}", cuotas_reales_casa)),
+            ]
             if tot_goles <= 2.40 or hay_under_otra:
-                emergencia = [
-                    ("Total Menos de 3.5 (Under)", round(float(res_m.get("p_under35") or 0.0), 1), calcular_cuota_real_casa(float(res_m.get("p_under35") or 72.0), res_m.get("c_min_under35"), lvl_em, "Total Menos de 3.5 (Under)", cuotas_reales_casa)),
-                    (f"Remates Puerta > {linea_t_free:.1f}", round(float(p_tf_m or 0.0), 1), calcular_cuota_real_casa(float(p_tf_m or 70.0), c_tf_m, lvl_em, f"Remates Puerta > {linea_t_free:.1f}", cuotas_reales_casa)),
-                    (f"Tarjetas > {res_m.get('linea_tarj', 3.5)}", round(float(res_m.get("p_t35") or 0.0), 1), calcular_cuota_real_casa(float(res_m.get("p_t35") or 62.0), res_m.get("c_min_t35"), lvl_em, f"Tarjetas > {res_m.get('linea_tarj', 3.5)}", cuotas_reales_casa)),
-                ]
+                emergencia.insert(0, ("Total Menos de 2.5 (Under)" if lvl_em == "VIP" else "Total Menos de 3.5 (Under)",
+                    round(float((res_m.get("p_under25") if lvl_em == "VIP" else res_m.get("p_under35")) or 0.0), 1),
+                    calcular_cuota_real_casa(float((res_m.get("p_under25") if lvl_em == "VIP" else res_m.get("p_under35")) or 68.0), (res_m.get("c_min_under25") if lvl_em == "VIP" else res_m.get("c_min_under35")), lvl_em, "Total Menos de 2.5 (Under)" if lvl_em == "VIP" else "Total Menos de 3.5 (Under)", cuotas_reales_casa)))
             else:
                 emergencia = [
-                    ("Over 1.5 Goles", round(float(res_m.get("p_15_match") or 0.0), 1), calcular_cuota_real_casa(float(res_m.get("p_15_match") or 75.0), res_m.get("c_min_15"), lvl_em, "Over 1.5 Goles", cuotas_reales_casa)),
-                    ("Gol en 2do Tiempo", round(float(res_m.get("p_05_2t") or 0.0), 1), calcular_cuota_real_casa(float(res_m.get("p_05_2t") or 75.0), res_m.get("c_min_05_2t"), lvl_em, "Gol en 2do Tiempo", cuotas_reales_casa)),
-                    (f"Remates Puerta > {linea_t_free:.1f}", round(float(p_tf_m or 0.0), 1), calcular_cuota_real_casa(float(p_tf_m or 70.0), c_tf_m, lvl_em, f"Remates Puerta > {linea_t_free:.1f}", cuotas_reales_casa)),
+                    ("Gol en 2do Tiempo", round(float(res_m.get("p_05_2t") or 0.0), 1), calcular_cuota_real_casa(float(res_m.get("p_05_2t") or 72.0), res_m.get("c_min_05_2t"), lvl_em, "Gol en 2do Tiempo", cuotas_reales_casa)),
                     ("Gol en 1T", round(float(res_m.get("p_05_ht") or 0.0), 1), calcular_cuota_real_casa(float(res_m.get("p_05_ht") or 70.0), res_m.get("c_min_05_ht"), lvl_em, "Gol en 1T", cuotas_reales_casa)),
+                    ("Over 1.5 Goles", round(float(res_m.get("p_15_match") or 0.0), 1), calcular_cuota_real_casa(float(res_m.get("p_15_match") or 72.0), res_m.get("c_min_15"), lvl_em, "Over 1.5 Goles", cuotas_reales_casa)),
+                    *emergencia
+                ]
+            if candado_mercado_real_kambi:
+                # Si Kambi está activo, el respaldo de emergencia usa exclusivamente los mercados reales restantes de cuotas_reales_casa
+                emergencia = [
+                    (m[0], round(float(m[1]), 1), calcular_cuota_real_casa(m[1], m[2], lvl_em, m[0], cuotas_reales_casa))
+                    for m in todos_ordenados
+                    if m[0] in cuotas_reales_casa
                 ]
             for e_m in emergencia:
-                if float(e_m[1] or 0) >= 58.0 and e_m[0] not in usados_actual and obtener_familia(e_m[0]) not in fams_misma_tarjeta:
+                fam_em = obtener_familia(e_m[0])
+                if lvl_em == "VIP" and float(e_m[2] or 0) < 1.35:
+                    continue
+                if fam_em in fams_misma_tarjeta or fam_em in fams_otra:
+                    continue
+                if (fam_em == "goles" and "tiempos" in fams_misma_tarjeta) or (fam_em == "tiempos" and "goles" in fams_misma_tarjeta):
+                    continue
+                if (fam_em == "combo" and ("goles" in fams_misma_tarjeta or "tiempos" in fams_misma_tarjeta)) or (fam_em in {"goles", "tiempos"} and "combo" in fams_misma_tarjeta):
+                    continue
+                if float(e_m[1] or 0) >= 54.0 and e_m[0] not in usados_actual:
                     top_2.append(e_m)
-                    fams_misma_tarjeta.add(obtener_familia(e_m[0]))
+                    fams_misma_tarjeta.add(fam_em)
                 if len(top_2) == 2:
                     break
 
     res_m[f"seleccion_{tipo_filtro.lower()}"] = top_2
+    if not guardar_imagen:
+        return None
 
     # ==========================================================================
     # RENDERIZADO ESTÉTICO CENTRADO Y SIMÉTRICO (1080x1080) — ESTILO INSTITUCIONAL
