@@ -6,6 +6,10 @@ import os
 _MEMORIA_VARIEDAD_TARJETAS = {"FREE": [], "VIP": [], "DESCARTES": []}
 
 
+FAMILIAS_FUTBOL_PURO = {"ganador", "goles", "goles_equipo", "btts", "tiempos", "combo"}
+FAMILIAS_SECUNDARIAS = {"remates", "corners", "tarjetas", "faltas"}
+
+
 def obtener_familia(nombre_mercado):
     n = str(nombre_mercado).lower()
     if "remates" in n:
@@ -18,12 +22,14 @@ def obtener_familia(nombre_mercado):
         return "tarjetas"
     elif "combo" in n:
         return "combo"
-    elif "oport" in n or "victoria" in n or "1x" in n or "x2" in n:
+    elif "oport" in n or "victoria" in n or "1x" in n or "x2" in n or "sin empate" in n or "dnb" in n:
         return "ganador"
     elif "btts" in n or "ambos marcan" in n:
         return "btts"
-    elif "1t" in n or "2do tiempo" in n:
+    elif "1t" in n or "2do tiempo" in n or "2t" in n:
         return "tiempos"
+    elif n.startswith("goles ") and ">" in n:
+        return "goles_equipo"
     elif "gol de " in n or "goleador" in n or "9 titular" in n:
         return "goleador"
     else:
@@ -85,49 +91,80 @@ def seleccionar_par_distinto_familia(lista_candidatos, excluidos=None, familias_
     if familias_excluidas is None:
         familias_excluidas = set()
 
-    historial_reciente = _MEMORIA_VARIEDAD_TARJETAS.get(tipo_filtro, [])[-4:]
+    historial_reciente = _MEMORIA_VARIEDAD_TARJETAS.get(tipo_filtro, [])[-5:]
+    historial_fams = [obtener_familia(x) for x in historial_reciente]
 
     def _puntaje_rotacion(item):
         nom, prob, _ = item
         fam = obtener_familia(nom)
-        penal_hist = 8.5 if nom in historial_reciente else 0.0
-        # Evitar que Faltas, Córners y Tarjetas monopolicen las tarjetas frente a BTTS, 1T, 2T, Over 2.5, Combos y Remates
-        penal_familia = 7.0 if fam == "faltas" else (4.5 if fam in {"corners", "tarjetas"} else 0.0)
-        bono_tactico = (5.0 if nom == "Gol en 1T" else 3.5) if fam in {"btts", "tiempos", "combo", "remates"} else (2.0 if fam == "goles" else 0.0)
-        return prob + bono_tactico - penal_hist - penal_familia
+        # Rotación inteligente basada en efectividad real:
+        # 1) Nunca sacrifica un pick muy superior (+10% prob) solo por rotar.
+        # 2) Entre mercados de alta efectividad parecida, rota limpiamente para NO repetir los mismos 2-3 mercados siempre.
+        penal_hist = 6.0 if nom in historial_reciente else 0.0
+        if fam in FAMILIAS_SECUNDARIAS and historial_fams.count(fam) >= 1:
+            penal_hist += 5.0 * historial_fams.count(fam)
+        elif fam in FAMILIAS_FUTBOL_PURO:
+            rep_rec = historial_fams[-4:].count(fam)
+            if rep_rec >= 1:
+                penal_hist += (4.8 if fam == "goles_equipo" else 3.6) * rep_rec
+
+        if fam == "faltas":
+            ajuste_tier = -10.5
+        elif fam in {"corners", "tarjetas"}:
+            ajuste_tier = -6.5
+        elif fam == "remates":
+            ajuste_tier = -2.5
+        elif fam == "tiempos":
+            ajuste_tier = 8.5 if nom == "Gol en 1T" else 7.0
+        elif fam in {"ganador", "combo", "btts", "goles"}:
+            ajuste_tier = 7.2
+        else:  # goles_equipo
+            ajuste_tier = 4.2
+        return float(prob) + ajuste_tier - penal_hist
 
     candidatos_rotados = sorted(lista_candidatos, key=_puntaje_rotacion, reverse=True)
+
+    def _es_colineal(fam, fams_en_tarjeta, tot_g):
+        if fam in fams_en_tarjeta:
+            return True
+        if (fam == "corners" and "tarjetas" in fams_en_tarjeta) or (fam == "tarjetas" and "corners" in fams_en_tarjeta):
+            return True
+        if (fam == "combo" and bool(fams_en_tarjeta & {"goles", "tiempos", "ganador", "goles_equipo"})) or (
+            fam in {"goles", "tiempos", "ganador", "goles_equipo"} and "combo" in fams_en_tarjeta
+        ):
+            return True
+        if (fam == "goles" and "tiempos" in fams_en_tarjeta) or (fam == "tiempos" and "goles" in fams_en_tarjeta):
+            return True
+        if float(tot_g or 2.5) < 3.15 and (
+            (fam == "goles_equipo" and bool(fams_en_tarjeta & {"goles", "tiempos"}))
+            or (fam in {"goles", "tiempos"} and "goles_equipo" in fams_en_tarjeta)
+        ):
+            return True
+        if float(tot_g or 2.5) < 3.05 and (
+            (fam == "btts" and bool(fams_en_tarjeta & {"goles", "tiempos"}))
+            or (fam in {"goles", "tiempos"} and "btts" in fams_en_tarjeta)
+        ):
+            return True
+        return False
 
     seleccion = []
     familias_usadas = set(familias_excluidas)
 
-    # Primer pase: respeta exclusión de mercados y prohibición de repetir familia entre FREE y VIP
+    # Primer pase ESTRICTO:
+    #  - Respeta exclusión de mercados y familias de la otra tarjeta (FREE/VIP)
+    #  - PROHÍBE 2 mercados secundarios (Córners/Faltas/Tarjetas/Remates) en la misma tarjeta
     for m in candidatos_rotados:
         if m[0] in excluidos:
             continue
         fam = obtener_familia(m[0])
         if fam in familias_usadas:
             continue
-        # Prohibir colinealidad en la misma tarjeta (Córners+Tarjetas juntos, o Combo+Goles/Tiempos juntos)
-        if (fam == "corners" and "tarjetas" in familias_usadas) or (fam == "tarjetas" and "corners" in familias_usadas):
-            if len(candidatos_rotados) > 3:
-                continue
-        fams_ya_en_esta = {obtener_familia(x[0]) for x in seleccion}
-        if (fam == "combo" and ("goles" in fams_ya_en_esta or "tiempos" in fams_ya_en_esta or "ganador" in fams_ya_en_esta)) or (
-            fam in {"goles", "tiempos", "ganador"} and "combo" in fams_ya_en_esta
-        ):
+        fams_ya = {obtener_familia(x[0]) for x in seleccion}
+        if _es_colineal(fam, fams_ya, tot_goles):
             continue
-        # Regla #1 Anti-Doble Castigo UNIVERSAL:
-        # 1) Dentro de la MISMA tarjeta JAMÁS mezclar `goles` + `tiempos` (evita doble rojo 0-0 / 1-0 como Aston Villa y Frankfurt)
-        # 2) Entre FREE y VIP, solo permitir `goles` + `tiempos` si tot_goles >= 3.35 (partido súper abierto)
-        if (fam == "goles" and "tiempos" in fams_ya_en_esta) or (fam == "tiempos" and "goles" in fams_ya_en_esta):
+        if fam in FAMILIAS_SECUNDARIAS and any(f in FAMILIAS_SECUNDARIAS for f in fams_ya):
             continue
-        if float(tot_goles or 2.5) < 3.05 and (
-            (fam == "btts" and ("goles" in fams_ya_en_esta or "tiempos" in fams_ya_en_esta))
-            or (fam in {"goles", "tiempos"} and "btts" in fams_ya_en_esta)
-        ):
-            continue
-        if float(tot_goles or 2.5) < 3.35 and (
+        if float(tot_goles or 2.5) < 2.95 and (
             (fam == "goles" and "tiempos" in familias_usadas) or (fam == "tiempos" and "goles" in familias_usadas)
         ):
             continue
@@ -136,7 +173,7 @@ def seleccionar_par_distinto_familia(lista_candidatos, excluidos=None, familias_
         if len(seleccion) == 2:
             break
 
-    # Segundo pase: prohíbe SIEMPRE repetir familia entre FREE y VIP y prohíbe colinealidad combo+goles o goles+tiempos
+    # Segundo pase: busca completar con 1 mercado de Fútbol Puro o 1 Secundario (nunca 2 de {faltas, corners, tarjetas})
     if len(seleccion) < 2:
         fams_internas = {obtener_familia(x[0]) for x in seleccion}
         for m in candidatos_rotados:
@@ -145,33 +182,27 @@ def seleccionar_par_distinto_familia(lista_candidatos, excluidos=None, familias_
             fam = obtener_familia(m[0])
             if fam in fams_internas or fam in familias_excluidas:
                 continue
-            if (fam == "goles" and "tiempos" in fams_internas) or (fam == "tiempos" and "goles" in fams_internas):
+            if _es_colineal(fam, fams_internas, tot_goles):
                 continue
-            if (fam == "combo" and ("goles" in fams_internas or "tiempos" in fams_internas or "ganador" in fams_internas)) or (
-                fam in {"goles", "tiempos", "ganador"} and "combo" in fams_internas
-            ):
+            if fam in {"faltas", "corners", "tarjetas"} and any(f in {"faltas", "corners", "tarjetas"} for f in fams_internas):
                 continue
             seleccion.append(m)
             fams_internas.add(fam)
             if len(seleccion) == 2:
                 break
 
-    # Tercer pase de emergencia: garantiza 2 selecciones de distinta familia, bloqueando SIEMPRE repetir faltas/corners/tarjetas/goles entre FREE y VIP
+    # Tercer pase de emergencia: garantiza siempre 2 selecciones de distinta familia sin repetir entre FREE y VIP
     if len(seleccion) < 2:
         fams_internas = {obtener_familia(x[0]) for x in seleccion}
-        for m in lista_candidatos:
+        for m in candidatos_rotados:
             if m in seleccion or m[0] in excluidos:
                 continue
             fam = obtener_familia(m[0])
             if fam in fams_internas:
                 continue
-            if fam in {"corners", "faltas", "tarjetas", "goles", "btts"} and fam in familias_excluidas:
+            if fam in {"corners", "faltas", "tarjetas", "goles", "btts", "ganador", "goles_equipo"} and fam in familias_excluidas:
                 continue
-            if (fam == "goles" and "tiempos" in fams_internas) or (fam == "tiempos" and "goles" in fams_internas):
-                continue
-            if (fam == "combo" and ("goles" in fams_internas or "tiempos" in fams_internas or "ganador" in fams_internas)) or (
-                fam in {"goles", "tiempos", "ganador"} and "combo" in fams_internas
-            ):
+            if _es_colineal(fam, fams_internas, tot_goles):
                 continue
             seleccion.append(m)
             fams_internas.add(fam)
@@ -323,6 +354,20 @@ def _prob_poisson_over(lmbda, linea):
         return None, None
     p_under = sum(((math.e ** -lmbda) * (lmbda ** k)) / math.factorial(k) for k in range(int(linea) + 1))
     p_over = min(91.0, max(5.0, (1.0 - p_under) * 100.0))
+    c_min = round(max(1.14, (100.0 / p_over) * 0.98), 2)
+    return p_over, c_min
+
+
+def _prob_negbin_over(mu, linea, phi=1.45):
+    if mu is None or mu <= 0:
+        return None, None
+    if phi <= 1.02:
+        return _prob_poisson_over(mu, linea)
+    r = float(mu) / (float(phi) - 1.0)
+    p = 1.0 / float(phi)
+    q = 1.0 - p
+    p_under = sum(math.exp(math.lgamma(k + r) - math.lgamma(k + 1) - math.lgamma(r) + r * math.log(p) + k * math.log(q)) for k in range(int(linea) + 1))
+    p_over = round(min(91.0, max(5.0, (1.0 - p_under) * 100.0)), 1)
     c_min = round(max(1.14, (100.0 / p_over) * 0.98), 2)
     return p_over, c_min
 
@@ -483,19 +528,28 @@ def generar_captura_automatica(res_m, tipo_filtro="DESCARTES", guardar_imagen=Tr
         ("Doble Oport. X2", res_m.get('p_x2'), res_m.get('c_min_x2')),
         ("Combo 1X + O1.5", res_m.get('p_combo_1x_over15'), res_m.get('c_min_combo_1x')),
         ("Combo X2 + O1.5", res_m.get('p_combo_x2_over15'), res_m.get('c_min_combo_x2')),
+        ("Combo 1X + U3.5", res_m.get('p_combo_1x_u35'), res_m.get('c_min_combo_1x_u35')),
+        ("Combo 1X + U4.5", res_m.get('p_combo_1x_u45'), res_m.get('c_min_combo_1x_u45')),
+        ("Combo X2 + U3.5", res_m.get('p_combo_x2_u35'), res_m.get('c_min_combo_x2_u35')),
+        (f"Sin Empate {res_m['local'][:12]}", res_m.get('p_dnb_local'), res_m.get('c_min_dnb_local')),
+        (f"Sin Empate {res_m['visitante'][:12]}", res_m.get('p_dnb_visita'), res_m.get('c_min_dnb_visita')),
+        (f"Goles {res_m['local'][:12]} > 0.5", res_m.get('p_loc_o05'), res_m.get('c_min_loc_o05')),
+        (f"Goles {res_m['visitante'][:12]} > 0.5", res_m.get('p_vis_o05'), res_m.get('c_min_vis_o05')),
+        (f"Goles {res_m['local'][:12]} > 1.5", res_m.get('p_loc_o15'), res_m.get('c_min_loc_o15')),
+        (f"Goles {res_m['visitante'][:12]} > 1.5", res_m.get('p_vis_o15'), res_m.get('c_min_vis_o15')),
         ("Total Menos de 2.5 (Under)", res_m.get('p_under25'), res_m.get('c_min_under25')),
         ("Total Menos de 3.5 (Under)", res_m.get('p_under35'), res_m.get('c_min_under35')),
         *lineas_tiros_dinamicas,
         *lineas_corners_dinamicas,
         (f"Tarjetas > {res_m.get('linea_tarj', 3.5)}", res_m.get('p_t35'), res_m.get('c_min_t35')),
-        *( [("Tarjetas > 3.5", *_prob_poisson_over(float(res_m.get('tot_tarj') or 4.5) * 0.92, 3.5))] if float(res_m.get('linea_tarj', 3.5)) >= 4.5 else [] ),
+        *( [("Tarjetas > 3.5", *_prob_negbin_over(float(res_m.get('tot_tarj') or 4.5) * 0.92, 3.5, phi=1.35))] if float(res_m.get('linea_tarj', 3.5)) >= 4.5 else [] ),
     ]
 
-    if (res_m.get("p_h") or 0) >= 63.0:
+    if (res_m.get("p_h") or 0) >= 54.0:
         mercados_brutos.append((f"Victoria {res_m['local'][:12]}", res_m.get("p_h"), res_m.get("cuota_h")))
-    if (res_m.get("p_a") or 0) >= 63.0:
+    if (res_m.get("p_a") or 0) >= 54.0:
         mercados_brutos.append((f"Victoria {res_m['visitante'][:12]}", res_m.get("p_a"), res_m.get("cuota_a")))
-    if res_m.get("nombre_dom_goles") and ((res_m.get("p_dom_goles") or 0) >= 62.0 or (res_m["nombre_dom_goles"] in cuotas_reales_casa and (res_m.get("p_dom_goles") or 0) >= 52.0)):
+    if res_m.get("nombre_dom_goles") and res_m["nombre_dom_goles"] not in {x[0] for x in mercados_brutos} and ((res_m.get("p_dom_goles") or 0) >= 60.0 or (res_m["nombre_dom_goles"] in cuotas_reales_casa and (res_m.get("p_dom_goles") or 0) >= 52.0)):
         mercados_brutos.append((res_m["nombre_dom_goles"], res_m.get("p_dom_goles"), res_m.get("c_min_dom_goles")))
     if res_m.get("nombre_dom_corn") and (res_m.get("p_dom_corn") or 0) >= 64.0:
         mercados_brutos.append((res_m["nombre_dom_corn"], res_m.get("p_dom_corn"), res_m.get("c_min_dom_corn")))
@@ -514,32 +568,32 @@ def generar_captura_automatica(res_m, tipo_filtro="DESCARTES", guardar_imagen=Tr
                 continue
             if nom_k.startswith("Córners > "):
                 lin_k = float(nom_k.split(">")[1].strip())
-                pk, _ = _prob_poisson_over(tot_corn, lin_k)
+                pk, _ = _prob_negbin_over(tot_corn, lin_k, phi=1.52)
                 if pk:
                     mercados_brutos.append((nom_k, pk, odd_kf))
                     nombres_ya_mb.add(nom_k)
             elif nom_k.startswith("Córners ") and " > " in nom_k:
                 lin_k = float(nom_k.split(">")[1].strip())
                 es_loc_ck = res_m["local"][:8].lower() in nom_k.lower()
-                pk, _ = _prob_poisson_over(base_c_l_gi if es_loc_ck else base_c_v_gi, lin_k)
+                pk, _ = _prob_negbin_over(base_c_l_gi if es_loc_ck else base_c_v_gi, lin_k, phi=1.42)
                 if pk:
                     mercados_brutos.append((nom_k, pk, odd_kf))
                     nombres_ya_mb.add(nom_k)
             elif nom_k.startswith("Faltas Totales > "):
                 lin_k = float(nom_k.split(">")[1].strip())
-                pk, _ = _prob_poisson_over(tot_faltas_val, lin_k)
+                pk, _ = _prob_negbin_over(tot_faltas_val, lin_k, phi=1.85)
                 if pk:
                     mercados_brutos.append((nom_k, pk, odd_kf))
                     nombres_ya_mb.add(nom_k)
             elif nom_k.startswith("Remates Puerta > "):
                 lin_k = float(nom_k.split(">")[1].strip())
-                pk, _ = _prob_poisson_over(tot_tiros, lin_k)
+                pk, _ = _prob_negbin_over(tot_tiros, lin_k, phi=1.38)
                 if pk:
                     mercados_brutos.append((nom_k, pk, odd_kf))
                     nombres_ya_mb.add(nom_k)
             elif nom_k.startswith("Tarjetas > "):
                 lin_k = float(nom_k.split(">")[1].strip())
-                pk, _ = _prob_poisson_over(tot_tarj_gi, lin_k)
+                pk, _ = _prob_negbin_over(tot_tarj_gi, lin_k, phi=1.35)
                 if pk:
                     mercados_brutos.append((nom_k, pk, odd_kf))
                     nombres_ya_mb.add(nom_k)
@@ -611,10 +665,15 @@ def generar_captura_automatica(res_m, tipo_filtro="DESCARTES", guardar_imagen=Tr
         # 1. Prohibido recomendar Menos de (Under) en Selecciones (incluyendo Nations League), Copas o con favorito claro (evita Suiza vs Escocia 4-0)
         es_torneo_selecciones = any(k in liga_vis for k in ["INTERNACIONAL", "ELIMINATORIAS", "NATIONS", "EURO", "MUNDIAL", "COPA AMÉRICA"])
         if "Menos de" in nombre:
-            if tot_goles >= 2.20 or hay_favorito_claro or res_m.get("es_copa") or es_torneo_selecciones:
+            if res_m.get("es_copa") or es_torneo_selecciones:
                 continue
-            if tipo_filtro == "VIP" and tot_goles >= 2.12:
-                continue
+            if "2.5" in nombre:
+                tope_u25 = 2.42 if (is_america or es_liga_cerrada) else 2.36
+                if tot_goles >= tope_u25 or (hay_favorito_claro and tot_goles >= 2.22) or prob < 56.5:
+                    continue
+            elif "3.5" in nombre:
+                if tot_goles >= 2.52 or (hay_favorito_claro and tot_goles >= 2.35) or prob < 69.0:
+                    continue
 
         # 2. Ambos Marcan (BTTS) calibrado por matemáticas reales (Poisson + Kambi):
         #    Permitido en VIP si ambos equipos tienen gol (prob >= 57.5% y tot_goles >= 2.45), aunque exista favorito (ej. Nice vs PSG 2-3, Newcastle vs Arsenal 2-2)
@@ -631,7 +690,7 @@ def generar_captura_automatica(res_m, tipo_filtro="DESCARTES", guardar_imagen=Tr
         # Calibración con líneas reales abiertas en casa de apuestas (ej. Barcelona: si casa abre desde 3.5, escalar a 3.5)
         if nombre in ("Over 1.5 Goles", "Over 2.5 Goles", "Over 3.5 Goles", "Over 4.5 Goles", "Over 5.5 Goles"):
             lin_g_num = float(nombre.split()[1])
-            if over_goles_bp:
+            if over_goles_bp and (candado_mercado_real_kambi or lin_g_num in over_goles_bp or str(lin_g_num) in over_goles_bp):
                 odd_real_g = over_goles_bp.get(lin_g_num)
                 if odd_real_g is None:
                     odd_real_g = over_goles_bp.get(str(lin_g_num))
@@ -768,95 +827,164 @@ def generar_captura_automatica(res_m, tipo_filtro="DESCARTES", guardar_imagen=Tr
             elif tot_goles < 3.65 or prob < 62.0:
                 continue
 
-        # 4. Regla #4 + CANDADO ESTRICTO CONTRA CUOTAS REALES DE LA CASA EN 1X2 / DOBLE OPORT. / COMBOS
-        if "Doble Oport." in nombre or "Combo " in nombre or "Victoria " in nombre:
+        # 3B. Gate profesional para Goles por Equipo (> 0.5 y > 1.5): mercado clave de fútbol puro
+        if obtener_familia(nombre) == "goles_equipo":
+            es_ge_loc = res_m["local"][:8].lower() in nombre.lower()
+            lam_ge = float(res_m.get("l_local_mat" if es_ge_loc else "l_vis_mat") or (tot_goles * 0.5))
+            if "> 0.5" in nombre:
+                if lam_ge < 1.18 or prob < 68.0:
+                    continue
+                if tipo_filtro == "VIP" and (cuota_orig < 1.34 or cuota_orig > 1.80):
+                    continue
+                if tipo_filtro == "FREE" and (cuota_orig < 1.16 or cuota_orig > 1.42):
+                    continue
+            elif "> 1.5" in nombre:
+                if lam_ge < 1.65 or prob < 56.0:
+                    continue
+                if tipo_filtro == "VIP" and (cuota_orig < 1.35 or cuota_orig > 2.05):
+                    continue
+                if tipo_filtro == "FREE" and (cuota_orig < 1.16 or cuota_orig > 1.44):
+                    continue
+
+        # 4. Regla #4 + CANDADO CALIBRADO CONTRA CUOTAS REALES EN 1X2 / SIN EMPATE (DNB) / DOBLE OPORT. / COMBOS
+        if "Doble Oport." in nombre or "Combo " in nombre or "Victoria " in nombre or "Sin Empate " in nombre:
             c1_bp = cuotas_bp_all.get("1") if isinstance(cuotas_bp_all.get("1"), (int, float)) else None
             c2_bp = cuotas_bp_all.get("2") if isinstance(cuotas_bp_all.get("2"), (int, float)) else None
             c1x_bp = cuotas_bp_all.get("1X") if isinstance(cuotas_bp_all.get("1X"), (int, float)) else None
             cx2_bp = cuotas_bp_all.get("X2") if isinstance(cuotas_bp_all.get("X2"), (int, float)) else None
-
-            # En derbis, choques de élites o partidos de Entropía de Shannon muy alta (moneda al aire), prohibir 1X/X2/Victoria/Combo
             entropia_p = float(res_m.get("entropia_1x2") or 0.0)
-            entropia_lim = float(res_m.get("entropia_max_ganador") or 0.935)
-            if es_derbi or (vis_protegido and loc_protegido) or (entropia_p >= entropia_lim):
+            entropia_lim = float(res_m.get("entropia_max_ganador") or 0.94)
+
+            es_copa_domestica = bool(res_m.get("es_copa")) and not any(
+                k_int in liga_vis for k_int in ("CHAMPIONS", "EUROPA LEAGUE", "CONFERENCE", "LIBERTADORES", "SUDAMERICANA", "MUNDIAL", "EUROCOPA", "AMÉRICA", "NATIONS")
+            )
+            if es_copa_domestica and (
+                "X2" in nombre
+                or ((nombre.startswith("Victoria ") or nombre.startswith("Sin Empate ")) and res_m["visitante"][:8].lower() in nombre.lower())
+            ):
+                continue
+
+            min_c_casa = min([c for c in (c1_bp, c2_bp) if c is not None], default=2.20)
+            if es_derbi and min_c_casa > 1.72:
+                continue
+
+            if nombre.startswith("Sin Empate "):
+                es_dnb_loc = res_m["local"][:8].lower() in nombre.lower()
+                c_fav_dnb = c1_bp if es_dnb_loc else c2_bp
+                c_riv_dnb = c2_bp if es_dnb_loc else c1_bp
+                if c_fav_dnb is not None:
+                    if c_fav_dnb < 1.48 or c_fav_dnb > 2.15 or (c_riv_dnb is not None and c_riv_dnb < 3.20):
+                        continue
+                else:
+                    if (es_dnb_loc and float(res_m.get("p_h", 0)) < 50.0) or ((not es_dnb_loc) and float(res_m.get("p_a", 0)) < 50.0):
+                        continue
+                if (not es_dnb_loc) and (loc_protegido or res_m.get("es_plaza_hostil_local") or (is_america and (c_fav_dnb is None or c_fav_dnb > 1.85))):
+                    continue
+                if es_liga_cerrada and (c_fav_dnb is None or c_fav_dnb > 1.85):
+                    continue
+                if prob < 65.0:
+                    continue
+                mercados_ganador_respaldo.append((nombre, prob, cuota_orig))
                 continue
 
             if "Doble Oport. 1X" == nombre:
                 if tipo_filtro == "VIP" and res_m.get("calidad_datos") != "ALTA" and (c1_bp is None or c1_bp > 1.85):
                     continue
-                if (c1x_bp is not None and (c1x_bp < 1.14 or c1x_bp > (1.62 if tipo_filtro == "VIP" else 1.38))):
+                if (c1x_bp is not None and (c1x_bp < 1.14 or c1x_bp > (1.62 if tipo_filtro == "VIP" else 1.40))):
                     continue
-                if (c1_bp is not None and (c1_bp < 1.28 or c1_bp > 2.25)) or (c2_bp is not None and c2_bp <= 2.90):
+                if (c1_bp is not None and (c1_bp < 1.32 or c1_bp > 2.25)) or (c2_bp is not None and c2_bp <= 3.00):
                     continue
-                if float(res_m.get("p_h", 0)) >= 68.0:
+                if float(res_m.get("p_h", 0)) >= 68.0 or float(res_m.get("p_a", 0)) >= 32.0:
                     continue
-            es_copa_domestica = bool(res_m.get("es_copa")) and not any(
-                k_int in liga_vis for k_int in ("CHAMPIONS", "EUROPA LEAGUE", "CONFERENCE", "LIBERTADORES", "SUDAMERICANA", "MUNDIAL", "EUROCOPA", "AMÉRICA", "NATIONS")
-            )
-            # REGLA GURÚ DE COPAS DOMÉSTICAS: jamás respaldar visitante (X2 / Victoria Visita / Combo X2) por riesgo masivo de rotaciones
-            if es_copa_domestica and ("X2" in nombre or (nombre.startswith("Victoria ") and res_m["visitante"][:8].lower() in nombre.lower())):
+                if vis_protegido and not loc_protegido and (c1_bp is None or c1_bp > 1.85):
+                    continue
+                if prob < 69.0:
+                    continue
+                mercados_ganador_respaldo.append((nombre, prob, cuota_orig))
                 continue
 
             if "Doble Oport. X2" == nombre:
-                if (cx2_bp is not None and (cx2_bp < 1.14 or cx2_bp > (1.62 if tipo_filtro == "VIP" else 1.38))):
+                if (cx2_bp is not None and (cx2_bp < 1.14 or cx2_bp > (1.62 if tipo_filtro == "VIP" else 1.40))):
                     continue
-                if (c2_bp is not None and (c2_bp < 1.28 or c2_bp > 2.15)) or (c1_bp is not None and c1_bp <= 3.00):
+                if (c2_bp is not None and (c2_bp < 1.32 or c2_bp > 2.15)) or (c1_bp is not None and c1_bp <= 3.10):
                     continue
-                # En Brasil / Sudamérica / Arabia el local es muy fuerte: X2 solo con visitante súper favorito en la casa (<= 1.75)
                 if (is_america or "ARABIA" in liga_vis) and (c2_bp is None or c2_bp > 1.75):
                     continue
-                if float(res_m.get("p_a", 0)) >= 68.0:
+                if float(res_m.get("p_a", 0)) >= 68.0 or float(res_m.get("p_h", 0)) >= 26.0 or res_m.get("es_plaza_hostil_local"):
                     continue
+                if loc_protegido and (c2_bp is None or c2_bp > 1.75):
+                    continue
+                if prob < 71.0:
+                    continue
+                mercados_ganador_respaldo.append((nombre, prob, cuota_orig))
+                continue
+
             if nombre.startswith("Victoria "):
                 es_v_loc = res_m["local"][:8].lower() in nombre.lower()
                 c_vic = c1_bp if es_v_loc else c2_bp
-                # Prohibido recomendar Victoria directa en Segunda División salvo súper favorito real en la casa (<= 1.55)
+                if entropia_p >= entropia_lim:
+                    continue
                 if es_liga_cerrada and (c_vic is None or c_vic > 1.55):
                     continue
                 if c_vic is not None:
-                    if tipo_filtro == "FREE" and (c_vic < 1.18 or c_vic > 1.48):
+                    if tipo_filtro == "FREE" and (c_vic < 1.18 or c_vic > 1.46):
                         continue
-                    if tipo_filtro == "VIP" and (c_vic < 1.34 or c_vic > 1.72):
+                    if tipo_filtro == "VIP" and (c_vic < 1.35 or c_vic > 1.78):
+                        continue
+                    if prob < 56.0:
                         continue
                 else:
-                    # Sin cuota real 1X2 de la casa, exigir superioridad abrumadora (nunca inventar Victoria @ 1.28 en partido parejo)
-                    if es_v_loc and (vis_protegido or float(res_m.get("p_h", 0)) < 72.0):
+                    if es_v_loc and (vis_protegido or float(res_m.get("p_h", 0)) < 68.0):
                         continue
-                    if (not es_v_loc) and (loc_protegido or float(res_m.get("p_a", 0)) < 72.0):
+                    if (not es_v_loc) and (loc_protegido or float(res_m.get("p_a", 0)) < 68.0):
                         continue
-            if nombre == "Combo 1X + O1.5":
-                if es_liga_cerrada and (c1_bp is None or c1_bp > 1.80):
-                    continue
-                if (c1_bp is not None and (c1_bp < 1.24 or c1_bp > 2.10)) or (c2_bp is not None and c2_bp <= 3.10):
-                    continue
-                if tot_goles >= 3.60 or (over_goles_bp and 1.5 not in over_goles_bp and "1.5" not in over_goles_bp):
-                    continue
-            if nombre == "Combo X2 + O1.5":
-                if es_liga_cerrada and (c2_bp is None or c2_bp > 1.80):
-                    continue
-                if (c2_bp is not None and (c2_bp < 1.24 or c2_bp > 2.05)) or (c1_bp is not None and c1_bp <= 3.10):
-                    continue
-                if tot_goles >= 3.60 or (over_goles_bp and 1.5 not in over_goles_bp and "1.5" not in over_goles_bp):
-                    continue
-            if "1X" in nombre and (vis_protegido and not loc_protegido or float(res_m.get("p_a", 0)) >= 34.0):
+                mercados_ganador_respaldo.append((nombre, prob, cuota_orig))
                 continue
-            if "X2" in nombre and (loc_protegido or float(res_m.get("p_h", 0)) >= 26.0 or res_m.get("es_plaza_hostil_local") or (is_america and float(res_m.get("p_a", 0)) < 54.0)):
+
+            if nombre in ("Combo 1X + O1.5", "Combo 1X + U3.5", "Combo 1X + U4.5"):
+                if es_liga_cerrada and (c1_bp is None or c1_bp > 1.95):
+                    continue
+                if (c1_bp is not None and (c1_bp < 1.28 or c1_bp > 2.35)) or (c2_bp is not None and c2_bp <= 3.00):
+                    continue
+                if float(res_m.get("p_a", 0)) >= 32.0:
+                    continue
+                if nombre == "Combo 1X + O1.5" and (tot_goles < 2.45 or tot_goles >= 3.60):
+                    continue
+                if nombre == "Combo 1X + U3.5" and (tot_goles >= 2.72):
+                    continue
+                if nombre == "Combo 1X + U4.5" and (tot_goles >= 2.58):
+                    continue
+                if prob < 62.0:
+                    continue
+                mercados_ganador_respaldo.append((nombre, prob, cuota_orig))
                 continue
-            umbral_do = 72.0 if "X2" in nombre else (69.0 if "Doble Oport." in nombre else (66.0 if "Combo " in nombre else 70.0))
-            if prob < umbral_do:
+
+            if nombre in ("Combo X2 + O1.5", "Combo X2 + U3.5"):
+                if es_liga_cerrada and (c2_bp is None or c2_bp > 1.85):
+                    continue
+                if (c2_bp is not None and (c2_bp < 1.28 or c2_bp > 2.10)) or (c1_bp is not None and c1_bp <= 3.15):
+                    continue
+                if float(res_m.get("p_h", 0)) >= 26.0 or res_m.get("es_plaza_hostil_local") or (is_america and (c2_bp is None or c2_bp > 1.75)):
+                    continue
+                if nombre == "Combo X2 + O1.5" and (tot_goles < 2.45 or tot_goles >= 3.60):
+                    continue
+                if nombre == "Combo X2 + U3.5" and (tot_goles >= 2.70):
+                    continue
+                if prob < 62.0:
+                    continue
+                mercados_ganador_respaldo.append((nombre, prob, cuota_orig))
                 continue
-            mercados_ganador_respaldo.append((nombre, prob, cuota_orig))
             continue
 
         mercados_ritmo.append((nombre, prob, cuota_orig))
 
-    # Ordenar priorizando mercados tácticos de fútbol (BTTS, 1T, 2T, Over 2.5, Combos, Remates, Doble Oport.) sobre Faltas/Córners/Tarjetas
+    # Ordenar priorizando efectividad real en MERCADOS PUROS DE FÚTBOL (equilibrado entre Ganador, Goles, Tiempos, BTTS, Combos y Goles Equipo)
     todos_ordenados = sorted(
         mercados_ritmo + mercados_ganador_respaldo,
         key=lambda x: (
             x[1]
-            + (3.5 if obtener_familia(x[0]) in {"btts", "tiempos", "combo", "remates"} else 0.0)
-            - (4.5 if obtener_familia(x[0]) in {"corners", "tarjetas", "faltas"} else 0.0)
+            + (7.5 if obtener_familia(x[0]) in {"ganador", "combo", "btts", "tiempos", "goles"} else (4.5 if obtener_familia(x[0]) == "goles_equipo" else 0.0))
+            - (10.5 if obtener_familia(x[0]) == "faltas" else (6.5 if obtener_familia(x[0]) in {"corners", "tarjetas"} else (2.5 if obtener_familia(x[0]) == "remates" else 0.0)))
         ),
         reverse=True
     )
@@ -865,7 +993,8 @@ def generar_captura_automatica(res_m, tipo_filtro="DESCARTES", guardar_imagen=Tr
         "Ambos Marcan (BTTS)", "Over 2.5 Goles", "Over 3.5 Goles",
         "Remates Puerta > 7.5", "Remates Puerta > 8.5", "Córners > 9.5",
         "Total Asiático > 2.25", "Total Asiático > 2.75", "Total Menos de 2.5 (Under)",
-        "Combo 1X + O1.5", "Combo X2 + O1.5"
+        "Combo 1X + O1.5", "Combo X2 + O1.5", "Combo 1X + U3.5", "Combo X2 + U3.5",
+        f"Goles {res_m['local'][:12]} > 1.5", f"Goles {res_m['visitante'][:12]} > 1.5",
     }
     if float(over_goles_bp.get(4.5) or over_goles_bp.get("4.5") or 2.0) > 1.38:
         exclusivos_vip_extremos.add("Over 4.5 Goles")
@@ -901,9 +1030,11 @@ def generar_captura_automatica(res_m, tipo_filtro="DESCARTES", guardar_imagen=Tr
 
     # Familias ya usadas en la otra tarjeta del mismo partido (prohibido repetir Córners/Tarjetas y, si tot_goles < 2.95, goles <-> tiempos)
     fams_usadas_vip = {obtener_familia(m[0]) for m in res_m.get("seleccion_vip", [])}
-    if tot_goles < 3.35 and ("goles" in fams_usadas_vip or "tiempos" in fams_usadas_vip):
+    if "combo" in fams_usadas_vip:
+        fams_usadas_vip.add("ganador")
+    if tot_goles < 2.95 and ("goles" in fams_usadas_vip or "tiempos" in fams_usadas_vip):
         fams_usadas_vip.update({"goles", "tiempos"})
-    if tot_goles < 2.75 and ("btts" in fams_usadas_vip):
+    if tot_goles < 2.58 and ("btts" in fams_usadas_vip):
         fams_usadas_vip.update({"goles", "tiempos"})
 
     top_2_free_base = seleccionar_par_distinto_familia(
@@ -920,7 +1051,7 @@ def generar_captura_automatica(res_m, tipo_filtro="DESCARTES", guardar_imagen=Tr
     elif tipo_filtro == "VIP":
         nombres_usados_free = {m[0] for m in top_2_free_base}
         fams_usadas_free = {obtener_familia(m[0]) for m in top_2_free_base}
-        if tot_goles < 3.35 and ("goles" in fams_usadas_free or "tiempos" in fams_usadas_free):
+        if tot_goles < 2.95 and ("goles" in fams_usadas_free or "tiempos" in fams_usadas_free):
             fams_usadas_free.update({"goles", "tiempos"})
         colchones_bajos = {"Córners > 7.5", "Total Menos de 3.5 (Under)"}
         if abs(linea_f_vip - linea_f_free) >= 0.5:
@@ -941,8 +1072,9 @@ def generar_captura_automatica(res_m, tipo_filtro="DESCARTES", guardar_imagen=Tr
         candidatos_vip.sort(
             key=lambda x: (
                 obtener_familia(x[0]) not in fams_usadas_free,
+                obtener_familia(x[0]) in FAMILIAS_FUTBOL_PURO,
                 obtener_familia(x[0]) not in {"corners", "tarjetas", "faltas"},
-                x[2] >= 1.40,
+                x[2] >= 1.38,
                 x[1]
             ),
             reverse=True
