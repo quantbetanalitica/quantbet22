@@ -1505,7 +1505,7 @@ with c_kpi3:
 st.markdown("<div id='instalar-app-quantbet'></div>", unsafe_allow_html=True)
 
 _HTML_PANEL_FREE_Y_PWA = f"""
-<div style="font-family: 'Inter', 'Segoe UI', Roboto, sans-serif; color: #f5f5f5; box-sizing: border-box;">
+<div id="qb-pwa-root" style="font-family: 'Inter', 'Segoe UI', Roboto, sans-serif; color: #f5f5f5; box-sizing: border-box; padding: 2px 2px 6px 2px;">
   <style>
     .qb-grid {{
       display: grid;
@@ -1517,15 +1517,15 @@ _HTML_PANEL_FREE_Y_PWA = f"""
       .qb-grid {{ grid-template-columns: 1fr; }}
     }}
     .qb-card {{
-      background: rgba(14, 20, 28, 0.94);
+      background: rgba(14, 20, 28, 0.95);
       border: 1.5px solid #00ff64;
-      border-radius: 13px;
-      padding: 15px 14px;
+      border-radius: 14px;
+      padding: 16px 14px;
       text-align: center;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.38);
     }}
     .qb-card-gold {{
       border-color: #ffcd00;
@@ -1535,14 +1535,14 @@ _HTML_PANEL_FREE_Y_PWA = f"""
       background: rgba(255, 205, 0, 0.16);
       border: 1px solid #ffcd00;
       color: #ffcd00;
-      font-size: 12px;
+      font-size: 11.5px;
       font-weight: 700;
       padding: 3px 10px;
       border-radius: 12px;
       margin-bottom: 8px;
     }}
     .qb-title {{
-      font-size: 20px;
+      font-size: 19px;
       font-weight: 800;
       margin: 2px 0 6px 0;
       letter-spacing: 0.2px;
@@ -1550,18 +1550,18 @@ _HTML_PANEL_FREE_Y_PWA = f"""
     .qb-sub {{
       font-size: 13px;
       color: #b8c4d0;
-      margin-bottom: 12px;
-      line-height: 1.4;
+      margin-bottom: 13px;
+      line-height: 1.42;
     }}
     .qb-btn {{
       display: block;
       width: 100%;
       box-sizing: border-box;
       border: none;
-      border-radius: 9px;
-      padding: 11px 14px;
+      border-radius: 10px;
+      padding: 12px 14px;
       font-size: 14px;
-      font-weight: 700;
+      font-weight: 800;
       cursor: pointer;
       text-decoration: none;
       text-align: center;
@@ -1578,30 +1578,108 @@ _HTML_PANEL_FREE_Y_PWA = f"""
     }}
     .qb-guide {{
       display: none;
-      margin-top: 12px;
-      background: rgba(10, 26, 20, 0.96);
+      margin-top: 14px;
+      background: rgba(10, 22, 18, 0.98);
       border: 1.5px solid #ffcd00;
-      border-radius: 12px;
-      padding: 14px 16px;
+      border-radius: 14px;
+      padding: 16px;
       text-align: left;
-      font-size: 13px;
+      font-size: 13.5px;
       line-height: 1.5;
       color: #e6edf3;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45);
     }}
     .qb-guide-head {{
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 8px;
+      gap: 10px;
+      margin-bottom: 10px;
     }}
     .qb-close {{
       background: rgba(255,255,255,0.12);
       color: #ffffff;
-      border: 1px solid rgba(255,255,255,0.25);
-      border-radius: 6px;
-      padding: 2px 9px;
+      border: 1px solid rgba(255,255,255,0.28);
+      border-radius: 7px;
+      padding: 4px 10px;
       cursor: pointer;
       font-weight: 700;
+    }}
+    .qb-tabs {{
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-bottom: 12px;
+    }}
+    .qb-tab {{
+      background: rgba(255, 255, 255, 0.08);
+      color: #d0d7de;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 8px;
+      padding: 6px 11px;
+      font-size: 12.5px;
+      font-weight: 700;
+      cursor: pointer;
+    }}
+    .qb-tab.active {{
+      background: #ffcd00;
+      color: #0b0e14;
+      border-color: #ffcd00;
+    }}
+    .qb-step-list {{
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 12px;
+    }}
+    .qb-step {{
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(0, 255, 100, 0.25);
+      border-radius: 10px;
+      padding: 9px 11px;
+    }}
+    .qb-num {{
+      flex: 0 0 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: #00ff64;
+      color: #05140a;
+      font-weight: 800;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 1px;
+    }}
+    .qb-copy-row {{
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      background: rgba(0, 0, 0, 0.35);
+      border: 1px dashed rgba(255, 205, 0, 0.55);
+      border-radius: 10px;
+      padding: 9px 11px;
+    }}
+    .qb-copy-url {{
+      flex: 1;
+      font-family: monospace;
+      font-size: 13px;
+      color: #00ff64;
+      word-break: break-all;
+    }}
+    .qb-copy-btn {{
+      background: #00ff64;
+      color: #05140a;
+      border: none;
+      border-radius: 8px;
+      padding: 7px 12px;
+      font-size: 12.5px;
+      font-weight: 800;
+      cursor: pointer;
     }}
   </style>
 
@@ -1610,7 +1688,7 @@ _HTML_PANEL_FREE_Y_PWA = f"""
       <div>
         <span class="qb-tag">📲 COMUNIDAD ABIERTA 100% GRATIS</span>
         <div class="qb-title" style="color:#00ff64;">CANAL FREE EN TELEGRAM</div>
-        <div class="qb-sub">Recibe 3 tarjetas gratuitas diarias, auditoría en tiempo real y aviso de próximas plazas.</div>
+        <div class="qb-sub">Recibe 3 tarjetas gratuitas diarias, auditoría en vivo y aviso prioritario cuando abramos nuevas plazas.</div>
       </div>
       <a class="qb-btn qb-btn-green" href="{LINK_TELEGRAM_FREE}" target="_blank" rel="noopener">
         📲 ENTRAR AL CANAL FREE DE TELEGRAM ➔
@@ -1619,9 +1697,9 @@ _HTML_PANEL_FREE_Y_PWA = f"""
 
     <div class="qb-card qb-card-gold">
       <div>
-        <span class="qb-tag">📱 APLICACIÓN WEB INSTALABLE (PWA)</span>
-        <div class="qb-title" style="color:#ffcd00;">INSTALAR APP QUANTBET22</div>
-        <div class="qb-sub">Descarga e instala QuantBet22 directo en tu pantalla de inicio (Android, iPhone o PC) sin tiendas.</div>
+        <span class="qb-tag">📱 SIN PLAY STORE NI APP STORE • 0 MB</span>
+        <div class="qb-title" style="color:#ffcd00;">DESCARGAR APP QUANTBET22</div>
+        <div class="qb-sub">Pon el icono de QuantBet22 directo en la pantalla de tu celular o PC en solo 3 toques.</div>
       </div>
       <button id="btn-instalar-pwa-qb" class="qb-btn qb-btn-gold" type="button">
         📲 INSTALAR APP EN MI DISPOSITIVO ➔
@@ -1631,25 +1709,49 @@ _HTML_PANEL_FREE_Y_PWA = f"""
 
   <div id="qb-install-guide" class="qb-guide">
     <div class="qb-guide-head">
-      <strong style="color:#ffcd00; font-size:14px;">📱 Cómo instalar la App QuantBet22 en 10 segundos:</strong>
-      <button id="qb-close-guide" class="qb-close" type="button">✕</button>
+      <strong style="color:#ffcd00; font-size:15px;">📱 Instalación fácil en 3 pasos (sin descargar archivos):</strong>
+      <button id="qb-close-guide" class="qb-close" type="button">✕ Cerrar</button>
     </div>
-    <div id="qb-install-steps"></div>
+
+    <div class="qb-tabs">
+      <button class="qb-tab" data-tab="android" type="button">🤖 Android (Chrome)</button>
+      <button class="qb-tab" data-tab="ios" type="button">🍎 iPhone (Safari)</button>
+      <button class="qb-tab" data-tab="inapp" type="button">🎵 Desde TikTok / IG</button>
+      <button class="qb-tab" data-tab="pc" type="button">💻 PC (Chrome/Edge)</button>
+    </div>
+
+    <div id="qb-install-steps" class="qb-step-list"></div>
+
+    <div class="qb-copy-row">
+      <span class="qb-copy-url">{LINK_WEB_APP}</span>
+      <button id="btn-copiar-url-qb" class="qb-copy-btn" type="button">📋 Copiar enlace</button>
+    </div>
   </div>
 </div>
 
 <script>
 (function() {{
   let deferredPrompt = null;
+  const appUrl = "{LINK_WEB_APP}";
   const manifestObj = {{
     name: "QuantBet22 | Laboratorio de Ciencia de Datos",
     short_name: "QuantBet22",
-    start_url: "{LINK_WEB_APP}",
+    start_url: appUrl,
     display: "standalone",
     background_color: "#0b0e14",
     theme_color: "#00ff64",
     icons: [{{ src: "https://img.icons8.com/color/192/artificial-intelligence.png", sizes: "192x192", type: "image/png" }}]
   }};
+
+  function ajustarAltoIframe() {{
+    try {{
+      const root = document.getElementById('qb-pwa-root');
+      if (root && window.frameElement) {{
+        const alto = Math.max(195, root.scrollHeight + 18);
+        window.frameElement.style.height = alto + 'px';
+      }}
+    }} catch (e) {{}}
+  }}
 
   try {{
     const pWin = window.parent || window;
@@ -1672,52 +1774,56 @@ _HTML_PANEL_FREE_Y_PWA = f"""
     deferredPrompt = e;
   }});
 
+  const GUIAS = {{
+    android: [
+      "Abre <b>quantbet22.streamlit.app</b> en <b>Google Chrome</b> (si estás en TikTok o Instagram, primero toca los 3 puntos <b>⋮</b> arriba y elige <b>Abrir en Chrome</b>).",
+      "Toca el menú de los <b>3 puntos (⋮)</b> en la esquina superior derecha de Chrome.",
+      "Pulsa <b>Instalar aplicación</b> o <b>Añadir a pantalla de inicio</b> ➔ <b>Instalar</b>. ¡Listo! Verás el icono de QuantBet22 junto a tus apps."
+    ],
+    ios: [
+      "Abre <b>quantbet22.streamlit.app</b> en el navegador <b>Safari</b> (si vienes de TikTok o Instagram, toca <b>⋯</b> y elige <b>Abrir en Safari</b>).",
+      "Toca el botón <b>Compartir</b> (el cuadrado con la flecha hacia arriba <b>⬆️</b>) en la barra inferior de Safari.",
+      "Desliza hacia abajo, pulsa <b>Añadir a pantalla de inicio</b> y luego <b>Añadir</b> arriba a la derecha. ¡Listo!"
+    ],
+    inapp: [
+      "TikTok, Instagram y Facebook bloquean la instalación dentro de su visor interno. Solo toca los <b>3 puntos (⋮ o ⋯)</b> en la esquina superior derecha.",
+      "Elige <b>Abrir en el navegador</b> (o pulsa <b>Copiar enlace</b> abajo y pégalo en Chrome o Safari).",
+      "Una vez abierto en Chrome/Safari, toca <b>Instalar aplicación</b> (Android) o <b>Compartir ⬆️ ➔ Añadir a pantalla de inicio</b> (iPhone)."
+    ],
+    pc: [
+      "Abre <b>quantbet22.streamlit.app</b> en <b>Google Chrome</b> o <b>Microsoft Edge</b>.",
+      "Haz clic en el menú <b>⋮</b> (arriba a la derecha) ➔ <b>Enviar, guardar y compartir</b> ➔ <b>Instalar página como aplicación</b> (o toca el icono <b>📥</b> en la barra de direcciones).",
+      "Pulsa <b>Instalar</b> y tendrás acceso directo en tu escritorio como una app nativa."
+    ]
+  }};
+
   const btn = document.getElementById('btn-instalar-pwa-qb');
   const guide = document.getElementById('qb-install-guide');
-  const steps = document.getElementById('qb-install-steps');
+  const stepsBox = document.getElementById('qb-install-steps');
   const closeBtn = document.getElementById('qb-close-guide');
+  const copyBtn = document.getElementById('btn-copiar-url-qb');
+  const tabs = document.querySelectorAll('.qb-tab');
 
-  function detectarGuia() {{
+  function detectarDispositivoInicial() {{
     const ua = navigator.userAgent || "";
-    const isIOS = /iPad|iPhone|iPod/.test(ua);
-    const isAndroid = /Android/i.test(ua);
-    const isInApp = /TikTok|Instagram|FBAN|FBAV|Musical_ly/i.test(ua);
-
-    if (isInApp) {{
-      return (
-        "<p style='margin:0 0 6px 0;'>Estás abriendo la web dentro del navegador interno de una red social:</p>" +
-        "<ol style='margin:0; padding-left:18px;'>" +
-        "<li>Toca los tres puntos (<b>⋮</b> o <b>⋯</b>) en la esquina superior derecha.</li>" +
-        "<li>Selecciona <b>Abrir en el navegador</b> (Chrome en Android o Safari en iPhone).</li>" +
-        "<li>En el navegador, pulsa <b>Instalar aplicación</b> o <b>Añadir a pantalla de inicio</b>.</li>" +
-        "</ol>"
-      );
-    }}
-    if (isIOS) {{
-      return (
-        "<ol style='margin:0; padding-left:18px;'>" +
-        "<li>Asegúrate de estar en <b>Safari</b>.</li>" +
-        "<li>Toca el icono <b>Compartir</b> (cuadrado con flecha hacia arriba ⬆️) en la barra inferior.</li>" +
-        "<li>Desliza y elige <b>Añadir a pantalla de inicio</b> ➔ <b>Añadir</b>.</li>" +
-        "</ol>"
-      );
-    }}
-    if (isAndroid) {{
-      return (
-        "<ol style='margin:0; padding-left:18px;'>" +
-        "<li>Toca el menú <b>⋮</b> en la esquina superior derecha de Chrome.</li>" +
-        "<li>Pulsa <b>Instalar aplicación</b> (o <b>Añadir a pantalla de inicio</b>).</li>" +
-        "<li>Confirma <b>Instalar</b> y el icono de QuantBet22 aparecerá junto a tus apps.</li>" +
-        "</ol>"
-      );
-    }}
-    return (
-      "<ol style='margin:0; padding-left:18px;'>" +
-      "<li>En <b>Chrome o Edge (PC)</b>, haz clic en el icono de <b>Instalar App</b> al final de la barra de direcciones (o menú <b>⋮ ➔ Guardar y compartir ➔ Instalar página como app</b>).</li>" +
-      "<li>En móvil, abre <b>quantbet22.streamlit.app</b> en Chrome/Safari y elige <b>Añadir a pantalla de inicio</b>.</li>" +
-      "</ol>"
-    );
+    if (/TikTok|Instagram|FBAN|FBAV|Musical_ly/i.test(ua)) return "inapp";
+    if (/iPad|iPhone|iPod/.test(ua)) return "ios";
+    if (/Android/i.test(ua)) return "android";
+    return "pc";
   }}
+
+  function renderGuia(clave) {{
+    const pasos = GUIAS[clave] || GUIAS.android;
+    stepsBox.innerHTML = pasos.map((txt, idx) => (
+      "<div class='qb-step'><span class='qb-num'>" + (idx + 1) + "</span><div>" + txt + "</div></div>"
+    )).join("");
+    tabs.forEach(t => t.classList.toggle('active', t.getAttribute('data-tab') === clave));
+    setTimeout(ajustarAltoIframe, 40);
+  }}
+
+  tabs.forEach(t => {{
+    t.addEventListener('click', () => renderGuia(t.getAttribute('data-tab')));
+  }});
 
   if (btn) {{
     btn.addEventListener('click', async () => {{
@@ -1729,18 +1835,81 @@ _HTML_PANEL_FREE_Y_PWA = f"""
           return;
         }} catch (e) {{}}
       }}
-      steps.innerHTML = detectarGuia();
-      guide.style.display = (guide.style.display === 'block') ? 'none' : 'block';
+      const abrir = (guide.style.display !== 'block');
+      guide.style.display = abrir ? 'block' : 'none';
+      if (abrir) renderGuia(detectarDispositivoInicial());
+      setTimeout(ajustarAltoIframe, 50);
     }});
   }}
+
   if (closeBtn) {{
-    closeBtn.addEventListener('click', () => {{ guide.style.display = 'none'; }});
+    closeBtn.addEventListener('click', () => {{
+      guide.style.display = 'none';
+      setTimeout(ajustarAltoIframe, 40);
+    }});
   }}
+
+  if (copyBtn) {{
+    copyBtn.addEventListener('click', async () => {{
+      try {{
+        await navigator.clipboard.writeText(appUrl);
+        copyBtn.textContent = "✅ ¡Enlace copiado!";
+      }} catch (e) {{
+        const ta = document.createElement('textarea');
+        ta.value = appUrl;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+        copyBtn.textContent = "✅ ¡Enlace copiado!";
+      }}
+      setTimeout(() => {{ copyBtn.textContent = "📋 Copiar enlace"; }}, 2500);
+    }});
+  }}
+
+  window.addEventListener('resize', ajustarAltoIframe);
+  setTimeout(ajustarAltoIframe, 120);
 }})();
 </script>
 """
 
-components.html(_HTML_PANEL_FREE_Y_PWA, height=305, scrolling=False)
+components.html(_HTML_PANEL_FREE_Y_PWA, height=230, scrolling=True)
+
+with st.expander("📱 ¿Primera vez? Guía rápida en 3 pasos para instalar la App QuantBet22 en tu celular o PC", expanded=False):
+    st.caption("No ocupa espacio ni necesitas Play Store o App Store. Elige tu dispositivo:")
+    tab_and, tab_ios, tab_red, tab_pc = st.tabs([
+        "🤖 Android (Chrome)",
+        "🍎 iPhone (Safari)",
+        "🎵 Vengo de TikTok / Instagram",
+        "💻 PC (Chrome / Edge)",
+    ])
+    with tab_and:
+        st.markdown(
+            "1. Abre **`https://quantbet22.streamlit.app`** en **Google Chrome**.\n"
+            "2. Toca los **3 puntos (`⋮`)** arriba a la derecha.\n"
+            "3. Pulsa **Instalar aplicación** (o **Añadir a pantalla de inicio**) ➔ **Instalar**.\n\n"
+            "✅ ¡Listo! Te quedará el icono de **QuantBet22** directo en tu pantalla como una app normal."
+        )
+    with tab_ios:
+        st.markdown(
+            "1. Abre **`https://quantbet22.streamlit.app`** en **Safari**.\n"
+            "2. Toca el botón **Compartir** (cuadrado con flecha hacia arriba **`⬆️`**) abajo en el centro.\n"
+            "3. Desliza, toca **Añadir a pantalla de inicio** y pulsa **Añadir**.\n\n"
+            "✅ ¡Listo! Ya podrás abrir **QuantBet22** en 1 toque desde tu pantalla principal."
+        )
+    with tab_red:
+        st.markdown(
+            "Si entraste desde **TikTok, Instagram o Facebook**, su navegador interno no deja instalar apps directamente:\n"
+            "1. Toca los **3 puntos (`⋮` o `⋯`)** arriba a la derecha.\n"
+            "2. Pulsa **Abrir en el navegador** (Chrome en Android o Safari en iPhone).\n"
+            "3. Ya en Chrome o Safari, pulsa **Instalar aplicación** / **Añadir a pantalla de inicio**."
+        )
+    with tab_pc:
+        st.markdown(
+            "1. Abre **`https://quantbet22.streamlit.app`** en **Chrome** o **Edge**.\n"
+            "2. Haz clic en el icono de **Instalar (`📥`)** al final de la barra de direcciones (o menú `⋮` ➔ **Guardar y compartir** ➔ **Instalar página como app**).\n"
+            "3. Confirma **Instalar** para abrir QuantBet22 directo desde tu escritorio."
+        )
 
 st.markdown(
     "<div class='banner-promo-gigante notranslate' translate='no' style='padding:16px 20px; margin-top:4px;'>"
