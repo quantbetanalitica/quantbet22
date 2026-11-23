@@ -700,13 +700,13 @@ def evaluar_mercado_contra_resultado_real(merc, gh, ga, g_ht, es_sudamerica=Fals
                 return float(stats_reales["yellow_total"]) > linea_t
             if stats_reales.get("cards_total") is not None:
                 return float(stats_reales["cards_total"]) > linea_t
-        return (abs(gh - ga) <= 1) or (tot >= 2)
+        return None
     elif "faltas" in m_low:
         m_n = re.search(r">\s*(\d+(?:\.\d+)?)", m)
         linea_f = float(m_n.group(1)) if m_n else 22.5
         if isinstance(stats_reales, dict) and stats_reales.get("fouls_total") is not None:
             return float(stats_reales["fouls_total"]) > linea_f
-        return (abs(gh - ga) <= 1) or (tot >= 2)
+        return None
     elif "corners" in m_norm:
         m_n = re.search(r">\s*(\d+(?:\.\d+)?)", m)
         linea_c = float(m_n.group(1)) if m_n else 7.5
@@ -718,13 +718,13 @@ def evaluar_mercado_contra_resultado_real(merc, gh, ga, g_ht, es_sudamerica=Fals
                     return float(stats_reales["corners_away"]) > linea_c
             if stats_reales.get("corners_total") is not None:
                 return float(stats_reales["corners_total"]) > linea_c
-        return (tot >= 1) or (abs(gh - ga) <= 1)
+        return None
     elif "remates" in m_low:
         m_n = re.search(r">\s*(\d+(?:\.\d+)?)", m)
         linea_r = float(m_n.group(1)) if m_n else 6.5
         if isinstance(stats_reales, dict) and stats_reales.get("shots_on_target_total") is not None:
             return float(stats_reales["shots_on_target_total"]) > linea_r
-        return (tot >= 1) or (abs(gh - ga) <= 1)
+        return None
     return tot >= 2
 
 
@@ -1471,8 +1471,7 @@ def generar_diccionario_copys_por_red(tipo_video, p_data, tasa_acierto="91.1%"):
     loc = p_data.get("local", "Equipo Local")
     vis = p_data.get("visitante", "Visitante")
     liga = p_data.get("liga_visual", "Fútbol Europeo")
-    goles = p_data.get("tot_goles", 2.65)
-    faltas = p_data.get("tot_faltas", 23.5)
+    goles = float(p_data.get("tot_goles", 2.65) or 2.65)
 
     tag_loc = limpiar_hashtag(loc)
     tag_vis = limpiar_hashtag(vis)
@@ -1481,8 +1480,8 @@ def generar_diccionario_copys_por_red(tipo_video, p_data, tasa_acierto="91.1%"):
     s = chr(10)
     ds = s + s
 
-    pregunta_gancho = f"¿Cuál es tu marcador para {loc} vs {vis}? Déjalo en los comentarios 👇⚽"
-    corn_val_c = float(p_data.get("tot_corn") or 9.0)
+    pregunta_gancho = f"¿Cuál es tu marcador para {loc} vs {vis}? Comenta DATOS + tu resultado ⚽"
+    cta_embudo = "La 2ª lectura clave, el radar de córners/remates y los demás partidos de hoy ya están publicados en nuestro panel diario y comunidad (accede desde nuestro perfil)."
 
     if tipo_video == "1_ESTRELLA_10AM":
         return {
@@ -1490,25 +1489,25 @@ def generar_diccionario_copys_por_red(tipo_video, p_data, tasa_acierto="91.1%"):
             "titulo_interno": f"VIDEO 2 (14:00) - {loc.upper()} VS {vis.upper()} ({p_data.get('hora', '')})",
             "tiktok": (
                 f"{pregunta_gancho} "
-                f"Previa estadística de {loc} vs {vis} ({liga}): ritmo estimado de {goles:.2f} goles esperados y {corn_val_c:.0f} córners según distribución de Poisson. "
-                f"¿Crees que será partido abierto o cerrado? 👇" + ds +
+                f"Avance del modelo en Python para {loc} vs {vis} ({liga}): proyección base de {goles:.2f} goles esperados. "
+                f"{cta_embudo}" + ds +
                 f"{tag_loc} {tag_vis} {tag_liga} #futbol #datosfutbol #analisistactico #cienciadedatos"
             ),
             "instagram": (
                 f"{pregunta_gancho}" + ds +
-                f"📊 Datos del partido ({liga}):" + s +
-                f"• Goles esperados (xG): {goles:.2f} | Córners estimados: {corn_val_c:.0f} | Fricción: {faltas:.1f} faltas." + ds +
-                f"Guarda este análisis para comprobar el resultado al final del partido. ⚽" + ds +
+                f"📊 Avance del modelo ({liga}):" + s +
+                f"• Goles esperados (xG): {goles:.2f} | Córners, remates y 2ª lectura: reservados en el panel diario." + ds +
+                f"{cta_embudo} Guarda este video para comparar al pitazo final. ⚽" + ds +
                 f"{tag_loc} {tag_vis} {tag_liga} #futbol #reels #datosfutbol #analisistactico"
             ),
-            "youtube_titulo": f"{loc} vs {vis} | Previa Táctica y Datos {tag_loc} {tag_vis} {tag_liga} #shorts"[:98],
+            "youtube_titulo": f"{loc} vs {vis} | El dato que nadie ve en Python {tag_loc} {tag_vis} {tag_liga} #shorts"[:98],
             "youtube_descripcion": (
-                f"{pregunta_gancho} Análisis estadístico previo de {loc} vs {vis} ({liga}) con modelo Poisson y Dixon-Coles: "
-                f"{goles:.2f} goles esperados y {corn_val_c:.0f} córners estimados." + ds +
+                f"{pregunta_gancho} Avance estadístico de {loc} vs {vis} ({liga}) con modelo Poisson y Dixon-Coles: "
+                f"{goles:.2f} goles esperados. {cta_embudo}" + ds +
                 f"{tag_loc} {tag_vis} {tag_liga} #shorts #futbol #datosfutbol #analisistactico"
             ),
             "facebook": (
-                f"{pregunta_gancho} Previa táctica del {loc} vs {vis} ({liga}): {goles:.2f} goles esperados y {corn_val_c:.0f} córners estimados según nuestro modelo estadístico." + ds +
+                f"{pregunta_gancho} Avance táctico de {loc} vs {vis} ({liga}): {goles:.2f} goles esperados según nuestro modelo en Python. {cta_embudo}" + ds +
                 f"{tag_loc} {tag_vis} {tag_liga} #futbol #reels #datosfutbol #analisistactico"
             ),
         }
@@ -1519,24 +1518,24 @@ def generar_diccionario_copys_por_red(tipo_video, p_data, tasa_acierto="91.1%"):
             "titulo_interno": f"VIDEO 1 (21:30) - {loc.upper()} VS {vis.upper()} ({p_data.get('hora', '')})",
             "tiktok": (
                 f"{pregunta_gancho} 📊⚽ "
-                f"Analizamos {loc} vs {vis} ({liga}) con modelo Poisson: {goles:.2f} goles esperados y {corn_val_c:.0f} córners proyectados. "
-                f"¿Gana {loc}, empate o sorpresa de {vis}? Te leo abajo 👇" + ds +
+                f"Nuestro modelo en Python ya analizó {loc} vs {vis} ({liga}): {goles:.2f} goles esperados en el avance inicial. "
+                f"{cta_embudo}" + ds +
                 f"{tag_loc} {tag_vis} {tag_liga} #futbol #datosfutbol #analisistactico #cienciadedatos"
             ),
             "instagram": (
                 f"{pregunta_gancho} 📈⚽" + ds +
-                f"Previa matemática de {loc} vs {vis} ({liga}):" + s +
-                f"• Goles esperados: {goles:.2f} | Córners: {corn_val_c:.0f} | Faltas: {faltas:.1f}" + ds +
-                f"Guarda este reel y comenta tu pronóstico de marcador antes del pitazo inicial." + ds +
+                f"Avance matemático de {loc} vs {vis} ({liga}):" + s +
+                f"• Goles esperados (xG): {goles:.2f} | Matriz completa y 2ª lectura disponibles en el panel diario." + ds +
+                f"{cta_embudo}" + ds +
                 f"{tag_loc} {tag_vis} {tag_liga} #futbol #reels #datosfutbol #analisistactico"
             ),
-            "youtube_titulo": f"{loc} vs {vis} | Previa y Estadísticas {tag_loc} {tag_vis} {tag_liga} #shorts"[:98],
+            "youtube_titulo": f"{loc} vs {vis} | Dato oculto del modelo Poisson {tag_loc} {tag_vis} {tag_liga} #shorts"[:98],
             "youtube_descripcion": (
-                f"{pregunta_gancho} Previa estadística de {loc} vs {vis} ({liga}) basada en datos históricos, goles esperados ({goles:.2f}) y ritmo ofensivo." + ds +
+                f"{pregunta_gancho} Avance estadístico de {loc} vs {vis} ({liga}) con {goles:.2f} goles esperados. {cta_embudo}" + ds +
                 f"{tag_loc} {tag_vis} {tag_liga} #shorts #futbol #datosfutbol #analisistactico"
             ),
             "facebook": (
-                f"{pregunta_gancho} Análisis de datos previo para {loc} vs {vis} ({liga}): {goles:.2f} goles esperados y {corn_val_c:.0f} córners estimados." + ds +
+                f"{pregunta_gancho} Avance del {loc} vs {vis} ({liga}): {goles:.2f} goles esperados proyectados. {cta_embudo}" + ds +
                 f"{tag_loc} {tag_vis} {tag_liga} #futbol #reels #datosfutbol #analisistactico"
             ),
         }
@@ -2362,153 +2361,209 @@ def _crear_historia_diaria_pro(datos, esc_l, esc_v, titular_gancho, ruta_out):
     return ruta_out
 
 
+def _dibujar_candado_vectorial(draw, cx, cy, escala=1.0, color=(255, 204, 0, 255)):
+    """Dibuja un candado limpio vectorial en Pillow (cero emojis rotos en fuentes TTF)."""
+    r = int(14 * escala)
+    bw = int(34 * escala)
+    bh = int(26 * escala)
+    grosor = max(3, int(4 * escala))
+    # Arco superior del candado
+    draw.arc([(cx - r, cy - bh // 2 - r - 2), (cx + r, cy - bh // 2 + r + 2)], start=180, end=360, fill=color, width=grosor)
+    draw.line([(cx - r, cy - bh // 2 - 2), (cx - r, cy - bh // 2 + 3)], fill=color, width=grosor)
+    draw.line([(cx + r, cy - bh // 2 - 2), (cx + r, cy - bh // 2 + 3)], fill=color, width=grosor)
+    # Cuerpo del candado
+    draw.rounded_rectangle([(cx - bw // 2, cy - bh // 2), (cx + bw // 2, cy + bh // 2)], radius=max(4, int(6 * escala)), fill=color)
+    # Ojo de cerradura oscuro
+    kr = max(3, int(4 * escala))
+    draw.ellipse([(cx - kr, cy - kr - 1), (cx + kr, cy + kr - 1)], fill=(12, 18, 28, 255))
+    draw.rectangle([(cx - max(2, kr // 2), cy), (cx + max(2, kr // 2), cy + int(7 * escala))], fill=(12, 18, 28, 255))
+
+
 def _crear_escena_2_metricas_pro(datos, esc_l, esc_v, ruta_out):
-    """Radiografía estadística centrada y elegante (SIN 1X2), cubriendo y=112..1295."""
+    """Escena 2 (Intriga + Autoridad): muestra SOLO el abrebocas de Goles Esperados (xG) y bloquea Córners, Remates y Disciplina."""
     lienzo = _crear_fondo_broadcast_pro()
-    y_bot = _dibujar_cabecera_pro(lienzo, esc_l, esc_v, datos["local"], datos["visitante"], datos["liga"], "RADIOGRAFÍA ESTADÍSTICA DEL PARTIDO", y_base=112)
+    y_bot = _dibujar_cabecera_pro(lienzo, esc_l, esc_v, datos["local"], datos["visitante"], datos["liga"], "AVANCE DEL MODELO ESTADÍSTICO", y_base=112)
     draw = ImageDraw.Draw(lienzo, "RGBA")
 
+    # Fila 1 (ABIERTA): Goles Esperados (xG) -> demuestra rigor matemático sin regalar toda la matriz
     y1 = y_bot + 32
-    draw.rounded_rectangle([(64, y1), (1016, y1 + 242)], radius=28, fill=_C_PANEL_PRO, outline=_C_BORDE_PRO, width=2)
+    draw.rounded_rectangle([(64, y1), (1016, y1 + 252)], radius=28, fill=(9, 34, 24, 244), outline=_C_VERDE_PRO, width=3)
     lbl_g = "GOLES ESPERADOS (SIMULACIÓN POISSON)"
     f_lg = _fuente_pro("bold", 25)
-    draw.text((_centrar_x_pro(draw, lbl_g, f_lg), y1 + 28), lbl_g, font=f_lg, fill=_C_GRIS_PRO)
+    draw.text((_centrar_x_pro(draw, lbl_g, f_lg), y1 + 26), lbl_g, font=f_lg, fill=_C_GRIS_PRO)
 
     val_g = f"{datos['tot_goles']:.2f} GOLES"
-    f_vg = _fuente_pro("bold", 66)
-    draw.text((_centrar_x_pro(draw, val_g, f_vg), y1 + 74), val_g, font=f_vg, fill=_C_VERDE_PRO)
+    f_vg = _fuente_pro("bold", 68)
+    draw.text((_centrar_x_pro(draw, val_g, f_vg), y1 + 72), val_g, font=f_vg, fill=_C_VERDE_PRO)
 
-    bx0, by0, bx1, by1 = 112, y1 + 174, 968, y1 + 208
+    bx0, by0, bx1, by1 = 112, y1 + 178, 968, y1 + 212
     draw.rounded_rectangle([(bx0, by0), (bx1, by1)], radius=16, fill=(24, 35, 50, 255))
     pct_g = max(0.18, min(1.0, datos["tot_goles"] / 4.2))
     draw.rounded_rectangle([(bx0, by0), (int(bx0 + (bx1 - bx0) * pct_g), by1)], radius=16, fill=_C_VERDE_PRO)
 
-    # Fila 2: Córners y Remates centrados en 2 columnas simétricas
-    y2 = y1 + 270
-    draw.rounded_rectangle([(64, y2), (526, y2 + 260)], radius=28, fill=_C_PANEL_PRO, outline=_C_BORDE_PRO, width=2)
-    draw.text((_centrar_x_pro(draw, "CÓRNERS PROYECTADOS", _fuente_pro("bold", 23), 295), y2 + 30), "CÓRNERS PROYECTADOS", font=_fuente_pro("bold", 23), fill=_C_GRIS_PRO)
-    draw.text((_centrar_x_pro(draw, f"{datos['tot_corn']:.1f}", _fuente_pro("bold", 78), 295), y2 + 80), f"{datos['tot_corn']:.1f}", font=_fuente_pro("bold", 78), fill=_C_ORO_PRO)
-    draw.text((_centrar_x_pro(draw, "Ritmo por bandas", _fuente_pro("mono", 22), 295), y2 + 194), "Ritmo por bandas", font=_fuente_pro("mono", 22), fill=_C_BLANCO_PRO)
+    # Fila 2 (BLOQUEADAS): Córners y Remates reservados en el Panel Diario
+    y2 = y1 + 280
+    for xc0, xc1, tit_b, sub_b in [
+        (64, 526, "CÓRNERS PROYECTADOS", "Volumen real por bandas"),
+        (554, 1016, "REMATES A PUERTA", "Presión exacta al arco"),
+    ]:
+        cx_b = (xc0 + xc1) // 2
+        draw.rounded_rectangle([(xc0, y2), (xc1, y2 + 260)], radius=28, fill=_C_PANEL_PRO, outline=(255, 204, 0, 165), width=2)
+        draw.text((_centrar_x_pro(draw, tit_b, _fuente_pro("bold", 22), cx_b), y2 + 28), tit_b, font=_fuente_pro("bold", 22), fill=_C_GRIS_PRO)
+        _dibujar_candado_vectorial(draw, cx_b, y2 + 114, escala=1.15, color=_C_ORO_PRO)
+        draw.rounded_rectangle([(xc0 + 46, y2 + 162), (xc1 - 46, y2 + 206)], radius=14, fill=(32, 28, 14, 240), outline=_C_ORO_PRO, width=2)
+        f_res = _fuente_pro("bold", 21)
+        draw.text((_centrar_x_pro(draw, "SOLO EN EL PANEL", f_res, cx_b), y2 + 172), "SOLO EN EL PANEL", font=f_res, fill=_C_ORO_PRO)
+        draw.text((_centrar_x_pro(draw, sub_b, _fuente_pro("mono", 19), cx_b), y2 + 220), sub_b, font=_fuente_pro("mono", 19), fill=_C_GRIS_PRO)
 
-    draw.rounded_rectangle([(554, y2), (1016, y2 + 260)], radius=28, fill=_C_PANEL_PRO, outline=_C_BORDE_PRO, width=2)
-    draw.text((_centrar_x_pro(draw, "REMATES A PUERTA", _fuente_pro("bold", 23), 785), y2 + 30), "REMATES A PUERTA", font=_fuente_pro("bold", 23), fill=_C_GRIS_PRO)
-    draw.text((_centrar_x_pro(draw, f"{datos['tot_tiros']:.1f}", _fuente_pro("bold", 78), 785), y2 + 80), f"{datos['tot_tiros']:.1f}", font=_fuente_pro("bold", 78), fill=_C_AZUL_PRO)
-    draw.text((_centrar_x_pro(draw, "Volumen ofensivo", _fuente_pro("mono", 22), 785), y2 + 194), "Volumen ofensivo", font=_fuente_pro("mono", 22), fill=_C_BLANCO_PRO)
-
-    # Fila 3: Faltas, Tarjetas y Perfil táctico centrados
+    # Fila 3: Perfil Táctico abierto + Faltas y Tarjetas reservadas
     y3 = y2 + 288
-    draw.rounded_rectangle([(64, y3), (1016, y3 + 302)], radius=28, fill=_C_PANEL_PRO, outline=_C_BORDE_PRO, width=2)
+    draw.rounded_rectangle([(64, y3), (1016, y3 + 292)], radius=28, fill=_C_PANEL_PRO, outline=_C_BORDE_PRO, width=2)
     f_t3 = _fuente_pro("bold", 24)
-    draw.text((_centrar_x_pro(draw, "FRICCIÓN, DISCIPLINA Y CONTEXTO", f_t3), y3 + 26), "FRICCIÓN, DISCIPLINA Y CONTEXTO", font=f_t3, fill=_C_GRIS_PRO)
+    draw.text((_centrar_x_pro(draw, "MATRIZ DE FRICCIÓN Y DISCIPLINA", f_t3), y3 + 24), "MATRIZ DE FRICCIÓN Y DISCIPLINA", font=f_t3, fill=_C_GRIS_PRO)
 
-    draw.rounded_rectangle([(100, y3 + 78), (526, y3 + 206)], radius=20, fill=_C_PANEL_ALT, outline=(255, 148, 64, 150), width=2)
-    draw.text((_centrar_x_pro(draw, "FALTAS ESTIMADAS", _fuente_pro("mono", 20), 313), y3 + 96), "FALTAS ESTIMADAS", font=_fuente_pro("mono", 20), fill=_C_GRIS_PRO)
-    draw.text((_centrar_x_pro(draw, f"{datos['tot_faltas']:.1f} faltas", _fuente_pro("bold", 40), 313), y3 + 134), f"{datos['tot_faltas']:.1f} faltas", font=_fuente_pro("bold", 40), fill=_C_NARANJA_PRO)
+    draw.rounded_rectangle([(104, y3 + 74), (976, y3 + 194)], radius=20, fill=_C_PANEL_ALT, outline=(255, 204, 0, 150), width=2)
+    _dibujar_candado_vectorial(draw, 164, y3 + 136, escala=0.95, color=_C_ORO_PRO)
+    f_blq1 = _fuente_pro_ajustada(draw, "FALTAS Y TARJETAS: RESERVADAS EN LA APP WEB", "bold", 26, 730, 18)
+    f_blq2 = _fuente_pro_ajustada(draw, "Desbloquea los 5 indicadores completos en nuestra comunidad diaria", "mono", 19, 730, 14)
+    draw.text((216, y3 + 98), "FALTAS Y TARJETAS: RESERVADAS EN LA APP WEB", font=f_blq1, fill=_C_ORO_PRO)
+    draw.text((216, y3 + 142), "Desbloquea los 5 indicadores completos en nuestra comunidad diaria", font=f_blq2, fill=_C_BLANCO_PRO)
 
-    draw.rounded_rectangle([(554, y3 + 78), (980, y3 + 206)], radius=20, fill=_C_PANEL_ALT, outline=(255, 204, 0, 150), width=2)
-    draw.text((_centrar_x_pro(draw, "TARJETAS PROYECTADAS", _fuente_pro("mono", 20), 767), y3 + 96), "TARJETAS PROYECTADAS", font=_fuente_pro("mono", 20), fill=_C_GRIS_PRO)
-    draw.text((_centrar_x_pro(draw, f"{datos['tot_tarj']:.1f} tarjetas", _fuente_pro("bold", 40), 767), y3 + 134), f"{datos['tot_tarj']:.1f} tarjetas", font=_fuente_pro("bold", 40), fill=_C_ORO_PRO)
-
-    etq_fuente = "MODELO POISSON + DIXON-COLES"
-    ctx_txt = f"PERFIL: {datos['contexto'].upper()}  •  {etq_fuente}"
-    f_ctx = _fuente_pro_ajustada(draw, ctx_txt, "mono", 21, 880, 15)
-    draw.text((_centrar_x_pro(draw, ctx_txt, f_ctx), y3 + 240), ctx_txt, font=f_ctx, fill=_C_VERDE_PRO)
+    ctx_txt = f"PERFIL TÁCTICO: {datos['contexto'].upper()}  •  POISSON + DIXON-COLES"
+    f_ctx = _fuente_pro_ajustada(draw, ctx_txt, "mono", 20, 880, 15)
+    draw.text((_centrar_x_pro(draw, ctx_txt, f_ctx), y3 + 228), ctx_txt, font=f_ctx, fill=_C_VERDE_PRO)
 
     lienzo.convert("RGB").save(ruta_out, quality=96)
     return ruta_out
 
 
 def _crear_escena_3_jugada_pro(datos, esc_l, esc_v, ruta_out):
-    """Escena 3 100% segura para redes sociales: Tendencia estadística + Probabilidad 1X2 (analítica pura)."""
+    """Escena 3 (Efecto Intriga): revela SOLO la 1ª lectura base y deja la 2ª lectura clave + modelo 1X2 reservados en el panel."""
     lienzo = _crear_fondo_broadcast_pro()
-    y_bot = _dibujar_cabecera_pro(lienzo, esc_l, esc_v, datos["local"], datos["visitante"], datos["liga"], "PROBABILIDADES DEL MODELO ESTADÍSTICO", y_base=112)
+    y_bot = _dibujar_cabecera_pro(lienzo, esc_l, esc_v, datos["local"], datos["visitante"], datos["liga"], "LECTURAS DEL MODELO MATEMÁTICO", y_base=112)
     draw = ImageDraw.Draw(lienzo, "RGBA")
 
-    # Tarjeta 1: Tendencia táctica principal con probabilidad % (sin cuotas decimales)
+    # Tarjeta 1 (ABIERTA): 1ª Tendencia Base para demostrar calidad real del algoritmo
     y1 = y_bot + 36
     draw.rounded_rectangle([(64, y1), (1016, y1 + 372)], radius=30, fill=(9, 34, 24, 246), outline=_C_VERDE_PRO, width=4)
 
-    draw.rounded_rectangle([(240, y1 + 32), (840, y1 + 88)], radius=24, fill=_C_VERDE_PRO)
+    draw.rounded_rectangle([(210, y1 + 30), (870, y1 + 86)], radius=24, fill=_C_VERDE_PRO)
     f_b1 = _fuente_pro("bold", 24)
-    draw.text((_centrar_x_pro(draw, "TENDENCIA PRINCIPAL DEL MODELO", f_b1), y1 + 46), "TENDENCIA PRINCIPAL DEL MODELO", font=f_b1, fill=(7, 18, 12, 255))
+    draw.text((_centrar_x_pro(draw, "LECTURA #1 DEL MODELO (AVANCE)", f_b1), y1 + 44), "LECTURA #1 DEL MODELO (AVANCE)", font=f_b1, fill=(7, 18, 12, 255))
 
     pick_txt = _limpiar_pick_visual_pro(datos["pick_abierto"], datos.get("local", ""), datos.get("visitante", "")).upper()
     pick_txt = pick_txt.replace("OVER ", "MÁS DE ").replace("UNDER ", "MENOS DE ")
     f_pick = _fuente_pro_ajustada(draw, pick_txt, "bold", 54, 860, 26)
-    draw.text((_centrar_x_pro(draw, pick_txt, f_pick), y1 + 128), pick_txt, font=f_pick, fill=_C_BLANCO_PRO)
+    draw.text((_centrar_x_pro(draw, pick_txt, f_pick), y1 + 126), pick_txt, font=f_pick, fill=_C_BLANCO_PRO)
 
     prob_est = float(datos.get("prob_abierta") or 74.5)
     nivel_conf = "MUY ALTA" if prob_est >= 74.0 else ("ALTA" if prob_est >= 65.0 else "MODERADA")
     prob_txt = f"CONFLUENCIA ESTADÍSTICA:  {nivel_conf}"
-    draw.rounded_rectangle([(210, y1 + 220), (870, y1 + 292)], radius=18, fill=(14, 24, 34, 230), outline=_C_VERDE_PRO, width=2)
-    f_pr = _fuente_pro_ajustada(draw, prob_txt, "mono", 32, 620, 20)
-    draw.text((_centrar_x_pro(draw, prob_txt, f_pr), y1 + 236), prob_txt, font=f_pr, fill=_C_VERDE_PRO)
+    draw.rounded_rectangle([(200, y1 + 218), (880, y1 + 290)], radius=18, fill=(14, 24, 34, 230), outline=_C_VERDE_PRO, width=2)
+    f_pr = _fuente_pro_ajustada(draw, prob_txt, "mono", 31, 640, 19)
+    draw.text((_centrar_x_pro(draw, prob_txt, f_pr), y1 + 235), prob_txt, font=f_pr, fill=_C_VERDE_PRO)
 
     nota_txt = "DATO CALCULADO CON HISTÓRICO DE LIGA + DIXON-COLES"
     f_nt = _fuente_pro_ajustada(draw, nota_txt, "mono", 20, 880, 15)
     draw.text((_centrar_x_pro(draw, nota_txt, f_nt), y1 + 318), nota_txt, font=f_nt, fill=_C_GRIS_PRO)
 
-    # Tarjeta 2: Probabilidades de Resultado (Local / Empate / Visitante) — estilo Opta / Google Win Probability
+    # Tarjeta 2 (BLOQUEADA): 2ª Lectura Clave + Probabilidades 1X2 Exactas -> Motivo real para entrar al perfil / app / comunidad
     y2 = y1 + 404
-    draw.rounded_rectangle([(64, y2), (1016, y2 + 436)], radius=30, fill=_C_PANEL_PRO, outline=_C_BORDE_PRO, width=3)
-    f_tit2 = _fuente_pro("bold", 26)
-    draw.text((_centrar_x_pro(draw, "DISTRIBUCIÓN DE RESULTADO (MODELO 1X2)", f_tit2), y2 + 34), "DISTRIBUCIÓN DE RESULTADO (MODELO 1X2)", font=f_tit2, fill=_C_ORO_PRO)
+    draw.rounded_rectangle([(64, y2), (1016, y2 + 436)], radius=30, fill=(24, 21, 12, 246), outline=_C_ORO_PRO, width=4)
 
-    p_h = float(datos.get("p_h") or 45.0)
-    p_d = float(datos.get("p_d") or 26.0)
-    p_a = float(datos.get("p_a") or 29.0)
-    filas_1x2 = [
-        (f"VICTORIA {datos['local'][:16].upper()}", p_h, _C_VERDE_PRO),
-        ("EMPATE", p_d, _C_ORO_PRO),
-        (f"VICTORIA {datos['visitante'][:16].upper()}", p_a, _C_AZUL_PRO),
+    draw.rounded_rectangle([(175, y2 + 30), (905, y2 + 86)], radius=24, fill=_C_ORO_PRO)
+    f_tit2 = _fuente_pro("bold", 24)
+    draw.text((_centrar_x_pro(draw, "LECTURA #2 + MODELO 1X2 COMPLETO", f_tit2), y2 + 44), "LECTURA #2 + MODELO 1X2 COMPLETO", font=f_tit2, fill=(10, 12, 18, 255))
+
+    _dibujar_candado_vectorial(draw, 540, y2 + 152, escala=1.45, color=_C_ORO_PRO)
+
+    lineas_lock = [
+        ("2ª LECTURA DE ALTA CONFLUENCIA", "DESBLOQUEADA EN EL PANEL"),
+        ("PROBABILIDADES 1X2 EXACTAS", "DISPONIBLES EN LA COMUNIDAD"),
     ]
-    yb = y2 + 102
-    for lbl_b, val_b, col_b in filas_1x2:
-        f_lb = _fuente_pro_ajustada(draw, lbl_b, "bold", 24, 620, 17)
-        draw.text((112, yb), lbl_b, font=f_lb, fill=_C_BLANCO_PRO)
-        v_s = f"{val_b:.1f}%"
-        f_vb = _fuente_pro("mono", 26)
-        bb_v = draw.textbbox((0, 0), v_s, font=f_vb)
-        draw.text((968 - (bb_v[2] - bb_v[0]), yb - 2), v_s, font=f_vb, fill=col_b)
-        draw.rounded_rectangle([(112, yb + 38), (968, yb + 64)], radius=12, fill=(28, 38, 54, 235))
-        ancho_fill = max(32, int((968 - 112) * min(1.0, val_b / 100.0)))
-        draw.rounded_rectangle([(112, yb + 38), (112 + ancho_fill, yb + 64)], radius=12, fill=col_b)
-        yb += 100
+    ylk = y2 + 210
+    for l_izq, l_der in lineas_lock:
+        draw.rounded_rectangle([(112, ylk), (968, ylk + 70)], radius=16, fill=(14, 22, 34, 238), outline=(255, 204, 0, 130), width=2)
+        f_li = _fuente_pro_ajustada(draw, l_izq, "bold", 21, 450, 15)
+        f_ld = _fuente_pro_ajustada(draw, l_der, "mono", 20, 360, 14)
+        draw.text((138, ylk + 21), l_izq, font=f_li, fill=_C_BLANCO_PRO)
+        bb_d = draw.textbbox((0, 0), l_der, font=f_ld)
+        draw.text((942 - (bb_d[2] - bb_d[0]), ylk + 22), l_der, font=f_ld, fill=_C_ORO_PRO)
+        ylk += 84
+
+    pie_l = "ACCEDE DESDE NUESTRO PERFIL PARA VER LA TARJETA COMPLETA"
+    f_pl = _fuente_pro_ajustada(draw, pie_l, "bold", 22, 880, 16)
+    draw.text((_centrar_x_pro(draw, pie_l, f_pl), y2 + 388), pie_l, font=f_pl, fill=_C_VERDE_PRO)
 
     lienzo.convert("RGB").save(ruta_out, quality=96)
     return ruta_out
 
 
-def _crear_escena_4_debate_tactico_pro(datos, esc_l, esc_v, ruta_out):
-    """Escena 4 100% segura para TikTok/Reels/Shorts: Resumen táctico + Encuesta de marcador (evita sanciones por 'Información falsa')."""
-    lienzo = _crear_fondo_broadcast_pro(acento_izq=(0, 232, 118), acento_der=(56, 168, 255))
-    y_bot = _dibujar_cabecera_pro(lienzo, esc_l, esc_v, datos["local"], datos["visitante"], datos["liga"], "CLAVES TÁCTICAS DEL ENCUENTRO", y_base=112)
+def _crear_escena_4_debate_tactico_pro(datos, esc_l, esc_v, ruta_out, otros_partidos=None):
+    """Escena 4 (Cartelera del Día + Embudo Seguro): muestra los otros partidazos de hoy listos en el panel + puente al perfil."""
+    lienzo = _crear_fondo_broadcast_pro(acento_izq=(0, 232, 118), acento_der=(255, 204, 0))
+    y_bot = _dibujar_cabecera_pro(lienzo, esc_l, esc_v, datos["local"], datos["visitante"], datos["liga"], "CARTELERA ANALIZADA DE HOY", y_base=112)
     draw = ImageDraw.Draw(lienzo, "RGBA")
 
-    y1 = y_bot + 36
-    claves = [
-        ("RITMO DE GOLES (xG)", f"{datos['tot_goles']:.2f} goles proyectados", "Escenario " + ("abierto con llegadas" if datos["tot_goles"] >= 2.60 else "táctico y disputado"), _C_VERDE_PRO),
-        ("PRESIÓN POR BANDAS", f"{datos['tot_corn']:.1f} córners y {datos['tot_tiros']:.1f} remates", "Volumen estimado de ataque al área rival", _C_ORO_PRO),
-        ("INTENSIDAD Y DUELOS", f"{datos['tot_faltas']:.1f} faltas y {datos['tot_tarj']:.1f} tarjetas", f"Perfil del partido: {datos['contexto']}", _C_AZUL_PRO),
-    ]
-    for tit_k, val_k, desc_k, col_k in claves:
-        draw.rounded_rectangle([(64, y1), (1016, y1 + 178)], radius=24, fill=_C_PANEL_PRO, outline=col_k, width=2)
-        f_tk = _fuente_pro("bold", 22)
-        f_vk = _fuente_pro_ajustada(draw, val_k.upper(), "bold", 38, 860, 22)
-        f_dk = _fuente_pro_ajustada(draw, desc_k, "mono", 21, 860, 15)
-        draw.text((_centrar_x_pro(draw, tit_k, f_tk), y1 + 22), tit_k, font=f_tk, fill=col_k)
-        draw.text((_centrar_x_pro(draw, val_k.upper(), f_vk), y1 + 64), val_k.upper(), font=f_vk, fill=_C_BLANCO_PRO)
-        draw.text((_centrar_x_pro(draw, desc_k, f_dk), y1 + 126), desc_k, font=f_dk, fill=_C_GRIS_PRO)
-        y1 += 200
+    lista_otros = list(otros_partidos or [])[:4]
+    y1 = y_bot + 28
+    if lista_otros:
+        f_sub4 = _fuente_pro("bold", 23)
+        tit_c4 = f"ADEMÁS DE ESTE DUELO, YA TIENES LISTOS {len(lista_otros)} PARTIDAZOS:"
+        f_sub4 = _fuente_pro_ajustada(draw, tit_c4, "bold", 23, 940, 17)
+        draw.text((_centrar_x_pro(draw, tit_c4, f_sub4), y1), tit_c4, font=f_sub4, fill=_C_ORO_PRO)
+        y1 += 44
 
-    # Tarjeta final de debate e interacción orgánica (100% permitida por TikTok)
-    draw.rounded_rectangle([(64, y1 + 12), (1016, y1 + 222)], radius=28, fill=(10, 34, 24, 244), outline=_C_VERDE_PRO, width=3)
-    f_q1 = _fuente_pro_ajustada(draw, "¿CUÁL ES TU MARCADOR EXACTO?", "bold", 38, 860, 24)
-    f_q2 = _fuente_pro_ajustada(draw, "DEJA TU PRONÓSTICO EN LOS COMENTARIOS", "bold", 25, 860, 18)
+        for p_o in lista_otros:
+            loc_o = str(p_o.get("local", "")).strip()
+            vis_o = str(p_o.get("visitante", "")).strip()
+            hor_o = str(p_o.get("hora", "21:00")).strip()
+            lig_o = str(p_o.get("liga_visual", "")).split("(")[0].strip().upper()
+            duelo_o = f"{loc_o} vs {vis_o}".upper()
+            draw.rounded_rectangle([(64, y1), (1016, y1 + 124)], radius=22, fill=_C_PANEL_PRO, outline=_C_BORDE_PRO, width=2)
+            # Hora izquierda
+            draw.rounded_rectangle([(84, y1 + 26), (210, y1 + 98)], radius=14, fill=_C_PANEL_ALT, outline=_C_AZUL_PRO, width=2)
+            f_ho = _fuente_pro("mono", 25)
+            draw.text((_centrar_x_pro(draw, f"{hor_o}h", f_ho, 147), y1 + 46), f"{hor_o}h", font=f_ho, fill=_C_AZUL_PRO)
+            # Partido centro
+            f_do = _fuente_pro_ajustada(draw, duelo_o, "bold", 29, 550, 18)
+            f_lo = _fuente_pro_ajustada(draw, f"{lig_o}  •  MATRIZ COMPLETA", "mono", 18, 550, 14)
+            draw.text((232, y1 + 28), duelo_o, font=f_do, fill=_C_BLANCO_PRO)
+            draw.text((232, y1 + 74), f"{lig_o}  •  MATRIZ COMPLETA", font=f_lo, fill=_C_GRIS_PRO)
+            # Tag LISTO derecha
+            draw.rounded_rectangle([(806, y1 + 34), (994, y1 + 90)], radius=16, fill=(10, 42, 28, 244), outline=_C_VERDE_PRO, width=2)
+            f_ok = _fuente_pro("bold", 21)
+            draw.text((_centrar_x_pro(draw, "EN EL PANEL", f_ok, 900), y1 + 49), "EN EL PANEL", font=f_ok, fill=_C_VERDE_PRO)
+            y1 += 138
+    else:
+        claves = [
+            ("RITMO DE GOLES (xG)", f"{datos['tot_goles']:.2f} goles esperados", "Base matemática Poisson + Dixon-Coles", _C_VERDE_PRO),
+            ("PANEL INTERACTIVO DIARIO", "2 lecturas por partido + radar completo", "Córners, remates, faltas y 1X2 desbloqueados", _C_ORO_PRO),
+            ("COMUNIDAD ABIERTA DE DATOS", "Auditoría pública y seguimiento en vivo", "Actualización automática tras cada pitazo final", _C_AZUL_PRO),
+        ]
+        for tit_k, val_k, desc_k, col_k in claves:
+            draw.rounded_rectangle([(64, y1), (1016, y1 + 172)], radius=24, fill=_C_PANEL_PRO, outline=col_k, width=2)
+            f_tk = _fuente_pro("bold", 22)
+            f_vk = _fuente_pro_ajustada(draw, val_k.upper(), "bold", 34, 860, 20)
+            f_dk = _fuente_pro_ajustada(draw, desc_k, "mono", 20, 860, 15)
+            draw.text((_centrar_x_pro(draw, tit_k, f_tk), y1 + 20), tit_k, font=f_tk, fill=col_k)
+            draw.text((_centrar_x_pro(draw, val_k.upper(), f_vk), y1 + 62), val_k.upper(), font=f_vk, fill=_C_BLANCO_PRO)
+            draw.text((_centrar_x_pro(draw, desc_k, f_dk), y1 + 120), desc_k, font=f_dk, fill=_C_GRIS_PRO)
+            y1 += 192
+
+    # Tarjeta final de embudo al perfil + interacción en comentarios (100% segura anti-ban)
+    y_cta = max(y1 + 10, 1020)
+    draw.rounded_rectangle([(64, y_cta), (1016, y_cta + 258)], radius=28, fill=(10, 34, 24, 248), outline=_C_VERDE_PRO, width=4)
+    draw.rounded_rectangle([(190, y_cta + 22), (890, y_cta + 72)], radius=22, fill=_C_ORO_PRO)
+    f_b4 = _fuente_pro("bold", 23)
+    draw.text((_centrar_x_pro(draw, "PANEL COMPLETO Y COMUNIDAD DIARIA", f_b4), y_cta + 34), "PANEL COMPLETO Y COMUNIDAD DIARIA", font=f_b4, fill=(10, 12, 18, 255))
+
+    f_q1 = _fuente_pro_ajustada(draw, "ACCEDE DESDE NUESTRO PERFIL", "bold", 42, 860, 26)
+    f_q2 = _fuente_pro_ajustada(draw, "COMENTA 'DATOS' + TU MARCADOR EXACTO", "bold", 26, 860, 18)
     f_q3 = _fuente_pro("mono", 20)
-    draw.text((_centrar_x_pro(draw, "¿CUÁL ES TU MARCADOR EXACTO?", f_q1), y1 + 42), "¿CUÁL ES TU MARCADOR EXACTO?", font=f_q1, fill=_C_ORO_PRO)
-    draw.text((_centrar_x_pro(draw, "DEJA TU PRONÓSTICO EN LOS COMENTARIOS", f_q2), y1 + 106), "DEJA TU PRONÓSTICO EN LOS COMENTARIOS", font=f_q2, fill=_C_BLANCO_PRO)
-    draw.text((_centrar_x_pro(draw, "SÍGUENOS PARA MÁS ANÁLISIS DE FÚTBOL CON DATOS", f_q3), y1 + 162), "SÍGUENOS PARA MÁS ANÁLISIS DE FÚTBOL CON DATOS", font=f_q3, fill=_C_VERDE_PRO)
+    draw.text((_centrar_x_pro(draw, "ACCEDE DESDE NUESTRO PERFIL", f_q1), y_cta + 92), "ACCEDE DESDE NUESTRO PERFIL", font=f_q1, fill=_C_BLANCO_PRO)
+    draw.text((_centrar_x_pro(draw, "COMENTA 'DATOS' + TU MARCADOR EXACTO", f_q2), y_cta + 154), "COMENTA 'DATOS' + TU MARCADOR EXACTO", font=f_q2, fill=_C_VERDE_PRO)
+    draw.text((_centrar_x_pro(draw, "APP WEB INTERACTIVA  •  SEGUIMIENTO EN TIEMPO REAL", f_q3), y_cta + 204), "APP WEB INTERACTIVA  •  SEGUIMIENTO EN TIEMPO REAL", font=f_q3, fill=_C_GRIS_PRO)
 
     lienzo.convert("RGB").save(ruta_out, quality=96)
     return ruta_out
@@ -2928,9 +2983,16 @@ def generar_paquete_redes_sociales(fecha_jornada, partidos_vip, partidos_descart
             s1 = _crear_escena_1_portada_pro(datos_v, esc_l, esc_v, tit_v, os.path.join(carpeta_videos, f"_v{num_v}_01_portada.jpg"))
             s2 = _crear_escena_2_metricas_pro(datos_v, esc_l, esc_v, os.path.join(carpeta_videos, f"_v{num_v}_02_metricas.jpg"))
             s3 = _crear_escena_3_jugada_pro(datos_v, esc_l, esc_v, os.path.join(carpeta_videos, f"_v{num_v}_03_jugada.jpg"))
+            otros_cartelera_v = [
+                x for x in todos_ordenados
+                if not (str(x.get("local", "")).lower() == loc_v.lower() and str(x.get("visitante", "")).lower() == vis_v.lower())
+            ][:4]
+            n_total_panel = max(len(todos_ordenados), len(otros_cartelera_v) + 1)
+
             s4 = _crear_escena_4_debate_tactico_pro(
                 datos_v, esc_l, esc_v,
-                os.path.join(carpeta_videos, f"_v{num_v}_04_claves.jpg")
+                os.path.join(carpeta_videos, f"_v{num_v}_04_claves.jpg"),
+                otros_partidos=otros_cartelera_v
             )
 
             # Crear Historia Diaria dedicada (100% centrada en 1080x1920 con métricas y zona de enlace)
@@ -2939,26 +3001,26 @@ def generar_paquete_redes_sociales(fecha_jornada, partidos_vip, partidos_descart
                 _crear_historia_diaria_pro(datos_v, esc_l, esc_v, tit_v, ruta_historia_hoy)
 
             if num_v == 1:
-                intro_voz = f"Ojo con el partidazo entre {loc_v} y {vis_v} por {liga_hab}. Así lo analizan las matemáticas antes del pitazo inicial."
+                intro_voz = f"Ojo con el dato que sacó nuestro algoritmo en Páiton para este {loc_v} contra {vis_v} por {liga_hab}. Quédate hasta el final porque hoy analizamos {n_total_panel} partidos en el panel."
             else:
-                intro_voz = f"Previa táctica con datos reales para {loc_v} frente a {vis_v} por {liga_hab}. Mira lo que proyecta nuestro modelo."
+                intro_voz = f"Nadie está viendo este detalle estadístico del {loc_v} frente a {vis_v} por {liga_hab}. Mira el avance del modelo antes del pitazo inicial."
 
             segmentos_4 = [
                 (
-                    f"Previa estadística: {loc_v} vs {vis_v}.|¿Quién domina según los datos?",
+                    f"Avance en Python: {loc_v} vs {vis_v}|Quédate hasta el final para ver la cartelera",
                     intro_voz,
                 ),
                 (
-                    f"Modelo Poisson en Python:|{datos_v['tot_goles']:.1f} goles esperados y {datos_v['tot_corn']:.0f} córners.",
-                    f"El modelo estadístico en Páiton estima {g_hab} goles esperados y alrededor de {c_hab} córners en el partido.",
+                    f"Avance Poisson: {datos_v['tot_goles']:.2f} goles esperados|Córners, remates y faltas en el panel",
+                    f"En el avance inicial, el modelo estima {g_hab} goles esperados. Pero las cifras exactas de córners, remates a puerta y disciplina están reservadas en nuestra aplicación web.",
                 ),
                 (
-                    f"Tendencia principal: {pick_vis}|Respaldada por histórico y Dixon-Coles.",
-                    f"La tendencia estadística más fuerte del encuentro apunta a {pick_voz}, respaldada por el histórico reciente y el modelo de Poison.",
+                    f"Lectura 1: {pick_vis}|Lectura 2 y modelo 1X2 solo en la comunidad",
+                    f"La primera lectura estadística apunta a {pick_voz}. La segunda lectura de mayor valor y las probabilidades exactas de resultado ya están desbloqueadas en nuestra comunidad diaria.",
                 ),
                 (
-                    f"¿Cuál es tu marcador para este duelo?|Déjalo en los comentarios 👇",
-                    f"Ahí tienes las claves tácticas completas del partido. ¿Cuál es tu marcador para este {loc_v} contra {vis_v}? Déjalo en los comentarios y síguenos para más análisis.",
+                    f"Accede al panel completo desde nuestro perfil|Comenta DATOS + tu marcador exacto",
+                    f"Además de este duelo, ya tienes listos otros {len(otros_cartelera_v) or 4} partidazos de hoy con su matriz completa. Entra desde nuestro perfil para acceder al panel diario y comenta DATOS con tu marcador exacto.",
                 ),
             ]
 
