@@ -3498,10 +3498,10 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-11-23 22:55:00,401879237,Brentford vs Everton (Inglaterra (Premier)),[VIP] Gol en 2do Tiempo,1.38,1.38,76.2,🟢 [LUZ VERDE / ALTO VALOR],3400.0,Ganada,4692.0,AUDITADA FT 4-0
 2026-11-23 22:55:00,401879237,Brentford vs Everton (Inglaterra (Premier)),[FREE] Goles Brentford > 0.5,1.18,1.18,80.7,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 4-0
 2026-11-23 22:55:00,401879237,Brentford vs Everton (Inglaterra (Premier)),[FREE] Doble Oport. 1X,1.24,1.24,75.3,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,620.0,AUDITADA FT 4-0
-2026-11-23 22:55:00,401933756,Gimnasia La Plata vs Newell's Old Boys (Argentina (Liga Profesional)),[VIP] Tarjetas > 3.5,1.7,PENDIENTE_CLV,60.0,🟢 [VALOR ALTO / OPERABLE],700.0,Pendiente,0.0,AUDITANDO
-2026-11-23 22:55:00,401933756,Gimnasia La Plata vs Newell's Old Boys (Argentina (Liga Profesional)),[VIP] Faltas Totales > 22.5,1.43,PENDIENTE_CLV,71.3,🟢 [LUZ VERDE / ALTO VALOR],1100.0,Pendiente,0.0,AUDITANDO
-2026-11-23 22:55:00,401933756,Gimnasia La Plata vs Newell's Old Boys (Argentina (Liga Profesional)),[FREE] Total Menos de 3.5 (Under),1.18,PENDIENTE_CLV,83.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
-2026-11-23 22:55:00,401933756,Gimnasia La Plata vs Newell's Old Boys (Argentina (Liga Profesional)),[FREE] Doble Oport. 1X,1.21,PENDIENTE_CLV,79.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
+2026-11-23 22:55:00,401933756,Gimnasia La Plata vs Newell's Old Boys (Argentina (Liga Profesional)),[VIP] Tarjetas > 3.5,1.7,1.70,60.0,🟢 [VALOR ALTO / OPERABLE],700.0,Ganada,1190.0,AUDITADA FT 4-2
+2026-11-23 22:55:00,401933756,Gimnasia La Plata vs Newell's Old Boys (Argentina (Liga Profesional)),[VIP] Faltas Totales > 22.5,1.43,1.43,71.3,🟢 [LUZ VERDE / ALTO VALOR],1100.0,Ganada,1573.0,AUDITADA FT 4-2
+2026-11-23 22:55:00,401933756,Gimnasia La Plata vs Newell's Old Boys (Argentina (Liga Profesional)),[FREE] Total Menos de 3.5 (Under),1.18,1.18,83.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 4-2
+2026-11-23 22:55:00,401933756,Gimnasia La Plata vs Newell's Old Boys (Argentina (Liga Profesional)),[FREE] Doble Oport. 1X,1.21,1.21,79.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,605.0,AUDITADA FT 4-2
 2026-11-24 01:25:00,401841323,Internacional vs Vitória (Brasil (Serie A)),[VIP] Doble Oport. 1X,1.38,PENDIENTE_CLV,79.3,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Pendiente,0.0,AUDITANDO
 2026-11-24 01:25:00,401841323,Internacional vs Vitória (Brasil (Serie A)),[VIP] Faltas Totales > 22.5,1.43,PENDIENTE_CLV,71.5,🟢 [LUZ VERDE / ALTO VALOR],1300.0,Pendiente,0.0,AUDITANDO
 2026-11-24 01:25:00,401841323,Internacional vs Vitória (Brasil (Serie A)),[FREE] Córners Internacional > 4.5,1.18,PENDIENTE_CLV,86.5,🟢 [LUZ VERDE / ALTO VALOR],2900.0,Pendiente,0.0,AUDITANDO
