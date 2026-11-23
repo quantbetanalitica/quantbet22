@@ -1210,6 +1210,218 @@ def crear_imagen_auditoria_vertical(fecha_hoy, ruta_csv="auditoria_apuestas.csv"
     return ruta_salida, tasa_txt
 
 
+
+def crear_imagenes_auditoria_completa_pro(fecha_auditar, ruta_csv="auditoria_apuestas.csv", modo_horario="manana"):
+    """Genera las láminas verticales (1080x1920, 7 tarjetas por página) con el 100% de las tarjetas
+    VIP y FREE de la jornada para el Canal PRO: finalizadas en verde/amarillo/rojo y pendientes en azul."""
+    if not os.path.exists(ruta_csv):
+        return [], "Sin datos", 0, 0, 0, 0, 0
+
+    try:
+        dt_base = datetime.strptime(str(fecha_auditar)[:10], "%Y-%m-%d")
+    except Exception:
+        dt_base = datetime.now(timezone.utc).replace(tzinfo=None) + timedelta(hours=1)
+        fecha_auditar = dt_base.strftime("%Y-%m-%d")
+
+    ini_vent = dt_base + timedelta(hours=7)
+    fin_vent = dt_base + timedelta(days=1, hours=8, minutes=59)
+
+    try:
+        df_pro = pd.read_csv(ruta_csv, dtype=str)
+    except Exception:
+        return [], "Sin datos", 0, 0, 0, 0, 0
+
+    grupos = {}
+    for _, r in df_pro.iterrows():
+        f_reg = str(r.get("Fecha_Registro", "")).strip()
+        try:
+            dt_r = datetime.strptime(f_reg[:16], "%Y-%m-%d %H:%M")
+        except Exception:
+            continue
+        if not (ini_vent <= dt_r <= fin_vent):
+            continue
+
+        merc_raw = str(r.get("Mercado", "")).strip()
+        if not (merc_raw.startswith("[VIP]") or merc_raw.startswith("[FREE]")):
+            continue
+        if any(ex in merc_raw.upper() for ex in ("DESCARTE", "VIP DOBLE", "PRO SNIPER")):
+            continue
+
+        tipo_t = "VIP" if merc_raw.startswith("[VIP]") else "FREE"
+        m_sin_tag = merc_raw.replace(f"[{tipo_t}] ", "").strip()
+        part_full = str(r.get("Partido", "")).strip()
+        part_key = part_full.split(" (")[0].strip().lower()
+        est_r = str(r.get("Estado", "")).strip()
+        clv_r = str(r.get("CLV_Status", "")).replace("AUDITADA ", "").replace("FT ", "").strip()
+        try:
+            cuo_r = float(r.get("Cuota_Compra", 1.42 if tipo_t == "VIP" else 1.24))
+        except Exception:
+            cuo_r = 1.42 if tipo_t == "VIP" else 1.24
+
+        hora_ini_est = (dt_r - timedelta(hours=1, minutes=55)).strftime("%H:%M")
+
+        clave_card = (tipo_t, part_key)
+        card = grupos.setdefault(clave_card, {
+            "tipo_tarjeta": tipo_t,
+            "partido": part_full,
+            "marcador": clv_r if "-" in clv_r else "",
+            "hora": hora_ini_est,
+            "dos_apuestas": [],
+        })
+        if "-" in clv_r and not card["marcador"]:
+            card["marcador"] = clv_r
+
+        m_corto = abreviar_pick_cliente(m_sin_tag, part_full)
+        if not any(x["mercado_corto"].lower() == m_corto.lower() for x in card["dos_apuestas"]):
+            gan_val = True if est_r in ("Ganada", "Mitad Devuelta") else (False if est_r == "Perdida" else None)
+            card["dos_apuestas"].append({
+                "mercado": merc_raw,
+                "mercado_corto": m_corto,
+                "cuota": cuo_r,
+                "ganada": gan_val,
+            })
+
+    tarjetas_pro = []
+    for card in grupos.values():
+        pks = card["dos_apuestas"][:2]
+        if not pks:
+            continue
+        card["dos_apuestas"] = pks
+        card["pendiente"] = any(k.get("ganada") is None for k in pks)
+        if not card["marcador"]:
+            card["marcador"] = f"{card['hora']}h" if card["pendiente"] else "FT"
+        tarjetas_pro.append(card)
+
+    if not tarjetas_pro:
+        return [], "Sin partidos", 0, 0, 0, 0, 0
+
+    tarjetas_pro.sort(key=lambda x: (bool(x["pendiente"]), 0 if x["tipo_tarjeta"] == "VIP" else 1, x["partido"].lower()))
+
+    ac_tot = sum(1 for t in tarjetas_pro for k in t["dos_apuestas"] if k.get("ganada") is True)
+    eval_tot = sum(1 for t in tarjetas_pro for k in t["dos_apuestas"] if k.get("ganada") is not None)
+    pend_cnt = sum(1 for t in tarjetas_pro if t["pendiente"])
+    fin_cnt = len(tarjetas_pro) - pend_cnt
+    tot_cards = len(tarjetas_pro)
+    tasa_txt = f"{ac_tot}/{eval_tot} Aciertos" + (" (En curso)" if pend_cnt > 0 else "") if eval_tot > 0 else "Jornada en curso"
+
+    por_pagina = 7
+    total_pags = (tot_cards + por_pagina - 1) // por_pagina
+    rutas_generadas = []
+
+    c_verde = (0, 232, 118, 255)
+    c_rojo = (255, 82, 92, 255)
+    c_oro = (255, 204, 0, 255)
+    c_azul = (86, 182, 255, 255)
+    c_blanco = (248, 250, 252, 255)
+    c_gris = (172, 186, 204, 255)
+
+    for idx_pag in range(total_pags):
+        bloque = tarjetas_pro[idx_pag * por_pagina : (idx_pag + 1) * por_pagina]
+        lienzo = _crear_fondo_broadcast_pro(acento_izq=(0, 232, 118), acento_der=(64, 174, 255))
+        _dibujar_marca_sup_pro(lienzo, y=46)
+        draw = ImageDraw.Draw(lienzo, "RGBA")
+
+        etq_pag = f"  •  PÁGINA {idx_pag + 1}/{total_pags}" if total_pags > 1 else ""
+        if pend_cnt > 0:
+            tit_sup = f"AUDITORÍA COMPLETA CANAL PRO (VIP + FREE){etq_pag}"
+            tit_prin = f"¿CÓMO VAMOS HOY PRO?  •  {fecha_auditar}"
+            txt_ef = f"Balance Global PRO: {ac_tot}/{eval_tot} Aciertos  ({fin_cnt}/{tot_cards} tarjetas finalizadas)"
+            txt_sub_ef = f"{pend_cnt} tarjeta(s) todavía en espera  •  100% de la jornada (VIP + FREE)"
+        else:
+            tit_sup = f"CIERRE OFICIAL CANAL PRO (VIP + FREE){etq_pag}"
+            tit_prin = f"AUDITORÍA TOTAL PRO  •  {fecha_auditar}"
+            txt_ef = f"Efectividad Total PRO: {ac_tot}/{eval_tot} Aciertos  ({fin_cnt}/{tot_cards} tarjetas)"
+            txt_sub_ef = f"Fecha Auditada: {fecha_auditar}  •  100% de partidos VIP y FREE verificados"
+
+        draw.rounded_rectangle([(46, 84), (1034, 140)], radius=26, fill=(12, 34, 26, 240), outline=c_verde, width=2)
+        f_sup = _fuente_pro_ajustada(draw, tit_sup, "bold", 23, 940, 15)
+        draw.text((_centrar_x_pro(draw, tit_sup, f_sup), 99), tit_sup, font=f_sup, fill=c_verde)
+
+        f_pr = _fuente_pro_ajustada(draw, tit_prin, "bold", 40, 960, 22)
+        draw.text((_centrar_x_pro(draw, tit_prin, f_pr), 158), tit_prin, font=f_pr, fill=c_blanco)
+
+        draw.rounded_rectangle([(46, 218), (1034, 314)], radius=22, fill=(14, 26, 24, 244), outline=c_verde, width=2)
+        f_ef = _fuente_pro_ajustada(draw, txt_ef, "bold", 30, 940, 18)
+        f_sef = _fuente_pro_ajustada(draw, txt_sub_ef, "mono", 20, 940, 14)
+        draw.text((_centrar_x_pro(draw, txt_ef, f_ef), 232), txt_ef, font=f_ef, fill=c_verde)
+        draw.text((_centrar_x_pro(draw, txt_sub_ef, f_sef), 276), txt_sub_ef, font=f_sef, fill=c_oro)
+
+        y = 334
+        alto_card = 128
+        salto_card = 138
+        for item in bloque:
+            pks = item["dos_apuestas"]
+            es_pend = bool(item["pendiente"])
+            ac_p = sum(1 for k in pks if k.get("ganada") is True)
+            tot_p = max(1, len(pks))
+
+            if es_pend:
+                col_b = c_azul
+                bg_c = (14, 24, 40, 244)
+            else:
+                es_verde = (ac_p == tot_p)
+                col_b = c_verde if es_verde else (c_oro if ac_p >= 1 else c_rojo)
+                bg_c = (12, 28, 22, 244) if es_verde else ((28, 24, 13, 244) if ac_p >= 1 else (36, 15, 18, 244))
+
+            draw.rounded_rectangle([(46, y), (1034, y + alto_card)], radius=20, fill=bg_c, outline=col_b, width=2)
+            if es_pend:
+                dibujar_icono_pendiente(draw, 66, y + 18, tam=26)
+            else:
+                dibujar_icono_check_o_cruz(draw, 66, y + 18, ac_p >= 1, tam=26)
+
+            tipo_t = item["tipo_tarjeta"]
+            color_tag_nivel = c_oro if tipo_t == "VIP" else c_verde
+            tag_nivel_txt = f"[{tipo_t}]"
+            f_tag_niv = _fuente_pro("bold", 26)
+            draw.text((104, y + 16), tag_nivel_txt, font=f_tag_niv, fill=color_tag_nivel)
+            w_tag = draw.textbbox((0, 0), tag_nivel_txt, font=f_tag_niv)[2]
+
+            part_corto = str(item.get("partido", "")).strip()
+            if len(part_corto) > 46 and " (" in part_corto:
+                part_corto = part_corto.split(" (")[0].strip()
+            if es_pend:
+                h_txt = str(item.get("hora", "")).strip()
+                suf_estado = f"  •  POR JUGAR ({h_txt}h)" if h_txt else "  •  EN ESPERA"
+                linea_duelo = f" {part_corto}{suf_estado}"
+            else:
+                linea_duelo = f" {part_corto} ({item.get('marcador', 'FT')})  [{ac_p}/{tot_p}]"
+
+            f_duelo = _fuente_pro_ajustada(draw, linea_duelo, "bold", 26, 902 - w_tag - 18, 14)
+            draw.text((108 + w_tag, y + 17), linea_duelo, font=f_duelo, fill=c_blanco)
+
+            x_cur = 68
+            for k in pks[:2]:
+                if k.get("ganada") is None:
+                    dibujar_icono_pendiente(draw, x_cur, y + 72, tam=22)
+                    col_pick = c_azul
+                else:
+                    dibujar_icono_check_o_cruz(draw, x_cur, y + 72, bool(k.get("ganada")), tam=22)
+                    col_pick = c_verde if k.get("ganada") else c_rojo
+                txt_k = f"{k.get('mercado_corto', '')} ({float(k.get('cuota', 1.25)):.2f})"
+                f_k = _fuente_pro_ajustada(draw, txt_k, "mono", 23, 435, 16)
+                draw.text((x_cur + 32, y + 70), txt_k, font=f_k, fill=col_pick)
+                x_cur += 478
+            y += salto_card
+
+        y_cta = max(y + 16, 1320)
+        draw.rounded_rectangle([(46, y_cta), (1034, y_cta + 172)], radius=26, fill=(22, 20, 12, 246), outline=c_oro, width=3)
+        t_c1 = f"AUDITORÍA COMPLETA PRO  •  PARTE {idx_pag + 1} DE {total_pags}"
+        t_c2 = "VER RESULTADOS EN VIVO EN QUANTBET22.STREAMLIT.APP"
+        t_c3 = "@QUANTBET22  •  TRANSPARENCIA TOTAL EN PYTHON"
+        f_c1 = _fuente_pro_ajustada(draw, t_c1, "bold", 32, 930, 20)
+        f_c2 = _fuente_pro_ajustada(draw, t_c2, "mono", 24, 930, 16)
+        f_c3 = _fuente_pro_ajustada(draw, t_c3, "mono", 20, 930, 14)
+        draw.text((_centrar_x_pro(draw, t_c1, f_c1), y_cta + 24), t_c1, font=f_c1, fill=c_oro)
+        draw.text((_centrar_x_pro(draw, t_c2, f_c2), y_cta + 76), t_c2, font=f_c2, fill=c_verde)
+        draw.text((_centrar_x_pro(draw, t_c3, f_c3), y_cta + 122), t_c3, font=f_c3, fill=c_gris)
+
+        ruta_pag = f"00_AUDITORIA_PRO_{fecha_auditar}_P{idx_pag + 1}_de_{total_pags}.jpg"
+        lienzo.convert("RGB").save(ruta_pag, quality=96)
+        rutas_generadas.append(ruta_pag)
+
+    return rutas_generadas, tasa_txt, ac_tot, eval_tot, fin_cnt, tot_cards, pend_cnt
+
+
 def publicar_auditoria_nocturna_canal_free(fecha_auditar=None, enviar_a_clientes=True, modo_horario="manana"):
     """Refresca marcadores FT, genera la imagen vertical oficial de las 7 tarjetas (4 VIP + 3 FREE)
     EXCLUSIVAMENTE de esa jornada (sin mezclar días anteriores) y la publica."""
@@ -1272,7 +1484,29 @@ def publicar_auditoria_nocturna_canal_free(fecha_auditar=None, enviar_a_clientes
         m.enviar_imagen_telegram(m.TOKEN_CARTERO, m.CHAT_ID_CLIENTES_FREE, ruta_img, caption_oficial_free)
         # 4. Enviar directo al Canal VIP de Clientes con su texto exclusivo
         m.enviar_imagen_telegram(m.TOKEN_CARTERO, m.CHAT_ID_CLIENTES_VIP, ruta_img, caption_oficial_vip)
-        print(f"✅ Imagen + texto de auditoría ({fecha_auditar} | {modo_horario}) enviada a Bot de Auditorías, Canal FREE y Canal VIP.")
+        # 5. Enviar Auditoría Completa (100% de partidos VIP + FREE en páginas de 7) al Canal PRO
+        try:
+            rutas_pro, tasa_pro, ac_p_tot, ev_p_tot, fin_p, tot_p_cards, pend_p = crear_imagenes_auditoria_completa_pro(
+                fecha_auditar, modo_horario=modo_horario
+            )
+            n_pags_pro = len(rutas_pro)
+            for idx_rp, r_pro_img in enumerate(rutas_pro, start=1):
+                if modo_horario == "noche":
+                    tit_pro = f"👑 <b>¿CÓMO VAMOS HOY EQUIPO PRO? ({fecha_auditar}) — {tasa_pro}</b> [{idx_rp}/{n_pags_pro}]"
+                    desc_pro = f"Balance completo de TODOS los partidos de hoy ({fin_p}/{tot_p_cards} tarjetas VIP+FREE finalizadas, {pend_p} en espera)."
+                else:
+                    tit_pro = f"👑 <b>CIERRE OFICIAL COMPLETO EQUIPO PRO ({fecha_auditar}) — {tasa_pro}</b> [{idx_rp}/{n_pags_pro}]"
+                    desc_pro = f"Auditoría total verificada del 100% de la jornada ({tot_p_cards} tarjetas VIP+FREE con marcador y boxscore reales)."
+                cap_pro = (
+                    f"{tit_pro}\n\n"
+                    f"{desc_pro}\n"
+                    "🌐 👉 <a href='https://quantbet22.streamlit.app'>https://quantbet22.streamlit.app</a>"
+                )
+                m.enviar_imagen_telegram(m.TOKEN_CARTERO, m.CHAT_ID_CLIENTES_PRO, r_pro_img, cap_pro)
+            print(f"✅ Auditoría PRO completa ({n_pags_pro} lámina(s), {tot_p_cards} tarjetas VIP+FREE) enviada al Canal PRO.")
+        except Exception as e_pro_aud:
+            print(f"⚠️ Aviso enviando auditoría completa al Canal PRO: {e_pro_aud}")
+        print(f"✅ Imagen + texto de auditoría ({fecha_auditar} | {modo_horario}) enviada a Bot de Auditorías, Canal FREE, Canal VIP y Canal PRO.")
     else:
         print(f"✅ Imagen + texto de auditoría ({fecha_auditar} | {modo_horario}) enviada en MODO PRIVADO solo a tu Bot de Auditorías y Chat Privado.")
 
