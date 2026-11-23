@@ -396,6 +396,36 @@ def puntaje_cartelera_video(p):
     return pts
 
 
+def _es_champions_masculina_video(p):
+    liga = str(p.get("liga_visual", "")).upper()
+    return ("UEFA CHAMPIONS" in liga) and ("WOMEN" not in liga) and ("FEMEN" not in liga)
+
+
+def seleccionar_top2_videos_cartelera(pool_partidos):
+    """Regla de Cartelera Inteligente para Vídeos:
+    - En días de UEFA Champions League masculina: prioriza los 2 mejores partidazos de Champions
+      (Real Madrid / Barcelona en Champions primero, luego los mejores cruces Tier 1 de Champions)
+      para maximizar el alcance viral, sin que Millonarios desplace a la Champions.
+    - En días SIN Champions League: Real Madrid, Barcelona y Millonarios mantienen su prioridad absoluta."""
+    if not pool_partidos:
+        return []
+    champions_dia = [p for p in pool_partidos if _es_champions_masculina_video(p)]
+    if len(champions_dia) >= 2:
+        # Ordenar solo dentro de Champions (así Millonarios nunca desplaza un partidazo de Champions)
+        ord_ucl = sorted(champions_dia, key=puntaje_cartelera_video, reverse=True)
+        resto = sorted([p for p in pool_partidos if p not in champions_dia], key=puntaje_cartelera_video, reverse=True)
+        return ord_ucl + resto
+    elif len(champions_dia) == 1:
+        ucl_1 = champions_dia[0]
+        resto = sorted([p for p in pool_partidos if p is not ucl_1], key=puntaje_cartelera_video, reverse=True)
+        # Si juega Real Madrid o Barcelona fuera de Champions, respetarlo; de lo contrario Champions #1
+        top_glob = sorted(pool_partidos, key=puntaje_cartelera_video, reverse=True)
+        if top_glob and puntaje_cartelera_video(top_glob[0]) >= 9500 and top_glob[0] is not ucl_1:
+            return [top_glob[0], ucl_1] + [p for p in resto if p is not top_glob[0]]
+        return [ucl_1] + resto
+    return sorted(pool_partidos, key=puntaje_cartelera_video, reverse=True)
+
+
 def obtener_fuente_video_ajustada(draw, texto, archivo_ttf, tam_inicial, ancho_max_px, tam_min=16):
     tam = tam_inicial
     while tam >= tam_min:
@@ -698,13 +728,25 @@ def evaluar_mercado_contra_resultado_real(merc, gh, ga, g_ht, es_sudamerica=Fals
     return tot >= 2
 
 
-def abreviar_pick_cliente(merc):
-    m = str(merc)
-    m = m.replace("[VIP] ", "").replace("[FREE] ", "")
-    m = m.replace("Remates Puerta", "Remates").replace("Faltas Totales", "Faltas")
-    m = m.replace("Gol en 2do Tiempo", "Gol 2T").replace("Gol en 1T", "Gol 1T")
-    m = m.replace("Total Menos de 2.5 (Under)", "Under 2.5").replace("Total Menos de 3.5 (Under)", "Under 3.5")
-    m = m.replace("Total Asiático > 2.25", "Asiático > 2.25").replace("Ambos Marcan (BTTS)", "Ambos Marcan")
+def abreviar_pick_cliente(merc, partido=""):
+    m = str(merc).replace("[VIP] ", "").replace("[FREE] ", "").strip()
+    try:
+        from generador_imagenes import formatear_mercado_claro_cliente
+        loc_a, vis_a = (str(partido).split(" (")[0].split(" vs ") + ["", ""])[:2]
+        m_claro, _ = formatear_mercado_claro_cliente(m, loc_a, vis_a)
+        m = m_claro
+    except Exception:
+        pass
+    m = (
+        m.replace(" Goles Totales", " Goles")
+         .replace(" Faltas Totales", " Faltas")
+         .replace(" Tarjetas Totales", " Tarjetas")
+         .replace(" Córners Totales", " Córners")
+         .replace("Más de 0.5 Goles en 1er Tiempo", "Gol en 1er Tiempo")
+         .replace("Más de 0.5 Goles en 2do Tiempo", "Gol en 2do Tiempo")
+         .replace("Ambos Equipos Marcan (Sí)", "Ambos Marcan (Sí)")
+         .replace("Doble Oportunidad ", "Doble Oport. ")
+    )
     return m
 
 
@@ -797,10 +839,10 @@ def seleccionar_7_partidos_14_apuestas_clientes(fecha_hoy, ruta_csv="auditoria_a
                             "fecha": str(fecha_tope_auditoria),
                             "dos_apuestas": [],
                         })
-                        if not any(x["mercado_corto"].lower() == abreviar_pick_cliente(m_sin_tag).lower() for x in slot["dos_apuestas"]):
+                        if not any(x["mercado_corto"].lower() == abreviar_pick_cliente(m_sin_tag, p_full).lower() for x in slot["dos_apuestas"]):
                             slot["dos_apuestas"].append({
                                 "mercado": f"[{lvl}] {m_sin_tag}",
-                                "mercado_corto": abreviar_pick_cliente(m_sin_tag),
+                                "mercado_corto": abreviar_pick_cliente(m_sin_tag, p_full),
                                 "cuota": cuo_r,
                                 "ganada": gano_r,
                             })
@@ -910,7 +952,7 @@ def seleccionar_7_partidos_14_apuestas_clientes(fecha_hoy, ruta_csv="auditoria_a
                     cuo = float(sel.get("cuota", 1.42 if tipo_t == "VIP" else 1.24))
                     mercados_pend.append({
                         "mercado": f"[{tipo_t}] {merc}",
-                        "mercado_corto": abreviar_pick_cliente(merc),
+                        "mercado_corto": abreviar_pick_cliente(merc, part_nom),
                         "cuota": cuo,
                         "ganada": None
                     })
@@ -972,7 +1014,7 @@ def seleccionar_7_partidos_14_apuestas_clientes(fecha_hoy, ruta_csv="auditoria_a
                     ganada = evaluar_mercado_contra_resultado_real(merc, gh, ga, g_ht, es_sud, part_nom, stats_reales=stats_bx_gv)
                 dos_apuestas.append({
                     "mercado": f"[{tipo_t}] {merc}",
-                    "mercado_corto": abreviar_pick_cliente(merc),
+                    "mercado_corto": abreviar_pick_cliente(merc, part_nom),
                     "cuota": cuo,
                     "ganada": ganada
                 })
@@ -1151,7 +1193,7 @@ def crear_imagen_auditoria_vertical(fecha_hoy, ruta_csv="auditoria_apuestas.csv"
     # Pie CTA centrado y elegante
     y_cta = max(y + 16, 1320)
     draw.rounded_rectangle([(46, y_cta), (1034, y_cta + 172)], radius=26, fill=(22, 20, 12, 246), outline=c_oro, width=3)
-    t_c1 = "PASE DE PRUEBA VIP 24 HORAS  •  SOLO 1.00 EUR"
+    t_c1 = "AUDITORÍA PÚBLICA EN VIVO  •  COMUNIDAD FREE"
     t_c2 = "VER RESULTADOS EN VIVO EN QUANTBET22.STREAMLIT.APP"
     t_c3 = "@QUANTBET22  •  TRANSPARENCIA TOTAL EN PYTHON"
     f_c1 = _fuente_pro_ajustada(draw, t_c1, "bold", 32, 930, 20)
@@ -1210,26 +1252,16 @@ def publicar_auditoria_nocturna_canal_free(fecha_auditar=None, enviar_a_clientes
     caption_oficial_free = (
         f"{titulo_free}\n\n"
         f"{intro_free}\n\n"
-        f"🔥 <b>PRUEBA {cta_dia} EL CANAL VIP POR SOLO 1.00 € (24H)</b>\n"
-        f"✅ 4 Tarjetas VIP de cuota alta de {cta_dia.lower()} + Doble VIP + Triple Sniper.\n"
-        "✅ Pago único por 1 día (sin cobros automáticos).\n"
-        "⏳ <i>Promo VIP 10 días (7.99 €) y PRO solo hasta el 30 de noviembre.</i>\n\n"
-        "💳 <b>1. Tarjeta en 1 clic (Whop Oficial):</b>\n"
-        "👉 <a href='https://whop.com/youtube-d4c7/quantbet22-canal-vip/'>Activar Pase Diario (1.00 €)</a>\n"
-        "📲 <b>2. Bizum, Nequi o USDT:</b>\n"
-        "👉 Escribe <b>\"PASE 1 DIA\"</b> aquí: @QuantBetSoporte_bot\n\n"
-        "🌐 <b>Auditoría y resultados en vivo:</b>\n"
-        "👉 <a href='https://quantbet22.streamlit.app'>quantbet22.streamlit.app</a>"
+        "🔒 <b>Plazas VIP y PRO cerradas temporalmente</b> por control de calidad y calibración independiente por liga.\n"
+        "📲 <i>Mientras tanto, el Canal FREE sigue 100% abierto con 3 tarjetas diarias gratis y auditoría pública verificable.</i>\n\n"
+        "📱 <b>Consulta resultados en vivo e instala la App Web gratis:</b>\n"
+        "👉 <a href='https://quantbet22.streamlit.app'>https://quantbet22.streamlit.app</a>"
     )
     caption_oficial_vip = (
         f"{titulo_vip}\n\n"
         f"{intro_vip}\n\n"
-        "📈 <i>Recuerden mantener disciplina con el Stake de Kelly y consultar todas las estadísticas y combinadas auditadas en tiempo real en nuestra plataforma web:</i>\n"
-        "🌐 👉 <a href='https://quantbet22.streamlit.app'>https://quantbet22.streamlit.app</a>\n\n"
-        "👑 <b>¿Quieres dar el salto al Canal PRO (100% de las ligas + Combinada Triple Sniper 3X)?</b>\n"
-        "⏳ <i>Promo especial hasta el 30 DE NOVIEMBRE por solo 49.99 € (Antes 74.99 €):</i>\n"
-        "👉 <a href='https://whop.com/youtube-d4c7/products/uantbet22-membresia-pro-avanzada/?ref=related_products'>Desbloquear Plan PRO aquí</a>\n"
-        "💬 Soporte directo 24/7: @QuantBetSoporte_bot"
+        "📈 <i>Consulta todas las estadísticas, métricas por liga y la auditoría completa en tiempo real en nuestra App Web:</i>\n"
+        "🌐 👉 <a href='https://quantbet22.streamlit.app'>https://quantbet22.streamlit.app</a>"
     )
     # 1. Enviar SIEMPRE imagen + texto a tu Bot Personal de Auditorías
     m.enviar_imagen_telegram(m.TOKEN_TICKETS, m.CHAT_ID_GRUPO_AUDITORIAS, ruta_img, caption_oficial_free)
@@ -1740,7 +1772,7 @@ def es_partido_de_america(p):
 # - Diseño centrado, simétrico y elegante (sin vacío inferior ni aspecto de hoja)
 # - Historia diaria dedicada centrada verticalmente + Auditoría completa 7 tarjetas
 # ==============================================================================
-CARPETA_ESCUDOS_PRO = os.path.join(os.path.dirname(os.path.abspath(__file__)), "escudos_cache_v2")
+CARPETA_ESCUDOS_PRO = os.path.join(os.path.dirname(os.path.abspath(__file__)), "escudos_cache_v3")
 os.makedirs(CARPETA_ESCUDOS_PRO, exist_ok=True)
 
 _C_VERDE_PRO = (0, 232, 118, 255)
@@ -1840,21 +1872,33 @@ def _tokens_escudo(nombre):
 def _nombre_coincide_escudo(objetivo, candidato):
     if not objetivo or not candidato:
         return False
+    obj_l = str(objetivo).lower()
+    can_l = str(candidato).lower()
+    # Bloquear cruces entre masculino/femenino o juvenil/absoluto
+    es_fem_o = any(k in obj_l for k in ("women", "femenin", "(f)", "(w)"))
+    es_fem_c = any(k in can_l for k in ("women", "femenin", "(f)", "(w)"))
+    if es_fem_o != es_fem_c:
+        return False
+    if any(k in can_l for k in ("u19", "u20", "u21", "u23", "sub-20", "sub 20", "youth")) and not any(k in obj_l for k in ("u19", "u20", "u21", "u23")):
+        return False
+
     t_obj = _tokens_escudo(objetivo)
     t_can = _tokens_escudo(candidato)
     if not t_obj or not t_can:
         return False
-    # Bloquear rivales de misma ciudad / prefijo opuesto
+    # Bloquear rivales de misma ciudad / prefijo opuesto / cruces falsos (ej. Millonarios vs Universitario / Millwall / Unión)
     opuestos = [
         ("city", "united"), ("real", "atletico"), ("madrid", "rayo"),
         ("inter", "milan"), ("roma", "lazio"), ("benfica", "sporting"),
         ("river", "boca"), ("nacional", "medellin"), ("millonarios", "santa"),
+        ("millonarios", "universitario"), ("millonarios", "millwall"), ("millonarios", "union"),
+        ("universitario", "union"), ("universidad", "union"),
         ("flamengo", "fluminense"), ("palmeiras", "corinthians"), ("palmeiras", "santos"),
     ]
     for w1, w2 in opuestos:
         if (w1 in t_obj and w2 in t_can and w2 not in t_obj) or (w2 in t_obj and w1 in t_can and w1 not in t_obj):
             return False
-    genericos = {"real", "atletico", "united", "city", "olympique", "borussia", "racing", "nacional", "santa", "san", "inter"}
+    genericos = {"real", "atletico", "united", "city", "olympique", "borussia", "racing", "nacional", "santa", "san", "inter", "union", "universidad", "universitario"}
     dist_obj = t_obj - genericos
     dist_can = t_can - genericos
     if not dist_obj or not dist_can:
@@ -1866,9 +1910,10 @@ def _nombre_coincide_escudo(objetivo, candidato):
             if ("city" in t_obj or "united" in t_obj) and ("city" in t_can or "united" in t_can):
                 return False
         return True
+    # Exigir mínimo 6 letras coincidentes en prefijo (evita cruces falsos de 4 letras como univ/unio/mill)
     for a in dist_obj:
         for b in dist_can:
-            if len(a) >= 4 and len(b) >= 4 and (a.startswith(b[:4]) or b.startswith(a[:4])):
+            if len(a) >= 6 and len(b) >= 6 and a[:6] == b[:6]:
                 return True
     return False
 
@@ -1889,14 +1934,17 @@ def _descargar_y_guardar_png_valido(url_img, ruta_png):
         if r_img.status_code == 200 and len(r_img.content) > 700:
             im = Image.open(BytesIO(r_img.content)).convert("RGBA")
             if im.width >= 32 and im.height >= 32:
-                # Rechazar el placeholder estándar gris de cámara "Image not available" (sin fondo transparente y casi monocromo gris medio)
+                # Rechazar fotos rectangulares / banners que no tienen proporción de escudo
+                ratio_wh = im.width / max(1.0, float(im.height))
+                if ratio_wh > 1.70 or ratio_wh < 0.58:
+                    return False
+                # Rechazar placeholders grises o fotos completamente opacas (ej. estadio/jugador desde Wikipedia)
                 alpha_vals = list(im.getchannel("A").getdata())
                 pct_opaco = sum(1 for a in alpha_vals if a > 240) / max(1, len(alpha_vals))
                 if pct_opaco > 0.96:
-                    # Un escudo oficial real suele ser PNG con fondo transparente; revisar si el borde es gris placeholder
                     px = im.load()
                     r0, g0, b0, _ = px[2, 2]
-                    if abs(r0 - g0) <= 5 and abs(g0 - b0) <= 5 and 25 <= r0 <= 110:
+                    if (abs(r0 - g0) <= 5 and abs(g0 - b0) <= 5 and 25 <= r0 <= 110) or ("wikimedia.org" in u_low):
                         return False
                 im.save(ruta_png)
                 return True
@@ -1924,6 +1972,13 @@ def obtener_escudo_real_equipo(nombre_equipo, team_id=None, logo_url=None, tam=2
             "paris sg": "Paris Saint-Germain", "psg": "Paris Saint-Germain",
             "ol lyonnes": "Olympique Lyonnais", "man united": "Manchester United", "man city": "Manchester City",
             "sp lisbon": "Sporting CP", "sp braga": "SC Braga",
+            "millonarios": "Millonarios FC", "millonarios fc": "Millonarios FC",
+            "santa fe": "Independiente Santa Fe", "independiente santa fe": "Independiente Santa Fe",
+            "junior": "Junior FC", "atletico junior": "Junior FC",
+            "america de cali": "America de Cali", "atletico nacional": "Atletico Nacional",
+            "deportivo cali": "Deportivo Cali", "independiente medellin": "Independiente Medellin",
+            "once caldas": "Once Caldas", "deportes tolima": "Deportes Tolima",
+            "bucaramanga": "Atletico Bucaramanga", "atletico bucaramanga": "Atletico Bucaramanga",
         }
         nom_orig = str(nombre_equipo).strip()
         nom_alias = alias_busq.get(nom_orig.lower(), nom_orig)
@@ -2157,21 +2212,27 @@ def _dibujar_candado_pro(draw, cx, cy, color=_C_ORO_PRO):
     draw.ellipse([(cx - 6, cy + 8), (cx + 6, cy + 20)], fill=(12, 18, 28, 255))
 
 
-def _limpiar_pick_visual_pro(pick_txt):
-    t = str(pick_txt).strip()
-    return t.replace("Doble Oport.", "Doble Oportunidad").replace("Ambos Marcan (BTTS)", "Ambos Marcan")
+def _limpiar_pick_visual_pro(pick_txt, local="", visitante=""):
+    try:
+        from generador_imagenes import formatear_mercado_claro_cliente
+        tit_v, _ = formatear_mercado_claro_cliente(pick_txt, local, visitante)
+        return tit_v
+    except Exception:
+        t = str(pick_txt).strip()
+        return t.replace("Doble Oport.", "Doble Oportunidad").replace("Ambos Marcan (BTTS)", "Ambos Marcan")
 
 
-def _limpiar_pick_voz_pro(pick_txt):
-    t = _limpiar_pick_visual_pro(pick_txt)
-    t = t.replace("Over ", "Más de ").replace("Under ", "Menos de ")
-    t = t.replace("1X", "uno equis").replace("X2", "equis dos")
-    t = t.replace("1T", "primer tiempo").replace("2do Tiempo", "segundo tiempo").replace("2T", "segundo tiempo")
-    t = t.replace(" > ", " superior a ").replace(">", " superior a ")
+def _limpiar_pick_voz_pro(pick_txt, local="", visitante=""):
+    t = _limpiar_pick_visual_pro(pick_txt, local, visitante)
+    t = t.replace("Over ", "Más de ").replace("Under ", "Menos de ").replace(" + ", " y ")
+    t = t.replace("1X", "uno equis").replace("X2", "equis dos").replace("(Sí)", "")
+    t = t.replace("1er Tiempo", "primer tiempo").replace("1T", "primer tiempo")
+    t = t.replace("2do Tiempo", "segundo tiempo").replace("2T", "segundo tiempo")
+    t = t.replace(" > ", " superior a ").replace(">", " superior a ").replace(":", " para")
     t = re.sub(r"(\d+)\.5\b", r"\1 punto 5", t)
     t = re.sub(r"(\d+)\.25\b", r"\1 punto 25", t)
     t = re.sub(r"(\d+)\.75\b", r"\1 punto 75", t)
-    return t
+    return " ".join(t.split())
 
 
 def _crear_escena_1_portada_pro(datos, esc_l, esc_v, titular_gancho, ruta_out):
@@ -2371,7 +2432,7 @@ def _crear_escena_3_jugada_pro(datos, esc_l, esc_v, ruta_out):
     f_b1 = _fuente_pro("bold", 24)
     draw.text((_centrar_x_pro(draw, "TENDENCIA PRINCIPAL DEL MODELO", f_b1), y1 + 46), "TENDENCIA PRINCIPAL DEL MODELO", font=f_b1, fill=(7, 18, 12, 255))
 
-    pick_txt = _limpiar_pick_visual_pro(datos["pick_abierto"]).upper()
+    pick_txt = _limpiar_pick_visual_pro(datos["pick_abierto"], datos.get("local", ""), datos.get("visitante", "")).upper()
     pick_txt = pick_txt.replace("OVER ", "MÁS DE ").replace("UNDER ", "MENOS DE ")
     f_pick = _fuente_pro_ajustada(draw, pick_txt, "bold", 54, 860, 26)
     draw.text((_centrar_x_pro(draw, pick_txt, f_pick), y1 + 128), pick_txt, font=f_pick, fill=_C_BLANCO_PRO)
@@ -2773,9 +2834,10 @@ def generar_paquete_redes_sociales(fecha_jornada, partidos_vip, partidos_descart
     ]
     por_jugar = [p for p in pool_cartelera if not p.get("ya_empezo")]
     base_ranking = con_margen if len(con_margen) >= 2 else (por_jugar if len(por_jugar) >= 2 else pool_cartelera)
-    todos_ordenados = sorted(base_ranking, key=puntaje_cartelera_video, reverse=True)
-
-    print("    📋 [TOP 6 CARTELERA GLOBAL PARA VÍDEOS] (Prioridad: Real Madrid > Barcelona > Millonarios > Top 2 Mundial):")
+    todos_ordenados = seleccionar_top2_videos_cartelera(base_ranking)
+    hay_ucl_hoy = any(_es_champions_masculina_video(x) for x in base_ranking)
+    etq_prio_v = "Prioridad CHAMPIONS LEAGUE (Top 2 UCL)" if hay_ucl_hoy else "Prioridad: Real Madrid > Barcelona > Millonarios > Top 2 Mundial"
+    print(f"    📋 [TOP 6 CARTELERA GLOBAL PARA VÍDEOS] ({etq_prio_v}):")
     for idx_r, p_r in enumerate(todos_ordenados[:6], start=1):
         print(f"       #{idx_r} ({puntaje_cartelera_video(p_r):7.1f} pts) | {p_r.get('hora', '')}h | {p_r.get('local')} vs {p_r.get('visitante')} ({p_r.get('liga_visual')})")
 
@@ -2855,8 +2917,8 @@ def generar_paquete_redes_sociales(fecha_jornada, partidos_vip, partidos_descart
             liga_hab = formatear_liga_hablada(datos_v["liga"])
             g_hab = formatear_numero_hablado(round(datos_v["tot_goles"], 1))
             c_hab = f"{datos_v['tot_corn']:.0f}"
-            pick_vis = _limpiar_pick_visual_pro(datos_v["pick_abierto"])
-            pick_voz = _limpiar_pick_voz_pro(datos_v["pick_abierto"])
+            pick_vis = _limpiar_pick_visual_pro(datos_v["pick_abierto"], loc_v, vis_v)
+            pick_voz = _limpiar_pick_voz_pro(datos_v["pick_abierto"], loc_v, vis_v)
 
             # Descarga verificada por NOMBRE (cero cruce de IDs entre ESPN y API-Sports)
             esc_l = obtener_escudo_real_equipo(loc_v, logo_url=p_vid.get("logo_local"), tam=230)
