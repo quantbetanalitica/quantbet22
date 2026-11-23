@@ -32,14 +32,14 @@ ARCHIVO_CALIBRACION_LIGAS = "calibracion_ligas.json"
 # Perfiles base independientes por liga (calibrables automáticamente vía MLE sin tocar ligas bloqueadas)
 PERFILES_BASE_LIGAS = {
     "inglaterra": {
-        "nombre": "Premier League", "bloqueada_ok": False, "activa_clientes": True,
+        "nombre": "Premier League", "bloqueada_ok": True, "activa_clientes": True,
         "mu_h": 1.62, "mu_a": 1.32, "rho_dc": -0.075, "xi_decay": 0.11, "kappa_bayes": 4.0,
         "phi_corners": 1.48, "phi_faltas": 1.62, "phi_remates": 1.36, "phi_tarjetas": 1.24,
         "peso_mercado_1x2": 0.56, "peso_mercado_goles": 0.42, "entropia_max_ganador": 0.945,
         "notas": "Ritmo alto, menos faltas, córners altos."
     },
     "españa": {
-        "nombre": "LaLiga EA Sports", "bloqueada_ok": False, "activa_clientes": True,
+        "nombre": "LaLiga EA Sports", "bloqueada_ok": True, "activa_clientes": True,
         "mu_h": 1.46, "mu_a": 1.09, "rho_dc": -0.115, "xi_decay": 0.11, "kappa_bayes": 4.0,
         "phi_corners": 1.44, "phi_faltas": 1.78, "phi_remates": 1.34, "phi_tarjetas": 1.32,
         "peso_mercado_1x2": 0.58, "peso_mercado_goles": 0.42, "entropia_max_ganador": 0.940,
@@ -53,14 +53,14 @@ PERFILES_BASE_LIGAS = {
         "notas": "Alta paridad y rotación de descendidos/ascendidos; alto peso a tabla actual y mercado."
     },
     "italia": {
-        "nombre": "Serie A", "bloqueada_ok": False, "activa_clientes": True,
+        "nombre": "Serie A", "bloqueada_ok": True, "activa_clientes": True,
         "mu_h": 1.42, "mu_a": 1.14, "rho_dc": -0.125, "xi_decay": 0.12, "kappa_bayes": 4.0,
         "phi_corners": 1.45, "phi_faltas": 1.75, "phi_remates": 1.35, "phi_tarjetas": 1.30,
         "peso_mercado_1x2": 0.58, "peso_mercado_goles": 0.42, "entropia_max_ganador": 0.940,
         "notas": "Táctica estructurada, correlación moderada en marcadores cerrados."
     },
     "alemania": {
-        "nombre": "Bundesliga", "bloqueada_ok": False, "activa_clientes": True,
+        "nombre": "Bundesliga", "bloqueada_ok": True, "activa_clientes": True,
         "mu_h": 1.74, "mu_a": 1.36, "rho_dc": -0.055, "xi_decay": 0.12, "kappa_bayes": 4.0,
         "phi_corners": 1.46, "phi_faltas": 1.68, "phi_remates": 1.38, "phi_tarjetas": 1.25,
         "peso_mercado_1x2": 0.56, "peso_mercado_goles": 0.42, "entropia_max_ganador": 0.945,
@@ -68,24 +68,24 @@ PERFILES_BASE_LIGAS = {
     },
     "francia": {
         "nombre": "Ligue 1", "bloqueada_ok": False, "activa_clientes": True,
-        "mu_h": 1.50, "mu_a": 1.18, "rho_dc": -0.105, "xi_decay": 0.13, "kappa_bayes": 4.5,
-        "phi_corners": 1.48, "phi_faltas": 1.76, "phi_remates": 1.36, "phi_tarjetas": 1.28,
-        "peso_mercado_1x2": 0.60, "peso_mercado_goles": 0.45, "entropia_max_ganador": 0.935,
-        "notas": "Equilibrio físico con varianza moderada en córners."
+        "mu_h": 1.39, "mu_a": 1.09, "rho_dc": -0.135, "xi_decay": 0.14, "kappa_bayes": 5.0,
+        "phi_corners": 1.54, "phi_faltas": 1.80, "phi_remates": 1.46, "phi_tarjetas": 1.32,
+        "peso_mercado_1x2": 0.68, "peso_mercado_goles": 0.56, "entropia_max_ganador": 0.915,
+        "notas": "Calibrada: mayor fricción en media tabla y menor sobreconfianza en goles/1X2."
     },
     "portugal": {
         "nombre": "Primeira Liga", "bloqueada_ok": False, "activa_clientes": True,
-        "mu_h": 1.48, "mu_a": 1.12, "rho_dc": -0.110, "xi_decay": 0.13, "kappa_bayes": 4.5,
-        "phi_corners": 1.50, "phi_faltas": 1.85, "phi_remates": 1.38, "phi_tarjetas": 1.35,
-        "peso_mercado_1x2": 0.62, "peso_mercado_goles": 0.46, "entropia_max_ganador": 0.935,
-        "notas": "Gran brecha entre los 3 grandes y el resto; alta fricción."
+        "mu_h": 1.38, "mu_a": 1.04, "rho_dc": -0.145, "xi_decay": 0.14, "kappa_bayes": 5.0,
+        "phi_corners": 1.62, "phi_faltas": 1.90, "phi_remates": 1.50, "phi_tarjetas": 1.38,
+        "peso_mercado_1x2": 0.70, "peso_mercado_goles": 0.58, "entropia_max_ganador": 0.920,
+        "notas": "Calibrada: duelos cerrados fuera del Top 3 y alta varianza en Taça de Portugal."
     },
     "holanda": {
         "nombre": "Eredivisie", "bloqueada_ok": False, "activa_clientes": True,
-        "mu_h": 1.72, "mu_a": 1.32, "rho_dc": -0.050, "xi_decay": 0.13, "kappa_bayes": 4.5,
-        "phi_corners": 1.48, "phi_faltas": 1.65, "phi_remates": 1.38, "phi_tarjetas": 1.22,
-        "peso_mercado_1x2": 0.60, "peso_mercado_goles": 0.46, "entropia_max_ganador": 0.940,
-        "notas": "Liga muy ofensiva."
+        "mu_h": 1.58, "mu_a": 1.18, "rho_dc": -0.095, "xi_decay": 0.14, "kappa_bayes": 5.0,
+        "phi_corners": 1.58, "phi_faltas": 1.72, "phi_remates": 1.48, "phi_tarjetas": 1.26,
+        "peso_mercado_1x2": 0.68, "peso_mercado_goles": 0.58, "entropia_max_ganador": 0.925,
+        "notas": "Calibrada: prior goleador regularizado para evitar Over/BTTS falsos en media tabla."
     },
     "belgica": {
         "nombre": "Pro League Bélgica", "bloqueada_ok": False, "activa_clientes": True,
@@ -109,28 +109,28 @@ PERFILES_BASE_LIGAS = {
         "notas": "Fuerte peso del mercado y tabla actual por fichajes de alto impacto."
     },
     "colombia": {
-        "nombre": "Liga/Copa Colombia", "bloqueada_ok": False, "activa_clientes": True,
+        "nombre": "Liga/Copa Colombia", "bloqueada_ok": True, "activa_clientes": True,
         "mu_h": 1.36, "mu_a": 0.88, "rho_dc": -0.160, "xi_decay": 0.17, "kappa_bayes": 5.0,
         "phi_corners": 1.55, "phi_faltas": 1.95, "phi_remates": 1.42, "phi_tarjetas": 1.42,
         "peso_mercado_1x2": 0.70, "peso_mercado_goles": 0.55, "entropia_max_ganador": 0.925,
         "notas": "Localía muy fuerte (altura/clima), alta fricción y marcadores cerrados."
     },
     "argentina": {
-        "nombre": "Liga Profesional Argentina", "bloqueada_ok": False, "activa_clientes": True,
+        "nombre": "Liga Profesional Argentina", "bloqueada_ok": True, "activa_clientes": True,
         "mu_h": 1.26, "mu_a": 0.86, "rho_dc": -0.175, "xi_decay": 0.16, "kappa_bayes": 5.0,
         "phi_corners": 1.54, "phi_faltas": 1.96, "phi_remates": 1.42, "phi_tarjetas": 1.44,
         "peso_mercado_1x2": 0.70, "peso_mercado_goles": 0.55, "entropia_max_ganador": 0.925,
         "notas": "Baja media goleadora, máxima fricción y correlación alta en 0-0 / 1-0."
     },
     "brasil": {
-        "nombre": "Brasileirão Serie A", "bloqueada_ok": False, "activa_clientes": True,
+        "nombre": "Brasileirão Serie A", "bloqueada_ok": True, "activa_clientes": True,
         "mu_h": 1.48, "mu_a": 1.02, "rho_dc": -0.125, "xi_decay": 0.15, "kappa_bayes": 4.5,
         "phi_corners": 1.50, "phi_faltas": 1.92, "phi_remates": 1.38, "phi_tarjetas": 1.40,
         "peso_mercado_1x2": 0.68, "peso_mercado_goles": 0.52, "entropia_max_ganador": 0.930,
         "notas": "Localía muy pesada y calendario intenso."
     },
     "mexico": {
-        "nombre": "Liga MX", "bloqueada_ok": False, "activa_clientes": True,
+        "nombre": "Liga MX", "bloqueada_ok": True, "activa_clientes": True,
         "mu_h": 1.54, "mu_a": 1.14, "rho_dc": -0.100, "xi_decay": 0.16, "kappa_bayes": 4.5,
         "phi_corners": 1.52, "phi_faltas": 1.85, "phi_remates": 1.40, "phi_tarjetas": 1.36,
         "peso_mercado_1x2": 0.70, "peso_mercado_goles": 0.55, "entropia_max_ganador": 0.930,
@@ -138,10 +138,10 @@ PERFILES_BASE_LIGAS = {
     },
     "usa": {
         "nombre": "MLS Estados Unidos", "bloqueada_ok": False, "activa_clientes": True,
-        "mu_h": 1.68, "mu_a": 1.24, "rho_dc": -0.065, "xi_decay": 0.15, "kappa_bayes": 4.5,
-        "phi_corners": 1.48, "phi_faltas": 1.72, "phi_remates": 1.36, "phi_tarjetas": 1.28,
-        "peso_mercado_1x2": 0.68, "peso_mercado_goles": 0.55, "entropia_max_ganador": 0.935,
-        "notas": "Fuerte ventaja local por viajes y alta tasa de goles/remates."
+        "mu_h": 1.54, "mu_a": 1.14, "rho_dc": -0.105, "xi_decay": 0.16, "kappa_bayes": 5.0,
+        "phi_corners": 1.55, "phi_faltas": 1.78, "phi_remates": 1.44, "phi_tarjetas": 1.32,
+        "peso_mercado_1x2": 0.72, "peso_mercado_goles": 0.62, "entropia_max_ganador": 0.920,
+        "notas": "Calibrada: sin doble inflación goleadora; anclada al mercado en playoffs."
     },
     "UEFA CHAMPIONS LEAGUE": {
         "nombre": "UEFA Champions League", "bloqueada_ok": False, "activa_clientes": True,
