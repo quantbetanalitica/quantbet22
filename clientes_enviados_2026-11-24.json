@@ -1,0 +1,313 @@
+{
+  "fecha": "2026-11-24",
+  "tarjetas_clientes": [
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "401915294",
+      "hora": "21:00",
+      "partido": "Feyenoord Rotterdam vs FC Porto (Uefa Champions League)",
+      "selecciones": [
+        {
+          "mercado": "Ambos Marcan (BTTS)",
+          "prob": 72.9,
+          "cuota": 1.5
+        },
+        {
+          "mercado": "Remates Puerta > 8.5",
+          "prob": 60.3,
+          "cuota": 1.69
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "401915299",
+      "hora": "21:00",
+      "partido": "RB Leipzig vs Lens (Uefa Champions League)",
+      "selecciones": [
+        {
+          "mercado": "Ambos Marcan (BTTS)",
+          "prob": 76.3,
+          "cuota": 1.5
+        },
+        {
+          "mercado": "Over 2.5 Goles",
+          "prob": 75.1,
+          "cuota": 1.38
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "401915297",
+      "hora": "21:00",
+      "partido": "Slovan Bratislava vs Real Betis (Uefa Champions League)",
+      "selecciones": [
+        {
+          "mercado": "Over 2.5 Goles",
+          "prob": 65.6,
+          "cuota": 1.55
+        },
+        {
+          "mercado": "Gol en 1T",
+          "prob": 82.8,
+          "cuota": 1.38
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "401915300",
+      "hora": "18:45",
+      "partido": "Galatasaray vs Aston Villa (Uefa Champions League)",
+      "selecciones": [
+        {
+          "mercado": "Over 2.5 Goles",
+          "prob": 61.4,
+          "cuota": 1.66
+        },
+        {
+          "mercado": "Remates Puerta > 8.5",
+          "prob": 60.8,
+          "cuota": 1.68
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "FREE",
+      "id_partido": "401915298",
+      "hora": "21:00",
+      "partido": "Real Madrid vs PSV Eindhoven (Uefa Champions League)",
+      "selecciones": [
+        {
+          "mercado": "Victoria Real Madrid",
+          "prob": 76.6,
+          "cuota": 1.18
+        },
+        {
+          "mercado": "Córners > 8.5",
+          "prob": 76.8,
+          "cuota": 1.24
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "FREE",
+      "id_partido": "401915379",
+      "hora": "21:00",
+      "partido": "Manchester City vs Napoli (Uefa Champions League)",
+      "selecciones": [
+        {
+          "mercado": "Victoria Manchester C",
+          "prob": 74.1,
+          "cuota": 1.26
+        },
+        {
+          "mercado": "Gol en 1T",
+          "prob": 81.0,
+          "cuota": 1.18
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "FREE",
+      "id_partido": "401915295",
+      "hora": "21:00",
+      "partido": "Arsenal vs Borussia Dortmund (Uefa Champions League)",
+      "selecciones": [
+        {
+          "mercado": "Doble Oport. 1X",
+          "prob": 84.5,
+          "cuota": 1.18
+        },
+        {
+          "mercado": "Faltas Totales > 17.5",
+          "prob": 73.0,
+          "cuota": 1.28
+        }
+      ]
+    }
+  ],
+  "combinada_doble": {
+    "selecciones": [
+      {
+        "partido": "RB Leipzig vs Lens",
+        "hora": "21:00",
+        "mercado": "Gol en 1T",
+        "prob": 86.5,
+        "cuota": 1.36,
+        "score_elite": 38
+      },
+      {
+        "partido": "Real Madrid vs PSV Eindhoven",
+        "hora": "21:00",
+        "mercado": "Gol en 1T",
+        "prob": 85.73667464056447,
+        "cuota": 1.36,
+        "score_elite": 53
+      }
+    ],
+    "cuota_total": 1.85,
+    "prob_directa": 74.2,
+    "prob_protegida": 88.7
+  },
+  "combinada_sniper": {
+    "selecciones": [
+      {
+        "partido": "Manchester City vs Napoli",
+        "hora": "21:00",
+        "mercado": "Córners Manchester City > 4.5",
+        "prob": 81.2879487042598,
+        "cuota": 1.44,
+        "score_elite": 68
+      },
+      {
+        "partido": "Real Madrid vs PSV Eindhoven",
+        "hora": "21:00",
+        "mercado": "Goles Real Madrid > 1.5",
+        "prob": 81.27691507685289,
+        "cuota": 1.44,
+        "score_elite": 53
+      },
+      {
+        "partido": "RB Leipzig vs Lens",
+        "hora": "21:00",
+        "mercado": "Ambos Marcan (BTTS)",
+        "prob": 76.31429480247047,
+        "cuota": 1.49,
+        "score_elite": 38
+      }
+    ],
+    "cuota_total": 3.09,
+    "prob_directa": 50.4,
+    "prob_protegida": 74.4
+  },
+  "combinadas_exclusivas_pro": [
+    {
+      "clave": "cuadruple_elite_pro",
+      "titulo": "CUÁDRUPLE ÉLITE PRO",
+      "subtitulo": "EXCLUSIVO PRO: 4 PARTIDOS DE ALTA CONFLUENCIA",
+      "sufijo": "CUADRUPLE_ELITE_PRO",
+      "stake": "Invertir el 1% de tu capital (Alto Retorno)",
+      "selecciones": [
+        {
+          "partido": "RB Leipzig vs Lens",
+          "hora": "21:00",
+          "mercado": "Over 1.5 Goles",
+          "prob": 90.46826066468526,
+          "cuota": 1.4,
+          "score_elite": 38,
+          "nuevo": true
+        },
+        {
+          "partido": "Real Madrid vs PSV Eindhoven",
+          "hora": "21:00",
+          "mercado": "Over 1.5 Goles",
+          "prob": 89.38811292475728,
+          "cuota": 1.4,
+          "score_elite": 53,
+          "nuevo": true
+        },
+        {
+          "partido": "Manchester City vs Napoli",
+          "hora": "21:00",
+          "mercado": "Over 1.5 Goles",
+          "prob": 89.14426544483727,
+          "cuota": 1.4,
+          "score_elite": 68,
+          "nuevo": true
+        },
+        {
+          "partido": "Como vs AEK Athens",
+          "hora": "21:00",
+          "mercado": "Over 1.5 Goles",
+          "prob": 87.09852236224654,
+          "cuota": 1.4,
+          "score_elite": 18,
+          "nuevo": true
+        }
+      ],
+      "cuota_total": 3.84,
+      "prob_directa": 62.8,
+      "prob_protegida": 82.0
+    },
+    {
+      "clave": "especial_ritmo_pro",
+      "titulo": "ESPECIAL RITMO PRO",
+      "subtitulo": "EXCLUSIVO PRO: CÓRNERS Y REMATES (3 PARTIDOS)",
+      "sufijo": "RITMO_CORNERS_PRO",
+      "stake": "Invertir del 1% al 2% de tu capital (Ritmo Puro)",
+      "selecciones": [
+        {
+          "partido": "Real Madrid vs PSV Eindhoven",
+          "hora": "21:00",
+          "mercado": "Córners > 7.5",
+          "prob": 84.28,
+          "cuota": 1.38,
+          "score_elite": 53,
+          "nuevo": true
+        },
+        {
+          "partido": "Manchester City vs Napoli",
+          "hora": "21:00",
+          "mercado": "Córners > 7.5",
+          "prob": 81.73,
+          "cuota": 1.38,
+          "score_elite": 68,
+          "nuevo": true
+        },
+        {
+          "partido": "RB Leipzig vs Lens",
+          "hora": "21:00",
+          "mercado": "Córners > 7.5",
+          "prob": 78.78,
+          "cuota": 1.38,
+          "score_elite": 38,
+          "nuevo": true
+        }
+      ],
+      "cuota_total": 2.63,
+      "prob_directa": 54.3,
+      "prob_protegida": 78.3
+    },
+    {
+      "clave": "especial_valor_pro",
+      "titulo": "ESPECIAL VALOR PRO",
+      "subtitulo": "EXCLUSIVO PRO: TÁCTICA, FRICCIÓN Y EV+ (3 PARTIDOS)",
+      "sufijo": "VALOR_TACTICO_PRO",
+      "stake": "Invertir del 1% al 2% de tu capital (Valor EV+)",
+      "selecciones": [
+        {
+          "partido": "RB Leipzig vs Lens",
+          "hora": "21:00",
+          "mercado": "Over 1.5 Goles",
+          "prob": 90.46826066468526,
+          "cuota": 1.4,
+          "score_elite": 38,
+          "nuevo": true
+        },
+        {
+          "partido": "Real Madrid vs PSV Eindhoven",
+          "hora": "21:00",
+          "mercado": "Over 1.5 Goles",
+          "prob": 89.38811292475728,
+          "cuota": 1.4,
+          "score_elite": 53,
+          "nuevo": true
+        },
+        {
+          "partido": "Manchester City vs Napoli",
+          "hora": "21:00",
+          "mercado": "Over 1.5 Goles",
+          "prob": 89.14426544483727,
+          "cuota": 1.4,
+          "score_elite": 68,
+          "nuevo": true
+        }
+      ],
+      "cuota_total": 2.74,
+      "prob_directa": 72.1,
+      "prob_protegida": 82.0
+    }
+  ]
+}
