@@ -1,6 +1,7 @@
 from PIL import Image, ImageDraw, ImageFont
 import math
 import os
+import re
 
 # Memoria de rotación para garantizar variedad real de los 20 mercados a lo largo de la jornada
 _MEMORIA_VARIEDAD_TARJETAS = {"FREE": [], "VIP": [], "DESCARTES": []}
@@ -8,6 +9,206 @@ _MEMORIA_VARIEDAD_TARJETAS = {"FREE": [], "VIP": [], "DESCARTES": []}
 
 FAMILIAS_FUTBOL_PURO = {"ganador", "goles", "goles_equipo", "btts", "tiempos", "combo"}
 FAMILIAS_SECUNDARIAS = {"remates", "corners", "tarjetas", "faltas"}
+
+
+
+
+def _acortar_nombre_club_limpio(nombre_club, max_len=16):
+    """Acorta un nombre de club SIN cortar palabras a la mitad (nunca 'San Jose Earthq' ni 'Deportivo Ca')."""
+    s = str(nombre_club or "").strip()
+    if not s:
+        return ""
+    reemplazos_cortos = {
+        "san jose earthquakes": "San Jose",
+        "houston dynamo fc": "Houston Dynamo",
+        "atletico bucaramanga": "Bucaramanga",
+        "atlético bucaramanga": "Bucaramanga",
+        "independiente santa fe": "Santa Fe",
+        "independiente medellin": "Medellín",
+        "independiente medellín": "Medellín",
+        "atletico nacional": "Atl. Nacional",
+        "atlético nacional": "Atl. Nacional",
+        "america de cali": "América Cali",
+        "américa de cali": "América Cali",
+        "deportivo cali": "Dep. Cali",
+        "deportes tolima": "Tolima",
+        "manchester united": "Man. United",
+        "manchester city": "Man. City",
+        "paris saint germain": "PSG",
+        "paris saint-germain": "PSG",
+        "paris sg": "PSG",
+        "atletico madrid": "Atl. Madrid",
+        "atlético madrid": "Atl. Madrid",
+        "atlético de madrid": "Atl. Madrid",
+        "borussia dortmund": "Dortmund",
+        "bayer leverkusen": "Leverkusen",
+        "eintracht frankfurt": "Frankfurt",
+        "bayern munich": "Bayern",
+        "bayern münchen": "Bayern",
+        "real sociedad": "R. Sociedad",
+        "rayo vallecano": "Rayo Vallecano",
+        "sporting cp": "Sporting",
+        "inter miami cf": "Inter Miami",
+    }
+    low = s.lower()
+    if low in reemplazos_cortos:
+        return reemplazos_cortos[low]
+    s_clean = re.sub(r"\s+(?:FC|CF|SC|CD|AC|AS|BC|KV|SV|SK)$", "", s, flags=re.I).strip()
+    if len(s_clean) <= max_len:
+        return s_clean
+    palabras = s_clean.split()
+    out = ""
+    for pal in palabras:
+        cand = f"{out} {pal}".strip()
+        if len(cand) <= max_len:
+            out = cand
+        else:
+            break
+    return out if len(out) >= 3 else palabras[0][:max_len]
+
+
+def _resolver_equipo_en_mercado(fragmento, local="", visitante=""):
+    """Recupera el nombre limpio completo si un mercado trae el club truncado (ej. 'San Jose Earthq' o 'Deportivo Ca')."""
+    frag = str(fragmento or "").strip()
+    fl = frag.lower()
+    for eq in (local, visitante):
+        el = str(eq or "").strip()
+        if not el:
+            continue
+        if fl and (el.lower().startswith(fl) or fl in el.lower() or (len(fl) >= 5 and fl[:5] in el.lower())):
+            return _acortar_nombre_club_limpio(el, max_len=16)
+    return _acortar_nombre_club_limpio(frag, max_len=16)
+
+
+def formatear_mercado_claro_cliente(nombre_mercado, local="", visitante=""):
+    """Traduce cualquier mercado interno del motor a español 100% claro para clientes
+    (cero abreviaturas confusas como 'U4.5', 'O1.5', '(Under)' sin 'Goles' o clubes cortados).
+    Devuelve (titulo_claro, subtitulo_explicativo)."""
+    raw = str(nombre_mercado or "").strip()
+    pref = ""
+    m_pref = re.match(r"^(\[(?:VIP|FREE|PRO|VIP DOBLE|PRO SNIPER)\]\s*)", raw, flags=re.I)
+    if m_pref:
+        pref = m_pref.group(1)
+        raw = raw[len(pref):].strip()
+
+    low = raw.lower()
+    loc_c = _acortar_nombre_club_limpio(local, max_len=16) or "Local"
+    vis_c = _acortar_nombre_club_limpio(visitante, max_len=16) or "Visitante"
+
+    # 1. Combos (1X / X2 + Over / Under goles)
+    m_combo = re.match(r"^combo\s+(1x|x2)\s*\+\s*([ou])\s*(\d+(?:\.\d+)?)$", low)
+    if m_combo:
+        lado, ou, lin_s = m_combo.group(1).upper(), m_combo.group(2), m_combo.group(3)
+        lin_f = float(lin_s)
+        eq_lado = loc_c if lado == "1X" else vis_c
+        if ou == "u":
+            max_g = int(math.floor(lin_f))
+            return f"{pref}{lado} + Menos de {lin_s} Goles", f"Gana o empata {eq_lado} y hay máx. {max_g} goles"
+        min_g = int(math.floor(lin_f)) + 1
+        return f"{pref}{lado} + Más de {lin_s} Goles", f"Gana o empata {eq_lado} y hay {min_g}+ goles"
+
+    # 2. Total Menos de X.5 (Under) -> especificar SIEMPRE GOLES
+    m_un = re.search(r"(?:total\s+)?menos\s+de\s+(\d+(?:\.\d+)?)", low)
+    if m_un and not any(k in low for k in ("córner", "corner", "tarjeta", "falta", "remate")):
+        lin_s = m_un.group(1)
+        max_g = int(math.floor(float(lin_s)))
+        return f"{pref}Menos de {lin_s} Goles Totales", f"Deben anotarse máximo {max_g} goles en el partido"
+
+    # 3. Over X.5 Goles
+    m_ov = re.match(r"^over\s+(\d+(?:\.\d+)?)\s+goles$", low)
+    if m_ov:
+        lin_s = m_ov.group(1)
+        min_g = int(math.floor(float(lin_s))) + 1
+        return f"{pref}Más de {lin_s} Goles Totales", f"Deben anotarse {min_g} o más goles en el partido"
+
+    # 4. Total Asiático > 2.25 / 2.75 Goles
+    m_asi = re.search(r"asi[áa]tico\s*>\s*(\d+(?:\.\d+)?)", low)
+    if m_asi:
+        lin_s = m_asi.group(1)
+        if lin_s == "2.25":
+            return f"{pref}Más de 2.25 Goles (Asiático)", "3+ goles gana • Con 2 goles devuelve mitad"
+        if lin_s == "2.75":
+            return f"{pref}Más de 2.75 Goles (Asiático)", "4+ goles gana • Con 3 goles gana mitad"
+        return f"{pref}Más de {lin_s} Goles (Asiático)", "Línea asiática de goles totales del partido"
+
+    # 5. Ambos Marcan (BTTS)
+    if "btts" in low or "ambos marcan" in low:
+        return f"{pref}Ambos Equipos Marcan (Sí)", "Tanto local como visitante anotan al menos 1 gol"
+
+    # 6. Tiempos (1T / 2do Tiempo)
+    if low == "gol en 1t":
+        return f"{pref}Más de 0.5 Goles en 1er Tiempo", "Al menos 1 gol antes del descanso"
+    if low.startswith("goles 1t >"):
+        lin_s = raw.split(">")[1].strip()
+        min_g = int(math.floor(float(lin_s))) + 1
+        return f"{pref}Más de {lin_s} Goles en 1er Tiempo", f"{min_g} o más goles antes del descanso"
+    if low == "gol en 2do tiempo":
+        return f"{pref}Más de 0.5 Goles en 2do Tiempo", "Al menos 1 gol durante la segunda mitad"
+    if "2do tiempo >" in low or "2t >" in low:
+        lin_s = raw.split(">")[1].strip()
+        min_g = int(math.floor(float(lin_s))) + 1
+        return f"{pref}Más de {lin_s} Goles en 2do Tiempo", f"{min_g} o más goles en la segunda mitad"
+
+    # 7. Doble Oportunidad 1X / X2
+    if "doble oport" in low and "1x" in low:
+        return f"{pref}Doble Oportunidad 1X ({loc_c})", f"Gana o empata {loc_c} en los 90 min"
+    if "doble oport" in low and "x2" in low:
+        return f"{pref}Doble Oportunidad X2 ({vis_c})", f"Gana o empata {vis_c} en los 90 min"
+
+    # 8. Apuesta Sin Empate (DNB)
+    if low.startswith("sin empate "):
+        eq_c = _resolver_equipo_en_mercado(raw[11:], local, visitante)
+        return f"{pref}Sin Empate: {eq_c}", f"Gana {eq_c} acierta • Si empatan se devuelve"
+
+    # 9. Victoria directa
+    if low.startswith("victoria "):
+        eq_c = _resolver_equipo_en_mercado(raw[9:], local, visitante)
+        return f"{pref}Victoria de {eq_c}", f"{eq_c} gana el partido en tiempo reglamentario"
+
+    # 10. Goles por equipo (> 0.5 / > 1.5 / > 2.5)
+    m_ge = re.match(r"^goles\s+(.+?)\s*>\s*(\d+(?:\.\d+)?)$", raw, flags=re.I)
+    if m_ge:
+        eq_c = _resolver_equipo_en_mercado(m_ge.group(1), local, visitante)
+        lin_s = m_ge.group(2)
+        min_g = int(math.floor(float(lin_s))) + 1
+        sub_g = f"{eq_c} anota al menos 1 gol en el partido" if min_g == 1 else f"{eq_c} anota {min_g} o más goles en el partido"
+        return f"{pref}Más de {lin_s} Goles: {eq_c}", sub_g
+
+    # 11. Córners por equipo vs Córners totales
+    m_ce = re.match(r"^c[óo]rners\s+(.+?)\s*>\s*(\d+(?:\.\d+)?)$", raw, flags=re.I)
+    if m_ce:
+        eq_c = _resolver_equipo_en_mercado(m_ce.group(1), local, visitante)
+        lin_s = m_ce.group(2)
+        min_c = int(math.floor(float(lin_s))) + 1
+        return f"{pref}Más de {lin_s} Córners: {eq_c}", f"{eq_c} consigue {min_c} o más tiros de esquina"
+    m_ct = re.match(r"^c[óo]rners\s*>\s*(\d+(?:\.\d+)?)$", raw, flags=re.I)
+    if m_ct:
+        lin_s = m_ct.group(1)
+        min_c = int(math.floor(float(lin_s))) + 1
+        return f"{pref}Más de {lin_s} Córners Totales", f"{min_c} o más tiros de esquina entre ambos equipos"
+
+    # 12. Remates a Puerta
+    m_rem = re.match(r"^remates\s+puerta\s*>\s*(\d+(?:\.\d+)?)$", raw, flags=re.I)
+    if m_rem:
+        lin_s = m_rem.group(1)
+        min_r = int(math.floor(float(lin_s))) + 1
+        return f"{pref}Más de {lin_s} Remates a Puerta", f"{min_r} o más tiros al arco entre ambos equipos"
+
+    # 13. Faltas Totales
+    m_fal = re.match(r"^faltas\s+totales\s*>\s*(\d+(?:\.\d+)?)$", raw, flags=re.I)
+    if m_fal:
+        lin_s = m_fal.group(1)
+        min_f = int(math.floor(float(lin_s))) + 1
+        return f"{pref}Más de {lin_s} Faltas Totales", f"{min_f} o más faltas pitadas en el partido"
+
+    # 14. Tarjetas Totales
+    m_tar = re.match(r"^tarjetas\s*>\s*(\d+(?:\.\d+)?)$", raw, flags=re.I)
+    if m_tar:
+        lin_s = m_tar.group(1)
+        min_t = int(math.floor(float(lin_s))) + 1
+        return f"{pref}Más de {lin_s} Tarjetas Totales", f"{min_t} o más tarjetas mostradas en el partido"
+
+    return f"{pref}{raw}", "Proyección validada por el modelo matemático"
 
 
 def obtener_familia(nombre_mercado):
@@ -140,7 +341,9 @@ def seleccionar_par_distinto_familia(lista_candidatos, excluidos=None, familias_
             or (fam in {"goles", "tiempos"} and "goles_equipo" in fams_en_tarjeta)
         ):
             return True
-        if float(tot_g or 2.5) < 3.05 and (
+        if (fam == "btts" and "goles_equipo" in fams_en_tarjeta) or (fam == "goles_equipo" and "btts" in fams_en_tarjeta):
+            return True
+        if float(tot_g or 2.5) < 3.25 and (
             (fam == "btts" and bool(fams_en_tarjeta & {"goles", "tiempos"}))
             or (fam in {"goles", "tiempos"} and "btts" in fams_en_tarjeta)
         ):
@@ -200,7 +403,7 @@ def seleccionar_par_distinto_familia(lista_candidatos, excluidos=None, familias_
             fam = obtener_familia(m[0])
             if fam in fams_internas:
                 continue
-            if fam in {"corners", "faltas", "tarjetas", "goles", "btts", "ganador", "goles_equipo"} and fam in familias_excluidas:
+            if fam in {"corners", "faltas", "tarjetas", "goles", "tiempos", "btts", "ganador", "goles_equipo"} and fam in familias_excluidas:
                 continue
             if _es_colineal(fam, fams_internas, tot_goles):
                 continue
@@ -679,7 +882,7 @@ def generar_captura_automatica(res_m, tipo_filtro="DESCARTES", guardar_imagen=Tr
         #    Permitido en VIP si ambos equipos tienen gol (prob >= 57.5% y tot_goles >= 2.45), aunque exista favorito (ej. Nice vs PSG 2-3, Newcastle vs Arsenal 2-2)
         if nombre == "Ambos Marcan (BTTS)":
             ataque_min_btts = float(res_m.get("ataque_debil") or 0.95)
-            if tot_goles < 2.45 or prob < 57.5 or ataque_min_btts < 0.80:
+            if tot_goles < 2.50 or prob < 58.0 or ataque_min_btts < 0.92:
                 continue
 
         # 3. Regla #3: Filtro Dixon-Coles exacto para Over 1.5 (si P(0-0)+P(1-0)+P(0-1) >= 27%, no priorizar Over 1.5)
@@ -1028,14 +1231,29 @@ def generar_captura_automatica(res_m, tipo_filtro="DESCARTES", guardar_imagen=Tr
             and (not candado_mercado_real_kambi or (1.12 <= calcular_cuota_real_casa(m[1], m[2], "FREE", m[0], cuotas_reales_casa) <= 1.52))
         ]
 
-    # Familias ya usadas en la otra tarjeta del mismo partido (prohibido repetir Córners/Tarjetas y, si tot_goles < 2.95, goles <-> tiempos)
-    fams_usadas_vip = {obtener_familia(m[0]) for m in res_m.get("seleccion_vip", [])}
+    # Control de Covarianza Intra-Partido entre VIP y FREE:
+    # Evita apilar 3 o 4 mercados que dependen todos de que haya goles (evita 3/4 y 4/4 rojos en 0-0 / 0-1)
+    def _es_pick_dependiente_gol(nom_p):
+        fm = obtener_familia(nom_p)
+        if fm in {"goles", "tiempos", "btts", "goles_equipo"}:
+            return "menos de" not in str(nom_p).lower() and "under" not in str(nom_p).lower()
+        if fm == "combo" and "o1.5" in str(nom_p).lower():
+            return True
+        return False
+
+    sel_vip_prev = res_m.get("seleccion_vip", [])
+    fams_usadas_vip = {obtener_familia(m[0]) for m in sel_vip_prev}
     if "combo" in fams_usadas_vip:
         fams_usadas_vip.add("ganador")
-    if tot_goles < 2.95 and ("goles" in fams_usadas_vip or "tiempos" in fams_usadas_vip):
-        fams_usadas_vip.update({"goles", "tiempos"})
-    if tot_goles < 2.58 and ("btts" in fams_usadas_vip):
-        fams_usadas_vip.update({"goles", "tiempos"})
+    n_goles_vip = sum(1 for m in sel_vip_prev if _es_pick_dependiente_gol(m[0]))
+    if n_goles_vip >= 2 and tot_goles < 3.25:
+        # VIP ya tiene 2 picks ligados a goles: FREE diversifica fuera de goles (ganador/córners/remates/tarjetas)
+        fams_usadas_vip.update({"goles", "tiempos", "btts", "goles_equipo"})
+    elif n_goles_vip >= 1 and tot_goles < 2.95:
+        if "goles" in fams_usadas_vip or "tiempos" in fams_usadas_vip:
+            fams_usadas_vip.update({"goles", "tiempos"})
+        if "btts" in fams_usadas_vip or "goles_equipo" in fams_usadas_vip:
+            fams_usadas_vip.update({"tiempos", "goles_equipo", "btts"})
 
     top_2_free_base = seleccionar_par_distinto_familia(
         candidatos_free,
@@ -1204,19 +1422,36 @@ def generar_captura_automatica(res_m, tipo_filtro="DESCARTES", guardar_imagen=Tr
             fams_misma_tarjeta = {obtener_familia(m[0]) for m in top_2}
             hay_under_otra = any("Menos de" in str(m[0]) or "Under" in str(m[0]) for m in otra_sel)
             lvl_em = tipo_filtro if tipo_filtro in ("FREE", "VIP") else "FREE"
+            # Escalar líneas de emergencia de forma honesta según la media real en duelos ultra-cerrados (ej. Colombia 1.84 goles)
+            if lvl_em == "FREE":
+                lin_r_em = linea_t_free if tot_tiros >= 7.8 else (5.5 if tot_tiros >= 6.4 else 4.5)
+                p_r_em_v, c_r_em_v = (p_tf_m, c_tf_m) if abs(lin_r_em - linea_t_free) < 0.1 else _prob_negbin_over(tot_tiros, lin_r_em, phi=1.40)
+                lin_c_em = 7.5 if tot_corn >= 8.2 else (6.5 if tot_corn >= 7.2 else 5.5)
+                p_c_em_v, c_c_em_v = (res_m.get("p_c75"), res_m.get("c_min_c75")) if lin_c_em == 7.5 else _prob_negbin_over(tot_corn, lin_c_em, phi=1.50)
+                tot_t_em = float(res_m.get("tot_tarj") or 4.0)
+                lin_t_em = 3.5 if float(res_m.get("p_t35") or 0.0) >= 56.0 else 2.5
+                p_t_em_v, c_t_em_v = (res_m.get("p_t35"), res_m.get("c_min_t35")) if lin_t_em == 3.5 else _prob_negbin_over(tot_t_em, 2.5, phi=1.35)
+                lin_f_em = linea_f_free
+                p_f_em_v, c_f_em_v = p_f_free, c_f_free
+            else:
+                lin_r_em, p_r_em_v, c_r_em_v = linea_t_vip, p_tv_m, c_tv_m
+                lin_c_em, p_c_em_v, c_c_em_v = 8.5, res_m.get("p_c85"), res_m.get("c_min_c85")
+                lin_t_em, p_t_em_v, c_t_em_v = res_m.get("linea_tarj", 3.5), res_m.get("p_t35"), res_m.get("c_min_t35")
+                lin_f_em, p_f_em_v, c_f_em_v = linea_f_vip, p_f_vip, c_f_vip
+
             emergencia = [
-                (f"Remates Puerta > {linea_t_vip if lvl_em == 'VIP' else linea_t_free:.1f}",
-                 round(float((p_tv_m if lvl_em == "VIP" else p_tf_m) or 0.0), 1),
-                 calcular_cuota_real_casa(float((p_tv_m if lvl_em == "VIP" else p_tf_m) or 65.0), (c_tv_m if lvl_em == "VIP" else c_tf_m), lvl_em, f"Remates Puerta > {linea_t_vip if lvl_em == 'VIP' else linea_t_free:.1f}", cuotas_reales_casa)),
-                ("Córners > 8.5" if lvl_em == "VIP" else ("Córners > 7.5" if tot_corn >= 8.2 else "Córners > 6.5"),
-                 round(float((res_m.get("p_c85") if lvl_em == "VIP" else (res_m.get("p_c75") if tot_corn >= 8.2 else (_prob_poisson_over(tot_corn * 0.94, 6.5)[0] or 0.0))) or 0.0), 1),
-                 calcular_cuota_real_casa(float((res_m.get("p_c85") if lvl_em == "VIP" else (res_m.get("p_c75") if tot_corn >= 8.2 else 64.0)) or 64.0), (res_m.get("c_min_c85") if lvl_em == "VIP" else res_m.get("c_min_c75")), lvl_em, "Córners > 8.5" if lvl_em == "VIP" else ("Córners > 7.5" if tot_corn >= 8.2 else "Córners > 6.5"), cuotas_reales_casa)),
-                (f"Tarjetas > {3.5 if lvl_em == 'FREE' else res_m.get('linea_tarj', 3.5)}",
-                 round(float((_prob_poisson_over(float(res_m.get('tot_tarj') or 4.5) * 0.92, 3.5)[0] if (lvl_em == 'FREE' and float(res_m.get('linea_tarj', 3.5)) >= 4.5) else res_m.get("p_t35")) or 0.0), 1),
-                 calcular_cuota_real_casa(float(res_m.get("p_t35") or 62.0), res_m.get("c_min_t35"), lvl_em, f"Tarjetas > {3.5 if lvl_em == 'FREE' else res_m.get('linea_tarj', 3.5)}", cuotas_reales_casa)),
-                (f"Faltas Totales > {linea_f_vip if lvl_em == 'VIP' else linea_f_free:.1f}",
-                 round(float((p_f_vip if lvl_em == "VIP" else p_f_free) or 0.0), 1),
-                 calcular_cuota_real_casa(float((p_f_vip if lvl_em == "VIP" else p_f_free) or 62.0), (c_f_vip if lvl_em == "VIP" else c_f_free), lvl_em, f"Faltas Totales > {linea_f_vip if lvl_em == 'VIP' else linea_f_free:.1f}", cuotas_reales_casa)),
+                (f"Remates Puerta > {lin_r_em:.1f}",
+                 round(float(p_r_em_v or 0.0), 1),
+                 calcular_cuota_real_casa(float(p_r_em_v or 62.0), c_r_em_v, lvl_em, f"Remates Puerta > {lin_r_em:.1f}", cuotas_reales_casa)),
+                (f"Tarjetas > {lin_t_em:.1f}",
+                 round(float(p_t_em_v or 0.0), 1),
+                 calcular_cuota_real_casa(float(p_t_em_v or 62.0), c_t_em_v, lvl_em, f"Tarjetas > {lin_t_em:.1f}", cuotas_reales_casa)),
+                (f"Córners > {lin_c_em:.1f}",
+                 round(float(p_c_em_v or 0.0), 1),
+                 calcular_cuota_real_casa(float(p_c_em_v or 62.0), c_c_em_v, lvl_em, f"Córners > {lin_c_em:.1f}", cuotas_reales_casa)),
+                (f"Faltas Totales > {lin_f_em:.1f}",
+                 round(float(p_f_em_v or 0.0), 1),
+                 calcular_cuota_real_casa(float(p_f_em_v or 62.0), c_f_em_v, lvl_em, f"Faltas Totales > {lin_f_em:.1f}", cuotas_reales_casa)),
             ]
             if tot_goles <= 2.40 or hay_under_otra:
                 emergencia.insert(0, ("Total Menos de 2.5 (Under)" if lvl_em == "VIP" else "Total Menos de 3.5 (Under)",
@@ -1340,7 +1575,8 @@ def generar_captura_automatica(res_m, tipo_filtro="DESCARTES", guardar_imagen=Tr
 
     # 4. Banda táctica centrada limpia
     linea_club_1, _ = obtener_explicacion_apuesta_club(res_m)
-    txt_banda = f"PERFIL: {contexto.upper()}   •   {linea_club_1.replace('DOMINIO TÁCTICO: ', '')}"
+    ctx_limpio = contexto.replace("[", "").replace("]", "").strip().upper()
+    txt_banda = f"PERFIL: {ctx_limpio}   •   {linea_club_1.replace('DOMINIO TÁCTICO: ', '')}"
     draw.rounded_rectangle([(56, 498), (1024, 558)], radius=18, fill=(20, 26, 38, 232), outline=(255, 204, 0, 120), width=2)
     f_bd = _fuente_card_ajustada(draw, txt_banda, "mono", 20, 920, 14)
     draw.text((_cx_card(draw, txt_banda, f_bd), 516), txt_banda, font=f_bd, fill=c_oro)
@@ -1358,14 +1594,18 @@ def generar_captura_automatica(res_m, tipo_filtro="DESCARTES", guardar_imagen=Tr
         draw.rounded_rectangle([(56, y_card), (1024, y_card + 146)], radius=24, fill=bg_pick, outline=c_acento, width=3)
 
         # Badge izquierdo con número de selección
-        draw.rounded_rectangle([(82, y_card + 22), (240, y_card + 56)], radius=14, fill=c_acento)
-        f_num = _fuente_card("bold", 19)
+        draw.rounded_rectangle([(82, y_card + 16), (236, y_card + 46)], radius=13, fill=c_acento)
+        f_num = _fuente_card("bold", 18)
         lbl_n = f"SELECCIÓN #{idx_p}"
-        draw.text((_cx_card(draw, lbl_n, f_num, 161), y_card + 28), lbl_n, font=f_num, fill=(8, 14, 20, 255))
+        draw.text((_cx_card(draw, lbl_n, f_num, 159), y_card + 21), lbl_n, font=f_num, fill=(8, 14, 20, 255))
 
-        # Nombre del mercado grande y nítido
-        f_mk = _fuente_card_ajustada(draw, nombre.upper(), "bold", 36, 560, 22)
-        draw.text((84, y_card + 74), nombre.upper(), font=f_mk, fill=c_blanco)
+        # Nombre del mercado 100% claro en español + subtítulo explicativo para clientes
+        tit_claro, sub_claro = formatear_mercado_claro_cliente(nombre, res_m.get("local", ""), res_m.get("visitante", ""))
+        f_mk = _fuente_card_ajustada(draw, tit_claro.upper(), "bold", 31, 576, 19)
+        draw.text((84, y_card + 56), tit_claro.upper(), font=f_mk, fill=c_blanco)
+        f_sub_mk = _fuente_card_ajustada(draw, sub_claro, "mono", 18, 576, 14)
+        c_sub_mk = (232, 220, 172, 255) if es_vip_card else (188, 232, 210, 255)
+        draw.text((84, y_card + 102), sub_claro, font=f_sub_mk, fill=c_sub_mk)
 
         # Panel derecho con Probabilidad % y Cuota/Índice
         draw.rounded_rectangle([(684, y_card + 20), (998, y_card + 126)], radius=18, fill=(12, 19, 30, 245), outline=c_borde, width=2)
@@ -1445,19 +1685,21 @@ def generar_tarjeta_combinada(fecha, titulo_combinada, subtitulo_nivel, lista_se
     for idx, item in enumerate(lista_selecciones, start=1):
         draw.rounded_rectangle([(56, y_cur), (1024, y_cur + alto_leg)], radius=22, fill=c_panel, outline=c_borde, width=2)
         partido_txt = f"#{idx}  {item['partido'].upper()}  ({item['hora']}h)"
-        mercado_txt = f"{item['mercado'].upper()}"
+        loc_cb, vis_cb = (str(item['partido']).split(" vs ") + ["", ""])[:2]
+        tit_cb, sub_cb = formatear_mercado_claro_cliente(item['mercado'], loc_cb, vis_cb)
+        mercado_txt = tit_cb.upper()
         cuota_txt = f"> {item['cuota']:.2f}"
         prob_txt = f"{item['prob']:.1f}%"
 
-        f_p = _fuente_card_ajustada(draw, partido_txt, "bold", 26 if n_legs < 4 else 23, 660, 17)
-        f_m = _fuente_card_ajustada(draw, mercado_txt, "bold", 31 if n_legs < 4 else 26, 660, 18)
+        f_p = _fuente_card_ajustada(draw, partido_txt, "bold", 25 if n_legs < 4 else 22, 660, 16)
+        f_m = _fuente_card_ajustada(draw, mercado_txt, "bold", 29 if n_legs < 4 else 24, 660, 17)
 
-        pad_top = 24 if n_legs == 2 else (22 if n_legs == 3 else 18)
+        pad_top = 22 if n_legs == 2 else (18 if n_legs == 3 else 16)
         draw.text((86, y_cur + pad_top), partido_txt, font=f_p, fill=c_gris)
-        draw.text((86, y_cur + pad_top + (46 if n_legs == 2 else 38)), mercado_txt, font=f_m, fill=c_blanco)
+        draw.text((86, y_cur + pad_top + (42 if n_legs == 2 else 34)), mercado_txt, font=f_m, fill=c_blanco)
 
-        if n_legs == 2:
-            draw.text((86, y_cur + pad_top + 106), "Confluencia verificada por simulación Monte Carlo (Poisson)", font=_fuente_card("mono", 19), fill=c_oro)
+        f_scb = _fuente_card_ajustada(draw, sub_cb, "mono", 18 if n_legs < 4 else 16, 660, 14)
+        draw.text((86, y_cur + pad_top + (92 if n_legs == 2 else (78 if n_legs == 3 else 68))), sub_cb, font=f_scb, fill=c_oro)
 
         # Pill derecha con cuota y probabilidad
         draw.rounded_rectangle([(768, y_cur + 18), (998, y_cur + alto_leg - 18)], radius=16, fill=(10, 28, 22, 240), outline=c_verde, width=2)
