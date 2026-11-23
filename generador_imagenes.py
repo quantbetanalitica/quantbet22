@@ -284,7 +284,17 @@ def es_visitante_protegido(nombre_visitante):
     return any(_re_evp.search(rf"(?<![a-z]){_re_evp.escape(g)}(?![a-z])", v_norm) for g in gigantes_visitantes)
 
 
-def seleccionar_par_distinto_familia(lista_candidatos, excluidos=None, familias_excluidas=None, tipo_filtro="FREE", registrar_memoria=True, tot_goles=2.5, **kwargs):
+def _es_pick_dependiente_gol_global(nom_p):
+    fm = obtener_familia(nom_p)
+    if fm in {"goles", "tiempos", "btts", "goles_equipo"}:
+        nl = str(nom_p).lower()
+        return ("menos de" not in nl) and ("under" not in nl)
+    if fm == "combo" and "o1.5" in str(nom_p).lower():
+        return True
+    return False
+
+
+def seleccionar_par_distinto_familia(lista_candidatos, excluidos=None, familias_excluidas=None, tipo_filtro="FREE", registrar_memoria=True, tot_goles=2.5, max_picks_gol=None, **kwargs):
     if "actualizar_memoria" in kwargs:
         registrar_memoria = kwargs["actualizar_memoria"]
     if excluidos is None:
@@ -362,6 +372,9 @@ def seleccionar_par_distinto_familia(lista_candidatos, excluidos=None, familias_
         fam = obtener_familia(m[0])
         if fam in familias_usadas:
             continue
+        if max_picks_gol is not None and _es_pick_dependiente_gol_global(m[0]):
+            if sum(1 for x in seleccion if _es_pick_dependiente_gol_global(x[0])) >= max_picks_gol:
+                continue
         fams_ya = {obtener_familia(x[0]) for x in seleccion}
         if _es_colineal(fam, fams_ya, tot_goles):
             continue
@@ -385,6 +398,9 @@ def seleccionar_par_distinto_familia(lista_candidatos, excluidos=None, familias_
             fam = obtener_familia(m[0])
             if fam in fams_internas or fam in familias_excluidas:
                 continue
+            if max_picks_gol is not None and _es_pick_dependiente_gol_global(m[0]):
+                if sum(1 for x in seleccion if _es_pick_dependiente_gol_global(x[0])) >= max_picks_gol:
+                    continue
             if _es_colineal(fam, fams_internas, tot_goles):
                 continue
             if fam in {"faltas", "corners", "tarjetas"} and any(f in {"faltas", "corners", "tarjetas"} for f in fams_internas):
@@ -403,6 +419,9 @@ def seleccionar_par_distinto_familia(lista_candidatos, excluidos=None, familias_
             fam = obtener_familia(m[0])
             if fam in fams_internas:
                 continue
+            if max_picks_gol is not None and _es_pick_dependiente_gol_global(m[0]):
+                if sum(1 for x in seleccion if _es_pick_dependiente_gol_global(x[0])) >= max_picks_gol:
+                    continue
             if fam in {"corners", "faltas", "tarjetas", "goles", "tiempos", "btts", "ganador", "goles_equipo"} and fam in familias_excluidas:
                 continue
             if _es_colineal(fam, fams_internas, tot_goles):
@@ -1255,13 +1274,18 @@ def generar_captura_automatica(res_m, tipo_filtro="DESCARTES", guardar_imagen=Tr
         if "btts" in fams_usadas_vip or "goles_equipo" in fams_usadas_vip:
             fams_usadas_vip.update({"tiempos", "goles_equipo", "btts"})
 
+    es_copa_dom_cov = bool(res_m.get("es_copa")) and not any(
+        k_int in liga_vis for k_int in ("CHAMPIONS", "EUROPA LEAGUE", "CONFERENCE", "LIBERTADORES", "SUDAMERICANA", "MUNDIAL", "EUROCOPA", "AMÉRICA", "NATIONS")
+    )
+    limite_goles_free = max(0, 2 - n_goles_vip) if (tot_goles < 3.25 or es_copa_dom_cov) else None
     top_2_free_base = seleccionar_par_distinto_familia(
         candidatos_free,
         excluidos={m[0] for m in res_m.get("seleccion_vip", [])},
         familias_excluidas=fams_usadas_vip,
         tipo_filtro="FREE",
         registrar_memoria=(tipo_filtro == "FREE"),
-        tot_goles=tot_goles
+        tot_goles=tot_goles,
+        max_picks_gol=limite_goles_free
     )
 
     if tipo_filtro == "FREE":
@@ -1409,6 +1433,9 @@ def generar_captura_automatica(res_m, tipo_filtro="DESCARTES", guardar_imagen=Tr
             if es_fem_resp and "Córners > 7.5" in r_m[0] and tot_corn < 7.8 and r_m[0] not in cuotas_reales_casa:
                 continue
             fam_r = obtener_familia(r_m[0])
+            n_gol_comb_r = sum(1 for x in (list(top_2) + list(otra_sel)) if _es_pick_dependiente_gol_global(x[0]))
+            if (tot_goles < 3.25 or es_copa_dom_fb) and n_gol_comb_r >= 2 and _es_pick_dependiente_gol_global(r_m[0]):
+                continue
             if (fam_r == "combo" and ("goles" in fams_actual or "tiempos" in fams_actual)) or (fam_r in {"goles", "tiempos"} and "combo" in fams_actual):
                 continue
             if r_m[0] not in usados_actual and fam_r not in fams_actual and fam_r not in fams_otra:
@@ -1475,9 +1502,14 @@ def generar_captura_automatica(res_m, tipo_filtro="DESCARTES", guardar_imagen=Tr
                 fam_em = obtener_familia(e_m[0])
                 if lvl_em == "VIP" and float(e_m[2] or 0) < 1.35:
                     continue
+                n_gol_comb_em = sum(1 for x in (list(top_2) + list(otra_sel)) if _es_pick_dependiente_gol_global(x[0]))
+                if (tot_goles < 3.25 or es_copa_dom_fb) and n_gol_comb_em >= 2 and _es_pick_dependiente_gol_global(e_m[0]):
+                    continue
                 if fam_em in fams_misma_tarjeta or fam_em in fams_otra:
                     continue
                 if (fam_em == "goles" and "tiempos" in fams_misma_tarjeta) or (fam_em == "tiempos" and "goles" in fams_misma_tarjeta):
+                    continue
+                if (fam_em == "goles" and "goles_equipo" in fams_misma_tarjeta) or (fam_em == "goles_equipo" and "goles" in fams_misma_tarjeta):
                     continue
                 if (fam_em == "combo" and ("goles" in fams_misma_tarjeta or "tiempos" in fams_misma_tarjeta)) or (fam_em in {"goles", "tiempos"} and "combo" in fams_misma_tarjeta):
                     continue
