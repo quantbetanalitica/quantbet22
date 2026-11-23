@@ -34,6 +34,7 @@ def _df_limpio_w(data, *a, **kw):
 _st_w.dataframe = _df_limpio_w
 
 import streamlit as st
+import streamlit.components.v1 as components
 
 st.set_page_config(
     page_title="QuantBet22 | Laboratorio de Ciencia de Datos",
@@ -99,14 +100,10 @@ def registrar_visita_origen_web():
 _MODO_ADMIN_TRAFICO = registrar_visita_origen_web()
 
 # ==============================================================================
-# ENLACES OFICIALES DE CONVERSIÓN Y PAGO
+# ENLACES OFICIALES (MODO COMUNIDAD FREE — PLAZAS VIP Y PRO CERRADAS TEMPORALMENTE)
 # ==============================================================================
 LINK_TELEGRAM_FREE = "https://t.me/+aYoc_N6oiU1lODU0"
-LINK_WHOP_VIP = "https://whop.com/youtube-d4c7/quantbet22-canal-vip/"
-LINK_WHOP_TRIAL_099 = "https://whop.com/youtube-d4c7/quantbet22-canal-vip/"
-LINK_WHOP_PASE_3DIAS = "https://whop.com/youtube-d4c7/quantbet22-canal-vip/"
-LINK_WHOP_PRO = "https://whop.com/youtube-d4c7/products/uantbet22-membresia-pro-avanzada/?ref=related_products"
-LINK_SOPORTE_BOT = "https://t.me/QuantBetSoporte_bot"
+LINK_WEB_APP = "https://quantbet22.streamlit.app"
 API_SPORTS_KEY = os.getenv("API_SPORTS_KEY", "48f391f30e76d9c84e5c94b6a4cccdb4")
 
 FECHA_CORTE_LIMPIO = "2026-10-23"
@@ -148,6 +145,10 @@ css_fondo_app = obtener_css_fondo_quantbet()
 
 st.markdown(f"""
 <meta name="google" content="notranslate">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="QuantBet22">
+<meta name="theme-color" content="#0b0e14">
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
@@ -547,6 +548,28 @@ def cargar_boxscores_reales_web():
         except Exception:
             pass
     return {}
+
+
+
+def formatear_mercado_claro_web(mercado_str, partido_str=""):
+    """Formatea SOLO para visualización en Web App (sin alterar claves internas del CSV)."""
+    m_raw = str(mercado_str or "").strip()
+    if not m_raw:
+        return m_raw
+    try:
+        from generador_imagenes import formatear_mercado_claro_cliente
+        loc_w, vis_w = (str(partido_str).split(" (")[0].split(" vs ") + ["", ""])[:2]
+        if m_raw.startswith("[VIP DOBLE]") or m_raw.startswith("[PRO SNIPER]"):
+            # Limpiar también abreviaturas sueltas dentro de combinadas auditadas
+            res_c = m_raw
+            res_c = re.sub(r"\bCombo\s+(1X|X2)\s*\+\s*U(\d+(?:\.\d+)?)", r"\1 + Menos de \2 Goles", res_c, flags=re.I)
+            res_c = re.sub(r"\bCombo\s+(1X|X2)\s*\+\s*O(\d+(?:\.\d+)?)", r"\1 + Más de \2 Goles", res_c, flags=re.I)
+            res_c = res_c.replace("Total Menos de 3.5 (Under)", "Menos de 3.5 Goles").replace("Total Menos de 2.5 (Under)", "Menos de 2.5 Goles")
+            return res_c
+        tit_w, _ = formatear_mercado_claro_cliente(m_raw, loc_w, vis_w)
+        return tit_w
+    except Exception:
+        return m_raw
 
 
 def evaluar_mercado_real(merc, gh, ga, g_ht, duelo_str="", stats_reales=None):
@@ -1419,8 +1442,7 @@ with st.sidebar:
         f"<div style='color:#ffffff; font-size:1.55rem; font-weight:700; margin:4px 0;'>{n_partidos_hoy} Partidos</div>"
         f"<div style='color:#ffcd00; font-size:0.84rem; font-weight:600; margin-bottom:8px;'>Analizados en {n_ligas_hoy} ligas profesionales</div>"
         f"<div style='color:#d0d7de; font-size:0.82rem; line-height:1.45;'>"
-        f"En esta plataforma web mostramos solo las <b>7 tarjetas destacadas</b> del día (3 FREE + 4 VIP). "
-        f"¿Quieres recibir el catálogo completo, las alertas en vivo y las combinadas exclusivas?"
+        f"Auditoría pública transparente en tiempo real. Recibe <b>3 tarjetas FREE diarias</b> en nuestra comunidad abierta de Telegram."
         f"</div>"
         f"</div>",
         unsafe_allow_html=True
@@ -1429,7 +1451,11 @@ with st.sidebar:
     st.markdown(
         f"<div class='notranslate' translate='no'>"
         f"<a href='{LINK_TELEGRAM_FREE}' target='_blank' class='btn-cta-bar-gold'>📲 ENTRAR AL TELEGRAM GRATIS</a>"
-        f"<a href='{LINK_SOPORTE_BOT}' target='_blank' class='btn-cta-bar'>👑 ACCESO COMPLETO VIP / PRO (SOPORTE)</a>"
+        f"<a href='#instalar-app-quantbet' class='btn-cta-bar'>📱 INSTALAR APP EN TU MÓVIL</a>"
+        f"</div>"
+        f"<div style='background:rgba(28,22,8,0.88); border:1px solid #ffcd00; border-radius:10px; padding:10px 12px; margin-top:6px; font-size:0.80rem; color:#ffe699;'>"
+        f"🔒 <b>Plazas VIP y PRO cerradas temporalmente.</b><br>"
+        f"Toda nueva apertura se anunciará primero en el Canal FREE."
         f"</div>",
         unsafe_allow_html=True
     )
@@ -1476,47 +1502,256 @@ with c_kpi3:
         unsafe_allow_html=True
     )
 
-o1, o2, o3, o4 = st.columns(4)
-with o1:
-    st.markdown(
-        f"<div class='oferta-card-animada notranslate' translate='no'>"
-        f"<div><span class='oferta-tag-top'>📲 CANAL ABIERTO</span>"
-        f"<div class='oferta-precio-limpio' style='color:#00ff64;'>GRATIS</div>"
-        f"<div class='oferta-subtexto'>3 Tarjetas FREE diarias + Auditoría en vivo</div></div>"
-        f"<a href='{LINK_TELEGRAM_FREE}' target='_blank' class='oferta-btn-clic'>Entrar a Telegram ➔</a>"
-        f"</div>",
-        unsafe_allow_html=True
-    )
-with o2:
-    st.markdown(
-        f"<div class='oferta-card-animada notranslate' translate='no' style='border-color:#ffcd00;'>"
-        f"<div><span class='oferta-tag-top'>🔓 PRUEBA 24 HORAS</span>"
-        f"<div class='oferta-precio-limpio' style='color:#ffcd00;'>1.00 €</div>"
-        f"<div class='oferta-subtexto'>4 VIP + Combinada Doble (Sin cobro automático)</div></div>"
-        f"<a href='{LINK_WHOP_TRIAL_099}' target='_blank' class='oferta-btn-clic-oro'>Probar 1 Día VIP ➔</a>"
-        f"</div>",
-        unsafe_allow_html=True
-    )
-with o3:
-    st.markdown(
-        f"<div class='oferta-card-animada notranslate' translate='no'>"
-        f"<div><span class='oferta-tag-top'>🔥 PROMO HASTA 30 NOV</span>"
-        f"<div class='oferta-precio-limpio'>7.99 € <span style='font-size:0.78rem; font-weight:500;'>/ 10 días</span></div>"
-        f"<div class='oferta-subtexto'>VIP Completo + Doble (o 3 Días x 4.99 €)</div></div>"
-        f"<a href='{LINK_WHOP_VIP}' target='_blank' class='oferta-btn-clic'>Activar VIP 10 Días ➔</a>"
-        f"</div>",
-        unsafe_allow_html=True
-    )
-with o4:
-    st.markdown(
-        f"<div class='oferta-card-animada notranslate' translate='no'>"
-        f"<div><span class='oferta-tag-top'>👑 TODAS LAS LIGAS</span>"
-        f"<div class='oferta-precio-limpio'>49.99 € <span style='font-size:0.76rem; text-decoration:line-through; color:#8b949e;'>74.99</span></div>"
-        f"<div class='oferta-subtexto'>{n_partidos_hoy} partidos hoy + Sniper 3X • Bizum/Nequi/USDT</div></div>"
-        f"<a href='{LINK_WHOP_PRO}' target='_blank' class='oferta-btn-clic'>Desbloquear PRO ➔</a>"
-        f"</div>",
-        unsafe_allow_html=True
-    )
+st.markdown("<div id='instalar-app-quantbet'></div>", unsafe_allow_html=True)
+
+_HTML_PANEL_FREE_Y_PWA = f"""
+<div style="font-family: 'Inter', 'Segoe UI', Roboto, sans-serif; color: #f5f5f5; box-sizing: border-box;">
+  <style>
+    .qb-grid {{
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      width: 100%;
+    }}
+    @media (max-width: 640px) {{
+      .qb-grid {{ grid-template-columns: 1fr; }}
+    }}
+    .qb-card {{
+      background: rgba(14, 20, 28, 0.94);
+      border: 1.5px solid #00ff64;
+      border-radius: 13px;
+      padding: 15px 14px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+    }}
+    .qb-card-gold {{
+      border-color: #ffcd00;
+    }}
+    .qb-tag {{
+      display: inline-block;
+      background: rgba(255, 205, 0, 0.16);
+      border: 1px solid #ffcd00;
+      color: #ffcd00;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 12px;
+      margin-bottom: 8px;
+    }}
+    .qb-title {{
+      font-size: 20px;
+      font-weight: 800;
+      margin: 2px 0 6px 0;
+      letter-spacing: 0.2px;
+    }}
+    .qb-sub {{
+      font-size: 13px;
+      color: #b8c4d0;
+      margin-bottom: 12px;
+      line-height: 1.4;
+    }}
+    .qb-btn {{
+      display: block;
+      width: 100%;
+      box-sizing: border-box;
+      border: none;
+      border-radius: 9px;
+      padding: 11px 14px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: none;
+      text-align: center;
+      transition: transform 0.15s ease;
+    }}
+    .qb-btn:hover {{ transform: scale(1.015); }}
+    .qb-btn-green {{
+      background: linear-gradient(90deg, #00e65c 0%, #00ff64 100%);
+      color: #05140a;
+    }}
+    .qb-btn-gold {{
+      background: linear-gradient(90deg, #ffcd00 0%, #ffb700 100%);
+      color: #0b0e14;
+    }}
+    .qb-guide {{
+      display: none;
+      margin-top: 12px;
+      background: rgba(10, 26, 20, 0.96);
+      border: 1.5px solid #ffcd00;
+      border-radius: 12px;
+      padding: 14px 16px;
+      text-align: left;
+      font-size: 13px;
+      line-height: 1.5;
+      color: #e6edf3;
+    }}
+    .qb-guide-head {{
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }}
+    .qb-close {{
+      background: rgba(255,255,255,0.12);
+      color: #ffffff;
+      border: 1px solid rgba(255,255,255,0.25);
+      border-radius: 6px;
+      padding: 2px 9px;
+      cursor: pointer;
+      font-weight: 700;
+    }}
+  </style>
+
+  <div class="qb-grid">
+    <div class="qb-card">
+      <div>
+        <span class="qb-tag">📲 COMUNIDAD ABIERTA 100% GRATIS</span>
+        <div class="qb-title" style="color:#00ff64;">CANAL FREE EN TELEGRAM</div>
+        <div class="qb-sub">Recibe 3 tarjetas gratuitas diarias, auditoría en tiempo real y aviso de próximas plazas.</div>
+      </div>
+      <a class="qb-btn qb-btn-green" href="{LINK_TELEGRAM_FREE}" target="_blank" rel="noopener">
+        📲 ENTRAR AL CANAL FREE DE TELEGRAM ➔
+      </a>
+    </div>
+
+    <div class="qb-card qb-card-gold">
+      <div>
+        <span class="qb-tag">📱 APLICACIÓN WEB INSTALABLE (PWA)</span>
+        <div class="qb-title" style="color:#ffcd00;">INSTALAR APP QUANTBET22</div>
+        <div class="qb-sub">Descarga e instala QuantBet22 directo en tu pantalla de inicio (Android, iPhone o PC) sin tiendas.</div>
+      </div>
+      <button id="btn-instalar-pwa-qb" class="qb-btn qb-btn-gold" type="button">
+        📲 INSTALAR APP EN MI DISPOSITIVO ➔
+      </button>
+    </div>
+  </div>
+
+  <div id="qb-install-guide" class="qb-guide">
+    <div class="qb-guide-head">
+      <strong style="color:#ffcd00; font-size:14px;">📱 Cómo instalar la App QuantBet22 en 10 segundos:</strong>
+      <button id="qb-close-guide" class="qb-close" type="button">✕</button>
+    </div>
+    <div id="qb-install-steps"></div>
+  </div>
+</div>
+
+<script>
+(function() {{
+  let deferredPrompt = null;
+  const manifestObj = {{
+    name: "QuantBet22 | Laboratorio de Ciencia de Datos",
+    short_name: "QuantBet22",
+    start_url: "{LINK_WEB_APP}",
+    display: "standalone",
+    background_color: "#0b0e14",
+    theme_color: "#00ff64",
+    icons: [{{ src: "https://img.icons8.com/color/192/artificial-intelligence.png", sizes: "192x192", type: "image/png" }}]
+  }};
+
+  try {{
+    const pWin = window.parent || window;
+    const pDoc = pWin.document;
+    if (pDoc && !pDoc.querySelector('link[data-qb-manifest="1"]')) {{
+      const link = pDoc.createElement('link');
+      link.rel = 'manifest';
+      link.setAttribute('data-qb-manifest', '1');
+      link.href = 'data:application/manifest+json;charset=utf-8,' + encodeURIComponent(JSON.stringify(manifestObj));
+      pDoc.head.appendChild(link);
+    }}
+    pWin.addEventListener('beforeinstallprompt', (e) => {{
+      e.preventDefault();
+      deferredPrompt = e;
+    }});
+  }} catch (err) {{}}
+
+  window.addEventListener('beforeinstallprompt', (e) => {{
+    e.preventDefault();
+    deferredPrompt = e;
+  }});
+
+  const btn = document.getElementById('btn-instalar-pwa-qb');
+  const guide = document.getElementById('qb-install-guide');
+  const steps = document.getElementById('qb-install-steps');
+  const closeBtn = document.getElementById('qb-close-guide');
+
+  function detectarGuia() {{
+    const ua = navigator.userAgent || "";
+    const isIOS = /iPad|iPhone|iPod/.test(ua);
+    const isAndroid = /Android/i.test(ua);
+    const isInApp = /TikTok|Instagram|FBAN|FBAV|Musical_ly/i.test(ua);
+
+    if (isInApp) {{
+      return (
+        "<p style='margin:0 0 6px 0;'>Estás abriendo la web dentro del navegador interno de una red social:</p>" +
+        "<ol style='margin:0; padding-left:18px;'>" +
+        "<li>Toca los tres puntos (<b>⋮</b> o <b>⋯</b>) en la esquina superior derecha.</li>" +
+        "<li>Selecciona <b>Abrir en el navegador</b> (Chrome en Android o Safari en iPhone).</li>" +
+        "<li>En el navegador, pulsa <b>Instalar aplicación</b> o <b>Añadir a pantalla de inicio</b>.</li>" +
+        "</ol>"
+      );
+    }}
+    if (isIOS) {{
+      return (
+        "<ol style='margin:0; padding-left:18px;'>" +
+        "<li>Asegúrate de estar en <b>Safari</b>.</li>" +
+        "<li>Toca el icono <b>Compartir</b> (cuadrado con flecha hacia arriba ⬆️) en la barra inferior.</li>" +
+        "<li>Desliza y elige <b>Añadir a pantalla de inicio</b> ➔ <b>Añadir</b>.</li>" +
+        "</ol>"
+      );
+    }}
+    if (isAndroid) {{
+      return (
+        "<ol style='margin:0; padding-left:18px;'>" +
+        "<li>Toca el menú <b>⋮</b> en la esquina superior derecha de Chrome.</li>" +
+        "<li>Pulsa <b>Instalar aplicación</b> (o <b>Añadir a pantalla de inicio</b>).</li>" +
+        "<li>Confirma <b>Instalar</b> y el icono de QuantBet22 aparecerá junto a tus apps.</li>" +
+        "</ol>"
+      );
+    }}
+    return (
+      "<ol style='margin:0; padding-left:18px;'>" +
+      "<li>En <b>Chrome o Edge (PC)</b>, haz clic en el icono de <b>Instalar App</b> al final de la barra de direcciones (o menú <b>⋮ ➔ Guardar y compartir ➔ Instalar página como app</b>).</li>" +
+      "<li>En móvil, abre <b>quantbet22.streamlit.app</b> en Chrome/Safari y elige <b>Añadir a pantalla de inicio</b>.</li>" +
+      "</ol>"
+    );
+  }}
+
+  if (btn) {{
+    btn.addEventListener('click', async () => {{
+      if (deferredPrompt) {{
+        try {{
+          deferredPrompt.prompt();
+          await deferredPrompt.userChoice;
+          deferredPrompt = null;
+          return;
+        }} catch (e) {{}}
+      }}
+      steps.innerHTML = detectarGuia();
+      guide.style.display = (guide.style.display === 'block') ? 'none' : 'block';
+    }});
+  }}
+  if (closeBtn) {{
+    closeBtn.addEventListener('click', () => {{ guide.style.display = 'none'; }});
+  }}
+}})();
+</script>
+"""
+
+components.html(_HTML_PANEL_FREE_Y_PWA, height=305, scrolling=False)
+
+st.markdown(
+    "<div class='banner-promo-gigante notranslate' translate='no' style='padding:16px 20px; margin-top:4px;'>"
+    "<div style='color:#ffcd00; font-size:1.05rem; font-weight:700; letter-spacing:0.4px;'>🔒 ACCESO PRIVADO VIP Y PRO — PLAZAS CERRADAS TEMPORALMENTE</div>"
+    "<div style='color:#e2e8f0; font-size:0.90rem; margin-top:6px; line-height:1.5;'>"
+    "Por control de calidad, calibración independiente por liga y límite de cupos, los accesos privados <b>VIP y PRO permanecen cerrados temporalmente</b> (no existen cobros activos en esta plataforma). "
+    "El <b>Canal FREE de Telegram</b> y la <b>auditoría pública en tiempo real</b> continúan 100% abiertos para toda la comunidad."
+    "</div>"
+    "</div>",
+    unsafe_allow_html=True
+)
 
 st.divider()
 
@@ -1597,7 +1832,7 @@ def renderizar_panel_en_vivo_silencioso():
                     else:
                         badge = "<span class='badge-perdida'>🔴 ❌ PERDIDA</span>"
                         color_txt = "#ffd6d6"
-                    filas_html += f"<div style='margin-top:8px; color:{color_txt};'>• {badge} &nbsp; <b>{op['mercado']}</b> ({op['prob']}%) ➔ Cuota > <b>{c_mostrar:.2f}</b></div>"
+                    filas_html += f"<div style='margin-top:8px; color:{color_txt};'>• {badge} &nbsp; <b>{formatear_mercado_claro_web(op['mercado'], tf['partido'])}</b> ({op['prob']}%) ➔ Cuota > <b>{c_mostrar:.2f}</b></div>"
 
                 clase_caja = "card-verde" if aciertos_card == total_card else ("card-amarilla" if aciertos_card >= 1 else "card-roja")
                 sem_titulo = f"🟢 [{aciertos_card}/{total_card}]" if aciertos_card == total_card else (f"🟡 [{aciertos_card}/{total_card}]" if aciertos_card >= 1 else f"🔴 [{aciertos_card}/{total_card}]")
@@ -1613,7 +1848,7 @@ def renderizar_panel_en_vivo_silencioso():
                     if opciones_f:
                         op1 = opciones_f[0]
                         c_mostrar = min(1.28, float(op1.get("cuota", 1.24)))
-                        filas_html += f"<div style='margin-top:8px; color:#e8fff0;'>• <span class='badge-abierta'>🟢 ABIERTA GRATIS</span> &nbsp; <b>{op1['mercado']}</b> ({op1['prob']}%) ➔ Cuota > <b>{c_mostrar:.2f}</b></div>"
+                        filas_html += f"<div style='margin-top:8px; color:#e8fff0;'>• <span class='badge-abierta'>🟢 ABIERTA GRATIS</span> &nbsp; <b>{formatear_mercado_claro_web(op1['mercado'], tf['partido'])}</b> ({op1['prob']}%) ➔ Cuota > <b>{c_mostrar:.2f}</b></div>"
                     if len(opciones_f) > 1:
                         filas_html += f"<div style='margin-top:8px; color:#ffcd00;'>• <span class='badge-candado'>📲 2ª JUGADA GRATIS</span> &nbsp; <i>Disponible sin costo dentro de nuestro <a href='{LINK_TELEGRAM_FREE}' target='_blank' style='color:#00ff64; font-weight:600;'>Canal FREE de Telegram (Entrar aquí)</a></i></div>"
                 else:
@@ -1664,7 +1899,7 @@ def renderizar_panel_en_vivo_silencioso():
                     else:
                         badge_v = "<span class='badge-perdida'>🔴 ❌ PERDIDA</span>"
                         color_v = "#ffd6d6"
-                    filas_v_html += f"<div style='margin-top:8px; color:{color_v};'>• {badge_v} &nbsp; <b>[VIP] {op['mercado']}</b> ({op['prob']}%) ➔ Cuota Alta > <b>{c_vip_mostrar:.2f}</b></div>"
+                    filas_v_html += f"<div style='margin-top:8px; color:{color_v};'>• {badge_v} &nbsp; <b>[VIP] {formatear_mercado_claro_web(op['mercado'], tv['partido'])}</b> ({op['prob']}%) ➔ Cuota Alta > <b>{c_vip_mostrar:.2f}</b></div>"
 
                 clase_v = "card-verde" if aciertos_v == total_v else ("card-amarilla" if aciertos_v >= 1 else "card-roja")
                 sem_v = f"🟢 [{aciertos_v}/{total_v}]" if aciertos_v == total_v else (f"🟡 [{aciertos_v}/{total_v}]" if aciertos_v >= 1 else f"🔴 [{aciertos_v}/{total_v}]")
@@ -1685,9 +1920,7 @@ def renderizar_panel_en_vivo_silencioso():
                         f"<div style='margin-top:10px; color:#f5f5f5; font-size:0.98rem;'>"
                         f"• <span class='badge-candado'>🔒 SELECCIÓN VIP #{idx_op}</span> &nbsp; "
                         f"Probabilidad Modelo: <b>{op.get('prob', 78.0)}%</b> ➔ Cuota VIP > <b>{c_vip_mostrar:.2f}</b> "
-                        f"<a href='{LINK_WHOP_VIP}' target='_blank' class='btn-vip-inline'>"
-                        f"🔓 DESBLOQUEAR HOY POR 1.00 €"
-                        f"</a>"
+                        f"<span style='color:#ffcd00; font-size:0.84rem; margin-left:8px;'><i>(Plazas VIP cerradas • Se audita en público al finalizar)</i></span>"
                         f"</div>"
                     )
 
@@ -1704,9 +1937,9 @@ def renderizar_panel_en_vivo_silencioso():
 
         col_v1, col_v2 = st.columns(2)
         with col_v1:
-            st.markdown(f"<a href='{LINK_WHOP_VIP}' target='_blank' class='btn-cta-bar-gold'>🔥 ACTIVAR PASE VIP (1 DÍA 1.00 € | 10 DÍAS 7.99 €)</a>", unsafe_allow_html=True)
+            st.markdown(f"<a href='{LINK_TELEGRAM_FREE}' target='_blank' class='btn-cta-bar-gold'>📲 ENTRAR AL CANAL FREE DE TELEGRAM (100% GRATIS)</a>", unsafe_allow_html=True)
         with col_v2:
-            st.markdown(f"<a href='{LINK_WHOP_PRO}' target='_blank' class='btn-cta-bar'>👑 PROMO PRO CIERRE DE AÑO: TODAS LAS LIGAS (49.99 €)</a>", unsafe_allow_html=True)
+            st.markdown("<a href='#instalar-app-quantbet' class='btn-cta-bar'>📱 INSTALAR APP QUANTBET22 • 🔒 VIP/PRO PLAZAS CERRADAS</a>", unsafe_allow_html=True)
 
     st.divider()
 
@@ -1796,7 +2029,8 @@ def renderizar_panel_en_vivo_silencioso():
         n_ok_m = int(df_mostrar["Estado"].isin(["Ganada", "Mitad Devuelta"]).sum())
         st.caption(f"📊 Mostrando **{n_part_unicos} partidos finalizados** ({n_ok_m}/{n_picks_m} selecciones acertadas • {round((n_ok_m / max(1, n_picks_m)) * 100.0, 1)}%).")
 
-        vista_cajon = df_mostrar[["Semáforo", "Fecha y Hora Fin", "Partido", "Mercado", "Cuota", "Marcador"]]
+        vista_cajon = df_mostrar[["Semáforo", "Fecha y Hora Fin", "Partido", "Mercado", "Cuota", "Marcador"]].copy()
+        vista_cajon["Mercado"] = vista_cajon.apply(lambda r: formatear_mercado_claro_web(r["Mercado"], r["Partido"]), axis=1)
         st.dataframe(vista_cajon, hide_index=True, height=520)
 
 
