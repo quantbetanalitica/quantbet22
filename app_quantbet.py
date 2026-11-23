@@ -550,6 +550,96 @@ def cargar_boxscores_reales_web():
     return {}
 
 
+@st.cache_data(ttl=300, show_spinner=False)
+def obtener_boxscore_real_web(id_partido, duelo_str=""):
+    """Obtiene el boxscore REAL (remates a puerta, córners, faltas, tarjetas) desde cache_boxscore_ft.json
+    o en tiempo real desde API-Sports / ESPN. Jamás inventa ni estima resultados."""
+    clave_id = str(id_partido or "").strip()
+    cache_local = cargar_boxscores_reales_web()
+    if clave_id and clave_id in cache_local:
+        d_c = cache_local[clave_id]
+        if isinstance(d_c, dict) and d_c.get("has_stats"):
+            return d_c
+    if not clave_id or not clave_id.isdigit():
+        return None
+
+    def _fnum(v):
+        if v is None:
+            return None
+        try:
+            return float(str(v).strip().replace("%", ""))
+        except Exception:
+            return None
+
+    loc_nom = str(duelo_str).split(" (")[0].split(" vs ")[0].strip().lower()
+    stats = {
+        "corners_home": None, "corners_away": None, "corners_total": None,
+        "shots_on_target_home": None, "shots_on_target_away": None, "shots_on_target_total": None,
+        "fouls_home": None, "fouls_away": None, "fouls_total": None,
+        "yellow_total": None, "cards_total": None, "has_stats": False,
+    }
+    try:
+        r_st = requests.get(
+            f"https://v3.football.api-sports.io/fixtures/statistics?fixture={clave_id}",
+            headers={"x-apisports-key": API_SPORTS_KEY},
+            timeout=4.0,
+        )
+        if r_st.status_code == 200:
+            resp_s = r_st.json().get("response") or []
+            if len(resp_s) >= 2:
+                idx_h, idx_a = 0, 1
+                t0 = str((resp_s[0].get("team") or {}).get("name") or "").lower()
+                t1 = str((resp_s[1].get("team") or {}).get("name") or "").lower()
+                if loc_nom and len(loc_nom) >= 4 and loc_nom[:4] in t1 and loc_nom[:4] not in t0:
+                    idx_h, idx_a = 1, 0
+                mh = {str(x.get("type")): _fnum(x.get("value")) for x in (resp_s[idx_h].get("statistics") or [])}
+                ma = {str(x.get("type")): _fnum(x.get("value")) for x in (resp_s[idx_a].get("statistics") or [])}
+                ch, ca = mh.get("Corner Kicks"), ma.get("Corner Kicks")
+                sh, sa = mh.get("Shots on Goal"), ma.get("Shots on Goal")
+                fh, fa = mh.get("Fouls"), ma.get("Fouls")
+                yh, ya = mh.get("Yellow Cards"), ma.get("Yellow Cards")
+                rh, ra = mh.get("Red Cards") or 0.0, ma.get("Red Cards") or 0.0
+                if ch is not None and ca is not None:
+                    stats["corners_home"], stats["corners_away"], stats["corners_total"] = ch, ca, ch + ca
+                if sh is not None and sa is not None:
+                    stats["shots_on_target_home"], stats["shots_on_target_away"], stats["shots_on_target_total"] = sh, sa, sh + sa
+                if fh is not None and fa is not None:
+                    stats["fouls_home"], stats["fouls_away"], stats["fouls_total"] = fh, fa, fh + fa
+                if yh is not None or ya is not None:
+                    yt = (yh or 0.0) + (ya or 0.0)
+                    stats["yellow_total"], stats["cards_total"] = yt, yt + rh + ra
+    except Exception:
+        pass
+
+    if stats["corners_total"] is None and stats["shots_on_target_total"] is None:
+        try:
+            r_e = requests.get(f"https://site.api.espn.com/apis/site/v2/sports/soccer/all/summary?event={clave_id}", timeout=3.5)
+            if r_e.status_code == 200:
+                bts = (r_e.json().get("boxscore") or {}).get("teams") or []
+                if len(bts) >= 2:
+                    eh = {str(s.get("name")): _fnum(s.get("displayValue")) for s in (bts[0].get("statistics") or [])}
+                    ea = {str(s.get("name")): _fnum(s.get("displayValue")) for s in (bts[1].get("statistics") or [])}
+                    ch, ca = eh.get("wonCorners"), ea.get("wonCorners")
+                    sh, sa = eh.get("shotsOnTarget"), ea.get("shotsOnTarget")
+                    fh, fa = eh.get("foulsCommitted"), ea.get("foulsCommitted")
+                    yh, ya = eh.get("yellowCards"), ea.get("yellowCards")
+                    rh, ra = eh.get("redCards") or 0.0, ea.get("redCards") or 0.0
+                    if ch is not None and ca is not None:
+                        stats["corners_home"], stats["corners_away"], stats["corners_total"] = ch, ca, ch + ca
+                    if sh is not None and sa is not None:
+                        stats["shots_on_target_home"], stats["shots_on_target_away"], stats["shots_on_target_total"] = sh, sa, sh + sa
+                    if fh is not None and fa is not None:
+                        stats["fouls_home"], stats["fouls_away"], stats["fouls_total"] = fh, fa, fh + fa
+                    if yh is not None or ya is not None:
+                        yt = (yh or 0.0) + (ya or 0.0)
+                        stats["yellow_total"], stats["cards_total"] = yt, yt + rh + ra
+        except Exception:
+            pass
+
+    stats["has_stats"] = any(stats[k] is not None for k in ("corners_total", "shots_on_target_total", "fouls_total", "cards_total"))
+    return stats if stats["has_stats"] else None
+
+
 
 def formatear_mercado_claro_web(mercado_str, partido_str=""):
     """Formatea SOLO para visualización en Web App (sin alterar claves internas del CSV)."""
@@ -647,13 +737,13 @@ def evaluar_mercado_real(merc, gh, ga, g_ht, duelo_str="", stats_reales=None):
                 return float(stats_reales["yellow_total"]) > linea_t
             if stats_reales.get("cards_total") is not None:
                 return float(stats_reales["cards_total"]) > linea_t
-        return (abs(gh - ga) <= 1) or (tot >= 2)
+        return None
     elif "faltas" in m_low:
         m_n = re.search(r">\s*(\d+(?:\.\d+)?)", m)
         linea_f = float(m_n.group(1)) if m_n else 22.5
         if isinstance(stats_reales, dict) and stats_reales.get("fouls_total") is not None:
             return float(stats_reales["fouls_total"]) > linea_f
-        return (abs(gh - ga) <= 1) or (tot >= 2)
+        return None
     elif "corners" in m_norm:
         m_n = re.search(r">\s*(\d+(?:\.\d+)?)", m)
         linea_c = float(m_n.group(1)) if m_n else 7.5
@@ -665,13 +755,13 @@ def evaluar_mercado_real(merc, gh, ga, g_ht, duelo_str="", stats_reales=None):
                     return float(stats_reales["corners_away"]) > linea_c
             if stats_reales.get("corners_total") is not None:
                 return float(stats_reales["corners_total"]) > linea_c
-        return (tot >= 1) or (abs(gh - ga) <= 1)
+        return None
     elif "remates" in m_low:
         m_n = re.search(r">\s*(\d+(?:\.\d+)?)", m)
         linea_r = float(m_n.group(1)) if m_n else 6.5
         if isinstance(stats_reales, dict) and stats_reales.get("shots_on_target_total") is not None:
             return float(stats_reales["shots_on_target_total"]) > linea_r
-        return (tot >= 1) or (abs(gh - ga) <= 1)
+        return None
     return tot >= 2
 
 
@@ -1074,7 +1164,9 @@ def obtener_resumen_auditoria():
                         ya_usados.add(m_base.lower())
                         m_etq = f"[{tipo_t}] {m_base}"
                         cuo_s = float(sel.get("cuota", 1.42 if tipo_t == "VIP" else 1.25))
-                        gano_l = evaluar_mercado_real(m_etq, gh_l, ga_l, ght_l, part_tc, stats_reales=cargar_boxscores_reales_web().get(str(id_tc)))
+                        gano_l = evaluar_mercado_real(m_etq, gh_l, ga_l, ght_l, part_tc, stats_reales=obtener_boxscore_real_web(id_tc, part_tc))
+                        if gano_l is None:
+                            continue
                         filas_clientes.append({
                             "Fecha_Registro": dt_fin_tc.strftime("%Y-%m-%d %H:%M:00"),
                             "ID_Partido": id_tc,
@@ -1153,7 +1245,10 @@ def obtener_resumen_auditoria():
 
             if info_m:
                 gh, ga, ght = info_m
-                gano_real = evaluar_mercado_real(merc_k, gh, ga, ght, part_k, stats_reales=cargar_boxscores_reales_web().get(str(id_k)))
+                gano_real = evaluar_mercado_real(merc_k, gh, ga, ght, part_k, stats_reales=obtener_boxscore_real_web(id_k, part_k))
+                if gano_real is None:
+                    indices_no_finalizados.append(idx)
+                    continue
                 tabla.at[idx, "Estado"] = "Ganada" if gano_real else "Perdida"
                 tabla.at[idx, "CLV_Status"] = f"FT {gh}-{ga}"
                 continue
@@ -1359,7 +1454,7 @@ def evaluar_pick_tarjeta(mapa_ft, df_hist, dia_str, id_partido, duelo_str, pick_
             pass
 
     # PRIORIDAD #2: Evaluar con marcador FT/HT real + boxscore real (cache_boxscore_ft.json)
-    box_stats = cargar_boxscores_reales_web().get(str(id_partido).strip())
+    box_stats = obtener_boxscore_real_web(id_partido, duelo_str)
     info_m = buscar_resultado_inteligente(mapa_ft, id_partido, duelo_str, dia_str)
     if info_m:
         gh, ga, ght = info_m
@@ -1683,10 +1778,11 @@ def renderizar_panel_en_vivo_silencioso():
                     marc_f, gano_f = evaluar_pick_tarjeta(
                         mapa_ft_live, df_hist_live, jornada_elegida, id_p, tf["partido"], op["mercado"], hora_p
                     )
-                    if gano_f is None:
-                        gano_f = True
                     c_mostrar = min(1.28, float(op.get("cuota", 1.24)))
-                    if gano_f:
+                    if gano_f is None:
+                        badge = "<span class='badge-candado'>⏳ VERIFICANDO BOXSCORE</span>"
+                        color_txt = "#ffe699"
+                    elif gano_f:
                         aciertos_card += 1
                         badge = "<span class='badge-ganada'>🟢 ✅ GANADA</span>"
                         color_txt = "#e8fff0"
@@ -1750,10 +1846,11 @@ def renderizar_panel_en_vivo_silencioso():
                     marc_v, gano_v = evaluar_pick_tarjeta(
                         mapa_ft_live, df_hist_live, jornada_elegida, id_pv, tv["partido"], op["mercado"], hora_pv
                     )
-                    if gano_v is None:
-                        gano_v = True
                     c_vip_mostrar = max(1.38, float(op.get("cuota", 1.45)))
-                    if gano_v:
+                    if gano_v is None:
+                        badge_v = "<span class='badge-candado'>⏳ VERIFICANDO BOXSCORE</span>"
+                        color_v = "#ffe699"
+                    elif gano_v:
                         aciertos_v += 1
                         badge_v = "<span class='badge-ganada'>🟢 ✅ GANADA</span>"
                         color_v = "#e8fff0"
