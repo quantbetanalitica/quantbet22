@@ -3502,22 +3502,22 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-11-23 22:55:00,401933756,Gimnasia La Plata vs Newell's Old Boys (Argentina (Liga Profesional)),[VIP] Faltas Totales > 22.5,1.43,1.43,71.3,🟢 [LUZ VERDE / ALTO VALOR],1100.0,Ganada,1573.0,AUDITADA FT 4-2
 2026-11-23 22:55:00,401933756,Gimnasia La Plata vs Newell's Old Boys (Argentina (Liga Profesional)),[FREE] Total Menos de 3.5 (Under),1.18,1.18,83.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 4-2
 2026-11-23 22:55:00,401933756,Gimnasia La Plata vs Newell's Old Boys (Argentina (Liga Profesional)),[FREE] Doble Oport. 1X,1.21,1.21,79.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,605.0,AUDITADA FT 4-2
-2026-11-24 01:25:00,401841323,Internacional vs Vitória (Brasil (Serie A)),[VIP] Doble Oport. 1X,1.38,PENDIENTE_CLV,79.3,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Pendiente,0.0,AUDITANDO
-2026-11-24 01:25:00,401841323,Internacional vs Vitória (Brasil (Serie A)),[VIP] Faltas Totales > 22.5,1.43,PENDIENTE_CLV,71.5,🟢 [LUZ VERDE / ALTO VALOR],1300.0,Pendiente,0.0,AUDITANDO
-2026-11-24 01:25:00,401841323,Internacional vs Vitória (Brasil (Serie A)),[FREE] Córners Internacional > 4.5,1.18,PENDIENTE_CLV,86.5,🟢 [LUZ VERDE / ALTO VALOR],2900.0,Pendiente,0.0,AUDITANDO
-2026-11-24 01:25:00,401841323,Internacional vs Vitória (Brasil (Serie A)),[FREE] Over 1.5 Goles,1.26,PENDIENTE_CLV,75.1,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
-2026-11-24 01:55:00,401841326,Botafogo vs São Paulo (Brasil (Serie A)),[VIP] Faltas Totales > 22.5,1.43,PENDIENTE_CLV,71.5,🟢 [LUZ VERDE / ALTO VALOR],1300.0,Pendiente,0.0,AUDITANDO
-2026-11-24 01:55:00,401841326,Botafogo vs São Paulo (Brasil (Serie A)),[VIP] Gol en 2do Tiempo,1.38,PENDIENTE_CLV,74.0,🟢 [LUZ VERDE / ALTO VALOR],1400.0,Pendiente,0.0,AUDITANDO
-2026-11-24 01:55:00,401841326,Botafogo vs São Paulo (Brasil (Serie A)),[FREE] Goles Botafogo > 0.5,1.28,PENDIENTE_CLV,73.4,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
-2026-11-24 01:55:00,401841326,Botafogo vs São Paulo (Brasil (Serie A)),[FREE] Córners > 7.5,1.28,PENDIENTE_CLV,62.2,🟢 [VALOR ALTO / OPERABLE],500.0,Pendiente,0.0,AUDITANDO
-2026-11-24 02:55:00,401841320,Santos vs Grêmio (Brasil (Serie A)),[VIP] Total Menos de 2.5 (Under),1.42,PENDIENTE_CLV,74.4,🟢 [LUZ VERDE / ALTO VALOR],3400.0,Pendiente,0.0,AUDITANDO
-2026-11-24 02:55:00,401841320,Santos vs Grêmio (Brasil (Serie A)),[VIP] Córners > 8.5,1.58,PENDIENTE_CLV,64.6,🟢 [VALOR ALTO / OPERABLE],900.0,Pendiente,0.0,AUDITANDO
-2026-11-24 02:55:00,401841320,Santos vs Grêmio (Brasil (Serie A)),[FREE] Faltas Totales > 20.5,1.28,PENDIENTE_CLV,71.6,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
-2026-11-24 02:55:00,401841320,Santos vs Grêmio (Brasil (Serie A)),[FREE] Tarjetas > 3.5,1.28,PENDIENTE_CLV,54.8,🟡 [MODERADO / VIGILAR],500.0,Pendiente,0.0,AUDITANDO
-2026-11-24 03:55:00,401933728,St. Louis CITY SC vs LAFC (Usa (Mls)),[VIP] Ambos Marcan (BTTS),1.5,PENDIENTE_CLV,70.4,🟢 [LUZ VERDE / ALTO VALOR],2800.0,Pendiente,0.0,AUDITANDO
-2026-11-24 03:55:00,401933728,St. Louis CITY SC vs LAFC (Usa (Mls)),[VIP] Faltas Totales > 18.5,1.55,PENDIENTE_CLV,65.6,🟢 [VALOR ALTO / OPERABLE],800.0,Pendiente,0.0,AUDITANDO
-2026-11-24 03:55:00,401933728,St. Louis CITY SC vs LAFC (Usa (Mls)),[FREE] Gol en 2do Tiempo,1.18,PENDIENTE_CLV,83.1,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
-2026-11-24 03:55:00,401933728,St. Louis CITY SC vs LAFC (Usa (Mls)),[FREE] Remates Puerta > 6.5,1.28,PENDIENTE_CLV,73.9,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
+2026-11-24 01:25:00,401841323,Internacional vs Vitória (Brasil (Serie A)),[VIP] Doble Oport. 1X,1.38,1.38,79.3,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Perdida,0.0,AUDITADA FT 2-5
+2026-11-24 01:25:00,401841323,Internacional vs Vitória (Brasil (Serie A)),[VIP] Faltas Totales > 22.5,1.43,1.43,71.5,🟢 [LUZ VERDE / ALTO VALOR],1300.0,Ganada,1859.0,AUDITADA FT 2-5
+2026-11-24 01:25:00,401841323,Internacional vs Vitória (Brasil (Serie A)),[FREE] Córners Internacional > 4.5,1.18,1.18,86.5,🟢 [LUZ VERDE / ALTO VALOR],2900.0,Ganada,3422.0,AUDITADA FT 2-5
+2026-11-24 01:25:00,401841323,Internacional vs Vitória (Brasil (Serie A)),[FREE] Over 1.5 Goles,1.26,1.26,75.1,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,630.0,AUDITADA FT 2-5
+2026-11-24 01:55:00,401841326,Botafogo vs São Paulo (Brasil (Serie A)),[VIP] Faltas Totales > 22.5,1.43,1.43,71.5,🟢 [LUZ VERDE / ALTO VALOR],1300.0,Ganada,1859.0,AUDITADA FT 1-1
+2026-11-24 01:55:00,401841326,Botafogo vs São Paulo (Brasil (Serie A)),[VIP] Gol en 2do Tiempo,1.38,1.38,74.0,🟢 [LUZ VERDE / ALTO VALOR],1400.0,Ganada,1932.0,AUDITADA FT 1-1
+2026-11-24 01:55:00,401841326,Botafogo vs São Paulo (Brasil (Serie A)),[FREE] Goles Botafogo > 0.5,1.28,1.28,73.4,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,640.0,AUDITADA FT 1-1
+2026-11-24 01:55:00,401841326,Botafogo vs São Paulo (Brasil (Serie A)),[FREE] Córners > 7.5,1.28,1.28,62.2,🟢 [VALOR ALTO / OPERABLE],500.0,Ganada,640.0,AUDITADA FT 1-1
+2026-11-24 02:55:00,401841320,Santos vs Grêmio (Brasil (Serie A)),[VIP] Total Menos de 2.5 (Under),1.42,1.42,74.4,🟢 [LUZ VERDE / ALTO VALOR],3400.0,Ganada,4828.0,AUDITADA FT 0-2
+2026-11-24 02:55:00,401841320,Santos vs Grêmio (Brasil (Serie A)),[VIP] Córners > 8.5,1.58,1.58,64.6,🟢 [VALOR ALTO / OPERABLE],900.0,Ganada,1422.0,AUDITADA FT 0-2
+2026-11-24 02:55:00,401841320,Santos vs Grêmio (Brasil (Serie A)),[FREE] Faltas Totales > 20.5,1.28,1.28,71.6,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,640.0,AUDITADA FT 0-2
+2026-11-24 02:55:00,401841320,Santos vs Grêmio (Brasil (Serie A)),[FREE] Tarjetas > 3.5,1.28,1.28,54.8,🟡 [MODERADO / VIGILAR],500.0,Ganada,640.0,AUDITADA FT 0-2
+2026-11-24 03:55:00,401933728,St. Louis CITY SC vs LAFC (Usa (Mls)),[VIP] Ambos Marcan (BTTS),1.5,1.50,70.4,🟢 [LUZ VERDE / ALTO VALOR],2800.0,Ganada,4200.0,AUDITADA FT 3-2
+2026-11-24 03:55:00,401933728,St. Louis CITY SC vs LAFC (Usa (Mls)),[VIP] Faltas Totales > 18.5,1.55,1.55,65.6,🟢 [VALOR ALTO / OPERABLE],800.0,Ganada,1240.0,AUDITADA FT 3-2
+2026-11-24 03:55:00,401933728,St. Louis CITY SC vs LAFC (Usa (Mls)),[FREE] Gol en 2do Tiempo,1.18,1.18,83.1,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 3-2
+2026-11-24 03:55:00,401933728,St. Louis CITY SC vs LAFC (Usa (Mls)),[FREE] Remates Puerta > 6.5,1.28,1.28,73.9,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,640.0,AUDITADA FT 3-2
 2026-11-22 18:10:00,401882298,Sporting Gijón vs Las Palmas (España (Segunda)),[FREE] Gol en 2do Tiempo,1.18,1.18,82.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 0-2
 2026-11-22 18:10:00,401882298,Sporting Gijón vs Las Palmas (España (Segunda)),[FREE] Faltas Totales > 16.5,1.28,1.28,72.2,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,640.0,AUDITADA FT 0-2
 2026-11-22 16:55:00,401879234,Hull City vs Brighton & Hove Albion (Inglaterra (Premier)),[VIP] Combo X2 + O1.5,1.5,1.50,71.1,🟢 [LUZ VERDE / ALTO VALOR],3300.0,Perdida,0.0,AUDITADA FT 2-0
