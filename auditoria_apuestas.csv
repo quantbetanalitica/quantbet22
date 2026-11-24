@@ -3544,21 +3544,21 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-11-22 23:55:00,401933731,Nashville SC vs FC Cincinnati (Usa (Mls)),[VIP] Faltas Totales > 19.5,1.6,1.60,63.9,🟢 [VALOR ALTO / OPERABLE],900.0,Ganada,1440.0,AUDITADA FT 0-1
 2026-11-22 23:55:00,401933731,Nashville SC vs FC Cincinnati (Usa (Mls)),[FREE] Sin Empate Nashville SC,1.18,1.18,86.2,🟢 [LUZ VERDE / ALTO VALOR],2400.0,Perdida,0.0,AUDITADA FT 0-1
 2026-11-22 23:55:00,401933731,Nashville SC vs FC Cincinnati (Usa (Mls)),[FREE] Over 1.5 Goles,1.18,1.18,81.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 0-1
-2026-11-24 16:40:00,401912755,East Bengal FC vs Al-Hussein SC (Copa Asiática),[VIP] Combo 1X + O1.5,1.5,PENDIENTE_CLV,70.4,🟢 [LUZ VERDE / ALTO VALOR],2800.0,Pendiente,0.0,AUDITANDO
-2026-11-24 16:40:00,401912755,East Bengal FC vs Al-Hussein SC (Copa Asiática),[VIP] Córners > 8.5,1.56,PENDIENTE_CLV,65.3,🟢 [VALOR ALTO / OPERABLE],800.0,Pendiente,0.0,AUDITANDO
-2026-11-24 16:40:00,401912755,East Bengal FC vs Al-Hussein SC (Copa Asiática),[FREE] Over 1.5 Goles,1.18,PENDIENTE_CLV,79.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
-2026-11-24 16:40:00,401912755,East Bengal FC vs Al-Hussein SC (Copa Asiática),[FREE] Faltas Totales > 16.5,1.28,PENDIENTE_CLV,73.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
-2026-11-24 18:55:00,401912754,Al-Seeb Club vs Al-Shorta SC (Copa Asiática),[VIP] Total Menos de 2.5 (Under),1.61,PENDIENTE_CLV,63.4,🟢 [VALOR ALTO / OPERABLE],900.0,Pendiente,0.0,AUDITANDO
-2026-11-24 18:55:00,401912754,Al-Seeb Club vs Al-Shorta SC (Copa Asiática),[FREE] Goles Al-Shorta SC > 0.5,1.18,PENDIENTE_CLV,79.3,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
-2026-11-24 18:55:00,401912754,Al-Seeb Club vs Al-Shorta SC (Copa Asiática),[FREE] Córners > 7.5,1.28,PENDIENTE_CLV,57.3,🟡 [MODERADO / VIGILAR],500.0,Pendiente,0.0,AUDITANDO
-2026-11-24 20:40:00,401915380,Bodo/Glimt vs LASK Linz (Uefa Champions League),[VIP] Total Asiático > 2.25,1.6,PENDIENTE_CLV,63.8,🟢 [VALOR ALTO / OPERABLE],900.0,Pendiente,0.0,AUDITANDO
-2026-11-24 20:40:00,401915380,Bodo/Glimt vs LASK Linz (Uefa Champions League),[VIP] Goles LASK Linz > 1.5,1.63,PENDIENTE_CLV,62.5,🟢 [VALOR ALTO / OPERABLE],700.0,Pendiente,0.0,AUDITANDO
-2026-11-24 20:40:00,401915380,Bodo/Glimt vs LASK Linz (Uefa Champions League),[FREE] Córners LASK Linz > 4.5,1.28,PENDIENTE_CLV,71.1,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
-2026-11-24 20:40:00,401915380,Bodo/Glimt vs LASK Linz (Uefa Champions League),[FREE] Faltas Totales > 17.5,1.28,PENDIENTE_CLV,73.4,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
-2026-11-24 20:40:00,401915300,Galatasaray vs Aston Villa (Uefa Champions League),[VIP] Over 2.5 Goles,1.66,PENDIENTE_CLV,61.4,🟢 [VALOR ALTO / OPERABLE],700.0,Pendiente,0.0,AUDITANDO
-2026-11-24 20:40:00,401915300,Galatasaray vs Aston Villa (Uefa Champions League),[VIP] Remates Puerta > 8.5,1.68,PENDIENTE_CLV,60.8,🟢 [VALOR ALTO / OPERABLE],800.0,Pendiente,0.0,AUDITANDO
-2026-11-24 20:40:00,401915300,Galatasaray vs Aston Villa (Uefa Champions League),[FREE] Gol en 2do Tiempo,1.18,PENDIENTE_CLV,84.1,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
-2026-11-24 20:40:00,401915300,Galatasaray vs Aston Villa (Uefa Champions League),[FREE] Córners > 8.5,1.28,PENDIENTE_CLV,67.4,🟢 [VALOR ALTO / OPERABLE],500.0,Pendiente,0.0,AUDITANDO
+2026-11-24 16:40:00,401912755,East Bengal FC vs Al-Hussein SC (Copa Asiática),[VIP] Combo 1X + O1.5,1.5,1.50,70.4,🟢 [LUZ VERDE / ALTO VALOR],2800.0,Perdida,0.0,AUDITADA FT 1-0
+2026-11-24 16:40:00,401912755,East Bengal FC vs Al-Hussein SC (Copa Asiática),[VIP] Córners > 8.5,1.56,1.56,65.3,🟢 [VALOR ALTO / OPERABLE],800.0,Ganada,1248.0,AUDITADA FT 1-0
+2026-11-24 16:40:00,401912755,East Bengal FC vs Al-Hussein SC (Copa Asiática),[FREE] Over 1.5 Goles,1.18,1.18,79.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 1-0
+2026-11-24 16:40:00,401912755,East Bengal FC vs Al-Hussein SC (Copa Asiática),[FREE] Faltas Totales > 16.5,1.28,1.28,73.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,640.0,AUDITADA FT 1-0
+2026-11-24 18:55:00,401912754,Al-Seeb Club vs Al-Shorta SC (Copa Asiática),[VIP] Total Menos de 2.5 (Under),1.61,1.61,63.4,🟢 [VALOR ALTO / OPERABLE],900.0,Ganada,1449.0,AUDITADA FT 2-0
+2026-11-24 18:55:00,401912754,Al-Seeb Club vs Al-Shorta SC (Copa Asiática),[FREE] Goles Al-Shorta SC > 0.5,1.18,1.18,79.3,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 2-0
+2026-11-24 18:55:00,401912754,Al-Seeb Club vs Al-Shorta SC (Copa Asiática),[FREE] Córners > 7.5,1.28,1.28,57.3,🟡 [MODERADO / VIGILAR],500.0,Ganada,640.0,AUDITADA FT 2-0
+2026-11-24 20:40:00,401915380,Bodo/Glimt vs LASK Linz (Uefa Champions League),[VIP] Total Asiático > 2.25,1.6,1.60,63.8,🟢 [VALOR ALTO / OPERABLE],900.0,Perdida,0.0,AUDITADA FT 1-0
+2026-11-24 20:40:00,401915380,Bodo/Glimt vs LASK Linz (Uefa Champions League),[VIP] Goles LASK Linz > 1.5,1.63,1.63,62.5,🟢 [VALOR ALTO / OPERABLE],700.0,Perdida,0.0,AUDITADA FT 1-0
+2026-11-24 20:40:00,401915380,Bodo/Glimt vs LASK Linz (Uefa Champions League),[FREE] Córners LASK Linz > 4.5,1.28,1.28,71.1,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 1-0
+2026-11-24 20:40:00,401915380,Bodo/Glimt vs LASK Linz (Uefa Champions League),[FREE] Faltas Totales > 17.5,1.28,1.28,73.4,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,640.0,AUDITADA FT 1-0
+2026-11-24 20:40:00,401915300,Galatasaray vs Aston Villa (Uefa Champions League),[VIP] Over 2.5 Goles,1.66,1.66,61.4,🟢 [VALOR ALTO / OPERABLE],700.0,Perdida,0.0,AUDITADA FT 1-0
+2026-11-24 20:40:00,401915300,Galatasaray vs Aston Villa (Uefa Champions League),[VIP] Remates Puerta > 8.5,1.68,1.68,60.8,🟢 [VALOR ALTO / OPERABLE],800.0,Perdida,0.0,AUDITADA FT 1-0
+2026-11-24 20:40:00,401915300,Galatasaray vs Aston Villa (Uefa Champions League),[FREE] Gol en 2do Tiempo,1.18,1.18,84.1,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 1-0
+2026-11-24 20:40:00,401915300,Galatasaray vs Aston Villa (Uefa Champions League),[FREE] Córners > 8.5,1.28,1.28,67.4,🟢 [VALOR ALTO / OPERABLE],500.0,Perdida,0.0,AUDITADA FT 1-0
 2026-11-24 22:55:00,401915295,Arsenal vs Borussia Dortmund (Uefa Champions League),[VIP] Goles Arsenal > 1.5,1.56,PENDIENTE_CLV,60.3,🟢 [VALOR ALTO / OPERABLE],500.0,Pendiente,0.0,AUDITANDO
 2026-11-24 22:55:00,401915295,Arsenal vs Borussia Dortmund (Uefa Champions League),[VIP] Córners Arsenal > 4.5,1.47,PENDIENTE_CLV,69.4,🟢 [LUZ VERDE / ALTO VALOR],1100.0,Pendiente,0.0,AUDITANDO
 2026-11-24 22:55:00,401915295,Arsenal vs Borussia Dortmund (Uefa Champions League),[FREE] Doble Oport. 1X,1.18,PENDIENTE_CLV,84.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
@@ -3603,4 +3603,96 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-11-25 05:55:00,401933738,San Jose Earthquakes vs Houston Dynamo FC (Usa (Mls)),[VIP] Remates Puerta > 8.5,1.71,PENDIENTE_CLV,59.8,🟢 [VALOR ALTO / OPERABLE],800.0,Pendiente,0.0,AUDITANDO
 2026-11-25 05:55:00,401933738,San Jose Earthquakes vs Houston Dynamo FC (Usa (Mls)),[FREE] Gol en 2do Tiempo,1.18,PENDIENTE_CLV,82.7,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
 2026-11-25 05:55:00,401933738,San Jose Earthquakes vs Houston Dynamo FC (Usa (Mls)),[FREE] Córners San Jose Earthq > 4.5,1.28,PENDIENTE_CLV,68.3,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
-2026-11-24 18:55:00,401912754,Al-Seeb Club vs Al-Shorta SC (Copa Asiática),[VIP] Total Menos de 2.5 (Under),1.61,PENDIENTE_CLV,63.4,🟢 [VALOR ALTO / OPERABLE],900.0,Pendiente,0.0,AUDITANDO
+2026-11-24 18:55:00,401912754,Al-Seeb Club vs Al-Shorta SC (Copa Asiática),[VIP] Total Menos de 2.5 (Under),1.61,1.61,63.4,🟢 [VALOR ALTO / OPERABLE],900.0,Ganada,1449.0,AUDITADA FT 2-0
+2026-11-25 10:40:00,401912752,Melbourne Victory vs The Cong-Viettel FC (Copa Asiática),[VIP] Sin Empate Melbourne Vi,1.38,PENDIENTE_CLV,84.0,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Pendiente,0,AUDITANDO
+2026-11-25 10:40:00,401912752,Melbourne Victory vs The Cong-Viettel FC (Copa Asiática),[VIP] Goles Melbourne Vi > 0.5,1.45,PENDIENTE_CLV,72.3,🟢 [LUZ VERDE / ALTO VALOR],2700.0,Pendiente,0,AUDITANDO
+2026-11-25 10:40:00,401912752,Melbourne Victory vs The Cong-Viettel FC (Copa Asiática),[FREE] Combo 1X + U4.5,1.18,PENDIENTE_CLV,85.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0,AUDITANDO
+2026-11-25 10:40:00,401912752,Melbourne Victory vs The Cong-Viettel FC (Copa Asiática),[FREE] Faltas Totales > 18.5,1.28,PENDIENTE_CLV,69.9,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0,AUDITANDO
+2026-11-25 15:10:00,401912753,Persib Bandung vs FC Seoul (Copa Asiática),[VIP] Victoria Persib Bandu,1.44,PENDIENTE_CLV,70.7,🟢 [LUZ VERDE / ALTO VALOR],1000.0,Pendiente,0,AUDITANDO
+2026-11-25 15:10:00,401912753,Persib Bandung vs FC Seoul (Copa Asiática),[VIP] Goles Persib Bandu > 1.5,1.65,PENDIENTE_CLV,62.0,🟢 [VALOR ALTO / OPERABLE],900.0,Pendiente,0,AUDITANDO
+2026-11-25 15:10:00,401912753,Persib Bandung vs FC Seoul (Copa Asiática),[FREE] Combo 1X + U4.5,1.18,PENDIENTE_CLV,83.4,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0,AUDITANDO
+2026-11-25 15:10:00,401912753,Persib Bandung vs FC Seoul (Copa Asiática),[FREE] Faltas Totales > 17.5,1.28,PENDIENTE_CLV,70.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0,AUDITANDO
+2026-11-25 16:40:00,401912751,FC Nasaf vs Al-Khaldiya SC (Copa Asiática),[VIP] Combo 1X + U4.5,1.5,PENDIENTE_CLV,70.5,🟢 [LUZ VERDE / ALTO VALOR],2900.0,Pendiente,0,AUDITANDO
+2026-11-25 16:40:00,401912751,FC Nasaf vs Al-Khaldiya SC (Copa Asiática),[VIP] Faltas Totales > 21.5,1.71,PENDIENTE_CLV,59.8,🟢 [VALOR ALTO / OPERABLE],800.0,Pendiente,0,AUDITANDO
+2026-11-25 16:40:00,401912751,FC Nasaf vs Al-Khaldiya SC (Copa Asiática),[FREE] Goles FC Nasaf > 0.5,1.21,PENDIENTE_CLV,77.6,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0,AUDITANDO
+2026-11-25 16:40:00,401912751,FC Nasaf vs Al-Khaldiya SC (Copa Asiática),[FREE] Córners > 7.5,1.28,PENDIENTE_CLV,64.2,🟢 [VALOR ALTO / OPERABLE],500.0,Pendiente,0,AUDITANDO
+2026-11-25 18:55:00,401912750,Al Jazira Club vs Gol Gohar Sirjan FC (Copa Asiática),[VIP] Combo 1X + O1.5,1.55,PENDIENTE_CLV,65.9,🟢 [VALOR ALTO / OPERABLE],1000.0,Pendiente,0,AUDITANDO
+2026-11-25 18:55:00,401912750,Al Jazira Club vs Gol Gohar Sirjan FC (Copa Asiática),[VIP] Faltas Totales > 22.5,1.66,PENDIENTE_CLV,61.5,🟢 [VALOR ALTO / OPERABLE],800.0,Pendiente,0,AUDITANDO
+2026-11-25 18:55:00,401912750,Al Jazira Club vs Gol Gohar Sirjan FC (Copa Asiática),[FREE] Over 1.5 Goles,1.28,PENDIENTE_CLV,74.3,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0,AUDITANDO
+2026-11-25 18:55:00,401912750,Al Jazira Club vs Gol Gohar Sirjan FC (Copa Asiática),[FREE] Doble Oport. 1X,1.18,PENDIENTE_CLV,82.7,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0,AUDITANDO
+2026-11-25 18:55:00,401912748,Al-Faisaly SC vs Al-Rayyan SC (Copa Asiática),[VIP] Ambos Marcan (BTTS),1.53,PENDIENTE_CLV,66.7,🟢 [VALOR ALTO / OPERABLE],1000.0,Pendiente,0,AUDITANDO
+2026-11-25 18:55:00,401912748,Al-Faisaly SC vs Al-Rayyan SC (Copa Asiática),[VIP] Faltas Totales > 20.5,1.59,PENDIENTE_CLV,64.0,🟢 [VALOR ALTO / OPERABLE],700.0,Pendiente,0,AUDITANDO
+2026-11-25 18:55:00,401912748,Al-Faisaly SC vs Al-Rayyan SC (Copa Asiática),[FREE] Remates Puerta > 6.5,1.28,PENDIENTE_CLV,67.1,🟢 [VALOR ALTO / OPERABLE],500.0,Pendiente,0,AUDITANDO
+2026-11-25 18:55:00,401912748,Al-Faisaly SC vs Al-Rayyan SC (Copa Asiática),[FREE] Over 1.5 Goles,1.18,PENDIENTE_CLV,78.7,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0,AUDITANDO
+2026-11-25 18:55:00,401912749,Al-Muharraq SC vs Arkadag FK (Copa Asiática),[VIP] Combo 1X + U4.5,1.57,PENDIENTE_CLV,64.9,🟢 [VALOR ALTO / OPERABLE],800.0,Pendiente,0,AUDITANDO
+2026-11-25 18:55:00,401912749,Al-Muharraq SC vs Arkadag FK (Copa Asiática),[VIP] Tarjetas > 3.5,1.71,PENDIENTE_CLV,59.8,🟢 [VALOR ALTO / OPERABLE],800.0,Pendiente,0,AUDITANDO
+2026-11-25 18:55:00,401912749,Al-Muharraq SC vs Arkadag FK (Copa Asiática),[FREE] Goles Al-Muharraq  > 0.5,1.25,PENDIENTE_CLV,75.1,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0,AUDITANDO
+2026-11-25 18:55:00,401912749,Al-Muharraq SC vs Arkadag FK (Copa Asiática),[FREE] Faltas Totales > 21.5,1.24,PENDIENTE_CLV,76.9,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0,AUDITANDO
+2026-11-25 18:55:00,401912747,Kuwait SC vs Al Wahda FC (Copa Asiática),[VIP] Ambos Marcan (BTTS),1.5,PENDIENTE_CLV,70.9,🟢 [LUZ VERDE / ALTO VALOR],3200.0,Pendiente,0,AUDITANDO
+2026-11-25 18:55:00,401912747,Kuwait SC vs Al Wahda FC (Copa Asiática),[VIP] Faltas Totales > 17.5,1.6,PENDIENTE_CLV,63.8,🟢 [VALOR ALTO / OPERABLE],900.0,Pendiente,0,AUDITANDO
+2026-11-25 18:55:00,401912747,Kuwait SC vs Al Wahda FC (Copa Asiática),[FREE] Gol en 2do Tiempo,1.18,PENDIENTE_CLV,81.8,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0,AUDITANDO
+2026-11-25 18:55:00,401912747,Kuwait SC vs Al Wahda FC (Copa Asiática),[FREE] Remates Puerta > 6.5,1.28,PENDIENTE_CLV,71.2,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0,AUDITANDO
+2026-11-25 20:40:00,401915378,Sabah FK vs Barcelona (Uefa Champions League),[VIP] Combo X2 + O1.5,1.5,PENDIENTE_CLV,76.2,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Pendiente,0,AUDITANDO
+2026-11-25 20:40:00,401915378,Sabah FK vs Barcelona (Uefa Champions League),[VIP] Córners Barcelona > 4.5,1.5,PENDIENTE_CLV,68.0,🟢 [LUZ VERDE / ALTO VALOR],1000.0,Pendiente,0,AUDITANDO
+2026-11-25 20:40:00,401915378,Sabah FK vs Barcelona (Uefa Champions League),[FREE] Gol en 1T,1.18,PENDIENTE_CLV,79.1,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0,AUDITANDO
+2026-11-25 20:40:00,401915378,Sabah FK vs Barcelona (Uefa Champions League),[FREE] Remates Puerta > 6.5,1.28,PENDIENTE_CLV,67.6,🟢 [VALOR ALTO / OPERABLE],500.0,Pendiente,0,AUDITANDO
+2026-11-25 20:40:00,401915293,Slavia Prague vs Villarreal (Uefa Champions League),[VIP] Ambos Marcan (BTTS),1.5,PENDIENTE_CLV,71.8,🟢 [LUZ VERDE / ALTO VALOR],3800.0,Pendiente,0,AUDITANDO
+2026-11-25 20:40:00,401915293,Slavia Prague vs Villarreal (Uefa Champions League),[VIP] Faltas Totales > 21.5,1.67,PENDIENTE_CLV,61.0,🟢 [VALOR ALTO / OPERABLE],700.0,Pendiente,0,AUDITANDO
+2026-11-25 20:40:00,401915293,Slavia Prague vs Villarreal (Uefa Champions League),[FREE] Over 1.5 Goles,1.18,PENDIENTE_CLV,81.9,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0,AUDITANDO
+2026-11-25 20:40:00,401915293,Slavia Prague vs Villarreal (Uefa Champions League),[FREE] Córners > 7.5,1.28,PENDIENTE_CLV,66.9,🟢 [VALOR ALTO / OPERABLE],500.0,Pendiente,0,AUDITANDO
+2026-11-25 21:10:00,401912746,Al Taawoun vs Al-Nahda Club (Copa Asiática),[VIP] Córners Al Taawoun > 4.5,1.38,PENDIENTE_CLV,84.9,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Pendiente,0,AUDITANDO
+2026-11-25 21:10:00,401912746,Al Taawoun vs Al-Nahda Club (Copa Asiática),[VIP] Ambos Marcan (BTTS),1.58,PENDIENTE_CLV,64.5,🟢 [VALOR ALTO / OPERABLE],800.0,Pendiente,0,AUDITANDO
+2026-11-25 21:10:00,401912746,Al Taawoun vs Al-Nahda Club (Copa Asiática),[FREE] Sin Empate Al Taawoun,1.16,PENDIENTE_CLV,77.3,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0,AUDITANDO
+2026-11-25 21:10:00,401912746,Al Taawoun vs Al-Nahda Club (Copa Asiática),[FREE] Faltas Totales > 18.5,1.28,PENDIENTE_CLV,70.2,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0,AUDITANDO
+2026-11-25 22:55:00,401915291,Atlético Madrid vs Viking FK (Uefa Champions League),[VIP] Combo 1X + O1.5,1.51,PENDIENTE_CLV,67.7,🟢 [VALOR ALTO / OPERABLE],1100.0,Pendiente,0,AUDITANDO
+2026-11-25 22:55:00,401915291,Atlético Madrid vs Viking FK (Uefa Champions League),[VIP] Tarjetas > 3.5,1.61,PENDIENTE_CLV,63.3,🟢 [VALOR ALTO / OPERABLE],800.0,Pendiente,0,AUDITANDO
+2026-11-25 22:55:00,401915291,Atlético Madrid vs Viking FK (Uefa Champions League),[FREE] Gol en 1T,1.27,PENDIENTE_CLV,75.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0,AUDITANDO
+2026-11-25 22:55:00,401915291,Atlético Madrid vs Viking FK (Uefa Champions League),[FREE] Córners Atlético Madrid > 4.5,1.18,PENDIENTE_CLV,78.3,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0,AUDITANDO
+2026-11-25 22:55:00,401915292,Club Brugge vs Liverpool (Uefa Champions League),[VIP] Total Asiático > 2.25,1.59,PENDIENTE_CLV,64.1,🟢 [VALOR ALTO / OPERABLE],800.0,Pendiente,0,AUDITANDO
+2026-11-25 22:55:00,401915292,Club Brugge vs Liverpool (Uefa Champions League),[VIP] Remates Puerta > 8.5,1.68,PENDIENTE_CLV,60.8,🟢 [VALOR ALTO / OPERABLE],800.0,Pendiente,0,AUDITANDO
+2026-11-25 22:55:00,401915292,Club Brugge vs Liverpool (Uefa Champions League),[FREE] Gol en 2do Tiempo,1.18,PENDIENTE_CLV,82.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0,AUDITANDO
+2026-11-25 22:55:00,401915292,Club Brugge vs Liverpool (Uefa Champions League),[FREE] Córners Club Brugge > 4.5,1.18,PENDIENTE_CLV,86.5,🟢 [LUZ VERDE / ALTO VALOR],2900.0,Pendiente,0,AUDITANDO
+2026-11-25 22:55:00,401915376,Internazionale vs VfB Stuttgart (Uefa Champions League),[VIP] Over 2.5 Goles,1.64,PENDIENTE_CLV,62.2,🟢 [VALOR ALTO / OPERABLE],800.0,Pendiente,0,AUDITANDO
+2026-11-25 22:55:00,401915376,Internazionale vs VfB Stuttgart (Uefa Champions League),[VIP] Ambos Marcan (BTTS),7.0,PENDIENTE_CLV,73.6,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Pendiente,0,AUDITANDO
+2026-11-25 22:55:00,401915376,Internazionale vs VfB Stuttgart (Uefa Champions League),[FREE] Remates Puerta > 6.5,1.25,PENDIENTE_CLV,76.1,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0,AUDITANDO
+2026-11-25 22:55:00,401915376,Internazionale vs VfB Stuttgart (Uefa Champions League),[FREE] Córners > 7.5,1.28,PENDIENTE_CLV,61.8,🟢 [VALOR ALTO / OPERABLE],500.0,Pendiente,0,AUDITANDO
+2026-11-25 22:55:00,401915377,Lille vs Bayern Munich (Uefa Champions League),[VIP] Combo X2 + O1.5,1.5,PENDIENTE_CLV,76.2,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Pendiente,0,AUDITANDO
+2026-11-25 22:55:00,401915377,Lille vs Bayern Munich (Uefa Champions League),[VIP] Córners > 8.5,1.45,PENDIENTE_CLV,71.6,🟢 [LUZ VERDE / ALTO VALOR],2100.0,Pendiente,0,AUDITANDO
+2026-11-25 22:55:00,401915377,Lille vs Bayern Munich (Uefa Champions League),[FREE] Over 1.5 Goles,1.18,PENDIENTE_CLV,80.4,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0,AUDITANDO
+2026-11-25 22:55:00,401915377,Lille vs Bayern Munich (Uefa Champions League),[FREE] Remates Puerta > 6.5,1.28,PENDIENTE_CLV,69.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0,AUDITANDO
+2026-11-25 22:55:00,401915374,Paris Saint-Germain vs AS Roma (Uefa Champions League),[VIP] Ambos Marcan (BTTS),1.5,PENDIENTE_CLV,71.7,🟢 [LUZ VERDE / ALTO VALOR],3800.0,Pendiente,0,AUDITANDO
+2026-11-25 22:55:00,401915374,Paris Saint-Germain vs AS Roma (Uefa Champions League),[VIP] Over 2.5 Goles,1.42,PENDIENTE_CLV,72.0,🟢 [LUZ VERDE / ALTO VALOR],1300.0,Pendiente,0,AUDITANDO
+2026-11-25 22:55:00,401915374,Paris Saint-Germain vs AS Roma (Uefa Champions League),[FREE] Doble Oport. 1X,1.18,PENDIENTE_CLV,83.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0,AUDITANDO
+2026-11-25 22:55:00,401915374,Paris Saint-Germain vs AS Roma (Uefa Champions League),[FREE] Gol en 1T,1.18,PENDIENTE_CLV,80.6,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0,AUDITANDO
+2026-11-25 22:55:00,401915375,Shakhtar Donetsk vs Fenerbahce (Uefa Champions League),[VIP] Goles Fenerbahce > 0.5,1.45,PENDIENTE_CLV,70.2,🟢 [LUZ VERDE / ALTO VALOR],1000.0,Pendiente,0,AUDITANDO
+2026-11-25 22:55:00,401915375,Shakhtar Donetsk vs Fenerbahce (Uefa Champions League),[VIP] Tarjetas > 3.5,1.62,PENDIENTE_CLV,63.1,🟢 [VALOR ALTO / OPERABLE],900.0,Pendiente,0,AUDITANDO
+2026-11-25 22:55:00,401915375,Shakhtar Donetsk vs Fenerbahce (Uefa Champions League),[FREE] Faltas Totales > 20.5,1.28,PENDIENTE_CLV,71.4,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0,AUDITANDO
+2026-11-25 22:55:00,401915375,Shakhtar Donetsk vs Fenerbahce (Uefa Champions League),[FREE] Over 1.5 Goles,1.28,PENDIENTE_CLV,73.9,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0,AUDITANDO
+2026-11-25 22:55:00,401915373,Sporting CP vs Manchester United (Uefa Champions League),[VIP] Combo 1X + O1.5,1.56,PENDIENTE_CLV,65.3,🟢 [VALOR ALTO / OPERABLE],800.0,Pendiente,0,AUDITANDO
+2026-11-25 22:55:00,401915373,Sporting CP vs Manchester United (Uefa Champions League),[VIP] Ambos Marcan (BTTS),1.48,PENDIENTE_CLV,65.4,🟢 [VALOR ALTO / OPERABLE],500.0,Pendiente,0,AUDITANDO
+2026-11-25 22:55:00,401915373,Sporting CP vs Manchester United (Uefa Champions League),[FREE] Córners Sporting CP > 4.5,1.28,PENDIENTE_CLV,74.1,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0,AUDITANDO
+2026-11-25 22:55:00,401915373,Sporting CP vs Manchester United (Uefa Champions League),[FREE] Remates Puerta > 6.5,1.28,PENDIENTE_CLV,73.8,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0,AUDITANDO
+2026-11-26 01:55:00,401841319,Atlético-MG vs Corinthians (Brasil (Serie A)),[VIP] Córners > 8.5,1.67,PENDIENTE_CLV,61.0,🟢 [VALOR ALTO / OPERABLE],700.0,Pendiente,0,AUDITANDO
+2026-11-26 01:55:00,401841319,Atlético-MG vs Corinthians (Brasil (Serie A)),[VIP] Faltas Totales > 22.5,1.69,PENDIENTE_CLV,60.2,🟢 [VALOR ALTO / OPERABLE],600.0,Pendiente,0,AUDITANDO
+2026-11-26 01:55:00,401841319,Atlético-MG vs Corinthians (Brasil (Serie A)),[FREE] Gol en 2do Tiempo,1.18,PENDIENTE_CLV,78.3,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0,AUDITANDO
+2026-11-26 01:55:00,401841319,Atlético-MG vs Corinthians (Brasil (Serie A)),[FREE] Tarjetas > 3.5,1.28,PENDIENTE_CLV,61.2,🟢 [VALOR ALTO / OPERABLE],500.0,Pendiente,0,AUDITANDO
+2026-11-26 02:15:00,401934687,Independiente Santa Fe vs Once Caldas (Colombia (Primera A)),[VIP] Combo 1X + U4.5,1.5,PENDIENTE_CLV,69.3,🟢 [LUZ VERDE / ALTO VALOR],2000.0,Pendiente,0,AUDITANDO
+2026-11-26 02:15:00,401934687,Independiente Santa Fe vs Once Caldas (Colombia (Primera A)),[VIP] Córners > 8.5,1.45,PENDIENTE_CLV,71.5,🟢 [LUZ VERDE / ALTO VALOR],2000.0,Pendiente,0,AUDITANDO
+2026-11-26 02:15:00,401934687,Independiente Santa Fe vs Once Caldas (Colombia (Primera A)),[FREE] Goles Independient > 0.5,1.21,PENDIENTE_CLV,77.8,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0,AUDITANDO
+2026-11-26 02:15:00,401934687,Independiente Santa Fe vs Once Caldas (Colombia (Primera A)),[FREE] Faltas Totales > 19.5,1.28,PENDIENTE_CLV,72.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0,AUDITANDO
+2026-11-26 02:55:00,401933757,Boca Juniors vs Independiente Rivadavia (Argentina (Liga Profesional)),[VIP] Combo 1X + U4.5,1.5,PENDIENTE_CLV,77.1,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Pendiente,0,AUDITANDO
+2026-11-26 02:55:00,401933757,Boca Juniors vs Independiente Rivadavia (Argentina (Liga Profesional)),[VIP] Faltas Totales > 21.5,1.73,PENDIENTE_CLV,58.8,🟢 [VALOR ALTO / OPERABLE],600.0,Pendiente,0,AUDITANDO
+2026-11-26 02:55:00,401933757,Boca Juniors vs Independiente Rivadavia (Argentina (Liga Profesional)),[FREE] Córners Boca Juniors > 4.5,1.26,PENDIENTE_CLV,75.3,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0,AUDITANDO
+2026-11-26 02:55:00,401933757,Boca Juniors vs Independiente Rivadavia (Argentina (Liga Profesional)),[FREE] Gol en 2do Tiempo,1.28,PENDIENTE_CLV,67.5,🟢 [VALOR ALTO / OPERABLE],500.0,Pendiente,0,AUDITANDO
+2026-11-26 03:55:00,401931986,Toluca vs Atlas (México (Liga Mx)),[VIP] Ambos Marcan (BTTS),1.5,PENDIENTE_CLV,68.1,🟢 [LUZ VERDE / ALTO VALOR],1100.0,Pendiente,0,AUDITANDO
+2026-11-26 03:55:00,401931986,Toluca vs Atlas (México (Liga Mx)),[VIP] Combo 1X + O1.5,1.5,PENDIENTE_CLV,73.4,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Pendiente,0,AUDITANDO
+2026-11-26 03:55:00,401931986,Toluca vs Atlas (México (Liga Mx)),[FREE] Gol en 1T,1.23,PENDIENTE_CLV,77.3,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0,AUDITANDO
+2026-11-26 03:55:00,401931986,Toluca vs Atlas (México (Liga Mx)),[FREE] Remates Puerta > 6.5,1.28,PENDIENTE_CLV,68.3,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0,AUDITANDO
+2026-11-26 04:25:00,401934705,Atlético Nacional vs Independiente Medellín (Colombia (Primera A)),[VIP] Ambos Marcan (BTTS),1.68,PENDIENTE_CLV,60.8,🟢 [VALOR ALTO / OPERABLE],800.0,Pendiente,0,AUDITANDO
+2026-11-26 04:25:00,401934705,Atlético Nacional vs Independiente Medellín (Colombia (Primera A)),[VIP] Tarjetas > 3.5,1.66,PENDIENTE_CLV,61.6,🟢 [VALOR ALTO / OPERABLE],900.0,Pendiente,0,AUDITANDO
+2026-11-26 04:25:00,401934705,Atlético Nacional vs Independiente Medellín (Colombia (Primera A)),[FREE] Doble Oport. 1X,1.28,PENDIENTE_CLV,73.8,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0,AUDITANDO
+2026-11-26 04:25:00,401934705,Atlético Nacional vs Independiente Medellín (Colombia (Primera A)),[FREE] Faltas Totales > 21.5,1.28,PENDIENTE_CLV,70.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0,AUDITANDO
+2026-11-26 06:05:00,401931998,Monterrey vs América (México (Liga Mx)),[VIP] Total Asiático > 2.25,1.73,PENDIENTE_CLV,58.9,🟢 [VALOR ALTO / OPERABLE],600.0,Pendiente,0,AUDITANDO
+2026-11-26 06:05:00,401931998,Monterrey vs América (México (Liga Mx)),[VIP] Faltas Totales > 21.5,1.61,PENDIENTE_CLV,63.5,🟢 [VALOR ALTO / OPERABLE],900.0,Pendiente,0,AUDITANDO
+2026-11-26 06:05:00,401931998,Monterrey vs América (México (Liga Mx)),[FREE] Gol en 2do Tiempo,1.18,PENDIENTE_CLV,82.8,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0,AUDITANDO
+2026-11-26 06:05:00,401931998,Monterrey vs América (México (Liga Mx)),[FREE] Córners > 8.5,1.28,PENDIENTE_CLV,71.1,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0,AUDITANDO
