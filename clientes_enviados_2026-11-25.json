@@ -1,0 +1,313 @@
+{
+  "fecha": "2026-11-25",
+  "tarjetas_clientes": [
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "401915377",
+      "hora": "21:00",
+      "partido": "Lille vs Bayern Munich (Uefa Champions League)",
+      "selecciones": [
+        {
+          "mercado": "Combo X2 + O1.5",
+          "prob": 76.2,
+          "cuota": 1.5
+        },
+        {
+          "mercado": "Córners > 8.5",
+          "prob": 71.6,
+          "cuota": 1.45
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "401915292",
+      "hora": "21:00",
+      "partido": "Club Brugge vs Liverpool (Uefa Champions League)",
+      "selecciones": [
+        {
+          "mercado": "Total Asiático > 2.25",
+          "prob": 64.1,
+          "cuota": 1.59
+        },
+        {
+          "mercado": "Remates Puerta > 8.5",
+          "prob": 60.8,
+          "cuota": 1.68
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "401915291",
+      "hora": "21:00",
+      "partido": "Atlético Madrid vs Viking FK (Uefa Champions League)",
+      "selecciones": [
+        {
+          "mercado": "Combo 1X + O1.5",
+          "prob": 67.7,
+          "cuota": 1.51
+        },
+        {
+          "mercado": "Tarjetas > 3.5",
+          "prob": 63.3,
+          "cuota": 1.61
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "401915374",
+      "hora": "21:00",
+      "partido": "Paris Saint-Germain vs AS Roma (Uefa Champions League)",
+      "selecciones": [
+        {
+          "mercado": "Ambos Marcan (BTTS)",
+          "prob": 71.7,
+          "cuota": 1.5
+        },
+        {
+          "mercado": "Over 2.5 Goles",
+          "prob": 72.0,
+          "cuota": 1.42
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "FREE",
+      "id_partido": "401915378",
+      "hora": "18:45",
+      "partido": "Sabah FK vs Barcelona (Uefa Champions League)",
+      "selecciones": [
+        {
+          "mercado": "Gol en 1T",
+          "prob": 79.1,
+          "cuota": 1.18
+        },
+        {
+          "mercado": "Remates Puerta > 6.5",
+          "prob": 67.6,
+          "cuota": 1.28
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "FREE",
+      "id_partido": "401915376",
+      "hora": "21:00",
+      "partido": "Internazionale vs VfB Stuttgart (Uefa Champions League)",
+      "selecciones": [
+        {
+          "mercado": "Remates Puerta > 6.5",
+          "prob": 76.1,
+          "cuota": 1.25
+        },
+        {
+          "mercado": "Córners > 7.5",
+          "prob": 61.8,
+          "cuota": 1.28
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "FREE",
+      "id_partido": "401915373",
+      "hora": "21:00",
+      "partido": "Sporting CP vs Manchester United (Uefa Champions League)",
+      "selecciones": [
+        {
+          "mercado": "Córners Sporting CP > 4.5",
+          "prob": 74.1,
+          "cuota": 1.28
+        },
+        {
+          "mercado": "Remates Puerta > 6.5",
+          "prob": 73.8,
+          "cuota": 1.28
+        }
+      ]
+    }
+  ],
+  "combinada_doble": {
+    "selecciones": [
+      {
+        "partido": "Sabah FK vs Barcelona",
+        "hora": "18:45",
+        "mercado": "Doble Oport. X2",
+        "prob": 84.86471659736527,
+        "cuota": 1.36,
+        "score_elite": 53
+      },
+      {
+        "partido": "Lille vs Bayern Munich",
+        "hora": "21:00",
+        "mercado": "Doble Oport. X2",
+        "prob": 84.85451611544359,
+        "cuota": 1.36,
+        "score_elite": 53
+      }
+    ],
+    "cuota_total": 1.85,
+    "prob_directa": 72.0,
+    "prob_protegida": 86.5
+  },
+  "combinada_sniper": {
+    "selecciones": [
+      {
+        "partido": "Paris Saint-Germain vs AS Roma",
+        "hora": "21:00",
+        "mercado": "Gol en 1T",
+        "prob": 80.62525941500762,
+        "cuota": 1.44,
+        "score_elite": 38
+      },
+      {
+        "partido": "Sabah FK vs Barcelona",
+        "hora": "18:45",
+        "mercado": "Over 1.5 Goles",
+        "prob": 80.56321647989088,
+        "cuota": 1.44,
+        "score_elite": 53
+      },
+      {
+        "partido": "Lille vs Bayern Munich",
+        "hora": "21:00",
+        "mercado": "Over 1.5 Goles",
+        "prob": 80.40834018137852,
+        "cuota": 1.44,
+        "score_elite": 53
+      }
+    ],
+    "cuota_total": 2.99,
+    "prob_directa": 52.2,
+    "prob_protegida": 76.2
+  },
+  "combinadas_exclusivas_pro": [
+    {
+      "clave": "cuadruple_elite_pro",
+      "titulo": "CUÁDRUPLE ÉLITE PRO",
+      "subtitulo": "EXCLUSIVO PRO: 4 PARTIDOS DE ALTA CONFLUENCIA",
+      "sufijo": "CUADRUPLE_ELITE_PRO",
+      "stake": "Invertir el 1% de tu capital (Alto Retorno)",
+      "selecciones": [
+        {
+          "partido": "Paris Saint-Germain vs AS Roma",
+          "hora": "21:00",
+          "mercado": "Over 1.5 Goles",
+          "prob": 88.82420323795289,
+          "cuota": 1.4,
+          "score_elite": 38,
+          "nuevo": true
+        },
+        {
+          "partido": "Club Brugge vs Liverpool",
+          "hora": "21:00",
+          "mercado": "Córners Club Brugge > 4.5",
+          "prob": 87.84988303694774,
+          "cuota": 1.38,
+          "score_elite": 53,
+          "nuevo": true
+        },
+        {
+          "partido": "Internazionale vs VfB Stuttgart",
+          "hora": "21:00",
+          "mercado": "Over 1.5 Goles",
+          "prob": 83.52283810230826,
+          "cuota": 1.4,
+          "score_elite": 53,
+          "nuevo": true
+        },
+        {
+          "partido": "Atlético Madrid vs Viking FK",
+          "hora": "21:00",
+          "mercado": "Over 1.5 Goles",
+          "prob": 82.65256325651372,
+          "cuota": 1.4,
+          "score_elite": 53,
+          "nuevo": true
+        }
+      ],
+      "cuota_total": 3.79,
+      "prob_directa": 53.9,
+      "prob_protegida": 79.9
+    },
+    {
+      "clave": "especial_ritmo_pro",
+      "titulo": "ESPECIAL RITMO PRO",
+      "subtitulo": "EXCLUSIVO PRO: CÓRNERS Y REMATES (3 PARTIDOS)",
+      "sufijo": "RITMO_CORNERS_PRO",
+      "stake": "Invertir del 1% al 2% de tu capital (Ritmo Puro)",
+      "selecciones": [
+        {
+          "partido": "Club Brugge vs Liverpool",
+          "hora": "21:00",
+          "mercado": "Córners Club Brugge > 4.5",
+          "prob": 87.84988303694774,
+          "cuota": 1.38,
+          "score_elite": 53,
+          "nuevo": true
+        },
+        {
+          "partido": "Lille vs Bayern Munich",
+          "hora": "21:00",
+          "mercado": "Córners > 7.5",
+          "prob": 80.23,
+          "cuota": 1.38,
+          "score_elite": 53,
+          "nuevo": true
+        },
+        {
+          "partido": "Independiente Santa Fe vs Once Caldas",
+          "hora": "00:20",
+          "mercado": "Córners > 7.5",
+          "prob": 79.98,
+          "cuota": 1.38,
+          "score_elite": 28,
+          "nuevo": true
+        }
+      ],
+      "cuota_total": 2.63,
+      "prob_directa": 56.4,
+      "prob_protegida": 80.4
+    },
+    {
+      "clave": "especial_valor_pro",
+      "titulo": "ESPECIAL VALOR PRO",
+      "subtitulo": "EXCLUSIVO PRO: TÁCTICA, FRICCIÓN Y EV+ (3 PARTIDOS)",
+      "sufijo": "VALOR_TACTICO_PRO",
+      "stake": "Invertir del 1% al 2% de tu capital (Valor EV+)",
+      "selecciones": [
+        {
+          "partido": "Paris Saint-Germain vs AS Roma",
+          "hora": "21:00",
+          "mercado": "Over 1.5 Goles",
+          "prob": 88.82420323795289,
+          "cuota": 1.4,
+          "score_elite": 38,
+          "nuevo": true
+        },
+        {
+          "partido": "Club Brugge vs Liverpool",
+          "hora": "21:00",
+          "mercado": "Over 1.5 Goles",
+          "prob": 83.73232322922436,
+          "cuota": 1.4,
+          "score_elite": 53,
+          "nuevo": true
+        },
+        {
+          "partido": "Internazionale vs VfB Stuttgart",
+          "hora": "21:00",
+          "mercado": "Over 1.5 Goles",
+          "prob": 83.52283810230826,
+          "cuota": 1.4,
+          "score_elite": 53,
+          "nuevo": true
+        }
+      ],
+      "cuota_total": 2.74,
+      "prob_directa": 62.1,
+      "prob_protegida": 82.0
+    }
+  ]
+}
