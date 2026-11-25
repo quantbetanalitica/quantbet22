@@ -1,0 +1,313 @@
+{
+  "fecha": "2026-11-26",
+  "tarjetas_clientes": [
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "401915521",
+      "hora": "18:45",
+      "partido": "Olympiacos vs AC Milan (Uefa Europa League)",
+      "selecciones": [
+        {
+          "mercado": "Doble Oport. 1X",
+          "prob": 76.4,
+          "cuota": 1.38
+        },
+        {
+          "mercado": "Córners > 8.5",
+          "prob": 63.3,
+          "cuota": 1.61
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "401915504",
+      "hora": "21:00",
+      "partido": "Crystal Palace vs Real Sociedad (Uefa Europa League)",
+      "selecciones": [
+        {
+          "mercado": "Ambos Marcan (BTTS)",
+          "prob": 76.9,
+          "cuota": 1.5
+        },
+        {
+          "mercado": "Over 2.5 Goles",
+          "prob": 65.1,
+          "cuota": 1.57
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "401915518",
+      "hora": "18:45",
+      "partido": "Viktoria Plzen vs Benfica (Uefa Europa League)",
+      "selecciones": [
+        {
+          "mercado": "Combo X2 + O1.5",
+          "prob": 78.0,
+          "cuota": 1.5
+        },
+        {
+          "mercado": "Córners > 8.5",
+          "prob": 69.4,
+          "cuota": 1.47
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "401915517",
+      "hora": "18:45",
+      "partido": "Dinamo Zagreb vs Bayer Leverkusen (Uefa Europa League)",
+      "selecciones": [
+        {
+          "mercado": "Ambos Marcan (BTTS)",
+          "prob": 59.3,
+          "cuota": 1.46
+        },
+        {
+          "mercado": "Gol en 2do Tiempo",
+          "prob": 81.9,
+          "cuota": 1.38
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "FREE",
+      "id_partido": "401915501",
+      "hora": "21:00",
+      "partido": "Lyon vs Lillestrom (Uefa Europa League)",
+      "selecciones": [
+        {
+          "mercado": "Victoria Lyon",
+          "prob": 76.3,
+          "cuota": 1.19
+        },
+        {
+          "mercado": "Córners Lyon > 4.5",
+          "prob": 74.7,
+          "cuota": 1.27
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "FREE",
+      "id_partido": "401915519",
+      "hora": "18:45",
+      "partido": "Celta Vigo vs AFC Bournemouth (Uefa Europa League)",
+      "selecciones": [
+        {
+          "mercado": "Gol en 1T",
+          "prob": 80.3,
+          "cuota": 1.18
+        },
+        {
+          "mercado": "Doble Oport. X2",
+          "prob": 77.6,
+          "cuota": 1.22
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "FREE",
+      "id_partido": "401915502",
+      "hora": "21:00",
+      "partido": "Juventus vs Omonia Nicosia (Uefa Europa League)",
+      "selecciones": [
+        {
+          "mercado": "Victoria Juventus",
+          "prob": 76.6,
+          "cuota": 1.18
+        },
+        {
+          "mercado": "Gol en 2do Tiempo",
+          "prob": 72.7,
+          "cuota": 1.28
+        }
+      ]
+    }
+  ],
+  "combinada_doble": {
+    "selecciones": [
+      {
+        "partido": "Sunderland vs Jagiellonia Bialystok",
+        "hora": "21:00",
+        "mercado": "Doble Oport. 1X",
+        "prob": 84.85670594951576,
+        "cuota": 1.36,
+        "score_elite": 18
+      },
+      {
+        "partido": "Juventus vs Omonia Nicosia",
+        "hora": "21:00",
+        "mercado": "Doble Oport. 1X",
+        "prob": 84.70588235294117,
+        "cuota": 1.36,
+        "score_elite": 53
+      }
+    ],
+    "cuota_total": 1.85,
+    "prob_directa": 71.9,
+    "prob_protegida": 86.4
+  },
+  "combinada_sniper": {
+    "selecciones": [
+      {
+        "partido": "Celta Vigo vs AFC Bournemouth",
+        "hora": "18:45",
+        "mercado": "Over 1.5 Goles",
+        "prob": 81.26873044879707,
+        "cuota": 1.44,
+        "score_elite": 18
+      },
+      {
+        "partido": "Pachuca vs Guadalajara",
+        "hora": "02:00",
+        "mercado": "Gol en 2do Tiempo",
+        "prob": 81.16964517695965,
+        "cuota": 1.44,
+        "score_elite": 8
+      },
+      {
+        "partido": "Viktoria Plzen vs Benfica",
+        "hora": "18:45",
+        "mercado": "Over 1.5 Goles",
+        "prob": 80.13046100339798,
+        "cuota": 1.44,
+        "score_elite": 38
+      }
+    ],
+    "cuota_total": 2.99,
+    "prob_directa": 52.9,
+    "prob_protegida": 76.9
+  },
+  "combinadas_exclusivas_pro": [
+    {
+      "clave": "cuadruple_elite_pro",
+      "titulo": "CUÁDRUPLE ÉLITE PRO",
+      "subtitulo": "EXCLUSIVO PRO: 4 PARTIDOS DE ALTA CONFLUENCIA",
+      "sufijo": "CUADRUPLE_ELITE_PRO",
+      "stake": "Invertir el 1% de tu capital (Alto Retorno)",
+      "selecciones": [
+        {
+          "partido": "NEC Nijmegen vs Stade Rennais",
+          "hora": "21:00",
+          "mercado": "Over 1.5 Goles",
+          "prob": 86.15261424533878,
+          "cuota": 1.4,
+          "score_elite": 18,
+          "nuevo": true
+        },
+        {
+          "partido": "Lyon vs Lillestrom",
+          "hora": "21:00",
+          "mercado": "Over 1.5 Goles",
+          "prob": 85.60108615410323,
+          "cuota": 1.4,
+          "score_elite": 18,
+          "nuevo": true
+        },
+        {
+          "partido": "TSG Hoffenheim vs SK Sturm Graz",
+          "hora": "21:00",
+          "mercado": "Over 1.5 Goles",
+          "prob": 85.41657757629906,
+          "cuota": 1.4,
+          "score_elite": 18,
+          "nuevo": true
+        },
+        {
+          "partido": "Crystal Palace vs Real Sociedad",
+          "hora": "21:00",
+          "mercado": "Over 1.5 Goles",
+          "prob": 85.37581394982584,
+          "cuota": 1.4,
+          "score_elite": 38,
+          "nuevo": true
+        }
+      ],
+      "cuota_total": 3.84,
+      "prob_directa": 53.8,
+      "prob_protegida": 79.8
+    },
+    {
+      "clave": "especial_ritmo_pro",
+      "titulo": "ESPECIAL RITMO PRO",
+      "subtitulo": "EXCLUSIVO PRO: CÓRNERS Y REMATES (3 PARTIDOS)",
+      "sufijo": "RITMO_CORNERS_PRO",
+      "stake": "Invertir del 1% al 2% de tu capital (Ritmo Puro)",
+      "selecciones": [
+        {
+          "partido": "TSG Hoffenheim vs SK Sturm Graz",
+          "hora": "21:00",
+          "mercado": "Córners > 7.5",
+          "prob": 83.77,
+          "cuota": 1.38,
+          "score_elite": 18,
+          "nuevo": true
+        },
+        {
+          "partido": "RB Salzburg vs Ararat-Armenia",
+          "hora": "18:45",
+          "mercado": "Córners RB Salzburg > 4.5",
+          "prob": 83.76767555406322,
+          "cuota": 1.38,
+          "score_elite": 18,
+          "nuevo": true
+        },
+        {
+          "partido": "Pachuca vs Guadalajara",
+          "hora": "02:00",
+          "mercado": "Córners > 7.5",
+          "prob": 83.71,
+          "cuota": 1.38,
+          "score_elite": 8,
+          "nuevo": true
+        }
+      ],
+      "cuota_total": 2.63,
+      "prob_directa": 58.7,
+      "prob_protegida": 82.0
+    },
+    {
+      "clave": "especial_valor_pro",
+      "titulo": "ESPECIAL VALOR PRO",
+      "subtitulo": "EXCLUSIVO PRO: TÁCTICA, FRICCIÓN Y EV+ (3 PARTIDOS)",
+      "sufijo": "VALOR_TACTICO_PRO",
+      "stake": "Invertir del 1% al 2% de tu capital (Valor EV+)",
+      "selecciones": [
+        {
+          "partido": "NEC Nijmegen vs Stade Rennais",
+          "hora": "21:00",
+          "mercado": "Over 1.5 Goles",
+          "prob": 86.15261424533878,
+          "cuota": 1.4,
+          "score_elite": 18,
+          "nuevo": true
+        },
+        {
+          "partido": "Lyon vs Lillestrom",
+          "hora": "21:00",
+          "mercado": "Over 1.5 Goles",
+          "prob": 85.60108615410323,
+          "cuota": 1.4,
+          "score_elite": 18,
+          "nuevo": true
+        },
+        {
+          "partido": "TSG Hoffenheim vs SK Sturm Graz",
+          "hora": "21:00",
+          "mercado": "Over 1.5 Goles",
+          "prob": 85.41657757629906,
+          "cuota": 1.4,
+          "score_elite": 18,
+          "nuevo": true
+        }
+      ],
+      "cuota_total": 2.74,
+      "prob_directa": 63.0,
+      "prob_protegida": 82.0
+    }
+  ]
+}
