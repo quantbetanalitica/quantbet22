@@ -1428,7 +1428,11 @@ def publicar_auditoria_nocturna_canal_free(fecha_auditar=None, enviar_a_clientes
     import mercados_optimizados as m
     ahora_esp = datetime.now(timezone.utc).replace(tzinfo=None) + timedelta(hours=1)
     if not fecha_auditar:
-        fecha_auditar = ahora_esp.strftime("%Y-%m-%d") if modo_horario == "noche" else (ahora_esp - timedelta(days=1)).strftime("%Y-%m-%d")
+        # Si corre de madrugada (00:00-06:59 ESP), la jornada activa sigue siendo la de AYER (nunca el día siguiente!)
+        if ahora_esp.hour < 7 or modo_horario != "noche":
+            fecha_auditar = (ahora_esp - timedelta(days=1)).strftime("%Y-%m-%d")
+        else:
+            fecha_auditar = ahora_esp.strftime("%Y-%m-%d")
     headers = {"x-apisports-key": API_KEY_RESPALDO_AYER}
     # Refrescar fecha_auditar + día siguiente (madrugada Sudamérica) y resolver TODAS las apuestas pendientes (FREE, VIP y PRO)
     m.obtener_datos_api_partidos(fecha_auditar, headers, forzar_refresco=True)
@@ -1490,6 +1494,10 @@ def publicar_auditoria_nocturna_canal_free(fecha_auditar=None, enviar_a_clientes
                 fecha_auditar, modo_horario=modo_horario
             )
             n_pags_pro = len(rutas_pro)
+            if fin_p == 0:
+                print(f"⏭️ [CANDADO PRO] 0 tarjetas finalizadas para ({fecha_auditar}); se omite envío de auditoría vacía/futura al Canal PRO.")
+                rutas_pro = []
+                n_pags_pro = 0
             for idx_rp, r_pro_img in enumerate(rutas_pro, start=1):
                 if modo_horario == "noche":
                     tit_pro = f"👑 <b>¿CÓMO VAMOS HOY EQUIPO PRO? ({fecha_auditar}) — {tasa_pro}</b> [{idx_rp}/{n_pags_pro}]"
