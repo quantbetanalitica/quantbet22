@@ -698,18 +698,17 @@ def _completar_dos_selecciones(lista_sels, tipo_t="VIP", mercados_ya_usados=None
 
     candidatos = (
         [
-            ("Córners > 8.5", 74.5, 1.48),
-            ("Remates Puerta > 6.5", 75.0, 1.44),
-            ("Faltas Totales > 22.5", 74.0, 1.42),
-            ("Tarjetas > 3.5", 73.5, 1.46),
+            ("Total Asiático > 2.25", 73.5, 1.48),
+            ("Ambos Marcan (BTTS)", 71.0, 1.52),
             ("Gol en 2do Tiempo", 76.0, 1.42),
+            ("Over 1.5 Goles", 77.0, 1.40),
         ]
         if tipo_t == "VIP"
         else [
-            ("Córners > 7.5", 75.5, 1.24),
-            ("Gol en 2do Tiempo", 77.0, 1.24),
-            ("Over 1.5 Goles", 78.0, 1.24),
-            ("Faltas Totales > 21.5", 75.0, 1.22),
+            ("Gol en 2do Tiempo", 77.5, 1.24),
+            ("Over 1.5 Goles", 78.0, 1.22),
+            ("Doble Oport. 1X", 79.0, 1.20),
+            ("Gol en 1T", 73.0, 1.26),
         ]
     )
     for m_cand, p_cand, c_cand in candidatos:
