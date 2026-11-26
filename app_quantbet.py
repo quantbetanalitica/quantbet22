@@ -550,95 +550,17 @@ def cargar_boxscores_reales_web():
     return {}
 
 
-@st.cache_data(ttl=300, show_spinner=False)
 def obtener_boxscore_real_web(id_partido, duelo_str=""):
-    """Obtiene el boxscore REAL (remates a puerta, córners, faltas, tarjetas) desde cache_boxscore_ft.json
-    o en tiempo real desde API-Sports / ESPN. Jamás inventa ni estima resultados."""
+    """Lectura instantánea (<1ms) desde cache_boxscore_ft.json sin llamadas HTTP bloqueantes.
+    Si el boxscore real aún no llegó al caché, devuelve None (nunca inventa GANADA)."""
     clave_id = str(id_partido or "").strip()
-    cache_local = cargar_boxscores_reales_web()
-    if clave_id and clave_id in cache_local:
-        d_c = cache_local[clave_id]
-        if isinstance(d_c, dict) and d_c.get("has_stats"):
-            return d_c
-    if not clave_id or not clave_id.isdigit():
+    if not clave_id:
         return None
-
-    def _fnum(v):
-        if v is None:
-            return None
-        try:
-            return float(str(v).strip().replace("%", ""))
-        except Exception:
-            return None
-
-    loc_nom = str(duelo_str).split(" (")[0].split(" vs ")[0].strip().lower()
-    stats = {
-        "corners_home": None, "corners_away": None, "corners_total": None,
-        "shots_on_target_home": None, "shots_on_target_away": None, "shots_on_target_total": None,
-        "fouls_home": None, "fouls_away": None, "fouls_total": None,
-        "yellow_total": None, "cards_total": None, "has_stats": False,
-    }
-    try:
-        r_st = requests.get(
-            f"https://v3.football.api-sports.io/fixtures/statistics?fixture={clave_id}",
-            headers={"x-apisports-key": API_SPORTS_KEY},
-            timeout=4.0,
-        )
-        if r_st.status_code == 200:
-            resp_s = r_st.json().get("response") or []
-            if len(resp_s) >= 2:
-                idx_h, idx_a = 0, 1
-                t0 = str((resp_s[0].get("team") or {}).get("name") or "").lower()
-                t1 = str((resp_s[1].get("team") or {}).get("name") or "").lower()
-                if loc_nom and len(loc_nom) >= 4 and loc_nom[:4] in t1 and loc_nom[:4] not in t0:
-                    idx_h, idx_a = 1, 0
-                mh = {str(x.get("type")): _fnum(x.get("value")) for x in (resp_s[idx_h].get("statistics") or [])}
-                ma = {str(x.get("type")): _fnum(x.get("value")) for x in (resp_s[idx_a].get("statistics") or [])}
-                ch, ca = mh.get("Corner Kicks"), ma.get("Corner Kicks")
-                sh, sa = mh.get("Shots on Goal"), ma.get("Shots on Goal")
-                fh, fa = mh.get("Fouls"), ma.get("Fouls")
-                yh, ya = mh.get("Yellow Cards"), ma.get("Yellow Cards")
-                rh, ra = mh.get("Red Cards") or 0.0, ma.get("Red Cards") or 0.0
-                if ch is not None and ca is not None:
-                    stats["corners_home"], stats["corners_away"], stats["corners_total"] = ch, ca, ch + ca
-                if sh is not None and sa is not None:
-                    stats["shots_on_target_home"], stats["shots_on_target_away"], stats["shots_on_target_total"] = sh, sa, sh + sa
-                if fh is not None and fa is not None:
-                    stats["fouls_home"], stats["fouls_away"], stats["fouls_total"] = fh, fa, fh + fa
-                if yh is not None or ya is not None:
-                    yt = (yh or 0.0) + (ya or 0.0)
-                    stats["yellow_total"], stats["cards_total"] = yt, yt + rh + ra
-    except Exception:
-        pass
-
-    if stats["corners_total"] is None and stats["shots_on_target_total"] is None:
-        try:
-            r_e = requests.get(f"https://site.api.espn.com/apis/site/v2/sports/soccer/all/summary?event={clave_id}", timeout=3.5)
-            if r_e.status_code == 200:
-                bts = (r_e.json().get("boxscore") or {}).get("teams") or []
-                if len(bts) >= 2:
-                    eh = {str(s.get("name")): _fnum(s.get("displayValue")) for s in (bts[0].get("statistics") or [])}
-                    ea = {str(s.get("name")): _fnum(s.get("displayValue")) for s in (bts[1].get("statistics") or [])}
-                    ch, ca = eh.get("wonCorners"), ea.get("wonCorners")
-                    sh, sa = eh.get("shotsOnTarget"), ea.get("shotsOnTarget")
-                    fh, fa = eh.get("foulsCommitted"), ea.get("foulsCommitted")
-                    yh, ya = eh.get("yellowCards"), ea.get("yellowCards")
-                    rh, ra = eh.get("redCards") or 0.0, ea.get("redCards") or 0.0
-                    if ch is not None and ca is not None:
-                        stats["corners_home"], stats["corners_away"], stats["corners_total"] = ch, ca, ch + ca
-                    if sh is not None and sa is not None:
-                        stats["shots_on_target_home"], stats["shots_on_target_away"], stats["shots_on_target_total"] = sh, sa, sh + sa
-                    if fh is not None and fa is not None:
-                        stats["fouls_home"], stats["fouls_away"], stats["fouls_total"] = fh, fa, fh + fa
-                    if yh is not None or ya is not None:
-                        yt = (yh or 0.0) + (ya or 0.0)
-                        stats["yellow_total"], stats["cards_total"] = yt, yt + rh + ra
-        except Exception:
-            pass
-
-    stats["has_stats"] = any(stats[k] is not None for k in ("corners_total", "shots_on_target_total", "fouls_total", "cards_total"))
-    return stats if stats["has_stats"] else None
-
+    cache_local = cargar_boxscores_reales_web()
+    d_c = cache_local.get(clave_id)
+    if isinstance(d_c, dict) and d_c.get("has_stats"):
+        return d_c
+    return None
 
 
 def formatear_mercado_claro_web(mercado_str, partido_str=""):
@@ -810,15 +732,16 @@ def _memoria_persistente_ft_web():
     return {"mapa": {}, "indice": [], "horas_fin": {}, "dt_fin": {}}
 
 
-@st.cache_data(ttl=180, show_spinner=False)
+@st.cache_data(ttl=60, show_spinner=False)
 def cargar_mapa_resultados_caches():
+    """Carga instantánea (<50ms) desde los archivos locales cache_partidos_*.json.
+    Elimina las 105+ peticiones HTTP síncronas a ESPN/API-Sports que congelaban la Web App."""
     mapa = {}
     indice_rapido = []
     mapa_horas_fin = {}
     mapa_dt_fin = {}
     mapa_en_vivo = {}
     indice_vivo = []
-    ahora_esp = obtener_hora_espana()
 
     for arch in sorted(os.listdir(".")):
         if arch.startswith("cache_partidos_") and arch.endswith(".json"):
@@ -845,7 +768,10 @@ def cargar_mapa_resultados_caches():
 
                     if loc and vis and len(f_iso) >= 16:
                         try:
-                            dt_ini = datetime.strptime(f_iso[:19], "%Y-%m-%dT%H:%M:%S") + timedelta(hours=1)
+                            if "+01:00" in f_iso or "+02:00" in f_iso:
+                                dt_ini = datetime.strptime(f_iso[:19], "%Y-%m-%dT%H:%M:%S")
+                            else:
+                                dt_ini = datetime.strptime(f_iso[:19], "%Y-%m-%dT%H:%M:%S") + timedelta(hours=1)
                             dt_fin_p = dt_ini + timedelta(hours=1, minutes=55)
                             h_txt = dt_fin_p.strftime("%H:%M")
                             mapa_horas_fin[f"{loc} vs {vis}"] = h_txt
@@ -858,7 +784,18 @@ def cargar_mapa_resultados_caches():
 
                     est = str((fix_d.get("status") or {}).get("short") or "")
                     goals_d = p.get("goals") or {}
-                    if est in ["FT", "AET", "PEN"] and goals_d.get("home") is not None and goals_d.get("away") is not None:
+                    if est in ["1H", "2H", "HT", "ET", "P", "LIVE"]:
+                        elap = (fix_d.get("status") or {}).get("elapsed")
+                        reloj_v = "Descanso (HT)" if est == "HT" else (f"{elap}'" if elap else est)
+                        gh_v = int(float(goals_d.get("home") or 0))
+                        ga_v = int(float(goals_d.get("away") or 0))
+                        dato_v = (reloj_v, gh_v, ga_v)
+                        if fid:
+                            mapa_en_vivo[fid] = dato_v
+                        if loc and vis:
+                            mapa_en_vivo[f"{loc} vs {vis}"] = dato_v
+                            indice_vivo.append((_tokens_club(loc), _tokens_club(vis), dato_v))
+                    elif est in ["FT", "AET", "PEN"] and goals_d.get("home") is not None and goals_d.get("away") is not None:
                         gh = int(float(goals_d.get("home") or 0))
                         ga = int(float(goals_d.get("away") or 0))
                         sh = ((p.get("score") or {}).get("halftime")) or {}
@@ -875,193 +812,9 @@ def cargar_mapa_resultados_caches():
                 except Exception:
                     continue
 
-    fechas_api = [(ahora_esp - timedelta(days=d)).strftime("%Y-%m-%d") for d in range(3, -1, -1)]
-    for f_api in fechas_api:
-        try:
-            r_as = requests.get(
-                f"https://v3.football.api-sports.io/fixtures?date={f_api}&timezone=Europe/Madrid",
-                headers={"x-apisports-key": API_SPORTS_KEY},
-                timeout=6.0
-            )
-            if r_as.status_code == 200:
-                resp_as = r_as.json().get("response") or []
-                for p in resp_as:
-                    fix_d = p.get("fixture") or {}
-                    st_d = fix_d.get("status") or {}
-                    short_s = str(st_d.get("short") or "")
-                    fid = str(fix_d.get("id") or "")
-                    f_iso_a = str(fix_d.get("date") or "")
-                    loc_a = str(((p.get("teams") or {}).get("home") or {}).get("name") or "").strip().lower()
-                    vis_a = str(((p.get("teams") or {}).get("away") or {}).get("name") or "").strip().lower()
-                    goals_d = p.get("goals") or {}
-                    gh_a = int(float(goals_d.get("home") or 0))
-                    ga_a = int(float(goals_d.get("away") or 0))
-
-                    if loc_a and vis_a and len(f_iso_a) >= 16:
-                        try:
-                            dt_i_a = datetime.strptime(f_iso_a[:19], "%Y-%m-%dT%H:%M:%S") if ("+01:00" in f_iso_a or "+02:00" in f_iso_a) else (datetime.strptime(f_iso_a[:19], "%Y-%m-%dT%H:%M:%S") + timedelta(hours=1))
-                            dt_f_a = dt_i_a + timedelta(hours=1, minutes=55)
-                            mapa_horas_fin[f"{loc_a} vs {vis_a}"] = dt_f_a.strftime("%H:%M")
-                            mapa_dt_fin[f"{loc_a} vs {vis_a}"] = dt_f_a
-                            if fid:
-                                mapa_horas_fin[fid] = dt_f_a.strftime("%H:%M")
-                                mapa_dt_fin[fid] = dt_f_a
-                        except Exception:
-                            pass
-
-                    if short_s in ["1H", "2H", "HT", "ET", "P", "LIVE"]:
-                        elap = st_d.get("elapsed")
-                        reloj_a = "Descanso (HT)" if short_s == "HT" else (f"{elap}'" if elap else short_s)
-                        dato_v = (reloj_a, gh_a, ga_a)
-                        if fid:
-                            mapa_en_vivo[fid] = dato_v
-                        if loc_a and vis_a:
-                            mapa_en_vivo[f"{loc_a} vs {vis_a}"] = dato_v
-                            indice_vivo.append((_tokens_club(loc_a), _tokens_club(vis_a), dato_v))
-                    elif short_s in ["FT", "AET", "PEN"]:
-                        sh = ((p.get("score") or {}).get("halftime")) or {}
-                        ght_a = (int(float(sh.get("home") or 0)) + int(float(sh.get("away") or 0))) if sh.get("home") is not None else ((gh_a + ga_a) // 2)
-                        info_a = (gh_a, ga_a, ght_a)
-                        if fid:
-                            mapa[fid] = info_a
-                        if loc_a and vis_a:
-                            mapa[f"{loc_a} vs {vis_a}"] = info_a
-                            indice_rapido.append((f_api, _tokens_club(loc_a), _tokens_club(vis_a), info_a))
-        except Exception:
-            pass
-
-    # Consultar solo últimos 2 días (ayer y hoy) en ligas activas para evitar bloqueos/timeouts en la nube
-    fechas_ymd = [(ahora_esp - timedelta(days=d)).strftime("%Y%m%d") for d in range(2, -1, -1)]
-    endpoints = [
-        "uefa.champions", "uefa.europa", "uefa.europa.conf", "uefa.wchampions",
-        "esp.1", "esp.2", "esp.copa_del_rey",
-        "eng.1", "eng.fa", "eng.league_cup",
-        "ita.1", "ita.coppa_italia",
-        "ger.1", "ger.dfb_pokal",
-        "fra.1", "por.1", "por.taca.portugal",
-        "ned.1", "bel.1", "gre.1", "sco.1", "ksa.1",
-        "col.1", "col.2", "col.copa",
-        "arg.1", "arg.copa", "bra.1", "bra.copa_do_brasil",
-        "mex.1", "usa.1",
-        "conmebol.libertadores", "conmebol.sudamericana",
-        "uefa.nations", "fifa.friendly"
-    ]
-    tareas = [(ep, ymd) for ymd in fechas_ymd for ep in endpoints]
-
-    def _consultar_espn_ligero(t):
-        ep, ymd = t
-        hallados_ft = []
-        hallados_vivo = []
-        try:
-            r = requests.get(f"https://site.api.espn.com/apis/site/v2/sports/soccer/{ep}/scoreboard?dates={ymd}&limit=100", timeout=3.0)
-            if r.status_code == 200:
-                for ev in r.json().get("events", []):
-                    comp = (ev.get("competitions") or [{}])[0]
-                    st_obj = comp.get("status") or {}
-                    st_t = st_obj.get("type") or {}
-                    estado_espn = str(st_t.get("state") or "")
-                    comps = comp.get("competitors") or []
-                    if len(comps) < 2:
-                        continue
-                    c_h = next((c for c in comps if c.get("homeAway") == "home"), comps[0])
-                    c_a = next((c for c in comps if c.get("homeAway") == "away"), comps[1])
-                    loc_e = str((c_h.get("team") or {}).get("displayName") or "").strip().lower()
-                    vis_e = str((c_a.get("team") or {}).get("displayName") or "").strip().lower()
-                    if any(x in loc_e or x in vis_e for x in PARTIDOS_EXCLUIDOS):
-                        continue
-                    gh_e = int(float(c_h.get("score") or 0))
-                    ga_e = int(float(c_a.get("score") or 0))
-                    eid = str(ev.get("id") or "")
-
-                    if estado_espn == "in":
-                        reloj = str(st_obj.get("displayClock") or st_t.get("shortDetail") or "En Vivo").strip()
-                        hallados_vivo.append((eid, loc_e, vis_e, (reloj, gh_e, ga_e)))
-                    elif st_t.get("completed") is True or estado_espn == "post":
-                        f_iso_e = str(ev.get("date") or "")
-                        dt_f = None
-                        h_fin_e = "22:55"
-                        f_dia_e = f"{ymd[:4]}-{ymd[4:6]}-{ymd[6:8]}"
-                        if len(f_iso_e) >= 16:
-                            try:
-                                dt_i = datetime.strptime(f_iso_e[:16], "%Y-%m-%dT%H:%M") + timedelta(hours=1)
-                                dt_f = dt_i + timedelta(hours=1, minutes=50)
-                                h_fin_e = dt_f.strftime("%H:%M")
-                                f_dia_e = (dt_i - timedelta(days=1)).strftime("%Y-%m-%d") if dt_i.hour < 6 else dt_i.strftime("%Y-%m-%d")
-                            except Exception:
-                                pass
-
-                        ls_h = c_h.get("linescores") or []
-                        ls_a = c_a.get("linescores") or []
-                        det_goles_e = [d for d in (comp.get("details") or []) if d.get("scoringPlay")]
-                        if ls_h and ls_a:
-                            ght_e = int(float(ls_h[0].get("value") or 0)) + int(float(ls_a[0].get("value") or 0))
-                        elif det_goles_e:
-                            ght_e = 0
-                            for dg in det_goles_e:
-                                rel_s = str((dg.get("clock") or {}).get("displayValue") or "")
-                                nums_m = re.findall(r"\d+", rel_s)
-                                min_g = int(nums_m[0]) if nums_m else 90
-                                if ("45+" in rel_s) or (min_g <= 45 and "90+" not in rel_s):
-                                    ght_e += 1
-                            ght_e = min(gh_e + ga_e, ght_e)
-                        else:
-                            ght_e = (gh_e + ga_e) // 2
-                        hallados_ft.append((eid, f_dia_e, loc_e, vis_e, (gh_e, ga_e, ght_e), h_fin_e, dt_f))
-        except Exception:
-            pass
-        return hallados_ft, hallados_vivo
-
-    try:
-        with ThreadPoolExecutor(max_workers=12) as ex:
-            for res_ft, res_vivo in ex.map(_consultar_espn_ligero, tareas):
-                for eid, f_dia_e, loc_e, vis_e, info_e, h_fin_e, dt_f in res_ft:
-                    # NO sobreescribir un marcador FT/HT real ya cargado desde cache_partidos o API-Sports
-                    if eid and eid not in mapa:
-                        mapa[eid] = info_e
-                    if loc_e and vis_e:
-                        clave_lv = f"{loc_e} vs {vis_e}"
-                        if clave_lv not in mapa:
-                            mapa[clave_lv] = info_e
-                        indice_rapido.append((f_dia_e, _tokens_club(loc_e), _tokens_club(vis_e), info_e))
-                        if h_fin_e:
-                            mapa_horas_fin[clave_lv] = h_fin_e
-                        if dt_f:
-                            mapa_dt_fin[clave_lv] = dt_f
-                            if eid:
-                                mapa_dt_fin[eid] = dt_f
-                for eid_v, loc_v, vis_v, dato_vivo in res_vivo:
-                    if eid_v:
-                        mapa_en_vivo[eid_v] = dato_vivo
-                    if loc_v and vis_v:
-                        mapa_en_vivo[f"{loc_v} vs {vis_v}"] = dato_vivo
-                        indice_vivo.append((_tokens_club(loc_v), _tokens_club(vis_v), dato_vivo))
-    except Exception:
-        pass
-
-    # Fusión con memoria persistente del servidor: un marcador FT ya detectado NUNCA se pierde por un timeout posterior
-    mem_ft = _memoria_persistente_ft_web()
-    for k_m, v_m in mapa.items():
-        if not str(k_m).startswith("_"):
-            mem_ft["mapa"][k_m] = v_m
-    for k_m, v_m in mem_ft["mapa"].items():
-        if k_m not in mapa:
-            mapa[k_m] = v_m
-
-    claves_idx_vistos = {(f_i, frozenset(tl_i), frozenset(tv_i)) for f_i, tl_i, tv_i, _ in mem_ft["indice"]}
-    for item_i in indice_rapido:
-        k_idx = (item_i[0], frozenset(item_i[1]), frozenset(item_i[2]))
-        if k_idx not in claves_idx_vistos:
-            mem_ft["indice"].append(item_i)
-            claves_idx_vistos.add(k_idx)
-    if len(mem_ft["indice"]) > 2500:
-        mem_ft["indice"] = mem_ft["indice"][-2500:]
-
-    mem_ft["horas_fin"].update(mapa_horas_fin)
-    mem_ft["dt_fin"].update(mapa_dt_fin)
-
-    mapa["_indice_rapido"] = list(mem_ft["indice"])
-    mapa["_horas_fin"] = dict(mem_ft["horas_fin"])
-    mapa["_dt_fin"] = dict(mem_ft["dt_fin"])
+    mapa["_indice_rapido"] = indice_rapido
+    mapa["_horas_fin"] = mapa_horas_fin
+    mapa["_dt_fin"] = mapa_dt_fin
     mapa["_en_vivo"] = mapa_en_vivo
     mapa["_indice_vivo"] = indice_vivo
     return mapa
@@ -1411,14 +1164,47 @@ def obtener_resumen_auditoria():
         return 91.7, 2773, 3025, 30.2, pd.DataFrame()
 
 
+def _jornada_anterior_terminada(dia_prev_str, ahora_esp):
+    """Devuelve True si todos los partidos de clientes_enviados_<dia_prev_str>.json ya finalizaron por horario."""
+    ruta_p = f"clientes_enviados_{dia_prev_str}.json"
+    if not os.path.exists(ruta_p):
+        return True
+    try:
+        tjs = (json.load(open(ruta_p, "r", encoding="utf-8")) or {}).get("tarjetas_clientes", [])
+        if not tjs:
+            return True
+        max_fin = max(calcular_dt_fin_real(dia_prev_str, str(t.get("hora", "20:00"))) for t in tjs)
+        return ahora_esp >= max_fin
+    except Exception:
+        return True
+
+
 def listar_jornadas():
+    """Auto-publicación en la nube: permite subir clientes_enviados_YYYY-MM-DD.json la noche anterior
+    y lo libera automáticamente a las 07:00h ESP de ese día (o apenas termine el último partido previo)."""
+    ahora_esp = obtener_hora_espana()
+    hoy_str = ahora_esp.strftime("%Y-%m-%d")
+    ayer_str = (ahora_esp - timedelta(days=1)).strftime("%Y-%m-%d")
     dias = set()
+
     for nombre in os.listdir("."):
         coincidencia = re.match(r"clientes_enviados_(\d{4}-\d{2}-\d{2})\.json", nombre)
-        if coincidencia and coincidencia.group(1) >= FECHA_CORTE_LIMPIO:
-            dias.add(coincidencia.group(1))
+        if not coincidencia:
+            continue
+        f_j = coincidencia.group(1)
+        if f_j < FECHA_CORTE_LIMPIO:
+            continue
+        # Jornadas futuras (> hoy): ocultas hasta que llegue su día (salvo modo ?admin=quant22)
+        if f_j > hoy_str and not _MODO_ADMIN_TRAFICO:
+            continue
+        # Jornada de HOY antes de las 07:00h ESP: esperar a que acabe el último partido de ayer
+        if f_j == hoy_str and ahora_esp.hour < 7 and not _MODO_ADMIN_TRAFICO:
+            if not _jornada_anterior_terminada(ayer_str, ahora_esp):
+                continue
+        dias.add(f_j)
+
     if not dias:
-        dias.add(obtener_hora_espana().strftime("%Y-%m-%d"))
+        dias.add(hoy_str)
     return sorted(list(dias), reverse=True)
 
 
