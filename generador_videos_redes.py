@@ -383,8 +383,10 @@ def puntaje_cartelera_video(p):
         pts += 120
     elif any(lg in liga for lg in ["LALIGA", "PREMIER", "SERIE A", "BUNDESLIGA", "LIGUE 1"]) and "BRASIL" not in liga:
         pts += 95
-    elif any(lg in liga for lg in ["LIBERTADORES", "EUROPA LEAGUE", "NATIONS LEAGUE", "ELIMINATORIAS"]):
-        pts += 65
+    elif "EUROPA LEAGUE" in liga:
+        pts += 105
+    elif any(lg in liga for lg in ["LIBERTADORES", "NATIONS LEAGUE", "ELIMINATORIAS"]):
+        pts += 75
     elif any(lg in liga for lg in ["COLOMBIA (PRIMERA A)", "ARGENTINA (LIGA", "BRASIL (SERIE A)", "COPA DEL REY", "FA CUP"]):
         pts += 45
     elif any(lg in liga for lg in ["CONFERENCE", "SUDAMERICANA", "PRIMEIRA LIGA", "EREDIVISIE"]):
@@ -401,28 +403,39 @@ def _es_champions_masculina_video(p):
     return ("UEFA CHAMPIONS" in liga) and ("WOMEN" not in liga) and ("FEMEN" not in liga)
 
 
+def _es_europa_o_conference_video(p):
+    liga = str(p.get("liga_visual", "")).upper()
+    return ("EUROPA LEAGUE" in liga) or ("CONFERENCE LEAGUE" in liga)
+
+
 def seleccionar_top2_videos_cartelera(pool_partidos):
-    """Regla de Cartelera Inteligente para Vídeos:
-    - En días de UEFA Champions League masculina: prioriza los 2 mejores partidazos de Champions
-      (Real Madrid / Barcelona en Champions primero, luego los mejores cruces Tier 1 de Champions)
-      para maximizar el alcance viral, sin que Millonarios desplace a la Champions.
-    - En días SIN Champions League: Real Madrid, Barcelona y Millonarios mantienen su prioridad absoluta."""
+    """Regla de Cartelera Inteligente para Vídeos (v24):
+    - En días de UEFA Champions League masculina: prioriza los 2 mejores partidazos de Champions.
+    - En jueves de UEFA Europa League / Conference League (sin Champions): prioriza los mejores
+      cruces europeos (ej. Real Sociedad, Athletic, Betis, Man United, Tottenham, Roma, Porto, Ajax)
+      salvo que Real Madrid o Barcelona jueguen ese mismo día.
+    - En días de ligas domésticas: Real Madrid, Barcelona y Millonarios mantienen prioridad absoluta."""
     if not pool_partidos:
         return []
     champions_dia = [p for p in pool_partidos if _es_champions_masculina_video(p)]
     if len(champions_dia) >= 2:
-        # Ordenar solo dentro de Champions (así Millonarios nunca desplaza un partidazo de Champions)
         ord_ucl = sorted(champions_dia, key=puntaje_cartelera_video, reverse=True)
         resto = sorted([p for p in pool_partidos if p not in champions_dia], key=puntaje_cartelera_video, reverse=True)
         return ord_ucl + resto
     elif len(champions_dia) == 1:
         ucl_1 = champions_dia[0]
         resto = sorted([p for p in pool_partidos if p is not ucl_1], key=puntaje_cartelera_video, reverse=True)
-        # Si juega Real Madrid o Barcelona fuera de Champions, respetarlo; de lo contrario Champions #1
         top_glob = sorted(pool_partidos, key=puntaje_cartelera_video, reverse=True)
         if top_glob and puntaje_cartelera_video(top_glob[0]) >= 9500 and top_glob[0] is not ucl_1:
             return [top_glob[0], ucl_1] + [p for p in resto if p is not top_glob[0]]
         return [ucl_1] + resto
+
+    uel_dia = [p for p in pool_partidos if _es_europa_o_conference_video(p)]
+    if len(uel_dia) >= 2:
+        gigantes_hoy = [p for p in pool_partidos if puntaje_cartelera_video(p) >= 9500 and p not in uel_dia]
+        ord_uel = sorted(uel_dia, key=puntaje_cartelera_video, reverse=True)
+        resto = sorted([p for p in pool_partidos if p not in uel_dia and p not in gigantes_hoy], key=puntaje_cartelera_video, reverse=True)
+        return sorted(gigantes_hoy, key=puntaje_cartelera_video, reverse=True) + ord_uel + resto
     return sorted(pool_partidos, key=puntaje_cartelera_video, reverse=True)
 
 
@@ -870,8 +883,16 @@ def seleccionar_7_partidos_14_apuestas_clientes(fecha_hoy, ruta_csv="auditoria_a
             for f_c, tl_c, tv_c, p_obj in indice_tokens_ft:
                 if fechas_ok and f_c not in fechas_ok:
                     continue
-                ok_l = bool(tl & tl_c) or any(a[:4] == b[:4] for a in tl for b in tl_c if len(a) >= 4 and len(b) >= 4)
-                ok_v = bool(tv & tv_c) or any(a[:4] == b[:4] for a in tv for b in tv_c if len(a) >= 4 and len(b) >= 4)
+                def _tok_ok_aud(ta, tb):
+                    if ("internacional" in ta and ("internazionale" in tb or "inter" in tb or "miami" in tb)) or (
+                        "internacional" in tb and ("internazionale" in ta or "inter" in ta or "miami" in ta)
+                    ):
+                        return False
+                    if ta & tb:
+                        return True
+                    return any(a[:4] == b[:4] and a[:4] not in {"inte", "real", "atle", "spor", "depo", "club", "unid", "unit"} for a in ta for b in tb if len(a) >= 4 and len(b) >= 4)
+                ok_l = _tok_ok_aud(tl, tl_c)
+                ok_v = _tok_ok_aud(tv, tv_c)
                 if ok_l and ok_v:
                     return p_obj
         if id_p and str(id_p).isdigit():
