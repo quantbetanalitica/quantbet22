@@ -1,0 +1,54 @@
+name: Vigilar CLV Real 24/7 (QuantBet22)
+
+on:
+  schedule:
+    # Se ejecuta cada 15 minutos en los servidores de GitHub aunque tu PC esté apagado
+    - cron: "*/15 * * * *"
+  workflow_dispatch:
+    inputs:
+      forzar:
+        description: "Capturar todos los pendientes futuros ahora (true/false)"
+        required: false
+        default: "false"
+
+permissions:
+  contents: write
+
+jobs:
+  capturar-clv:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Descargar repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Instalar dependencias mínimas
+        run: pip install --quiet pandas requests
+
+      - name: Capturar Cuotas de Cierre Kambi y enviar alerta a Telegram
+        env:
+          TG_TOKEN_TICKETS: ${{ secrets.TG_TOKEN_TICKETS }}
+          TG_CHAT_ID_AUDITORIAS: ${{ secrets.TG_CHAT_ID_AUDITORIAS }}
+        run: |
+          if [ "${{ github.event.inputs.forzar }}" = "true" ]; then
+            python capturar_clv.py --forzar
+          else
+            python capturar_clv.py --ventana=45
+          fi
+
+      - name: Guardar cambios de CLV en el repositorio
+        run: |
+          git config user.name "QuantBet22 CLV Bot"
+          git config user.email "bot@quantbet22.local"
+          git add auditoria_apuestas.csv registro_clv_real.csv 2>/dev/null || true
+          if ! git diff --cached --quiet; then
+            git pull --rebase origin main || true
+            git commit -m "Auto-CLV: cuotas de cierre Kambi capturadas"
+            git push
+          else
+            echo "Sin cambios nuevos de CLV en este ciclo."
+          fi
