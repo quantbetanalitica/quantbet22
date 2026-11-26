@@ -3788,13 +3788,13 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-11-26 20:40:00,401915808,SK Brann vs AGF (Uefa Conference League),[VIP] Córners > 8.5,1.45,PENDIENTE_CLV,75.1,🟢 [LUZ VERDE / ALTO VALOR],4900.0,Pendiente,0.0,AUDITANDO
 2026-11-26 20:40:00,401915808,SK Brann vs AGF (Uefa Conference League),[FREE] Combo 1X + U4.5,1.18,PENDIENTE_CLV,86.4,🟢 [LUZ VERDE / ALTO VALOR],2700.0,Pendiente,0.0,AUDITANDO
 2026-11-26 20:40:00,401915808,SK Brann vs AGF (Uefa Conference League),[FREE] Remates Puerta > 5.5,1.28,PENDIENTE_CLV,59.1,🟢 [VALOR ALTO / OPERABLE],500.0,Pendiente,0.0,AUDITANDO
-2026-11-26 22:55:00,401915504,Crystal Palace vs Real Sociedad (Uefa Europa League),[VIP] Ambos Marcan (BTTS),1.5,PENDIENTE_CLV,76.9,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Pendiente,0.0,AUDITANDO
+2026-11-26 22:55:00,401915504,Crystal Palace vs Real Sociedad (Uefa Europa League),[VIP] Ambos Marcan (BTTS),1.5,3.25,76.9,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Pendiente,0.0,AUDITANDO
 2026-11-26 22:55:00,401915504,Crystal Palace vs Real Sociedad (Uefa Europa League),[VIP] Over 2.5 Goles,1.57,PENDIENTE_CLV,65.1,🟢 [VALOR ALTO / OPERABLE],1000.0,Pendiente,0.0,AUDITANDO
 2026-11-26 22:55:00,401915504,Crystal Palace vs Real Sociedad (Uefa Europa League),[FREE] Gol en 2do Tiempo,1.18,PENDIENTE_CLV,84.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
 2026-11-26 22:55:00,401915504,Crystal Palace vs Real Sociedad (Uefa Europa League),[FREE] Goles Real Socieda > 0.5,1.17,PENDIENTE_CLV,80.3,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
 2026-11-26 22:55:00,401915516,Ferencvaros vs NK Celje (Uefa Europa League),[VIP] Combo 1X + O1.5,1.5,PENDIENTE_CLV,76.2,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Pendiente,0.0,AUDITANDO
 2026-11-26 22:55:00,401915516,Ferencvaros vs NK Celje (Uefa Europa League),[FREE] Over 1.5 Goles,1.18,PENDIENTE_CLV,82.7,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
-2026-11-26 22:55:00,401915516,Ferencvaros vs NK Celje (Uefa Europa League),[FREE] Doble Oport. 1X,1.18,PENDIENTE_CLV,84.6,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
+2026-11-26 22:55:00,401915516,Ferencvaros vs NK Celje (Uefa Europa League),[FREE] Doble Oport. 1X,1.18,1.08,84.6,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
 2026-11-26 22:55:00,401915502,Juventus vs Omonia Nicosia (Uefa Europa League),[VIP] Over 2.5 Goles,1.57,PENDIENTE_CLV,64.9,🟢 [VALOR ALTO / OPERABLE],800.0,Pendiente,0.0,AUDITANDO
 2026-11-26 22:55:00,401915502,Juventus vs Omonia Nicosia (Uefa Europa League),[VIP] Córners > 8.5,1.86,PENDIENTE_CLV,55.0,🟡 [MODERADO / VIGILAR],500.0,Pendiente,0.0,AUDITANDO
 2026-11-26 22:55:00,401915502,Juventus vs Omonia Nicosia (Uefa Europa League),[FREE] Victoria Juventus,1.18,PENDIENTE_CLV,76.6,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
@@ -3803,15 +3803,15 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-11-26 22:55:00,401915501,Lyon vs Lillestrom (Uefa Europa League),[VIP] Gol en 2do Tiempo,1.4,PENDIENTE_CLV,72.7,🟢 [LUZ VERDE / ALTO VALOR],1100.0,Pendiente,0.0,AUDITANDO
 2026-11-26 22:55:00,401915501,Lyon vs Lillestrom (Uefa Europa League),[FREE] Victoria Lyon,1.19,PENDIENTE_CLV,76.3,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
 2026-11-26 22:55:00,401915501,Lyon vs Lillestrom (Uefa Europa League),[FREE] Córners Lyon > 4.5,1.27,PENDIENTE_CLV,74.7,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
-2026-11-26 22:55:00,401915505,NEC Nijmegen vs Stade Rennais (Uefa Europa League),[VIP] Ambos Marcan (BTTS),1.5,PENDIENTE_CLV,77.9,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Pendiente,0.0,AUDITANDO
+2026-11-26 22:55:00,401915505,NEC Nijmegen vs Stade Rennais (Uefa Europa League),[VIP] Ambos Marcan (BTTS),1.5,3.10,77.9,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Pendiente,0.0,AUDITANDO
 2026-11-26 22:55:00,401915505,NEC Nijmegen vs Stade Rennais (Uefa Europa League),[VIP] Over 2.5 Goles,1.54,PENDIENTE_CLV,66.4,🟢 [VALOR ALTO / OPERABLE],1000.0,Pendiente,0.0,AUDITANDO
 2026-11-26 22:55:00,401915505,NEC Nijmegen vs Stade Rennais (Uefa Europa League),[FREE] Gol en 1T,1.18,PENDIENTE_CLV,82.2,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
 2026-11-26 22:55:00,401915505,NEC Nijmegen vs Stade Rennais (Uefa Europa League),[FREE] Goles Stade Rennai > 0.5,1.16,PENDIENTE_CLV,82.3,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
-2026-11-26 22:55:00,401915503,OFI Crete vs Anderlecht (Uefa Europa League),[VIP] Ambos Marcan (BTTS),1.52,PENDIENTE_CLV,66.9,🟢 [VALOR ALTO / OPERABLE],800.0,Pendiente,0.0,AUDITANDO
+2026-11-26 22:55:00,401915503,OFI Crete vs Anderlecht (Uefa Europa League),[VIP] Ambos Marcan (BTTS),1.52,3.10,66.9,🟢 [VALOR ALTO / OPERABLE],800.0,Pendiente,0.0,AUDITANDO
 2026-11-26 22:55:00,401915503,OFI Crete vs Anderlecht (Uefa Europa League),[VIP] Tarjetas > 3.5,1.64,PENDIENTE_CLV,62.3,🟢 [VALOR ALTO / OPERABLE],800.0,Pendiente,0.0,AUDITANDO
-2026-11-26 22:55:00,401915503,OFI Crete vs Anderlecht (Uefa Europa League),[FREE] Sin Empate Anderlecht,1.32,PENDIENTE_CLV,68.7,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
+2026-11-26 22:55:00,401915503,OFI Crete vs Anderlecht (Uefa Europa League),[FREE] Sin Empate Anderlecht,1.32,1.30,68.7,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
 2026-11-26 22:55:00,401915503,OFI Crete vs Anderlecht (Uefa Europa League),[FREE] Córners > 7.5,1.28,PENDIENTE_CLV,61.2,🟢 [VALOR ALTO / OPERABLE],500.0,Pendiente,0.0,AUDITANDO
-2026-11-26 22:55:00,401915514,Sparta Prague vs AZ Alkmaar (Uefa Europa League),[VIP] Ambos Marcan (BTTS),1.5,PENDIENTE_CLV,71.1,🟢 [LUZ VERDE / ALTO VALOR],3300.0,Pendiente,0.0,AUDITANDO
+2026-11-26 22:55:00,401915514,Sparta Prague vs AZ Alkmaar (Uefa Europa League),[VIP] Ambos Marcan (BTTS),1.5,4.30,71.1,🟢 [LUZ VERDE / ALTO VALOR],3300.0,Pendiente,0.0,AUDITANDO
 2026-11-26 22:55:00,401915514,Sparta Prague vs AZ Alkmaar (Uefa Europa League),[VIP] Gol en 2do Tiempo,1.38,PENDIENTE_CLV,83.6,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Pendiente,0.0,AUDITANDO
 2026-11-26 22:55:00,401915514,Sparta Prague vs AZ Alkmaar (Uefa Europa League),[FREE] Córners AZ Alkmaar > 4.5,1.28,PENDIENTE_CLV,74.1,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
 2026-11-26 22:55:00,401915514,Sparta Prague vs AZ Alkmaar (Uefa Europa League),[FREE] Tarjetas > 2.5,1.28,PENDIENTE_CLV,73.7,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
@@ -3819,7 +3819,7 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-11-26 22:55:00,401915513,Sunderland vs Jagiellonia Bialystok (Uefa Europa League),[VIP] Gol en 2do Tiempo,1.47,PENDIENTE_CLV,69.4,🟢 [LUZ VERDE / ALTO VALOR],1100.0,Pendiente,0.0,AUDITANDO
 2026-11-26 22:55:00,401915513,Sunderland vs Jagiellonia Bialystok (Uefa Europa League),[FREE] Victoria Sunderland,1.24,PENDIENTE_CLV,74.2,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
 2026-11-26 22:55:00,401915513,Sunderland vs Jagiellonia Bialystok (Uefa Europa League),[FREE] Over 1.5 Goles,1.24,PENDIENTE_CLV,76.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
-2026-11-26 22:55:00,401915512,Torreense vs Celtic (Uefa Europa League),[VIP] Ambos Marcan (BTTS),1.5,PENDIENTE_CLV,75.7,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Pendiente,0.0,AUDITANDO
+2026-11-26 22:55:00,401915512,Torreense vs Celtic (Uefa Europa League),[VIP] Ambos Marcan (BTTS),1.5,2.50,75.7,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Pendiente,0.0,AUDITANDO
 2026-11-26 22:55:00,401915512,Torreense vs Celtic (Uefa Europa League),[VIP] Over 2.5 Goles,1.57,PENDIENTE_CLV,65.1,🟢 [VALOR ALTO / OPERABLE],1000.0,Pendiente,0.0,AUDITANDO
 2026-11-26 22:55:00,401915512,Torreense vs Celtic (Uefa Europa League),[FREE] Gol en 2do Tiempo,1.18,PENDIENTE_CLV,84.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
 2026-11-26 22:55:00,401915512,Torreense vs Celtic (Uefa Europa League),[FREE] Goles Celtic > 0.5,1.16,PENDIENTE_CLV,83.1,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
@@ -3828,18 +3828,18 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-11-26 22:55:00,401915515,TSG Hoffenheim vs SK Sturm Graz (Uefa Europa League),[FREE] Gol en 1T,1.28,PENDIENTE_CLV,69.4,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
 2026-11-26 22:55:00,401915515,TSG Hoffenheim vs SK Sturm Graz (Uefa Europa League),[FREE] Over 1.5 Goles,1.18,PENDIENTE_CLV,85.4,🟢 [LUZ VERDE / ALTO VALOR],1100.0,Pendiente,0.0,AUDITANDO
 2026-11-26 22:55:00,401915806,Borac Banja Luka vs Atalanta (Uefa Conference League),[VIP] Combo X2 + O1.5,1.55,PENDIENTE_CLV,65.6,🟢 [VALOR ALTO / OPERABLE],800.0,Pendiente,0.0,AUDITANDO
-2026-11-26 22:55:00,401915806,Borac Banja Luka vs Atalanta (Uefa Conference League),[VIP] Ambos Marcan (BTTS),1.59,PENDIENTE_CLV,64.2,🟢 [VALOR ALTO / OPERABLE],900.0,Pendiente,0.0,AUDITANDO
+2026-11-26 22:55:00,401915806,Borac Banja Luka vs Atalanta (Uefa Conference League),[VIP] Ambos Marcan (BTTS),1.59,8.00,64.2,🟢 [VALOR ALTO / OPERABLE],900.0,Pendiente,0.0,AUDITANDO
 2026-11-26 22:55:00,401915806,Borac Banja Luka vs Atalanta (Uefa Conference League),[FREE] Tarjetas > 3.5,1.28,PENDIENTE_CLV,62.6,🟢 [VALOR ALTO / OPERABLE],500.0,Pendiente,0.0,AUDITANDO
-2026-11-26 22:55:00,401915806,Borac Banja Luka vs Atalanta (Uefa Conference League),[FREE] Doble Oport. X2,1.27,PENDIENTE_CLV,74.7,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
+2026-11-26 22:55:00,401915806,Borac Banja Luka vs Atalanta (Uefa Conference League),[FREE] Doble Oport. X2,1.27,1.12,74.7,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
 2026-11-26 22:55:00,401915802,Braga vs KuPS Kuopio (Uefa Conference League),[VIP] Over 2.5 Goles,1.7,PENDIENTE_CLV,60.1,🟢 [VALOR ALTO / OPERABLE],800.0,Pendiente,0.0,AUDITANDO
 2026-11-26 22:55:00,401915802,Braga vs KuPS Kuopio (Uefa Conference League),[VIP] Tarjetas > 3.5,1.74,PENDIENTE_CLV,58.6,🟢 [VALOR ALTO / OPERABLE],700.0,Pendiente,0.0,AUDITANDO
 2026-11-26 22:55:00,401915802,Braga vs KuPS Kuopio (Uefa Conference League),[FREE] Gol en 1T,1.26,PENDIENTE_CLV,75.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
-2026-11-26 22:55:00,401915802,Braga vs KuPS Kuopio (Uefa Conference League),[FREE] Doble Oport. 1X,1.18,PENDIENTE_CLV,84.7,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
-2026-11-26 22:55:00,401915803,CSKA Sofia vs Trabzonspor (Uefa Conference League),[VIP] Ambos Marcan (BTTS),1.5,PENDIENTE_CLV,71.6,🟢 [LUZ VERDE / ALTO VALOR],3700.0,Pendiente,0.0,AUDITANDO
+2026-11-26 22:55:00,401915802,Braga vs KuPS Kuopio (Uefa Conference League),[FREE] Doble Oport. 1X,1.18,1.04,84.7,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
+2026-11-26 22:55:00,401915803,CSKA Sofia vs Trabzonspor (Uefa Conference League),[VIP] Ambos Marcan (BTTS),1.5,5.60,71.6,🟢 [LUZ VERDE / ALTO VALOR],3700.0,Pendiente,0.0,AUDITANDO
 2026-11-26 22:55:00,401915803,CSKA Sofia vs Trabzonspor (Uefa Conference League),[VIP] Combo X2 + O1.5,1.57,PENDIENTE_CLV,64.9,🟢 [VALOR ALTO / OPERABLE],800.0,Pendiente,0.0,AUDITANDO
 2026-11-26 22:55:00,401915803,CSKA Sofia vs Trabzonspor (Uefa Conference League),[FREE] Tarjetas > 3.5,1.28,PENDIENTE_CLV,61.8,🟢 [VALOR ALTO / OPERABLE],500.0,Pendiente,0.0,AUDITANDO
 2026-11-26 22:55:00,401915803,CSKA Sofia vs Trabzonspor (Uefa Conference League),[FREE] Remates Puerta > 5.5,1.28,PENDIENTE_CLV,61.3,🟢 [VALOR ALTO / OPERABLE],500.0,Pendiente,0.0,AUDITANDO
-2026-11-26 22:55:00,401915807,FC Nordsjælland vs Panathinaikos (Uefa Conference League),[VIP] Ambos Marcan (BTTS),1.5,PENDIENTE_CLV,68.1,🟢 [LUZ VERDE / ALTO VALOR],1100.0,Pendiente,0.0,AUDITANDO
+2026-11-26 22:55:00,401915807,FC Nordsjælland vs Panathinaikos (Uefa Conference League),[VIP] Ambos Marcan (BTTS),1.5,3.80,68.1,🟢 [LUZ VERDE / ALTO VALOR],1100.0,Pendiente,0.0,AUDITANDO
 2026-11-26 22:55:00,401915807,FC Nordsjælland vs Panathinaikos (Uefa Conference League),[VIP] Gol en 2do Tiempo,1.38,PENDIENTE_CLV,80.4,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Pendiente,0.0,AUDITANDO
 2026-11-26 22:55:00,401915807,FC Nordsjælland vs Panathinaikos (Uefa Conference League),[FREE] Córners > 8.5,1.28,PENDIENTE_CLV,68.0,🟢 [VALOR ALTO / OPERABLE],500.0,Pendiente,0.0,AUDITANDO
 2026-11-26 22:55:00,401915807,FC Nordsjælland vs Panathinaikos (Uefa Conference League),[FREE] Tarjetas > 2.5,1.28,PENDIENTE_CLV,68.7,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
@@ -3855,19 +3855,19 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-11-26 22:55:00,401915804,KAA Gent vs Red Star Belgrade (Uefa Conference League),[VIP] Tarjetas > 3.5,1.85,PENDIENTE_CLV,55.3,🟡 [MODERADO / VIGILAR],500.0,Pendiente,0.0,AUDITANDO
 2026-11-26 22:55:00,401915804,KAA Gent vs Red Star Belgrade (Uefa Conference League),[FREE] Gol en 1T,1.28,PENDIENTE_CLV,73.7,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
 2026-11-26 22:55:00,401915804,KAA Gent vs Red Star Belgrade (Uefa Conference League),[FREE] Remates Puerta > 4.5,1.28,PENDIENTE_CLV,60.4,🟢 [VALOR ALTO / OPERABLE],500.0,Pendiente,0.0,AUDITANDO
-2026-11-26 22:55:00,401915801,SC Freiburg vs FC Twente (Uefa Conference League),[VIP] Ambos Marcan (BTTS),1.5,PENDIENTE_CLV,76.5,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Pendiente,0.0,AUDITANDO
+2026-11-26 22:55:00,401915801,SC Freiburg vs FC Twente (Uefa Conference League),[VIP] Ambos Marcan (BTTS),1.5,6.00,76.5,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Pendiente,0.0,AUDITANDO
 2026-11-26 22:55:00,401915801,SC Freiburg vs FC Twente (Uefa Conference League),[VIP] Total Asiático > 2.25,1.53,PENDIENTE_CLV,66.5,🟢 [VALOR ALTO / OPERABLE],800.0,Pendiente,0.0,AUDITANDO
 2026-11-26 22:55:00,401915801,SC Freiburg vs FC Twente (Uefa Conference League),[FREE] Gol en 2do Tiempo,1.18,PENDIENTE_CLV,83.1,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
 2026-11-26 22:55:00,401915801,SC Freiburg vs FC Twente (Uefa Conference League),[FREE] Goles FC Twente > 0.5,1.2,PENDIENTE_CLV,78.4,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
 2026-11-27 01:55:00,401841329,São Paulo vs Remo (Brasil (Serie A)),[VIP] Combo 1X + O1.5,1.5,PENDIENTE_CLV,72.5,🟢 [LUZ VERDE / ALTO VALOR],4400.0,Pendiente,0.0,AUDITANDO
 2026-11-27 01:55:00,401841329,São Paulo vs Remo (Brasil (Serie A)),[VIP] Córners > 8.5,1.56,PENDIENTE_CLV,65.5,🟢 [VALOR ALTO / OPERABLE],1000.0,Pendiente,0.0,AUDITANDO
 2026-11-27 01:55:00,401841329,São Paulo vs Remo (Brasil (Serie A)),[FREE] Over 1.5 Goles,1.18,PENDIENTE_CLV,79.6,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
-2026-11-27 01:55:00,401841329,São Paulo vs Remo (Brasil (Serie A)),[FREE] Doble Oport. 1X,1.18,PENDIENTE_CLV,84.6,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
-2026-11-27 03:55:00,401931982,Pachuca vs Guadalajara (México (Liga Mx)),[VIP] Ambos Marcan (BTTS),1.52,PENDIENTE_CLV,67.0,🟢 [VALOR ALTO / OPERABLE],900.0,Pendiente,0.0,AUDITANDO
+2026-11-27 01:55:00,401841329,São Paulo vs Remo (Brasil (Serie A)),[FREE] Doble Oport. 1X,1.18,1.08,84.6,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
+2026-11-27 03:55:00,401931982,Pachuca vs Guadalajara (México (Liga Mx)),[VIP] Ambos Marcan (BTTS),1.52,1.60,67.0,🟢 [VALOR ALTO / OPERABLE],900.0,Pendiente,0.0,AUDITANDO
 2026-11-27 03:55:00,401931982,Pachuca vs Guadalajara (México (Liga Mx)),[VIP] Gol en 2do Tiempo,1.38,PENDIENTE_CLV,81.2,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Pendiente,0.0,AUDITANDO
 2026-11-27 03:55:00,401931982,Pachuca vs Guadalajara (México (Liga Mx)),[FREE] Córners > 8.5,1.25,PENDIENTE_CLV,76.2,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
 2026-11-27 03:55:00,401931982,Pachuca vs Guadalajara (México (Liga Mx)),[FREE] Tarjetas > 2.5,1.28,PENDIENTE_CLV,61.6,🟢 [VALOR ALTO / OPERABLE],500.0,Pendiente,0.0,AUDITANDO
-2026-11-27 06:05:00,401931995,León vs Cruz Azul (México (Liga Mx)),[VIP] Ambos Marcan (BTTS),1.5,PENDIENTE_CLV,70.8,🟢 [LUZ VERDE / ALTO VALOR],3100.0,Pendiente,0.0,AUDITANDO
+2026-11-27 06:05:00,401931995,León vs Cruz Azul (México (Liga Mx)),[VIP] Ambos Marcan (BTTS),1.5,3.35,70.8,🟢 [LUZ VERDE / ALTO VALOR],3100.0,Pendiente,0.0,AUDITANDO
 2026-11-27 06:05:00,401931995,León vs Cruz Azul (México (Liga Mx)),[VIP] Gol en 2do Tiempo,1.38,PENDIENTE_CLV,81.6,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Pendiente,0.0,AUDITANDO
 2026-11-27 06:05:00,401931995,León vs Cruz Azul (México (Liga Mx)),[FREE] Córners Cruz Azul > 4.5,1.28,PENDIENTE_CLV,71.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
 2026-11-27 06:05:00,401931995,León vs Cruz Azul (México (Liga Mx)),[FREE] Tarjetas > 2.5,1.28,PENDIENTE_CLV,70.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
