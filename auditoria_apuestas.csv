@@ -3637,9 +3637,9 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-11-25 20:40:00,401915378,Sabah FK vs Barcelona (Uefa Champions League),[FREE] Gol en 1T,1.18,1.18,79.1,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 1-4
 2026-11-25 20:40:00,401915378,Sabah FK vs Barcelona (Uefa Champions League),[FREE] Remates Puerta > 6.5,1.28,1.28,67.6,🟢 [VALOR ALTO / OPERABLE],500.0,Ganada,640.0,AUDITADA FT 1-4
 2026-11-25 20:40:00,401915293,Slavia Prague vs Villarreal (Uefa Champions League),[VIP] Ambos Marcan (BTTS),1.5,1.50,71.8,🟢 [LUZ VERDE / ALTO VALOR],3800.0,Perdida,0.0,AUDITADA FT 0-1
-2026-11-25 20:40:00,401915293,Slavia Prague vs Villarreal (Uefa Champions League),[VIP] Faltas Totales > 21.5,1.67,PENDIENTE_CLV,61.0,🟢 [VALOR ALTO / OPERABLE],700.0,Pendiente,0.0,AUDITANDO
+2026-11-25 20:40:00,401915293,Slavia Prague vs Villarreal (Uefa Champions League),[VIP] Faltas Totales > 21.5,1.67,1.67,61.0,🟢 [VALOR ALTO / OPERABLE],700.0,Ganada,1169.0,AUDITADA FT 0-1
 2026-11-25 20:40:00,401915293,Slavia Prague vs Villarreal (Uefa Champions League),[FREE] Over 1.5 Goles,1.18,1.18,81.9,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 0-1
-2026-11-25 20:40:00,401915293,Slavia Prague vs Villarreal (Uefa Champions League),[FREE] Córners > 7.5,1.28,PENDIENTE_CLV,66.9,🟢 [VALOR ALTO / OPERABLE],500.0,Pendiente,0.0,AUDITANDO
+2026-11-25 20:40:00,401915293,Slavia Prague vs Villarreal (Uefa Champions League),[FREE] Córners > 7.5,1.28,1.28,66.9,🟢 [VALOR ALTO / OPERABLE],500.0,Ganada,640.0,AUDITADA FT 0-1
 2026-11-25 21:10:00,401912746,Al Taawoun vs Al-Nahda Club (Copa Asiática),[VIP] Córners Al Taawoun > 4.5,1.38,1.38,84.9,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Perdida,0.0,AUDITADA FT 0-0
 2026-11-25 21:10:00,401912746,Al Taawoun vs Al-Nahda Club (Copa Asiática),[VIP] Ambos Marcan (BTTS),1.58,1.58,64.5,🟢 [VALOR ALTO / OPERABLE],800.0,Perdida,0.0,AUDITADA FT 0-0
 2026-11-25 21:10:00,401912746,Al Taawoun vs Al-Nahda Club (Copa Asiática),[FREE] Sin Empate Al Taawoun,1.16,1.16,77.3,🟢 [LUZ VERDE / ALTO VALOR],500.0,Mitad Devuelta,500.0,AUDITADA FT 0-0
@@ -3649,9 +3649,9 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-11-25 22:55:00,401915291,Atlético Madrid vs Viking FK (Uefa Champions League),[FREE] Gol en 1T,1.27,1.27,75.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,635.0,AUDITADA FT 2-0
 2026-11-25 22:55:00,401915291,Atlético Madrid vs Viking FK (Uefa Champions League),[FREE] Córners Atlético Madrid > 4.5,1.18,PENDIENTE_CLV,78.3,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
 2026-11-25 22:55:00,401915292,Club Brugge vs Liverpool (Uefa Champions League),[VIP] Total Asiático > 2.25,1.59,1.59,64.1,🟢 [VALOR ALTO / OPERABLE],800.0,Ganada,1272.0,AUDITADA FT 0-3
-2026-11-25 22:55:00,401915292,Club Brugge vs Liverpool (Uefa Champions League),[VIP] Remates Puerta > 8.5,1.68,PENDIENTE_CLV,60.8,🟢 [VALOR ALTO / OPERABLE],800.0,Pendiente,0.0,AUDITANDO
+2026-11-25 22:55:00,401915292,Club Brugge vs Liverpool (Uefa Champions League),[VIP] Remates Puerta > 8.5,1.68,1.68,60.8,🟢 [VALOR ALTO / OPERABLE],800.0,Ganada,1344.0,AUDITADA FT 0-3
 2026-11-25 22:55:00,401915292,Club Brugge vs Liverpool (Uefa Champions League),[FREE] Gol en 2do Tiempo,1.18,1.18,82.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 0-3
-2026-11-25 22:55:00,401915292,Club Brugge vs Liverpool (Uefa Champions League),[FREE] Córners Club Brugge > 4.5,1.18,PENDIENTE_CLV,86.5,🟢 [LUZ VERDE / ALTO VALOR],2900.0,Pendiente,0.0,AUDITANDO
+2026-11-25 22:55:00,401915292,Club Brugge vs Liverpool (Uefa Champions League),[FREE] Córners Club Brugge > 4.5,1.18,1.18,86.5,🟢 [LUZ VERDE / ALTO VALOR],2900.0,Ganada,3422.0,AUDITADA FT 0-3
 2026-11-25 22:55:00,401915376,Internazionale vs VfB Stuttgart (Uefa Champions League),[VIP] Over 2.5 Goles,1.64,1.64,62.2,🟢 [VALOR ALTO / OPERABLE],800.0,Perdida,0.0,AUDITADA FT 2-0
 2026-11-25 22:55:00,401915376,Internazionale vs VfB Stuttgart (Uefa Champions League),[VIP] Ambos Marcan (BTTS),7.0,7.00,73.6,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Perdida,0.0,AUDITADA FT 2-0
 2026-11-25 22:55:00,401915376,Internazionale vs VfB Stuttgart (Uefa Champions League),[FREE] Remates Puerta > 6.5,1.25,PENDIENTE_CLV,76.1,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
@@ -3696,16 +3696,16 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-11-26 06:05:00,401931998,Monterrey vs América (México (Liga Mx)),[VIP] Faltas Totales > 21.5,1.61,PENDIENTE_CLV,63.5,🟢 [VALOR ALTO / OPERABLE],900.0,Pendiente,0.0,AUDITANDO
 2026-11-26 06:05:00,401931998,Monterrey vs América (México (Liga Mx)),[FREE] Gol en 2do Tiempo,1.18,1.18,82.8,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 0-0
 2026-11-26 06:05:00,401931998,Monterrey vs América (México (Liga Mx)),[FREE] Córners > 8.5,1.28,PENDIENTE_CLV,71.1,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
-2026-11-26 12:55:00,401912744,Gangwon FC vs Kitchee SC (Copa Asiática),[VIP] Combo 1X + U4.5,1.5,PENDIENTE_CLV,77.7,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Pendiente,0.0,AUDITANDO
+2026-11-26 12:55:00,401912744,Gangwon FC vs Kitchee SC (Copa Asiática),[VIP] Combo 1X + U4.5,1.5,1.50,77.7,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Perdida,0.0,AUDITADA FT 3-2
 2026-11-26 12:55:00,401912744,Gangwon FC vs Kitchee SC (Copa Asiática),[VIP] Córners > 8.5,1.48,PENDIENTE_CLV,68.7,🟢 [LUZ VERDE / ALTO VALOR],900.0,Pendiente,0.0,AUDITANDO
-2026-11-26 12:55:00,401912744,Gangwon FC vs Kitchee SC (Copa Asiática),[FREE] Doble Oport. 1X,1.18,PENDIENTE_CLV,84.6,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
-2026-11-26 12:55:00,401912744,Gangwon FC vs Kitchee SC (Copa Asiática),[FREE] Gol en 2do Tiempo,1.28,PENDIENTE_CLV,63.5,🟢 [VALOR ALTO / OPERABLE],500.0,Pendiente,0.0,AUDITANDO
-2026-11-26 12:55:00,401912743,Kuching City vs Phnom Penh Crown FC (Copa Asiática),[VIP] Ambos Marcan (BTTS),1.63,PENDIENTE_CLV,62.7,🟢 [VALOR ALTO / OPERABLE],900.0,Pendiente,0.0,AUDITANDO
-2026-11-26 12:55:00,401912743,Kuching City vs Phnom Penh Crown FC (Copa Asiática),[VIP] Gol en 2do Tiempo,1.38,PENDIENTE_CLV,80.3,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Pendiente,0.0,AUDITANDO
-2026-11-26 12:55:00,401912743,Kuching City vs Phnom Penh Crown FC (Copa Asiática),[FREE] Doble Oport. 1X,1.26,PENDIENTE_CLV,75.7,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
+2026-11-26 12:55:00,401912744,Gangwon FC vs Kitchee SC (Copa Asiática),[FREE] Doble Oport. 1X,1.18,1.18,84.6,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 3-2
+2026-11-26 12:55:00,401912744,Gangwon FC vs Kitchee SC (Copa Asiática),[FREE] Gol en 2do Tiempo,1.28,1.28,63.5,🟢 [VALOR ALTO / OPERABLE],500.0,Ganada,640.0,AUDITADA FT 3-2
+2026-11-26 12:55:00,401912743,Kuching City vs Phnom Penh Crown FC (Copa Asiática),[VIP] Ambos Marcan (BTTS),1.63,1.63,62.7,🟢 [VALOR ALTO / OPERABLE],900.0,Perdida,0.0,AUDITADA FT 3-0
+2026-11-26 12:55:00,401912743,Kuching City vs Phnom Penh Crown FC (Copa Asiática),[VIP] Gol en 2do Tiempo,1.38,1.38,80.3,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,6900.0,AUDITADA FT 3-0
+2026-11-26 12:55:00,401912743,Kuching City vs Phnom Penh Crown FC (Copa Asiática),[FREE] Doble Oport. 1X,1.26,1.26,75.7,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,630.0,AUDITADA FT 3-0
 2026-11-26 12:55:00,401912743,Kuching City vs Phnom Penh Crown FC (Copa Asiática),[FREE] Córners > 7.5,1.28,PENDIENTE_CLV,67.4,🟢 [VALOR ALTO / OPERABLE],500.0,Pendiente,0.0,AUDITANDO
-2026-11-26 12:55:00,401912745,Tampines Rovers FC vs Shanghai Shenhua FC (Copa Asiática),[VIP] Goles Shanghai She > 1.5,1.41,PENDIENTE_CLV,66.6,🟢 [VALOR ALTO / OPERABLE],500.0,Pendiente,0.0,AUDITANDO
-2026-11-26 12:55:00,401912745,Tampines Rovers FC vs Shanghai Shenhua FC (Copa Asiática),[VIP] Over 2.5 Goles,1.61,PENDIENTE_CLV,63.5,🟢 [VALOR ALTO / OPERABLE],900.0,Pendiente,0.0,AUDITANDO
+2026-11-26 12:55:00,401912745,Tampines Rovers FC vs Shanghai Shenhua FC (Copa Asiática),[VIP] Goles Shanghai She > 1.5,1.41,1.41,66.6,🟢 [VALOR ALTO / OPERABLE],500.0,Ganada,705.0,AUDITADA FT 1-7
+2026-11-26 12:55:00,401912745,Tampines Rovers FC vs Shanghai Shenhua FC (Copa Asiática),[VIP] Over 2.5 Goles,1.61,1.61,63.5,🟢 [VALOR ALTO / OPERABLE],900.0,Ganada,1449.0,AUDITADA FT 1-7
 2026-11-26 12:55:00,401912745,Tampines Rovers FC vs Shanghai Shenhua FC (Copa Asiática),[FREE] Córners Shanghai Shenhu > 4.5,1.25,PENDIENTE_CLV,76.3,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
 2026-11-26 15:10:00,401912742,BG Pathum United vs Lion City Sailors FC (Copa Asiática),[VIP] Ambos Marcan (BTTS),1.5,PENDIENTE_CLV,69.2,🟢 [LUZ VERDE / ALTO VALOR],1900.0,Pendiente,0.0,AUDITANDO
 2026-11-26 15:10:00,401912742,BG Pathum United vs Lion City Sailors FC (Copa Asiática),[VIP] Gol en 1T,1.38,PENDIENTE_CLV,79.2,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Pendiente,0.0,AUDITANDO
