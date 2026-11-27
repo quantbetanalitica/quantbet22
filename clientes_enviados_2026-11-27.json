@@ -1,0 +1,274 @@
+{
+  "fecha": "2026-11-27",
+  "tarjetas_clientes": [
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "401884720",
+      "hora": "20:30",
+      "partido": "Werder Bremen vs Borussia Mönchengladbach (Alemania (Bundesliga))",
+      "selecciones": [
+        {
+          "mercado": "Gol en 2do Tiempo",
+          "prob": 79.8,
+          "cuota": 1.4
+        },
+        {
+          "mercado": "Ambos Marcan (BTTS)",
+          "prob": 70.6,
+          "cuota": 1.46
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "401933727",
+      "hora": "02:00",
+      "partido": "Columbus Crew vs Inter Miami CF (Usa (Mls))",
+      "selecciones": [
+        {
+          "mercado": "Goles Inter Miami  > 0.5",
+          "prob": 72.1,
+          "cuota": 1.46
+        },
+        {
+          "mercado": "Gol en 2do Tiempo",
+          "prob": 82.7,
+          "cuota": 1.4
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "401875536",
+      "hora": "20:00",
+      "partido": "FC Groningen vs Willem II (Países Bajos (Eredivisie))",
+      "selecciones": [
+        {
+          "mercado": "Ambos Marcan (BTTS)",
+          "prob": 62.4,
+          "cuota": 1.6
+        },
+        {
+          "mercado": "Combo 1X + O1.5",
+          "prob": 66.5,
+          "cuota": 1.53
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "401876392",
+      "hora": "20:45",
+      "partido": "Brest vs Paris FC (Francia (Ligue 1))",
+      "selecciones": [
+        {
+          "mercado": "Gol en 1T",
+          "prob": 74.1,
+          "cuota": 1.4
+        },
+        {
+          "mercado": "Ambos Marcan (BTTS)",
+          "prob": 65.1,
+          "cuota": 1.61
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "FREE",
+      "id_partido": "401936054",
+      "hora": "02:40",
+      "partido": "Millonarios vs América de Cali (Colombia (Primera A))",
+      "selecciones": [
+        {
+          "mercado": "Doble Oport. 1X",
+          "prob": 79.3,
+          "cuota": 1.2
+        },
+        {
+          "mercado": "Goles Millonarios > 0.5",
+          "prob": 74.0,
+          "cuota": 1.34
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "FREE",
+      "id_partido": "401879225",
+      "hora": "21:00",
+      "partido": "Nottingham Forest vs Chelsea (Inglaterra (Premier))",
+      "selecciones": [
+        {
+          "mercado": "Total Menos de 3.5 (Under)",
+          "prob": 72.4,
+          "cuota": 1.37
+        },
+        {
+          "mercado": "Remates Puerta > 5.5",
+          "prob": 70.1,
+          "cuota": 1.38
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "FREE",
+      "id_partido": "401841337",
+      "hora": "00:00",
+      "partido": "Fluminense vs Cruzeiro (Brasil (Serie A))",
+      "selecciones": [
+        {
+          "mercado": "Gol en 1T",
+          "prob": 73.4,
+          "cuota": 1.35
+        },
+        {
+          "mercado": "Tarjetas > 2.5",
+          "prob": 74.9,
+          "cuota": 1.31
+        }
+      ]
+    }
+  ],
+  "combinada_doble": {
+    "selecciones": [
+      {
+        "partido": "Fluminense vs Cruzeiro",
+        "hora": "00:00",
+        "mercado": "Gol en 2do Tiempo",
+        "prob": 83.066901698487,
+        "cuota": 1.36,
+        "score_elite": 8
+      },
+      {
+        "partido": "Levante vs Racing Santander",
+        "hora": "21:00",
+        "mercado": "Doble Oport. 1X",
+        "prob": 82.97621771045915,
+        "cuota": 1.36,
+        "score_elite": 38
+      }
+    ],
+    "cuota_total": 1.85,
+    "prob_directa": 68.9,
+    "prob_protegida": 83.4
+  },
+  "combinada_sniper": {
+    "selecciones": [
+      {
+        "partido": "Werder Bremen vs Borussia Mönchengladbach",
+        "hora": "20:30",
+        "mercado": "Over 1.5 Goles",
+        "prob": 80.9555606160333,
+        "cuota": 1.44,
+        "score_elite": 18
+      },
+      {
+        "partido": "Levante vs Racing Santander",
+        "hora": "21:00",
+        "mercado": "Gol en 2do Tiempo",
+        "prob": 80.55732901410417,
+        "cuota": 1.44,
+        "score_elite": 38
+      },
+      {
+        "partido": "Brest vs Paris FC",
+        "hora": "20:45",
+        "mercado": "Over 1.5 Goles",
+        "prob": 78.10271030171499,
+        "cuota": 1.44,
+        "score_elite": 18
+      }
+    ],
+    "cuota_total": 2.99,
+    "prob_directa": 50.9,
+    "prob_protegida": 74.9
+  },
+  "combinadas_exclusivas_pro": [
+    {
+      "clave": "cuadruple_elite_pro",
+      "titulo": "CUÁDRUPLE ÉLITE PRO",
+      "subtitulo": "EXCLUSIVO PRO: 4 PARTIDOS DE ALTA CONFLUENCIA",
+      "sufijo": "CUADRUPLE_ELITE_PRO",
+      "stake": "Invertir el 1% de tu capital (Alto Retorno)",
+      "selecciones": [
+        {
+          "partido": "Fluminense vs Cruzeiro",
+          "hora": "00:00",
+          "mercado": "Over 1.5 Goles",
+          "prob": 81.59487433795226,
+          "cuota": 1.4,
+          "score_elite": 8,
+          "nuevo": true
+        },
+        {
+          "partido": "Al Qadsiah vs Al Fayha",
+          "hora": "15:20",
+          "mercado": "Doble Oport. 1X",
+          "prob": 84.80627071712128,
+          "cuota": 1.4,
+          "score_elite": 0,
+          "nuevo": true
+        },
+        {
+          "partido": "Columbus Crew vs Inter Miami CF",
+          "hora": "02:00",
+          "mercado": "Over 1.5 Goles",
+          "prob": 81.89584803135101,
+          "cuota": 1.4,
+          "score_elite": 0,
+          "nuevo": true
+        },
+        {
+          "partido": "FC Groningen vs Willem II",
+          "hora": "20:00",
+          "mercado": "Over 1.5 Goles",
+          "prob": 81.55204857813861,
+          "cuota": 1.4,
+          "score_elite": 0,
+          "nuevo": true
+        }
+      ],
+      "cuota_total": 3.84,
+      "prob_directa": 46.2,
+      "prob_protegida": 72.2
+    },
+    {
+      "clave": "especial_valor_pro",
+      "titulo": "ESPECIAL VALOR PRO",
+      "subtitulo": "EXCLUSIVO PRO: TÁCTICA, FRICCIÓN Y EV+ (3 PARTIDOS)",
+      "sufijo": "VALOR_TACTICO_PRO",
+      "stake": "Invertir del 1% al 2% de tu capital (Valor EV+)",
+      "selecciones": [
+        {
+          "partido": "Levante vs Racing Santander",
+          "hora": "21:00",
+          "mercado": "Over 1.5 Goles",
+          "prob": 82.20146607937161,
+          "cuota": 1.4,
+          "score_elite": 38,
+          "nuevo": true
+        },
+        {
+          "partido": "Fluminense vs Cruzeiro",
+          "hora": "00:00",
+          "mercado": "Over 1.5 Goles",
+          "prob": 81.59487433795226,
+          "cuota": 1.4,
+          "score_elite": 8,
+          "nuevo": true
+        },
+        {
+          "partido": "Werder Bremen vs Borussia Mönchengladbach",
+          "hora": "20:30",
+          "mercado": "Ambos Marcan (BTTS)",
+          "prob": 70.61876031568885,
+          "cuota": 1.6,
+          "score_elite": 18,
+          "nuevo": true
+        }
+      ],
+      "cuota_total": 3.14,
+      "prob_directa": 47.4,
+      "prob_protegida": 71.4
+    }
+  ]
+}
