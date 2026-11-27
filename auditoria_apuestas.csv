@@ -3717,12 +3717,12 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-11-27 22:40:00,401875004,Venezia vs Bologna (Italia (Serie A)),[FREE] Goles Bologna > 0.5,1.28,PENDIENTE_CLV,77.4,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
 2026-11-27 22:40:00,401875004,Venezia vs Bologna (Italia (Serie A)),[FREE] Remates Puerta > 5.5,1.38,PENDIENTE_CLV,65.0,🟢 [VALOR ALTO / OPERABLE],500.0,Pendiente,0.0,AUDITANDO
 2026-11-27 22:40:00,401876392,Brest vs Paris FC (Francia (Ligue 1)),[VIP] Gol en 1T,1.4,PENDIENTE_CLV,74.1,🟢 [LUZ VERDE / ALTO VALOR],2300.0,Pendiente,0.0,AUDITANDO
-2026-11-27 22:40:00,401876392,Brest vs Paris FC (Francia (Ligue 1)),[VIP] Ambos Marcan (BTTS),1.61,PENDIENTE_CLV,65.1,🟢 [VALOR ALTO / OPERABLE],2000.0,Pendiente,0.0,AUDITANDO
+2026-11-27 22:40:00,401876392,Brest vs Paris FC (Francia (Ligue 1)),[VIP] Ambos Marcan (BTTS),1.61,1.68,65.1,🟢 [VALOR ALTO / OPERABLE],2000.0,Pendiente,0.0,AUDITANDO
 2026-11-27 22:40:00,401876392,Brest vs Paris FC (Francia (Ligue 1)),[FREE] Over 1.5 Goles,1.26,PENDIENTE_CLV,78.1,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
 2026-11-27 22:40:00,401876392,Brest vs Paris FC (Francia (Ligue 1)),[FREE] Tarjetas > 2.5,1.38,PENDIENTE_CLV,63.9,🟢 [VALOR ALTO / OPERABLE],500.0,Pendiente,0.0,AUDITANDO
 2026-11-27 22:55:00,401882791,Levante vs Racing Santander (España (Laliga)),[VIP] Combo 1X + O1.5,1.5,PENDIENTE_CLV,71.8,🟢 [LUZ VERDE / ALTO VALOR],3800.0,Pendiente,0.0,AUDITANDO
 2026-11-27 22:55:00,401882791,Levante vs Racing Santander (España (Laliga)),[FREE] Over 1.5 Goles,1.26,PENDIENTE_CLV,82.2,🟢 [LUZ VERDE / ALTO VALOR],3400.0,Pendiente,0.0,AUDITANDO
-2026-11-27 22:55:00,401882791,Levante vs Racing Santander (España (Laliga)),[FREE] Sin Empate Levante,1.5,PENDIENTE_CLV,72.7,🟢 [LUZ VERDE / ALTO VALOR],4500.0,Pendiente,0.0,AUDITANDO
+2026-11-27 22:55:00,401882791,Levante vs Racing Santander (España (Laliga)),[FREE] Sin Empate Levante,1.5,1.50,72.7,🟢 [LUZ VERDE / ALTO VALOR],4500.0,Pendiente,0.0,AUDITANDO
 2026-11-27 22:55:00,401879225,Nottingham Forest vs Chelsea (Inglaterra (Premier)),[FREE] Total Menos de 3.5 (Under),1.37,PENDIENTE_CLV,72.4,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
 2026-11-27 22:55:00,401879225,Nottingham Forest vs Chelsea (Inglaterra (Premier)),[FREE] Remates Puerta > 5.5,1.38,PENDIENTE_CLV,70.1,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
 2026-11-27 23:10:00,401885389,Maritimo vs C.D. Nacional (Portugal (Primeira Liga)),[VIP] Gol en 2do Tiempo,1.4,PENDIENTE_CLV,76.6,🟢 [LUZ VERDE / ALTO VALOR],4500.0,Pendiente,0.0,AUDITANDO
