@@ -157,10 +157,6 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-10-24 09:07:04,1575194,Borussia Dortmund vs Eintracht Frankfurt (Bundesliga),[VIP] Córners > 8.5,1.51,1.51,68.0,🟢 [LUZ VERDE / ALTO VALOR],1300.0,Ganada,1963.0,AUDITADA FT 1-0
 2026-10-24 09:07:04,1570425,Atletico Madrid vs Deportivo La Coruna (España - LaLiga),[VIP] Córners > 8.5,1.52,1.52,68.0,🟢 [LUZ VERDE / ALTO VALOR],1600.0,Ganada,2432.0,AUDITADA FT 1-0
 2026-10-24 09:07:04,1570425,Atletico Madrid vs Deportivo La Coruna (España - LaLiga),[VIP] Total Asiático > 2.25,1.56,1.56,68.0,🟢 [LUZ VERDE / ALTO VALOR],2700.0,Perdida,0.0,AUDITADA FT 1-0
-2026-10-24 09:22:15,1584441,Eyüpspor vs Kasımpaşa (Turquía - Süper Lig),[VIP] Total Asiático > 2.25,1.52,1.52,69.0,🟢 [LUZ VERDE / ALTO VALOR],2400.0,Perdida,0.0,AUDITADA FT 0-1
-2026-10-24 09:22:15,1584441,Eyüpspor vs Kasımpaşa (Turquía - Süper Lig),[VIP] Remates Puerta > 6.5,1.48,1.48,68.9,🟢 [LUZ VERDE / ALTO VALOR],1000.0,Ganada,1480.0,AUDITADA FT 0-1
-2026-10-24 09:22:15,1584441,Eyüpspor vs Kasımpaşa (Turquía - Süper Lig),[FREE] Over 1.5 Goles,1.16,1.16,84.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 0-1
-2026-10-24 09:22:15,1584441,Eyüpspor vs Kasımpaşa (Turquía - Süper Lig),[FREE] Remates Puerta > 5.5,1.16,1.16,81.1,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,580.0,AUDITADA FT 0-1
 2026-10-24 09:22:23,1570429,Rayo Vallecano vs Elche (España - LaLiga),[VIP] Faltas Totales > 22.5,1.42,1.42,75.7,🟢 [LUZ VERDE / ALTO VALOR],4500.0,Ganada,6390.0,AUDITADA FT 0-3
 2026-10-24 09:22:23,1570429,Rayo Vallecano vs Elche (España - LaLiga),[VIP] Over 1.5 Goles,1.46,1.46,70.0,🟢 [LUZ VERDE / ALTO VALOR],1200.0,Ganada,1752.0,AUDITADA FT 0-3
 2026-10-24 09:22:23,1570429,Rayo Vallecano vs Elche (España - LaLiga),[FREE] Faltas Totales > 21.5,1.16,1.16,81.7,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,580.0,AUDITADA FT 0-3
@@ -169,10 +165,6 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-10-24 09:22:29,1550158,Cagliari vs Bologna (Italia - Serie A),[VIP] Gol en 1T,1.48,1.48,68.8,🟢 [LUZ VERDE / ALTO VALOR],1000.0,Perdida,0.0,AUDITADA FT 0-2
 2026-10-24 09:22:29,1550158,Cagliari vs Bologna (Italia - Serie A),[FREE] Faltas Totales > 21.5,1.16,1.16,84.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,580.0,AUDITADA FT 0-2
 2026-10-24 09:22:29,1550158,Cagliari vs Bologna (Italia - Serie A),[FREE] Gol en 2do Tiempo,1.16,1.16,81.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,580.0,AUDITADA FT 0-2
-2026-10-24 09:22:37,1584443,Gaziantep FK vs Erzurumspor FK (Turquía - Süper Lig),[VIP] Tarjetas > 3.5,1.67,1.67,68.0,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,8350.0,AUDITADA FT 1-3
-2026-10-24 09:22:37,1584443,Gaziantep FK vs Erzurumspor FK (Turquía - Süper Lig),[VIP] Doble Oport. 1X,1.38,1.38,88.4,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Perdida,0.0,AUDITADA FT 1-3
-2026-10-24 09:22:37,1584443,Gaziantep FK vs Erzurumspor FK (Turquía - Süper Lig),[FREE] Faltas Totales > 21.5,1.28,1.28,66.4,🟢 [VALOR ALTO / OPERABLE],500.0,Ganada,640.0,AUDITADA FT 1-3
-2026-10-24 09:22:37,1584443,Gaziantep FK vs Erzurumspor FK (Turquía - Süper Lig),[FREE] Total Menos de 2.5 (Under),1.28,1.28,63.2,🟢 [VALOR ALTO / OPERABLE],500.0,Perdida,0.0,AUDITADA FT 1-3
 2026-10-24 09:22:43,1575195,RB Leipzig vs SV Elversberg (Bundesliga),[VIP] Remates Puerta > 6.5,1.48,1.48,69.1,🟢 [LUZ VERDE / ALTO VALOR],1200.0,Ganada,1776.0,AUDITADA FT 4-0
 2026-10-24 09:22:43,1575195,RB Leipzig vs SV Elversberg (Bundesliga),[VIP] Total Asiático > 2.25,1.54,1.54,68.0,🟢 [LUZ VERDE / ALTO VALOR],2200.0,Ganada,3388.0,AUDITADA FT 4-0
 2026-10-24 09:22:43,1575195,RB Leipzig vs SV Elversberg (Bundesliga),[FREE] Gol en 2do Tiempo,1.16,1.16,82.8,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,580.0,AUDITADA FT 4-0
@@ -221,10 +213,6 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-10-24 09:24:03,1603067,Al Kholood vs Al-Ettifaq (Saudi Pro League),[VIP] Córners > 8.5,1.67,1.67,68.0,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,8350.0,AUDITADA FT 0-3
 2026-10-24 09:24:03,1603067,Al Kholood vs Al-Ettifaq (Saudi Pro League),[FREE] Gol en 2do Tiempo,1.26,1.26,74.9,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,630.0,AUDITADA FT 0-3
 2026-10-24 09:24:03,1603067,Al Kholood vs Al-Ettifaq (Saudi Pro League),[FREE] Córners > 7.5,1.28,1.28,73.2,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,640.0,AUDITADA FT 0-3
-2026-10-24 09:24:11,1584447,Samsunspor vs Amed (Turquía - Süper Lig),[VIP] Gol en 1T,1.49,1.49,68.5,🟢 [LUZ VERDE / ALTO VALOR],1100.0,Ganada,1639.0,AUDITADA FT 1-2
-2026-10-24 09:24:11,1584447,Samsunspor vs Amed (Turquía - Süper Lig),[VIP] Córners > 8.5,1.6,1.60,68.0,🟢 [LUZ VERDE / ALTO VALOR],3700.0,Ganada,5920.0,AUDITADA FT 1-2
-2026-10-24 09:24:11,1584447,Samsunspor vs Amed (Turquía - Süper Lig),[FREE] Gol en 2do Tiempo,1.21,1.21,77.8,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,605.0,AUDITADA FT 1-2
-2026-10-24 09:24:11,1584447,Samsunspor vs Amed (Turquía - Süper Lig),[FREE] Córners > 7.5,1.25,1.25,75.4,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,625.0,AUDITADA FT 1-2
 2026-10-24 09:24:18,1558658,OH Leuven vs Lommel United (Bélgica - Pro League),[VIP] Tarjetas > 3.5,1.49,1.49,68.6,🟢 [LUZ VERDE / ALTO VALOR],1100.0,Ganada,1639.0,AUDITADA FT 2-2
 2026-10-24 09:24:18,1558658,OH Leuven vs Lommel United (Bélgica - Pro League),[VIP] Over 1.5 Goles,1.49,1.49,68.4,🟢 [LUZ VERDE / ALTO VALOR],1000.0,Ganada,1490.0,AUDITADA FT 2-2
 2026-10-24 09:24:18,1558658,OH Leuven vs Lommel United (Bélgica - Pro League),[FREE] Gol en 2do Tiempo,1.28,1.28,72.3,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,640.0,AUDITADA FT 2-2
@@ -369,10 +357,6 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-10-25 09:04:38,1558655,Genk vs Standard Liege (Bélgica - Pro League),[VIP] Córners > 8.5,1.63,1.63,68.0,🟢 [LUZ VERDE / ALTO VALOR],4300.0,Ganada,7009.0,AUDITADA FT 2-1
 2026-10-25 09:04:38,1558655,Genk vs Standard Liege (Bélgica - Pro League),[FREE] Remates Puerta > 5.5,1.16,1.16,84.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,580.0,AUDITADA FT 2-1
 2026-10-25 09:04:38,1558655,Genk vs Standard Liege (Bélgica - Pro League),[FREE] Gol en 2do Tiempo,1.21,1.21,77.8,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,605.0,AUDITADA FT 2-1
-2026-10-25 09:04:47,1584445,Konyaspor vs Gençlerbirliği S.K. (Turquía - Süper Lig),[VIP] Tarjetas > 3.5,1.51,1.51,68.0,🟢 [LUZ VERDE / ALTO VALOR],1300.0,Ganada,1963.0,AUDITADA FT 2-0
-2026-10-25 09:04:47,1584445,Konyaspor vs Gençlerbirliği S.K. (Turquía - Süper Lig),[VIP] Over 1.5 Goles,1.53,1.53,68.0,🟢 [LUZ VERDE / ALTO VALOR],1900.0,Ganada,2907.0,AUDITADA FT 2-0
-2026-10-25 09:04:47,1584445,Konyaspor vs Gençlerbirliği S.K. (Turquía - Süper Lig),[FREE] Gol en 2do Tiempo,1.28,1.28,71.2,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,640.0,AUDITADA FT 2-0
-2026-10-25 09:04:47,1584445,Konyaspor vs Gençlerbirliği S.K. (Turquía - Süper Lig),[FREE] Faltas Totales > 21.5,1.28,1.28,69.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,640.0,AUDITADA FT 2-0
 2026-10-25 09:04:53,1552203,NEC Nijmegen vs Groningen (Eredivisie),[VIP] Remates Puerta > 6.5,1.42,1.42,85.7,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,7100.0,AUDITADA FT 2-2
 2026-10-25 09:04:53,1552203,NEC Nijmegen vs Groningen (Eredivisie),[VIP] Córners > 8.5,1.48,1.48,76.9,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,7400.0,AUDITADA FT 2-2
 2026-10-25 09:04:53,1552203,NEC Nijmegen vs Groningen (Eredivisie),[FREE] Remates Puerta > 5.5,1.16,1.16,84.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,580.0,AUDITADA FT 2-2
@@ -429,10 +413,6 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-10-25 09:06:26,1552205,Sparta Rotterdam vs Ajax (Eredivisie),[VIP] Combo X2 + O1.5,1.52,1.52,74.1,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,7600.0,AUDITADA FT 1-2
 2026-10-25 09:06:26,1552205,Sparta Rotterdam vs Ajax (Eredivisie),[FREE] Remates Puerta > 5.5,1.16,1.16,84.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,580.0,AUDITADA FT 1-2
 2026-10-25 09:06:26,1552205,Sparta Rotterdam vs Ajax (Eredivisie),[FREE] Gol en 2do Tiempo,1.16,1.16,81.8,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 1-2
-2026-10-25 09:06:32,1584444,Göztepe vs Çorum FK (Turquía - Süper Lig),[VIP] Faltas Totales > 22.5,1.42,1.42,87.2,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,7100.0,AUDITADA FT 2-0
-2026-10-25 09:06:32,1584444,Göztepe vs Çorum FK (Turquía - Süper Lig),[VIP] Remates Puerta > 6.5,1.42,1.42,80.7,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,7100.0,AUDITADA FT 2-0
-2026-10-25 09:06:32,1584444,Göztepe vs Çorum FK (Turquía - Süper Lig),[FREE] Faltas Totales > 21.5,1.16,1.16,84.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,580.0,AUDITADA FT 2-0
-2026-10-25 09:06:32,1584444,Göztepe vs Çorum FK (Turquía - Süper Lig),[FREE] Remates Puerta > 5.5,1.16,1.16,84.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,580.0,AUDITADA FT 2-0
 2026-10-25 09:06:40,1552792,Angers vs Lorient (Francia - Ligue 1),[VIP] Over 1.5 Goles,1.45,1.45,70.2,🟢 [LUZ VERDE / ALTO VALOR],1000.0,Perdida,0.0,AUDITADA FT 0-0
 2026-10-25 09:06:40,1552792,Angers vs Lorient (Francia - Ligue 1),[VIP] Remates Puerta > 6.5,1.71,1.71,68.0,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,8550.0,AUDITADA FT 0-0
 2026-10-25 09:06:40,1552792,Angers vs Lorient (Francia - Ligue 1),[FREE] Gol en 2do Tiempo,1.27,1.27,73.8,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 0-0
@@ -527,16 +507,6 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-10-25 09:09:21,1557444,Liverpool vs Brighton (Premier League),[VIP] Córners > 8.5,1.48,1.48,72.0,🟢 [LUZ VERDE / ALTO VALOR],3400.0,Ganada,5032.0,AUDITADA FT 2-0
 2026-10-25 09:09:21,1557445,Manchester United vs Bournemouth (Premier League),[VIP] Remates Puerta > 6.5,1.42,1.42,85.7,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,7100.0,AUDITADA FT 0-3
 2026-10-25 09:09:21,1557445,Manchester United vs Bournemouth (Premier League),[VIP] Córners > 8.5,1.52,1.52,68.0,🟢 [LUZ VERDE / ALTO VALOR],1600.0,Ganada,2432.0,AUDITADA FT 0-3
-2026-10-26 16:51:36,1584440,Beşiktaş vs Başakşehir (Turquía - Süper Lig),[VIP] Faltas Totales > 22.5,1.42,1.42,84.5,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,7100.0,AUDITADA FT 2-0
-2026-10-26 16:51:36,1584440,Beşiktaş vs Başakşehir (Turquía - Süper Lig),[VIP] Gol en 2do Tiempo,1.38,1.38,78.4,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,6900.0,AUDITADA FT 2-0
-2026-10-26 16:51:36,1584440,Beşiktaş vs Başakşehir (Turquía - Süper Lig),[FREE] Faltas Totales > 22.5,1.18,1.18,84.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 2-0
-2026-10-26 16:51:36,1584440,Beşiktaş vs Başakşehir (Turquía - Süper Lig),[FREE] Doble Oport. 1X,1.18,1.18,84.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 2-0
-2026-10-26 16:51:43,1584446,Rizespor vs Trabzonspor (Turquía - Süper Lig),[VIP] Over 1.5 Goles,1.38,1.38,79.9,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,6900.0,AUDITADA FT 3-4
-2026-10-26 16:51:43,1584446,Rizespor vs Trabzonspor (Turquía - Süper Lig),[VIP] Gol en 1T,1.38,1.38,78.4,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,6900.0,AUDITADA FT 3-4
-2026-10-26 16:51:43,1584446,Rizespor vs Trabzonspor (Turquía - Süper Lig),[FREE] Gol en 2do Tiempo,1.18,1.18,80.8,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 3-4
-2026-10-26 16:51:43,1584446,Rizespor vs Trabzonspor (Turquía - Süper Lig),[FREE] Remates Puerta > 6.5,1.18,1.18,84.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 3-4
-2026-10-26 16:51:49,1584442,Galatasaray vs Fenerbahçe (Turquía - Süper Lig),[VIP] Remates Puerta > 6.5,1.42,1.42,85.7,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,7100.0,AUDITADA FT 2-1
-2026-10-26 16:51:49,1584442,Galatasaray vs Fenerbahçe (Turquía - Süper Lig),[VIP] Gol en 2do Tiempo,1.38,1.38,82.7,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,6900.0,AUDITADA FT 2-1
 2026-10-26 16:51:55,1575524,Santa Clara vs Benfica (Primeira Liga),[VIP] Faltas Totales > 22.5,1.42,1.42,77.5,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,7100.0,AUDITADA FT 1-2
 2026-10-26 16:51:55,1575524,Santa Clara vs Benfica (Primeira Liga),[VIP] Over 1.5 Goles,1.38,1.38,75.2,🟢 [LUZ VERDE / ALTO VALOR],2500.0,Ganada,3450.0,AUDITADA FT 1-2
 2026-10-26 16:52:03,1570431,Sevilla vs Osasuna (España - LaLiga),[VIP] Faltas Totales > 22.5,1.42,1.42,87.2,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,7100.0,AUDITADA FT 2-0
@@ -561,8 +531,6 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-10-26 16:52:51,1575524,Santa Clara vs Benfica (Primeira Liga),[FREE] Córners > 7.5,1.18,1.18,79.8,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 1-2
 2026-10-26 16:52:51,1493211,Union Santa Fe vs Estudiantes L.P. (Liga Argentina),[FREE] Doble Oport. 1X,1.18,1.18,80.2,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 3-1
 2026-10-26 16:52:51,1493211,Union Santa Fe vs Estudiantes L.P. (Liga Argentina),[FREE] Gol en 2do Tiempo,1.32,1.32,71.1,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,660.0,AUDITADA FT 3-1
-2026-10-26 16:52:51,1584442,Galatasaray vs Fenerbahçe (Turquía - Süper Lig),[FREE] Remates Puerta > 6.5,1.18,1.18,84.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 2-1
-2026-10-26 16:52:51,1584442,Galatasaray vs Fenerbahçe (Turquía - Süper Lig),[FREE] Gol en 2do Tiempo,1.18,1.18,82.7,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 2-1
 2026-10-27 10:39:45,1603035,Abha vs Al-Faisaly FC (Saudi Pro League),[VIP] Over 1.5 Goles,1.45,1.45,70.2,🟢 [LUZ VERDE / ALTO VALOR],1000.0,Perdida,0.0,AUDITADA FT 0-1
 2026-10-27 10:39:45,1603035,Abha vs Al-Faisaly FC (Saudi Pro League),[VIP] Córners > 7.5,1.45,1.45,70.3,🟢 [LUZ VERDE / ALTO VALOR],1100.0,Ganada,1595.0,AUDITADA FT 0-1
 2026-10-27 10:39:45,1603035,Abha vs Al-Faisaly FC (Saudi Pro League),[FREE] Over 1.5 Goles,1.32,1.32,70.2,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 0-1
@@ -956,10 +924,6 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-10-30 10:52:22,1603071,Abha vs Al-Ittihad FC (Saudi Pro League),[VIP] Over 1.5 Goles,1.75,1.75,68.0,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,8750.0,AUDITADA FT 1-1
 2026-10-30 10:52:22,1603071,Abha vs Al-Ittihad FC (Saudi Pro League),[FREE] Doble Oport. X2,1.18,1.18,83.4,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 1-1
 2026-10-30 10:52:22,1603071,Abha vs Al-Ittihad FC (Saudi Pro League),[FREE] Córners > 7.5,1.28,1.28,74.3,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,640.0,AUDITADA FT 1-1
-2026-10-30 10:52:25,1584455,Konyaspor vs Galatasaray (Turquía - Süper Lig),[VIP] Faltas Totales > 22.5,1.42,1.42,80.7,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,7100.0,AUDITADA FT 0-4
-2026-10-30 10:52:25,1584455,Konyaspor vs Galatasaray (Turquía - Süper Lig),[VIP] Remates Puerta > 5.5,1.48,1.48,68.8,🟢 [LUZ VERDE / ALTO VALOR],900.0,Ganada,1332.0,AUDITADA FT 0-4
-2026-10-30 10:52:25,1584455,Konyaspor vs Galatasaray (Turquía - Süper Lig),[FREE] Faltas Totales > 22.5,1.18,1.18,80.7,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 0-4
-2026-10-30 10:52:25,1584455,Konyaspor vs Galatasaray (Turquía - Süper Lig),[FREE] Doble Oport. X2,1.18,1.18,77.7,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 0-4
 2026-10-30 10:52:26,1552801,Le Havre vs Paris Saint Germain (Francia - Ligue 1),[VIP] Córners > 8.5,1.6,1.60,68.0,🟢 [LUZ VERDE / ALTO VALOR],3700.0,Ganada,5920.0,AUDITADA FT 1-5
 2026-10-30 10:52:26,1552801,Le Havre vs Paris Saint Germain (Francia - Ligue 1),[VIP] Over 1.5 Goles,1.68,1.68,68.0,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,8400.0,AUDITADA FT 1-5
 2026-10-30 10:52:26,1552801,Le Havre vs Paris Saint Germain (Francia - Ligue 1),[FREE] Doble Oport. X2,1.18,1.18,83.1,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 1-5
@@ -1094,10 +1058,6 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-10-31 11:18:15,1575535,Moreirense vs Estrela (Primeira Liga),[VIP] Ambos Marcan (BTTS),1.7,1.70,68.0,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,8500.0,AUDITADA FT 2-1
 2026-10-31 11:18:15,1575535,Moreirense vs Estrela (Primeira Liga),[FREE] Over 1.5 Goles,1.18,1.18,80.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 2-1
 2026-10-31 11:18:15,1575535,Moreirense vs Estrela (Primeira Liga),[FREE] Gol en 2do Tiempo,1.18,1.18,72.7,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 2-1
-2026-10-31 11:18:16,1584451,Fenerbahçe vs Göztepe (Turquía - Süper Lig),[VIP] Over 1.5 Goles,1.38,1.38,81.3,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,6900.0,AUDITADA FT 1-2
-2026-10-31 11:18:16,1584451,Fenerbahçe vs Göztepe (Turquía - Süper Lig),[VIP] Remates Puerta > 7.5,1.48,1.48,76.1,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,7400.0,AUDITADA FT 1-2
-2026-10-31 11:18:16,1584451,Fenerbahçe vs Göztepe (Turquía - Süper Lig),[FREE] Over 1.5 Goles,1.18,1.18,81.3,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 1-2
-2026-10-31 11:18:16,1584451,Fenerbahçe vs Göztepe (Turquía - Süper Lig),[FREE] Remates Puerta > 6.5,1.18,1.18,84.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 1-2
 2026-10-31 11:18:18,1490587,Charlotte vs Orlando City SC (MLS),[VIP] Over 1.5 Goles,1.38,1.38,84.4,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,6900.0,AUDITADA FT 4-0
 2026-10-31 11:18:18,1490587,Charlotte vs Orlando City SC (MLS),[VIP] Córners > 8.5,1.48,1.48,72.0,🟢 [LUZ VERDE / ALTO VALOR],3400.0,Ganada,5032.0,AUDITADA FT 4-0
 2026-10-31 11:18:18,1490587,Charlotte vs Orlando City SC (MLS),[FREE] Over 1.5 Goles,1.18,1.18,84.4,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 4-0
@@ -1226,10 +1186,6 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-10-31 11:19:30,1575204,Bayer Leverkusen vs VfB Stuttgart (Bundesliga),[VIP] Remates Puerta > 7.5,1.48,1.48,76.1,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,7400.0,AUDITADA FT 2-4
 2026-10-31 11:19:30,1557456,Tottenham vs Crystal Palace (Premier League),[VIP] Gol en 1T,1.38,1.38,78.2,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,6900.0,AUDITADA FT 2-0
 2026-10-31 11:19:30,1557456,Tottenham vs Crystal Palace (Premier League),[VIP] Remates Puerta > 6.5,1.42,1.42,73.6,🟢 [LUZ VERDE / ALTO VALOR],2700.0,Ganada,3834.0,AUDITADA FT 2-0
-2026-11-01 09:24:48,1584448,Amed vs Eyüpspor (Turquía - Süper Lig),[VIP] Gol en 1T,1.38,1.38,76.4,🟢 [LUZ VERDE / ALTO VALOR],3600.0,Ganada,4968.0,AUDITADA FT 5-1
-2026-11-01 09:24:48,1584448,Amed vs Eyüpspor (Turquía - Süper Lig),[VIP] Combo 1X + O1.5,1.52,1.52,72.0,🟢 [LUZ VERDE / ALTO VALOR],4600.0,Ganada,6992.0,AUDITADA FT 5-1
-2026-11-01 09:24:48,1584448,Amed vs Eyüpspor (Turquía - Süper Lig),[FREE] Remates Puerta > 6.5,1.18,1.18,84.3,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 5-1
-2026-11-01 09:24:48,1584448,Amed vs Eyüpspor (Turquía - Süper Lig),[FREE] Doble Oport. 1X,1.18,1.18,83.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 5-1
 2026-11-01 09:24:50,1552212,PEC Zwolle vs ADO Den Haag (Eredivisie),[VIP] Gol en 1T,1.41,1.41,72.6,🟢 [LUZ VERDE / ALTO VALOR],1400.0,Ganada,1974.0,AUDITADA FT 1-0
 2026-11-01 09:24:50,1552212,PEC Zwolle vs ADO Den Haag (Eredivisie),[VIP] Ambos Marcan (BTTS),1.67,1.67,68.0,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Perdida,0.0,AUDITADA FT 1-0
 2026-11-01 09:24:50,1552212,PEC Zwolle vs ADO Den Haag (Eredivisie),[FREE] Over 1.5 Goles,1.18,1.18,80.8,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 1-0
@@ -1246,14 +1202,6 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-11-01 09:24:56,1570438,Getafe vs Sevilla (España - LaLiga),[VIP] Remates Puerta > 5.5,1.69,1.69,68.0,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,8450.0,AUDITADA FT 3-1
 2026-11-01 09:24:56,1570438,Getafe vs Sevilla (España - LaLiga),[FREE] Córners > 7.5,1.32,1.32,67.4,🟢 [VALOR ALTO / OPERABLE],500.0,Ganada,660.0,AUDITADA FT 3-1
 2026-11-01 09:24:56,1570438,Getafe vs Sevilla (España - LaLiga),[FREE] Remates Puerta > 5.5,1.32,1.32,60.4,🟢 [VALOR ALTO / OPERABLE],500.0,Ganada,660.0,AUDITADA FT 3-1
-2026-11-01 09:24:58,1584449,Başakşehir vs Samsunspor (Turquía - Süper Lig),[VIP] Córners > 8.5,1.7,1.70,68.0,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,8500.0,AUDITADA FT 5-2
-2026-11-01 09:24:58,1584449,Başakşehir vs Samsunspor (Turquía - Süper Lig),[VIP] Córners > 7.5,1.41,1.41,72.3,🟢 [LUZ VERDE / ALTO VALOR],1200.0,Ganada,1692.0,AUDITADA FT 5-2
-2026-11-01 09:24:58,1584449,Başakşehir vs Samsunspor (Turquía - Süper Lig),[FREE] Córners > 7.5,1.31,1.31,72.3,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,655.0,AUDITADA FT 5-2
-2026-11-01 09:24:58,1584449,Başakşehir vs Samsunspor (Turquía - Süper Lig),[FREE] Tarjetas > 3.5,1.32,1.32,68.9,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,660.0,AUDITADA FT 5-2
-2026-11-01 09:25:00,1584456,Trabzonspor vs Gaziantep FK (Turquía - Süper Lig),[VIP] Remates Puerta > 7.5,1.48,1.48,68.8,🟢 [LUZ VERDE / ALTO VALOR],1000.0,Ganada,1480.0,AUDITADA FT 2-0
-2026-11-01 09:25:00,1584456,Trabzonspor vs Gaziantep FK (Turquía - Süper Lig),[VIP] Tarjetas > 4.5,1.66,1.66,68.0,🟢 [LUZ VERDE / ALTO VALOR],4900.0,Ganada,8134.0,AUDITADA FT 2-0
-2026-11-01 09:25:00,1584456,Trabzonspor vs Gaziantep FK (Turquía - Süper Lig),[FREE] Doble Oport. 1X,1.18,1.18,83.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 2-0
-2026-11-01 09:25:00,1584456,Trabzonspor vs Gaziantep FK (Turquía - Süper Lig),[FREE] Remates Puerta > 6.5,1.18,1.18,82.3,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 2-0
 2026-11-01 09:25:02,1552213,Excelsior vs Twente (Eredivisie),[VIP] Over 1.5 Goles,1.46,1.46,70.0,🟢 [LUZ VERDE / ALTO VALOR],1200.0,Ganada,1752.0,AUDITADA FT 0-9
 2026-11-01 09:25:02,1552213,Excelsior vs Twente (Eredivisie),[VIP] Córners > 8.5,1.63,1.63,68.0,🟢 [LUZ VERDE / ALTO VALOR],4300.0,Ganada,7009.0,AUDITADA FT 0-9
 2026-11-01 09:25:03,1552213,Excelsior vs Twente (Eredivisie),[FREE] Remates Puerta > 6.5,1.18,1.18,84.4,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 0-9
@@ -1292,10 +1240,6 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-11-01 09:25:20,1552215,Groningen vs Sparta Rotterdam (Eredivisie),[VIP] Gol en 2do Tiempo,1.38,1.38,78.0,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,6900.0,AUDITADA FT 2-3
 2026-11-01 09:25:20,1552215,Groningen vs Sparta Rotterdam (Eredivisie),[FREE] Remates Puerta > 6.5,1.18,1.18,83.9,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 2-3
 2026-11-01 09:25:20,1552215,Groningen vs Sparta Rotterdam (Eredivisie),[FREE] Over 1.5 Goles,1.18,1.18,84.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 2-3
-2026-11-01 09:25:22,1584453,Kasımpaşa vs Beşiktaş (Turquía - Süper Lig),[VIP] Tarjetas > 3.5,1.46,1.46,69.8,🟢 [LUZ VERDE / ALTO VALOR],1000.0,Ganada,1460.0,AUDITADA FT 2-2
-2026-11-01 09:25:22,1584453,Kasımpaşa vs Beşiktaş (Turquía - Süper Lig),[VIP] Córners > 8.5,1.63,1.63,68.0,🟢 [LUZ VERDE / ALTO VALOR],4300.0,Ganada,7009.0,AUDITADA FT 2-2
-2026-11-01 09:25:22,1584453,Kasımpaşa vs Beşiktaş (Turquía - Süper Lig),[FREE] Doble Oport. 1X,1.18,1.18,75.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 2-2
-2026-11-01 09:25:22,1584453,Kasımpaşa vs Beşiktaş (Turquía - Süper Lig),[FREE] Córners > 7.5,1.27,1.27,74.7,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,635.0,AUDITADA FT 2-2
 2026-11-01 09:25:24,1552804,Lyon vs Angers (Francia - Ligue 1),[FREE] Doble Oport. 1X,1.18,1.18,83.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 2-0
 2026-11-01 09:25:24,1552804,Lyon vs Angers (Francia - Ligue 1),[FREE] Gol en 1T,1.18,1.18,80.4,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 2-0
 2026-11-01 09:25:26,1552807,Paris FC vs Monaco (Francia - Ligue 1),[FREE] Over 1.5 Goles,1.18,1.18,78.9,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 3-1
@@ -1399,8 +1343,6 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-11-02 00:03:16,1569999,Oviedo vs Las Palmas (España - Segunda),[VIP] Córners > 7.5,1.25,1.25,76.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,625.0,AUDITADA FT 2-3
 2026-11-02 00:03:16,1569999,Oviedo vs Las Palmas (España - Segunda),[FREE] Córners > 7.5,1.32,1.32,66.8,🟢 [VALOR ALTO / OPERABLE],500.0,Ganada,660.0,AUDITADA FT 2-3
 2026-11-02 00:03:16,1569999,Oviedo vs Las Palmas (España - Segunda),[FREE] Tarjetas > 3.5,1.32,1.32,63.1,🟢 [VALOR ALTO / OPERABLE],500.0,Ganada,660.0,AUDITADA FT 2-3
-2026-11-02 00:03:18,1584452,Gençlerbirliği S.K. vs Alanyaspor (Turquía - Süper Lig),[FREE] Doble Oport. 1X,1.18,1.18,81.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 5-0
-2026-11-02 00:03:18,1584452,Gençlerbirliği S.K. vs Alanyaspor (Turquía - Süper Lig),[FREE] Remates Puerta > 6.5,1.32,1.32,70.6,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,660.0,AUDITADA FT 5-0
 2026-11-02 00:03:19,1550185,Sassuolo vs Fiorentina (Italia - Serie A),[VIP] Gol en 1T,1.39,1.39,73.3,🟢 [LUZ VERDE / ALTO VALOR],1200.0,Ganada,1668.0,AUDITADA FT 2-4
 2026-11-02 00:03:19,1550185,Sassuolo vs Fiorentina (Italia - Serie A),[VIP] Ambos Marcan (BTTS),1.68,1.68,68.0,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,8400.0,AUDITADA FT 2-4
 2026-11-02 00:03:23,1550178,Atalanta vs Parma (Italia - Serie A),[VIP] Tarjetas > 3.5,1.28,1.28,78.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,640.0,AUDITADA FT 0-3
@@ -1428,8 +1370,6 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-11-02 00:03:58,1575533,GIL Vicente vs Vitória SC (Primeira Liga),[VIP] Over 1.5 Goles,1.46,1.46,69.8,🟢 [LUZ VERDE / ALTO VALOR],1100.0,Perdida,0.0,AUDITADA FT 0-0
 2026-11-02 00:03:58,1552803,Lorient vs Stade Brestois 29 (Francia - Ligue 1),[VIP] Tarjetas > 3.5,1.28,1.28,78.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,640.0,AUDITADA FT 0-2
 2026-11-02 00:03:58,1552803,Lorient vs Stade Brestois 29 (Francia - Ligue 1),[VIP] Córners > 7.5,1.25,1.25,76.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,625.0,AUDITADA FT 0-2
-2026-11-02 00:03:58,1584452,Gençlerbirliği S.K. vs Alanyaspor (Turquía - Süper Lig),[VIP] Tarjetas > 3.5,1.53,1.53,68.0,🟢 [LUZ VERDE / ALTO VALOR],1900.0,Ganada,2907.0,AUDITADA FT 5-0
-2026-11-02 00:03:58,1584452,Gençlerbirliği S.K. vs Alanyaspor (Turquía - Süper Lig),[VIP] Córners > 8.5,1.62,1.62,68.0,🟢 [LUZ VERDE / ALTO VALOR],4100.0,Ganada,6642.0,AUDITADA FT 5-0
 2026-11-02 00:55:00,1493215,Defensa Y Justicia vs Independiente (Liga Argentina),[VIP] Tarjetas > 3.5,1.28,1.28,78.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,640.0,AUDITADA FT 1-1
 2026-11-02 00:55:00,1493215,Defensa Y Justicia vs Independiente (Liga Argentina),[VIP] Córners > 7.5,1.25,1.25,76.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,625.0,AUDITADA FT 1-1
 2026-11-02 00:55:00,1493215,Defensa Y Justicia vs Independiente (Liga Argentina),[FREE] Total Menos de 3.5 (Under),1.28,1.28,66.1,🟢 [VALOR ALTO / OPERABLE],500.0,Ganada,640.0,AUDITADA FT 1-1
@@ -1748,10 +1688,6 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-11-06 03:55:00,401876910,Atlético de San Luis vs FC Juárez (Liga MX),[FREE] Over 1.5 Goles,1.28,1.28,69.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 0-1
 2026-11-06 03:55:00,401877916,Fortaleza CEIF vs Independiente Medellín (Colombia - Primera A),[VIP] Córners > 8.5,1.75,1.75,66.5,🟢 [VALOR ALTO / OPERABLE],5000.0,Ganada,8750.0,AUDITADA FT 0-3
 2026-11-06 03:55:00,401877916,Fortaleza CEIF vs Independiente Medellín (Colombia - Primera A),[VIP] Gol en 2do Tiempo,1.42,1.42,75.2,🟢 [LUZ VERDE / ALTO VALOR],4000.0,Ganada,5680.0,AUDITADA FT 0-3
-2026-11-06 19:55:00,401888256,Gaziantep FK vs Kasimpasa (Turquía - Süper Lig),[VIP] Over 1.5 Goles,1.45,1.45,70.2,🟢 [LUZ VERDE / ALTO VALOR],1000.0,Ganada,1450.0,AUDITADA FT 0-2
-2026-11-06 19:55:00,401888256,Gaziantep FK vs Kasimpasa (Turquía - Süper Lig),[VIP] Tarjetas > 4.5,1.56,1.56,66.5,🟢 [VALOR ALTO / OPERABLE],1700.0,Ganada,2652.0,AUDITADA FT 0-2
-2026-11-06 19:55:00,401888256,Gaziantep FK vs Kasimpasa (Turquía - Süper Lig),[FREE] Faltas Totales > 22.5,1.18,1.18,86.5,🟢 [LUZ VERDE / ALTO VALOR],2900.0,Ganada,3422.0,AUDITADA FT 0-2
-2026-11-06 19:55:00,401888256,Gaziantep FK vs Kasimpasa (Turquía - Süper Lig),[FREE] Córners Gaziantep FK > 4.5,1.18,1.18,79.8,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 0-2
 2026-11-06 20:55:00,401841670,Barracas Central vs Racing Club (Liga Argentina),[FREE] Faltas Totales > 22.5,1.18,1.18,86.5,🟢 [LUZ VERDE / ALTO VALOR],2900.0,Ganada,3422.0,AUDITADA FT 2-0
 2026-11-06 20:55:00,401841670,Barracas Central vs Racing Club (Liga Argentina),[FREE] Over 1.5 Goles,1.28,1.28,70.8,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,640.0,AUDITADA FT 2-0
 2026-11-06 20:55:00,401841670,Barracas Central vs Racing Club (Liga Argentina),[VIP] Remates Puerta > 6.5,1.54,1.54,66.5,🟢 [VALOR ALTO / OPERABLE],1100.0,Ganada,1694.0,AUDITADA FT 2-0
@@ -1864,10 +1800,6 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-11-07 15:55:00,401883306,Burgos vs RC Celta Fortuna (España - Segunda),[VIP] Gol en 2do Tiempo,1.42,1.42,75.2,🟢 [LUZ VERDE / ALTO VALOR],4000.0,Ganada,5680.0,AUDITADA FT 2-1
 2026-11-07 15:55:00,401883306,Burgos vs RC Celta Fortuna (España - Segunda),[FREE] Faltas Totales > 22.5,1.28,1.28,74.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,640.0,AUDITADA FT 2-1
 2026-11-07 15:55:00,401883306,Burgos vs RC Celta Fortuna (España - Segunda),[FREE] Total Menos de 3.5 (Under),1.18,1.18,86.5,🟢 [LUZ VERDE / ALTO VALOR],2900.0,Ganada,3422.0,AUDITADA FT 2-1
-2026-11-07 15:55:00,401888250,Samsunspor vs Konyaspor (Turquía - Süper Lig),[VIP] Over 1.5 Goles,1.45,1.45,70.5,🟢 [LUZ VERDE / ALTO VALOR],1300.0,Perdida,0.0,AUDITADA FT 1-0
-2026-11-07 15:55:00,401888250,Samsunspor vs Konyaspor (Turquía - Süper Lig),[VIP] Córners Samsunspor > 4.5,1.45,1.45,70.1,🟢 [LUZ VERDE / ALTO VALOR],900.0,Ganada,1305.0,AUDITADA FT 1-0
-2026-11-07 15:55:00,401888250,Samsunspor vs Konyaspor (Turquía - Süper Lig),[FREE] Faltas Totales > 22.5,1.18,1.18,86.5,🟢 [LUZ VERDE / ALTO VALOR],2900.0,Ganada,3422.0,AUDITADA FT 1-0
-2026-11-07 15:55:00,401888250,Samsunspor vs Konyaspor (Turquía - Süper Lig),[FREE] Doble Oport. X2,1.27,1.27,74.7,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 1-0
 2026-11-07 16:55:00,401874811,Torino vs Lecce (Italia - Serie A),[VIP] Tarjetas > 3.5,1.65,1.65,66.5,🟢 [VALOR ALTO / OPERABLE],3700.0,Ganada,6105.0,AUDITADA FT 1-1
 2026-11-07 16:55:00,401874811,Torino vs Lecce (Italia - Serie A),[VIP] Gol en 2do Tiempo,1.42,1.42,75.2,🟢 [LUZ VERDE / ALTO VALOR],4000.0,Ganada,5680.0,AUDITADA FT 1-1
 2026-11-07 16:55:00,401874811,Torino vs Lecce (Italia - Serie A),[FREE] Faltas Totales > 22.5,1.18,1.18,81.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 1-1
@@ -2028,14 +1960,6 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-11-07 18:25:00,401875555,Fortuna Sittard vs Telstar (Eredivisie),[VIP] Over 1.5 Goles,1.53,1.53,66.7,🟢 [VALOR ALTO / OPERABLE],1000.0,Ganada,1530.0,AUDITADA FT 2-2
 2026-11-07 18:25:00,401875555,Fortuna Sittard vs Telstar (Eredivisie),[FREE] Córners > 7.5,1.28,1.28,72.6,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,640.0,AUDITADA FT 2-2
 2026-11-07 18:25:00,401875555,Fortuna Sittard vs Telstar (Eredivisie),[FREE] Doble Oport. X2,1.28,1.28,68.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,640.0,AUDITADA FT 2-2
-2026-11-07 18:55:00,401888371,Galatasaray vs Amed SFK (Turquía - Süper Lig),[VIP] Faltas Totales > 22.5,1.42,1.42,82.8,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,7100.0,AUDITADA FT 4-3
-2026-11-07 18:55:00,401888371,Galatasaray vs Amed SFK (Turquía - Süper Lig),[VIP] Over 1.5 Goles,1.38,1.38,81.6,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,6900.0,AUDITADA FT 4-3
-2026-11-07 18:55:00,401888371,Galatasaray vs Amed SFK (Turquía - Süper Lig),[FREE] Doble Oport. 1X,1.18,1.18,84.7,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 4-3
-2026-11-07 18:55:00,401888371,Galatasaray vs Amed SFK (Turquía - Süper Lig),[FREE] Córners Galatasaray > 4.5,1.18,1.18,86.5,🟢 [LUZ VERDE / ALTO VALOR],2900.0,Ganada,3422.0,AUDITADA FT 4-3
-2026-11-07 18:55:00,401888252,Goztepe vs Istanbul Basaksehir (Turquía - Süper Lig),[VIP] Gol en 2do Tiempo,1.38,1.38,76.6,🟢 [LUZ VERDE / ALTO VALOR],3800.0,Ganada,5244.0,AUDITADA FT 1-2
-2026-11-07 18:55:00,401888252,Goztepe vs Istanbul Basaksehir (Turquía - Süper Lig),[VIP] Tarjetas > 3.5,1.53,1.53,66.6,🟢 [VALOR ALTO / OPERABLE],900.0,Ganada,1377.0,AUDITADA FT 1-2
-2026-11-07 18:55:00,401888252,Goztepe vs Istanbul Basaksehir (Turquía - Süper Lig),[FREE] Faltas Totales > 22.5,1.18,1.18,86.5,🟢 [LUZ VERDE / ALTO VALOR],2900.0,Ganada,3422.0,AUDITADA FT 1-2
-2026-11-07 18:55:00,401888252,Goztepe vs Istanbul Basaksehir (Turquía - Süper Lig),[FREE] Remates Puerta > 6.5,1.18,1.18,79.7,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 1-2
 2026-11-07 19:55:00,401874974,Parma vs Bologna (Italia - Serie A),[VIP] Tarjetas > 3.5,1.6,1.60,66.5,🟢 [VALOR ALTO / OPERABLE],2700.0,Ganada,4320.0,AUDITADA FT 1-2
 2026-11-07 19:55:00,401874974,Parma vs Bologna (Italia - Serie A),[VIP] Gol en 2do Tiempo,1.42,1.42,75.2,🟢 [LUZ VERDE / ALTO VALOR],4000.0,Ganada,5680.0,AUDITADA FT 1-2
 2026-11-07 19:55:00,401874974,Parma vs Bologna (Italia - Serie A),[FREE] Doble Oport. X2,1.18,1.18,84.9,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 1-2
@@ -2168,10 +2092,6 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-11-08 05:05:00,401876902,León vs Guadalajara (Liga MX),[VIP] Ambos Marcan (BTTS),1.5,1.50,68.8,🟢 [LUZ VERDE / ALTO VALOR],1600.0,Ganada,2400.0,AUDITADA FT 1-1
 2026-11-08 05:05:00,401876902,León vs Guadalajara (Liga MX),[FREE] Gol en 2do Tiempo,1.18,1.18,81.6,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 1-1
 2026-11-08 05:05:00,401876902,León vs Guadalajara (Liga MX),[FREE] Over 1.5 Goles,1.18,1.18,79.7,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 1-1
-2026-11-08 13:25:00,401888253,Caykur Rizespor vs Erzurum BB (Turquía - Süper Lig),[VIP] Ambos Marcan (BTTS),1.51,1.51,67.5,🟢 [VALOR ALTO / OPERABLE],900.0,Ganada,1359.0,AUDITADA FT 2-1
-2026-11-08 13:25:00,401888253,Caykur Rizespor vs Erzurum BB (Turquía - Süper Lig),[VIP] Córners > 8.5,1.53,1.53,66.5,🟢 [VALOR ALTO / OPERABLE],800.0,Ganada,1224.0,AUDITADA FT 2-1
-2026-11-08 13:25:00,401888253,Caykur Rizespor vs Erzurum BB (Turquía - Süper Lig),[FREE] Gol en 2do Tiempo,1.18,1.18,84.4,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 2-1
-2026-11-08 13:25:00,401888253,Caykur Rizespor vs Erzurum BB (Turquía - Süper Lig),[FREE] Remates Puerta > 6.5,1.25,1.25,76.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,625.0,AUDITADA FT 2-1
 2026-11-08 14:10:00,401875551,Heerenveen vs Feyenoord Rotterdam (Eredivisie),[VIP] Gol en 2do Tiempo,1.38,1.38,76.6,🟢 [LUZ VERDE / ALTO VALOR],3700.0,Ganada,5106.0,AUDITADA FT 5-3
 2026-11-08 14:10:00,401875551,Heerenveen vs Feyenoord Rotterdam (Eredivisie),[VIP] Faltas Totales > 22.5,1.5,1.50,67.9,🟢 [VALOR ALTO / OPERABLE],900.0,Ganada,1350.0,AUDITADA FT 5-3
 2026-11-08 14:10:00,401875551,Heerenveen vs Feyenoord Rotterdam (Eredivisie),[FREE] Córners Heerenveen > 4.5,1.18,1.18,83.7,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 5-3
@@ -2186,10 +2106,6 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-11-08 14:55:00,401931079,Stafford Rangers vs Grimsby Town (FA Cup),[FREE] Córners Grimsby Town > 4.5,1.18,1.18,83.2,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 3-3
 2026-11-08 15:55:00,401882814,Elche vs Real Betis (España - LaLiga),[FREE] Over 1.5 Goles,1.18,1.18,82.4,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 0-2
 2026-11-08 15:55:00,401882814,Elche vs Real Betis (España - LaLiga),[FREE] Gol en 2do Tiempo,1.18,1.18,86.2,🟢 [LUZ VERDE / ALTO VALOR],2400.0,Ganada,2832.0,AUDITADA FT 0-2
-2026-11-08 15:55:00,401888372,Çorum FK vs Fenerbahce (Turquía - Süper Lig),[VIP] Córners > 8.5,1.45,1.45,71.4,🟢 [LUZ VERDE / ALTO VALOR],2000.0,Ganada,2900.0,AUDITADA FT 0-5
-2026-11-08 15:55:00,401888372,Çorum FK vs Fenerbahce (Turquía - Süper Lig),[VIP] Ambos Marcan (BTTS),1.52,1.52,67.3,🟢 [VALOR ALTO / OPERABLE],1100.0,Perdida,0.0,AUDITADA FT 0-5
-2026-11-08 15:55:00,401888372,Çorum FK vs Fenerbahce (Turquía - Süper Lig),[FREE] Gol en 1T,1.18,1.18,85.8,🟢 [LUZ VERDE / ALTO VALOR],1700.0,Ganada,2006.0,AUDITADA FT 0-5
-2026-11-08 15:55:00,401888372,Çorum FK vs Fenerbahce (Turquía - Süper Lig),[FREE] Over 1.5 Goles,1.18,1.18,80.3,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 0-5
 2026-11-08 15:55:00,401882814,Elche vs Real Betis (España - LaLiga),[VIP] Doble Oport. X2,1.4,1.40,73.1,🟢 [LUZ VERDE / ALTO VALOR],1500.0,Ganada,2100.0,AUDITADA FT 0-2
 2026-11-08 15:55:00,401882814,Elche vs Real Betis (España - LaLiga),[VIP] Remates Puerta > 6.5,1.42,1.42,74.6,🟢 [LUZ VERDE / ALTO VALOR],3500.0,Ganada,4970.0,AUDITADA FT 0-2
 2026-11-08 16:25:00,401875550,FC Twente vs Ajax Amsterdam (Eredivisie),[VIP] Over 1.5 Goles,1.38,1.38,84.0,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,6900.0,AUDITADA FT 2-2
@@ -2296,10 +2212,6 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-11-08 20:55:00,401885394,Vitória de Guimaraes vs FC Porto (Primeira Liga),[VIP] Over 1.5 Goles,1.38,1.38,80.1,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,6900.0,AUDITADA FT 1-2
 2026-11-08 20:55:00,401885394,Vitória de Guimaraes vs FC Porto (Primeira Liga),[FREE] Gol en 2do Tiempo,1.18,1.18,85.8,🟢 [LUZ VERDE / ALTO VALOR],1800.0,Ganada,2124.0,AUDITADA FT 1-2
 2026-11-08 20:55:00,401885394,Vitória de Guimaraes vs FC Porto (Primeira Liga),[FREE] Doble Oport. X2,1.18,1.18,83.7,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 1-2
-2026-11-08 20:55:00,401888251,Besiktas vs Genclerbirligi (Turquía - Süper Lig),[VIP] Gol en 2do Tiempo,1.38,1.38,73.8,🟢 [LUZ VERDE / ALTO VALOR],1200.0,Ganada,1656.0,AUDITADA FT 3-0
-2026-11-08 20:55:00,401888251,Besiktas vs Genclerbirligi (Turquía - Süper Lig),[VIP] Combo 1X + O1.5,1.5,1.50,73.5,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,7500.0,AUDITADA FT 3-0
-2026-11-08 20:55:00,401888251,Besiktas vs Genclerbirligi (Turquía - Süper Lig),[FREE] Doble Oport. 1X,1.18,1.18,84.8,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 3-0
-2026-11-08 20:55:00,401888251,Besiktas vs Genclerbirligi (Turquía - Süper Lig),[FREE] Faltas Totales > 22.5,1.18,1.18,86.5,🟢 [LUZ VERDE / ALTO VALOR],2900.0,Ganada,3422.0,AUDITADA FT 3-0
 2026-11-08 21:25:00,401884742,TSG Hoffenheim vs Schalke 04 (Bundesliga),[VIP] Remates Puerta > 6.5,1.42,1.42,78.0,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,7100.0,AUDITADA FT 2-1
 2026-11-08 21:25:00,401884742,TSG Hoffenheim vs Schalke 04 (Bundesliga),[VIP] Córners TSG Hoffenhe > 4.5,1.38,1.38,78.2,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,6900.0,AUDITADA FT 2-1
 2026-11-08 21:25:00,401884742,TSG Hoffenheim vs Schalke 04 (Bundesliga),[FREE] Over 1.5 Goles,1.18,1.18,82.1,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 2-1
@@ -2388,10 +2300,6 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-11-12 17:55:00,401930962,Uzbekistan vs Russia (Amistoso Internacional),[VIP] Total Menos de 2.5 (Under),1.64,1.64,66.5,🟢 [VALOR ALTO / OPERABLE],3500.0,Perdida,0.0,AUDITADA FT 2-3
 2026-11-12 17:55:00,401930962,Uzbekistan vs Russia (Amistoso Internacional),[FREE] Doble Oport. 1X,1.18,1.18,79.3,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 2-3
 2026-11-12 17:55:00,401930962,Uzbekistan vs Russia (Amistoso Internacional),[FREE] Total Menos de 3.5 (Under),1.18,1.18,81.8,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 2-3
-2026-11-12 19:55:00,401861145,Turquía vs Bélgica (UEFA Nations League),[VIP] Tarjetas > 4.5,1.54,1.54,66.5,🟢 [VALOR ALTO / OPERABLE],1100.0,Ganada,1694.0,AUDITADA FT 1-2
-2026-11-12 19:55:00,401861145,Turquía vs Bélgica (UEFA Nations League),[VIP] Faltas Totales > 22.5,1.54,1.54,66.5,🟢 [VALOR ALTO / OPERABLE],1100.0,Ganada,1694.0,AUDITADA FT 1-2
-2026-11-12 19:55:00,401861145,Turquía vs Bélgica (UEFA Nations League),[FREE] Total Menos de 3.5 (Under),1.18,1.18,82.4,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 1-2
-2026-11-12 19:55:00,401861145,Turquía vs Bélgica (UEFA Nations League),[FREE] Doble Oport. X2,1.23,1.23,77.2,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,615.0,AUDITADA FT 1-2
 2026-11-12 20:25:00,401928506,Calvo Sotelo vs Albacete (Copa del Rey),[VIP] Córners Albacete > 4.5,1.38,1.38,79.2,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,6900.0,AUDITADA FT 0-0
 2026-11-12 20:25:00,401928506,Calvo Sotelo vs Albacete (Copa del Rey),[VIP] Faltas Totales > 22.5,1.42,1.42,76.6,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,7100.0,AUDITADA FT 0-0
 2026-11-12 20:25:00,401928506,Calvo Sotelo vs Albacete (Copa del Rey),[FREE] Doble Oport. X2,1.18,1.18,85.1,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 0-0
@@ -2830,16 +2738,12 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-11-15 22:40:00,401861176,Bélgica vs Italia (UEFA Nations League),[VIP] Ambos Marcan (BTTS),1.5,1.50,71.8,🟢 [LUZ VERDE / ALTO VALOR],3800.0,Ganada,5700.0,AUDITADA FT 4-1
 2026-11-15 22:40:00,401861178,Croacia vs República Checa (UEFA Nations League),[FREE] Doble Oport. 1X,1.18,1.18,81.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 2-1
 2026-11-15 22:40:00,401861178,Croacia vs República Checa (UEFA Nations League),[FREE] Faltas Totales > 22.5,1.18,1.18,79.3,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 2-1
-2026-11-15 22:40:00,401861177,Francia vs Turquía (UEFA Nations League),[VIP] Gol en 2do Tiempo,1.5,1.50,68.1,🟢 [LUZ VERDE / ALTO VALOR],1100.0,Ganada,1650.0,AUDITADA FT 2-1
-2026-11-15 22:40:00,401861177,Francia vs Turquía (UEFA Nations League),[VIP] Córners Francia > 4.5,1.59,1.59,66.5,🟢 [VALOR ALTO / OPERABLE],2400.0,Ganada,3816.0,AUDITADA FT 2-1
 2026-11-15 22:40:00,401861175,España vs Inglaterra (UEFA Nations League),[VIP] Doble Oport. X2,1.4,1.40,73.1,🟢 [LUZ VERDE / ALTO VALOR],1400.0,Ganada,1960.0,AUDITADA FT 2-3
 2026-11-15 22:40:00,401861175,España vs Inglaterra (UEFA Nations League),[VIP] Remates Puerta > 6.5,1.42,1.42,71.6,🟢 [LUZ VERDE / ALTO VALOR],1000.0,Ganada,1420.0,AUDITADA FT 2-3
 2026-11-15 22:40:00,401861176,Bélgica vs Italia (UEFA Nations League),[FREE] Gol en 1T,1.18,1.18,84.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 4-1
 2026-11-15 22:40:00,401861176,Bélgica vs Italia (UEFA Nations League),[FREE] Over 1.5 Goles,1.18,1.18,81.7,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 4-1
 2026-11-15 22:40:00,401861175,España vs Inglaterra (UEFA Nations League),[FREE] Gol en 2do Tiempo,1.18,1.18,81.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 2-3
 2026-11-15 22:40:00,401861175,España vs Inglaterra (UEFA Nations League),[FREE] Over 1.5 Goles,1.23,1.23,77.4,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,615.0,AUDITADA FT 2-3
-2026-11-15 22:40:00,401861177,Francia vs Turquía (UEFA Nations League),[FREE] Doble Oport. 1X,1.18,1.18,78.6,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 2-1
-2026-11-15 22:40:00,401861177,Francia vs Turquía (UEFA Nations League),[FREE] Faltas Totales > 22.5,1.18,1.18,78.4,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 2-1
 2026-11-15 22:40:00,401861178,Croacia vs República Checa (UEFA Nations League),[VIP] Córners Croacia > 4.5,1.54,1.54,66.5,🟢 [VALOR ALTO / OPERABLE],1100.0,Ganada,1694.0,AUDITADA FT 2-1
 2026-11-15 22:40:00,401861178,Croacia vs República Checa (UEFA Nations League),[VIP] Tarjetas > 4.5,1.53,1.53,66.5,🟢 [VALOR ALTO / OPERABLE],800.0,Ganada,1224.0,AUDITADA FT 2-1
 2026-11-16 02:55:00,401929706,Martinique vs Aruba (CONCACAF Nations League),[VIP] Over 1.5 Goles,1.38,1.38,78.5,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,6900.0,AUDITADA FT 1-1
@@ -3162,10 +3066,6 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-11-22 05:55:00,401877048,Tigres UANL vs América (México (Liga Mx)),[VIP] Córners > 8.5,1.7,1.70,66.5,🟢 [VALOR ALTO / OPERABLE],4700.0,Ganada,7990.0,AUDITADA FT 1-0
 2026-11-22 05:55:00,401877048,Tigres UANL vs América (México (Liga Mx)),[FREE] Gol en 2do Tiempo,1.18,1.18,80.3,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 1-0
 2026-11-22 05:55:00,401877048,Tigres UANL vs América (México (Liga Mx)),[FREE] Faltas Totales > 24.5,1.28,1.28,66.4,🟢 [VALOR ALTO / OPERABLE],500.0,Ganada,640.0,AUDITADA FT 1-0
-2026-11-21 13:25:00,401888247,Genclerbirligi vs Gaziantep FK (Turquía (Süper Lig)),[VIP] Tarjetas > 3.5,1.65,1.65,66.5,🟢 [VALOR ALTO / OPERABLE],3700.0,Perdida,0.0,AUDITADA FT 1-0
-2026-11-21 13:25:00,401888247,Genclerbirligi vs Gaziantep FK (Turquía (Süper Lig)),[VIP] Faltas Totales > 24.5,1.56,1.56,66.5,🟢 [VALOR ALTO / OPERABLE],1700.0,Ganada,2652.0,AUDITADA FT 1-0
-2026-11-21 13:25:00,401888247,Genclerbirligi vs Gaziantep FK (Turquía (Süper Lig)),[FREE] Over 1.5 Goles,1.18,1.18,78.1,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 1-0
-2026-11-21 13:25:00,401888247,Genclerbirligi vs Gaziantep FK (Turquía (Süper Lig)),[FREE] Remates Puerta > 6.5,1.28,1.28,70.1,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 1-0
 2026-11-21 13:55:00,401931813,Atlético CP vs Casa Pia (Portugal (Taça De Portugal)),[VIP] Córners > 8.5,1.66,1.66,66.5,🟢 [VALOR ALTO / OPERABLE],3900.0,Ganada,6474.0,AUDITADA FT 1-0
 2026-11-21 13:55:00,401931813,Atlético CP vs Casa Pia (Portugal (Taça De Portugal)),[VIP] Tarjetas > 4.5,1.75,1.75,66.5,🟢 [VALOR ALTO / OPERABLE],5000.0,Ganada,8750.0,AUDITADA FT 1-0
 2026-11-21 13:55:00,401931813,Atlético CP vs Casa Pia (Portugal (Taça De Portugal)),[FREE] Doble Oport. X2,1.18,1.18,79.3,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 1-0
@@ -3182,10 +3082,6 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-11-21 15:55:00,401882299,CD Sabadell vs Granada (España (Segunda)),[VIP] Córners > 8.5,1.72,1.72,66.5,🟢 [VALOR ALTO / OPERABLE],5000.0,Ganada,8600.0,AUDITADA FT 1-1
 2026-11-21 15:55:00,401882299,CD Sabadell vs Granada (España (Segunda)),[FREE] Faltas Totales > 23.5,1.18,1.18,80.3,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 1-1
 2026-11-21 15:55:00,401882299,CD Sabadell vs Granada (España (Segunda)),[FREE] Córners CD Sabadell > 4.5,1.28,1.28,64.2,🟢 [VALOR ALTO / OPERABLE],500.0,Ganada,640.0,AUDITADA FT 1-1
-2026-11-21 15:55:00,401888245,Galatasaray vs Samsunspor (Turquía (Süper Lig)),[VIP] Faltas Totales > 24.5,1.59,PENDIENTE_CLV,66.5,🟢 [VALOR ALTO / OPERABLE],2400.0,Pendiente,0.0,AUDITANDO
-2026-11-21 15:55:00,401888245,Galatasaray vs Samsunspor (Turquía (Süper Lig)),[VIP] Combo 1X + O1.5,1.5,PENDIENTE_CLV,70.2,🟢 [LUZ VERDE / ALTO VALOR],2600.0,Pendiente,0.0,AUDITANDO
-2026-11-21 15:55:00,401888245,Galatasaray vs Samsunspor (Turquía (Süper Lig)),[FREE] Córners Galatasaray > 4.5,1.18,PENDIENTE_CLV,82.2,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
-2026-11-21 15:55:00,401888245,Galatasaray vs Samsunspor (Turquía (Süper Lig)),[FREE] Remates Puerta > 6.5,1.28,PENDIENTE_CLV,70.6,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
 2026-11-21 16:55:00,401875056,Como vs Cagliari (Italia (Serie A)),[VIP] Faltas Totales > 23.5,1.75,1.75,66.5,🟢 [VALOR ALTO / OPERABLE],5000.0,Perdida,0.0,AUDITADA FT 2-0
 2026-11-21 16:55:00,401875056,Como vs Cagliari (Italia (Serie A)),[VIP] Córners > 8.5,1.48,1.48,73.5,🟢 [LUZ VERDE / ALTO VALOR],4600.0,Perdida,0.0,AUDITADA FT 2-0
 2026-11-21 16:55:00,401875056,Como vs Cagliari (Italia (Serie A)),[FREE] Remates Puerta > 6.5,1.28,1.28,67.3,🟢 [VALOR ALTO / OPERABLE],500.0,Ganada,640.0,AUDITADA FT 2-0
@@ -3258,10 +3154,6 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-11-21 18:55:00,401931806,Estoril vs Felgueiras 1932 (Portugal (Taça De Portugal)),[VIP] Córners > 8.5,1.59,1.59,66.5,🟢 [VALOR ALTO / OPERABLE],2400.0,Ganada,3816.0,AUDITADA FT 2-3
 2026-11-21 18:55:00,401931806,Estoril vs Felgueiras 1932 (Portugal (Taça De Portugal)),[FREE] Faltas Totales > 22.5,1.28,1.28,71.6,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,640.0,AUDITADA FT 2-3
 2026-11-21 18:55:00,401931806,Estoril vs Felgueiras 1932 (Portugal (Taça De Portugal)),[FREE] Córners Estoril > 4.5,1.28,1.28,73.9,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,640.0,AUDITADA FT 2-3
-2026-11-21 18:55:00,401888244,Kocaelispor vs Fenerbahce (Turquía (Süper Lig)),[VIP] Córners > 8.5,1.5,PENDIENTE_CLV,68.1,🟢 [LUZ VERDE / ALTO VALOR],1100.0,Pendiente,0.0,AUDITANDO
-2026-11-21 18:55:00,401888244,Kocaelispor vs Fenerbahce (Turquía (Süper Lig)),[VIP] Faltas Totales > 24.5,1.64,PENDIENTE_CLV,62.3,🟢 [VALOR ALTO / OPERABLE],800.0,Pendiente,0.0,AUDITANDO
-2026-11-21 18:55:00,401888244,Kocaelispor vs Fenerbahce (Turquía (Süper Lig)),[FREE] Faltas Totales > 23.5,1.28,PENDIENTE_CLV,68.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
-2026-11-21 18:55:00,401888244,Kocaelispor vs Fenerbahce (Turquía (Süper Lig)),[FREE] Córners Fenerbahce > 4.5,1.18,PENDIENTE_CLV,78.7,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
 2026-11-21 19:10:00,401876398,Nice vs Paris Saint-Germain (Francia (Ligue 1)),[VIP] Córners > 8.5,1.7,1.70,66.5,🟢 [VALOR ALTO / OPERABLE],4700.0,Perdida,0.0,AUDITADA FT 2-3
 2026-11-21 19:10:00,401876398,Nice vs Paris Saint-Germain (Francia (Ligue 1)),[VIP] Faltas Totales > 21.5,1.65,1.65,66.5,🟢 [VALOR ALTO / OPERABLE],3700.0,Ganada,6105.0,AUDITADA FT 2-3
 2026-11-21 19:10:00,401876398,Nice vs Paris Saint-Germain (Francia (Ligue 1)),[FREE] Over 1.5 Goles,1.27,1.27,74.8,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,635.0,AUDITADA FT 2-3
@@ -3544,13 +3436,6 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-11-22 23:55:00,401933731,Nashville SC vs FC Cincinnati (Usa (Mls)),[VIP] Faltas Totales > 19.5,1.6,1.60,63.9,🟢 [VALOR ALTO / OPERABLE],900.0,Ganada,1440.0,AUDITADA FT 0-1
 2026-11-22 23:55:00,401933731,Nashville SC vs FC Cincinnati (Usa (Mls)),[FREE] Sin Empate Nashville SC,1.18,1.18,86.2,🟢 [LUZ VERDE / ALTO VALOR],2400.0,Perdida,0.0,AUDITADA FT 0-1
 2026-11-22 23:55:00,401933731,Nashville SC vs FC Cincinnati (Usa (Mls)),[FREE] Over 1.5 Goles,1.18,1.18,81.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 0-1
-2026-11-24 16:40:00,401912755,East Bengal FC vs Al-Hussein SC (Copa Asiática),[VIP] Combo 1X + O1.5,1.5,1.50,70.4,🟢 [LUZ VERDE / ALTO VALOR],2800.0,Perdida,0.0,AUDITADA FT 1-0
-2026-11-24 16:40:00,401912755,East Bengal FC vs Al-Hussein SC (Copa Asiática),[VIP] Córners > 8.5,1.56,1.56,65.3,🟢 [VALOR ALTO / OPERABLE],800.0,Ganada,1248.0,AUDITADA FT 1-0
-2026-11-24 16:40:00,401912755,East Bengal FC vs Al-Hussein SC (Copa Asiática),[FREE] Over 1.5 Goles,1.18,1.18,79.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 1-0
-2026-11-24 16:40:00,401912755,East Bengal FC vs Al-Hussein SC (Copa Asiática),[FREE] Faltas Totales > 16.5,1.28,1.28,73.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,640.0,AUDITADA FT 1-0
-2026-11-24 18:55:00,401912754,Al-Seeb Club vs Al-Shorta SC (Copa Asiática),[VIP] Total Menos de 2.5 (Under),1.61,1.61,63.4,🟢 [VALOR ALTO / OPERABLE],900.0,Ganada,1449.0,AUDITADA FT 2-0
-2026-11-24 18:55:00,401912754,Al-Seeb Club vs Al-Shorta SC (Copa Asiática),[FREE] Goles Al-Shorta SC > 0.5,1.18,1.18,79.3,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 2-0
-2026-11-24 18:55:00,401912754,Al-Seeb Club vs Al-Shorta SC (Copa Asiática),[FREE] Córners > 7.5,1.28,1.28,57.3,🟡 [MODERADO / VIGILAR],500.0,Ganada,640.0,AUDITADA FT 2-0
 2026-11-24 20:40:00,401915380,Bodo/Glimt vs LASK Linz (Uefa Champions League),[VIP] Total Asiático > 2.25,1.6,1.60,63.8,🟢 [VALOR ALTO / OPERABLE],900.0,Perdida,0.0,AUDITADA FT 1-0
 2026-11-24 20:40:00,401915380,Bodo/Glimt vs LASK Linz (Uefa Champions League),[VIP] Goles LASK Linz > 1.5,1.63,1.63,62.5,🟢 [VALOR ALTO / OPERABLE],700.0,Perdida,0.0,AUDITADA FT 1-0
 2026-11-24 20:40:00,401915380,Bodo/Glimt vs LASK Linz (Uefa Champions League),[FREE] Córners LASK Linz > 4.5,1.28,1.28,71.1,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 1-0
@@ -3603,35 +3488,6 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-11-25 05:55:00,401933738,San Jose Earthquakes vs Houston Dynamo FC (Usa (Mls)),[VIP] Remates Puerta > 8.5,1.71,1.71,59.8,🟢 [VALOR ALTO / OPERABLE],800.0,Ganada,1368.0,AUDITADA FT 2-1
 2026-11-25 05:55:00,401933738,San Jose Earthquakes vs Houston Dynamo FC (Usa (Mls)),[FREE] Gol en 2do Tiempo,1.18,1.18,82.7,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 2-1
 2026-11-25 05:55:00,401933738,San Jose Earthquakes vs Houston Dynamo FC (Usa (Mls)),[FREE] Córners San Jose Earthq > 4.5,1.28,1.28,68.3,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,640.0,AUDITADA FT 2-1
-2026-11-24 18:55:00,401912754,Al-Seeb Club vs Al-Shorta SC (Copa Asiática),[VIP] Total Menos de 2.5 (Under),1.61,1.61,63.4,🟢 [VALOR ALTO / OPERABLE],900.0,Ganada,1449.0,AUDITADA FT 2-0
-2026-11-25 10:40:00,401912752,Melbourne Victory vs The Cong-Viettel FC (Copa Asiática),[VIP] Sin Empate Melbourne Vi,1.38,1.38,84.0,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Mitad Devuelta,5000.0,AUDITADA FT 0-0
-2026-11-25 10:40:00,401912752,Melbourne Victory vs The Cong-Viettel FC (Copa Asiática),[VIP] Goles Melbourne Vi > 0.5,1.45,1.45,72.3,🟢 [LUZ VERDE / ALTO VALOR],2700.0,Perdida,0.0,AUDITADA FT 0-0
-2026-11-25 10:40:00,401912752,Melbourne Victory vs The Cong-Viettel FC (Copa Asiática),[FREE] Combo 1X + U4.5,1.18,1.18,85.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 0-0
-2026-11-25 10:40:00,401912752,Melbourne Victory vs The Cong-Viettel FC (Copa Asiática),[FREE] Faltas Totales > 18.5,1.28,1.28,69.9,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 0-0
-2026-11-25 15:10:00,401912753,Persib Bandung vs FC Seoul (Copa Asiática),[VIP] Victoria Persib Bandu,1.44,1.44,70.7,🟢 [LUZ VERDE / ALTO VALOR],1000.0,Ganada,1440.0,AUDITADA FT 3-1
-2026-11-25 15:10:00,401912753,Persib Bandung vs FC Seoul (Copa Asiática),[VIP] Goles Persib Bandu > 1.5,1.65,1.65,62.0,🟢 [VALOR ALTO / OPERABLE],900.0,Ganada,1485.0,AUDITADA FT 3-1
-2026-11-25 15:10:00,401912753,Persib Bandung vs FC Seoul (Copa Asiática),[FREE] Combo 1X + U4.5,1.18,1.18,83.4,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 3-1
-2026-11-25 15:10:00,401912753,Persib Bandung vs FC Seoul (Copa Asiática),[FREE] Faltas Totales > 17.5,1.28,1.28,70.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,640.0,AUDITADA FT 3-1
-2026-11-25 16:40:00,401912751,FC Nasaf vs Al-Khaldiya SC (Copa Asiática),[VIP] Combo 1X + U4.5,1.5,1.50,70.5,🟢 [LUZ VERDE / ALTO VALOR],2900.0,Ganada,4350.0,AUDITADA FT 1-0
-2026-11-25 16:40:00,401912751,FC Nasaf vs Al-Khaldiya SC (Copa Asiática),[VIP] Faltas Totales > 21.5,1.71,1.71,59.8,🟢 [VALOR ALTO / OPERABLE],800.0,Perdida,0.0,AUDITADA FT 1-0
-2026-11-25 16:40:00,401912751,FC Nasaf vs Al-Khaldiya SC (Copa Asiática),[FREE] Goles FC Nasaf > 0.5,1.21,1.21,77.6,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,605.0,AUDITADA FT 1-0
-2026-11-25 16:40:00,401912751,FC Nasaf vs Al-Khaldiya SC (Copa Asiática),[FREE] Córners > 7.5,1.28,1.28,64.2,🟢 [VALOR ALTO / OPERABLE],500.0,Perdida,0.0,AUDITADA FT 1-0
-2026-11-25 18:55:00,401912750,Al Jazira Club vs Gol Gohar Sirjan FC (Copa Asiática),[VIP] Combo 1X + O1.5,1.55,1.55,65.9,🟢 [VALOR ALTO / OPERABLE],1000.0,Perdida,0.0,AUDITADA FT 1-0
-2026-11-25 18:55:00,401912750,Al Jazira Club vs Gol Gohar Sirjan FC (Copa Asiática),[VIP] Faltas Totales > 22.5,1.66,1.66,61.5,🟢 [VALOR ALTO / OPERABLE],800.0,Perdida,0.0,AUDITADA FT 1-0
-2026-11-25 18:55:00,401912750,Al Jazira Club vs Gol Gohar Sirjan FC (Copa Asiática),[FREE] Over 1.5 Goles,1.28,1.28,74.3,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 1-0
-2026-11-25 18:55:00,401912750,Al Jazira Club vs Gol Gohar Sirjan FC (Copa Asiática),[FREE] Doble Oport. 1X,1.18,1.18,82.7,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 1-0
-2026-11-25 18:55:00,401912748,Al-Faisaly SC vs Al-Rayyan SC (Copa Asiática),[VIP] Ambos Marcan (BTTS),1.53,1.53,66.7,🟢 [VALOR ALTO / OPERABLE],1000.0,Perdida,0.0,AUDITADA FT 0-1
-2026-11-25 18:55:00,401912748,Al-Faisaly SC vs Al-Rayyan SC (Copa Asiática),[VIP] Faltas Totales > 20.5,1.59,1.59,64.0,🟢 [VALOR ALTO / OPERABLE],700.0,Perdida,0.0,AUDITADA FT 0-1
-2026-11-25 18:55:00,401912748,Al-Faisaly SC vs Al-Rayyan SC (Copa Asiática),[FREE] Remates Puerta > 6.5,1.28,1.28,67.1,🟢 [VALOR ALTO / OPERABLE],500.0,Perdida,0.0,AUDITADA FT 0-1
-2026-11-25 18:55:00,401912748,Al-Faisaly SC vs Al-Rayyan SC (Copa Asiática),[FREE] Over 1.5 Goles,1.18,1.18,78.7,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 0-1
-2026-11-25 18:55:00,401912749,Al-Muharraq SC vs Arkadag FK (Copa Asiática),[VIP] Combo 1X + U4.5,1.57,1.57,64.9,🟢 [VALOR ALTO / OPERABLE],800.0,Perdida,0.0,AUDITADA FT 2-4
-2026-11-25 18:55:00,401912749,Al-Muharraq SC vs Arkadag FK (Copa Asiática),[VIP] Tarjetas > 3.5,1.71,1.71,59.8,🟢 [VALOR ALTO / OPERABLE],800.0,Ganada,1368.0,AUDITADA FT 2-4
-2026-11-25 18:55:00,401912749,Al-Muharraq SC vs Arkadag FK (Copa Asiática),[FREE] Goles Al-Muharraq  > 0.5,1.25,1.25,75.1,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,625.0,AUDITADA FT 2-4
-2026-11-25 18:55:00,401912749,Al-Muharraq SC vs Arkadag FK (Copa Asiática),[FREE] Faltas Totales > 21.5,1.24,1.24,76.9,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,620.0,AUDITADA FT 2-4
-2026-11-25 18:55:00,401912747,Kuwait SC vs Al Wahda FC (Copa Asiática),[VIP] Ambos Marcan (BTTS),1.5,1.50,70.9,🟢 [LUZ VERDE / ALTO VALOR],3200.0,Ganada,4800.0,AUDITADA FT 1-2
-2026-11-25 18:55:00,401912747,Kuwait SC vs Al Wahda FC (Copa Asiática),[VIP] Faltas Totales > 17.5,1.6,1.60,63.8,🟢 [VALOR ALTO / OPERABLE],900.0,Ganada,1440.0,AUDITADA FT 1-2
-2026-11-25 18:55:00,401912747,Kuwait SC vs Al Wahda FC (Copa Asiática),[FREE] Gol en 2do Tiempo,1.18,1.18,81.8,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 1-2
-2026-11-25 18:55:00,401912747,Kuwait SC vs Al Wahda FC (Copa Asiática),[FREE] Remates Puerta > 6.5,1.28,1.28,71.2,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,640.0,AUDITADA FT 1-2
 2026-11-25 20:40:00,401915378,Sabah FK vs Barcelona (Uefa Champions League),[VIP] Combo X2 + O1.5,1.5,1.50,76.2,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,7500.0,AUDITADA FT 1-4
 2026-11-25 20:40:00,401915378,Sabah FK vs Barcelona (Uefa Champions League),[VIP] Córners Barcelona > 4.5,1.5,1.50,68.0,🟢 [LUZ VERDE / ALTO VALOR],1000.0,Ganada,1500.0,AUDITADA FT 1-4
 2026-11-25 20:40:00,401915378,Sabah FK vs Barcelona (Uefa Champions League),[FREE] Gol en 1T,1.18,1.18,79.1,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 1-4
@@ -3640,10 +3496,6 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-11-25 20:40:00,401915293,Slavia Prague vs Villarreal (Uefa Champions League),[VIP] Faltas Totales > 21.5,1.67,1.67,61.0,🟢 [VALOR ALTO / OPERABLE],700.0,Ganada,1169.0,AUDITADA FT 0-1
 2026-11-25 20:40:00,401915293,Slavia Prague vs Villarreal (Uefa Champions League),[FREE] Over 1.5 Goles,1.18,1.18,81.9,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 0-1
 2026-11-25 20:40:00,401915293,Slavia Prague vs Villarreal (Uefa Champions League),[FREE] Córners > 7.5,1.28,1.28,66.9,🟢 [VALOR ALTO / OPERABLE],500.0,Ganada,640.0,AUDITADA FT 0-1
-2026-11-25 21:10:00,401912746,Al Taawoun vs Al-Nahda Club (Copa Asiática),[VIP] Córners Al Taawoun > 4.5,1.38,1.38,84.9,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Perdida,0.0,AUDITADA FT 0-0
-2026-11-25 21:10:00,401912746,Al Taawoun vs Al-Nahda Club (Copa Asiática),[VIP] Ambos Marcan (BTTS),1.58,1.58,64.5,🟢 [VALOR ALTO / OPERABLE],800.0,Perdida,0.0,AUDITADA FT 0-0
-2026-11-25 21:10:00,401912746,Al Taawoun vs Al-Nahda Club (Copa Asiática),[FREE] Sin Empate Al Taawoun,1.16,1.16,77.3,🟢 [LUZ VERDE / ALTO VALOR],500.0,Mitad Devuelta,500.0,AUDITADA FT 0-0
-2026-11-25 21:10:00,401912746,Al Taawoun vs Al-Nahda Club (Copa Asiática),[FREE] Faltas Totales > 18.5,1.28,1.28,70.2,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,640.0,AUDITADA FT 0-0
 2026-11-25 22:55:00,401915291,Atlético Madrid vs Viking FK (Uefa Champions League),[VIP] Combo 1X + O1.5,1.51,1.51,67.7,🟢 [VALOR ALTO / OPERABLE],1100.0,Ganada,1661.0,AUDITADA FT 2-0
 2026-11-25 22:55:00,401915291,Atlético Madrid vs Viking FK (Uefa Champions League),[VIP] Tarjetas > 3.5,1.61,1.61,63.3,🟢 [VALOR ALTO / OPERABLE],800.0,Perdida,0.0,AUDITADA FT 2-0
 2026-11-25 22:55:00,401915291,Atlético Madrid vs Viking FK (Uefa Champions League),[FREE] Gol en 1T,1.27,1.27,75.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,635.0,AUDITADA FT 2-0
@@ -3696,178 +3548,201 @@ Fecha_Registro,ID_Partido,Partido,Mercado,Cuota_Compra,Cuota_Cierre_CLV,Probabil
 2026-11-26 06:05:00,401931998,Monterrey vs América (México (Liga Mx)),[VIP] Faltas Totales > 21.5,1.61,1.61,63.5,🟢 [VALOR ALTO / OPERABLE],900.0,Ganada,1449.0,AUDITADA FT 0-0
 2026-11-26 06:05:00,401931998,Monterrey vs América (México (Liga Mx)),[FREE] Gol en 2do Tiempo,1.18,1.18,82.8,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 0-0
 2026-11-26 06:05:00,401931998,Monterrey vs América (México (Liga Mx)),[FREE] Córners > 8.5,1.28,1.28,71.1,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,640.0,AUDITADA FT 0-0
-2026-11-26 12:55:00,401912744,Gangwon FC vs Kitchee SC (Copa Asiática),[VIP] Combo 1X + U4.5,1.5,1.50,77.7,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Perdida,0.0,AUDITADA FT 3-2
-2026-11-26 12:55:00,401912744,Gangwon FC vs Kitchee SC (Copa Asiática),[VIP] Córners > 8.5,1.48,1.48,68.7,🟢 [LUZ VERDE / ALTO VALOR],900.0,Ganada,1332.0,AUDITADA FT 3-2
-2026-11-26 12:55:00,401912744,Gangwon FC vs Kitchee SC (Copa Asiática),[FREE] Doble Oport. 1X,1.18,1.18,84.6,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 3-2
-2026-11-26 12:55:00,401912744,Gangwon FC vs Kitchee SC (Copa Asiática),[FREE] Gol en 2do Tiempo,1.28,1.28,63.5,🟢 [VALOR ALTO / OPERABLE],500.0,Ganada,640.0,AUDITADA FT 3-2
-2026-11-26 12:55:00,401912743,Kuching City vs Phnom Penh Crown FC (Copa Asiática),[VIP] Ambos Marcan (BTTS),1.63,1.63,62.7,🟢 [VALOR ALTO / OPERABLE],900.0,Perdida,0.0,AUDITADA FT 3-0
-2026-11-26 12:55:00,401912743,Kuching City vs Phnom Penh Crown FC (Copa Asiática),[VIP] Gol en 2do Tiempo,1.38,1.38,80.3,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,6900.0,AUDITADA FT 3-0
-2026-11-26 12:55:00,401912743,Kuching City vs Phnom Penh Crown FC (Copa Asiática),[FREE] Doble Oport. 1X,1.26,1.26,75.7,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,630.0,AUDITADA FT 3-0
-2026-11-26 12:55:00,401912743,Kuching City vs Phnom Penh Crown FC (Copa Asiática),[FREE] Córners > 7.5,1.28,1.28,67.4,🟢 [VALOR ALTO / OPERABLE],500.0,Perdida,0.0,AUDITADA FT 3-0
-2026-11-26 12:55:00,401912745,Tampines Rovers FC vs Shanghai Shenhua FC (Copa Asiática),[VIP] Goles Shanghai She > 1.5,1.41,1.41,66.6,🟢 [VALOR ALTO / OPERABLE],500.0,Ganada,705.0,AUDITADA FT 1-7
-2026-11-26 12:55:00,401912745,Tampines Rovers FC vs Shanghai Shenhua FC (Copa Asiática),[VIP] Over 2.5 Goles,1.61,1.61,63.5,🟢 [VALOR ALTO / OPERABLE],900.0,Ganada,1449.0,AUDITADA FT 1-7
-2026-11-26 12:55:00,401912745,Tampines Rovers FC vs Shanghai Shenhua FC (Copa Asiática),[FREE] Córners Shanghai Shenhu > 4.5,1.25,1.25,76.3,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,625.0,AUDITADA FT 1-7
-2026-11-26 15:10:00,401912742,BG Pathum United vs Lion City Sailors FC (Copa Asiática),[VIP] Ambos Marcan (BTTS),1.5,1.50,69.2,🟢 [LUZ VERDE / ALTO VALOR],1900.0,Perdida,0.0,AUDITADA FT 0-3
-2026-11-26 15:10:00,401912742,BG Pathum United vs Lion City Sailors FC (Copa Asiática),[VIP] Gol en 1T,1.38,1.38,79.2,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,6900.0,AUDITADA FT 0-3
-2026-11-26 15:10:00,401912742,BG Pathum United vs Lion City Sailors FC (Copa Asiática),[FREE] Córners > 8.5,1.28,1.28,61.8,🟢 [VALOR ALTO / OPERABLE],500.0,Perdida,0.0,AUDITADA FT 0-3
-2026-11-26 15:10:00,401912742,BG Pathum United vs Lion City Sailors FC (Copa Asiática),[FREE] Tarjetas > 2.5,1.28,1.28,57.3,🟡 [MODERADO / VIGILAR],500.0,Perdida,0.0,AUDITADA FT 0-3
-2026-11-26 15:10:00,401912740,PKR Svay Rieng vs Machida Zelvia (Copa Asiática),[VIP] Gol en 2do Tiempo,1.38,1.38,78.2,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,6900.0,AUDITADA FT 2-0
-2026-11-26 15:10:00,401912740,PKR Svay Rieng vs Machida Zelvia (Copa Asiática),[FREE] Goles Machida Zelv > 0.5,1.22,1.22,77.1,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 2-0
-2026-11-26 15:10:00,401912740,PKR Svay Rieng vs Machida Zelvia (Copa Asiática),[FREE] Remates Puerta > 5.5,1.28,SIN_CLV,66.7,🟢 [VALOR ALTO / OPERABLE],500.0,Ganada,640.0,AUDITADA FT 2-0
-2026-11-26 15:10:00,401912741,Tai Po FC vs Adelaide United FC (Copa Asiática),[VIP] Goles Adelaide Uni > 1.5,1.4,1.40,67.1,🟢 [VALOR ALTO / OPERABLE],500.0,Ganada,700.0,AUDITADA FT 1-7
-2026-11-26 15:10:00,401912741,Tai Po FC vs Adelaide United FC (Copa Asiática),[VIP] Over 2.5 Goles,1.65,1.65,61.8,🟢 [VALOR ALTO / OPERABLE],800.0,Ganada,1320.0,AUDITADA FT 1-7
-2026-11-26 15:10:00,401912741,Tai Po FC vs Adelaide United FC (Copa Asiática),[FREE] Córners Adelaide United > 4.5,1.28,1.28,71.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,640.0,AUDITADA FT 1-7
-2026-11-26 15:10:00,401912741,Tai Po FC vs Adelaide United FC (Copa Asiática),[FREE] Remates Puerta > 4.5,1.28,SIN_CLV,70.8,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,640.0,AUDITADA FT 1-7
-2026-11-26 18:25:00,401915816,Kairat Almaty vs Mjällby AIF (Uefa Conference League),[VIP] Combo X2 + U3.5,1.63,1.63,62.5,🟢 [VALOR ALTO / OPERABLE],700.0,Perdida,0.0,AUDITADA FT 1-0
-2026-11-26 18:25:00,401915816,Kairat Almaty vs Mjällby AIF (Uefa Conference League),[FREE] Over 1.5 Goles,1.28,1.28,74.4,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 1-0
-2026-11-26 18:25:00,401915816,Kairat Almaty vs Mjällby AIF (Uefa Conference League),[FREE] Doble Oport. X2,1.43,1.43,77.9,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Perdida,0.0,AUDITADA FT 1-0
-2026-11-26 20:25:00,401900871,Al Faisaly vs Al Diriyah (Arabia Saudita (Saudi Pro League)),[VIP] Goles Al Diriyah > 0.5,1.45,1.45,71.3,🟢 [LUZ VERDE / ALTO VALOR],1900.0,Ganada,2755.0,AUDITADA FT 2-2
-2026-11-26 20:25:00,401900871,Al Faisaly vs Al Diriyah (Arabia Saudita (Saudi Pro League)),[FREE] Total Menos de 3.5 (Under),1.28,1.28,74.4,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 2-2
-2026-11-26 20:25:00,401900871,Al Faisaly vs Al Diriyah (Arabia Saudita (Saudi Pro League)),[FREE] Remates Puerta > 4.5,1.28,1.28,63.1,🟢 [VALOR ALTO / OPERABLE],500.0,Perdida,0.0,AUDITADA FT 2-2
-2026-11-26 20:40:00,401915506,Besiktas vs Hapoel Be'er (Uefa Europa League),[VIP] Combo 1X + O1.5,1.5,1.50,80.1,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,7500.0,AUDITADA FT 2-1
-2026-11-26 20:40:00,401915506,Besiktas vs Hapoel Be'er (Uefa Europa League),[VIP] Córners > 8.5,1.88,1.88,54.4,🟡 [MODERADO / VIGILAR],500.0,Ganada,940.0,AUDITADA FT 2-1
-2026-11-26 20:40:00,401915506,Besiktas vs Hapoel Be'er (Uefa Europa League),[FREE] Over 1.5 Goles,1.18,1.18,81.4,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 2-1
-2026-11-26 20:40:00,401915506,Besiktas vs Hapoel Be'er (Uefa Europa League),[FREE] Doble Oport. 1X,1.18,1.18,84.7,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 2-1
-2026-11-26 20:40:00,401915519,Celta Vigo vs AFC Bournemouth (Uefa Europa League),[VIP] Total Asiático > 2.25,1.71,1.71,59.8,🟢 [VALOR ALTO / OPERABLE],800.0,Ganada,1368.0,AUDITADA FT 1-2
-2026-11-26 20:40:00,401915519,Celta Vigo vs AFC Bournemouth (Uefa Europa League),[VIP] Tarjetas > 3.5,1.85,1.85,55.0,🟡 [MODERADO / VIGILAR],500.0,Ganada,925.0,AUDITADA FT 1-2
-2026-11-26 20:40:00,401915519,Celta Vigo vs AFC Bournemouth (Uefa Europa League),[FREE] Gol en 1T,1.18,1.18,80.3,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 1-2
-2026-11-26 20:40:00,401915519,Celta Vigo vs AFC Bournemouth (Uefa Europa League),[FREE] Doble Oport. X2,1.22,1.22,77.6,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,610.0,AUDITADA FT 1-2
-2026-11-26 20:40:00,401915517,Dinamo Zagreb vs Bayer Leverkusen (Uefa Europa League),[VIP] Ambos Marcan (BTTS),1.46,1.46,59.3,🟢 [VALOR ALTO / OPERABLE],500.0,Perdida,0.0,AUDITADA FT 0-2
-2026-11-26 20:40:00,401915517,Dinamo Zagreb vs Bayer Leverkusen (Uefa Europa League),[VIP] Gol en 2do Tiempo,1.38,1.38,81.9,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Perdida,0.0,AUDITADA FT 0-2
-2026-11-26 20:40:00,401915517,Dinamo Zagreb vs Bayer Leverkusen (Uefa Europa League),[FREE] Córners > 8.5,1.28,1.28,60.9,🟢 [VALOR ALTO / OPERABLE],500.0,Ganada,640.0,AUDITADA FT 0-2
-2026-11-26 20:40:00,401915517,Dinamo Zagreb vs Bayer Leverkusen (Uefa Europa League),[FREE] Remates Puerta > 5.5,1.28,1.28,65.9,🟢 [VALOR ALTO / OPERABLE],500.0,Perdida,0.0,AUDITADA FT 0-2
-2026-11-26 20:40:00,401915507,Marseille vs Levski Sofia (Uefa Europa League),[VIP] Combo X2 + U3.5,1.5,1.50,68.6,🟢 [LUZ VERDE / ALTO VALOR],1400.0,Perdida,0.0,AUDITADA FT 1-0
-2026-11-26 20:40:00,401915507,Marseille vs Levski Sofia (Uefa Europa League),[FREE] Goles Levski Sofia > 0.5,1.28,1.28,73.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 1-0
-2026-11-26 20:40:00,401915507,Marseille vs Levski Sofia (Uefa Europa League),[FREE] Total Menos de 3.5 (Under),1.23,1.23,77.2,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,615.0,AUDITADA FT 1-0
-2026-11-26 20:40:00,401915521,Olympiacos vs AC Milan (Uefa Europa League),[VIP] Doble Oport. 1X,1.38,1.38,76.4,🟢 [LUZ VERDE / ALTO VALOR],3600.0,Perdida,0.0,AUDITADA FT 2-4
-2026-11-26 20:40:00,401915521,Olympiacos vs AC Milan (Uefa Europa League),[VIP] Córners > 8.5,1.61,1.61,63.3,🟢 [VALOR ALTO / OPERABLE],800.0,Perdida,0.0,AUDITADA FT 2-4
-2026-11-26 20:40:00,401915521,Olympiacos vs AC Milan (Uefa Europa League),[FREE] Combo 1X + U4.5,1.18,1.18,86.5,🟢 [LUZ VERDE / ALTO VALOR],2900.0,Perdida,0.0,AUDITADA FT 2-4
-2026-11-26 20:40:00,401915521,Olympiacos vs AC Milan (Uefa Europa League),[FREE] Remates Puerta > 5.5,1.28,1.28,59.0,🟢 [VALOR ALTO / OPERABLE],500.0,Ganada,640.0,AUDITADA FT 2-4
-2026-11-26 20:40:00,401915520,RB Salzburg vs Ararat-Armenia (Uefa Europa League),[VIP] Córners RB Salzburg > 4.5,1.38,1.38,83.8,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,6900.0,AUDITADA FT 2-0
-2026-11-26 20:40:00,401915520,RB Salzburg vs Ararat-Armenia (Uefa Europa League),[VIP] Combo 1X + O1.5,1.5,1.50,69.4,🟢 [LUZ VERDE / ALTO VALOR],2100.0,Ganada,3150.0,AUDITADA FT 2-0
-2026-11-26 20:40:00,401915520,RB Salzburg vs Ararat-Armenia (Uefa Europa League),[FREE] Over 1.5 Goles,1.23,1.23,77.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,615.0,AUDITADA FT 2-0
-2026-11-26 20:40:00,401915520,RB Salzburg vs Ararat-Armenia (Uefa Europa League),[FREE] Doble Oport. 1X,1.18,1.18,84.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 2-0
-2026-11-26 20:40:00,401915508,Union St.-Gilloise vs Lech Poznan (Uefa Europa League),[VIP] Goles Union St.-Gi > 1.5,1.45,1.45,72.1,🟢 [LUZ VERDE / ALTO VALOR],2500.0,Ganada,3625.0,AUDITADA FT 2-2
-2026-11-26 20:40:00,401915508,Union St.-Gilloise vs Lech Poznan (Uefa Europa League),[VIP] Gol en 2do Tiempo,1.45,1.45,70.4,🟢 [LUZ VERDE / ALTO VALOR],1200.0,Ganada,1740.0,AUDITADA FT 2-2
-2026-11-26 20:40:00,401915508,Union St.-Gilloise vs Lech Poznan (Uefa Europa League),[FREE] Sin Empate Union St.-Gi,1.18,1.18,85.4,🟢 [LUZ VERDE / ALTO VALOR],1100.0,Mitad Devuelta,1100.0,AUDITADA FT 2-2
-2026-11-26 20:40:00,401915508,Union St.-Gilloise vs Lech Poznan (Uefa Europa League),[FREE] Córners > 7.5,1.28,1.28,66.2,🟢 [VALOR ALTO / OPERABLE],500.0,Ganada,640.0,AUDITADA FT 2-2
-2026-11-26 20:40:00,401915518,Viktoria Plzen vs Benfica (Uefa Europa League),[VIP] Combo X2 + O1.5,1.5,1.50,78.0,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Perdida,0.0,AUDITADA FT 4-0
-2026-11-26 20:40:00,401915518,Viktoria Plzen vs Benfica (Uefa Europa League),[VIP] Córners > 8.5,1.47,1.47,69.4,🟢 [LUZ VERDE / ALTO VALOR],1100.0,Ganada,1617.0,AUDITADA FT 4-0
-2026-11-26 20:40:00,401915518,Viktoria Plzen vs Benfica (Uefa Europa League),[FREE] Gol en 1T,1.28,1.28,72.4,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,640.0,AUDITADA FT 4-0
-2026-11-26 20:40:00,401915518,Viktoria Plzen vs Benfica (Uefa Europa League),[FREE] Tarjetas > 2.5,1.28,1.28,67.3,🟢 [VALOR ALTO / OPERABLE],500.0,Perdida,0.0,AUDITADA FT 4-0
-2026-11-26 20:40:00,401915815,Ajax Amsterdam vs FC Thun (Uefa Conference League),[VIP] Córners Ajax Amsterdam > 4.5,1.38,1.38,81.3,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,6900.0,AUDITADA FT 4-0
-2026-11-26 20:40:00,401915815,Ajax Amsterdam vs FC Thun (Uefa Conference League),[VIP] Combo 1X + U3.5,1.53,1.53,66.7,🟢 [VALOR ALTO / OPERABLE],1000.0,Perdida,0.0,AUDITADA FT 4-0
-2026-11-26 20:40:00,401915815,Ajax Amsterdam vs FC Thun (Uefa Conference League),[FREE] Gol en 1T,1.28,1.28,74.1,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,640.0,AUDITADA FT 4-0
-2026-11-26 20:40:00,401915815,Ajax Amsterdam vs FC Thun (Uefa Conference League),[FREE] Doble Oport. 1X,1.18,1.18,85.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 4-0
-2026-11-26 20:40:00,401915814,Brighton & Hove Albion vs CSU Craiova (Uefa Conference League),[VIP] Combo 1X + U4.5,1.5,1.50,69.7,🟢 [LUZ VERDE / ALTO VALOR],2300.0,Ganada,3450.0,AUDITADA FT 4-0
-2026-11-26 20:40:00,401915814,Brighton & Hove Albion vs CSU Craiova (Uefa Conference League),[FREE] Goles Brighton & H > 0.5,1.28,1.28,73.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,640.0,AUDITADA FT 4-0
-2026-11-26 20:40:00,401915814,Brighton & Hove Albion vs CSU Craiova (Uefa Conference League),[FREE] Córners Brighton & Hove > 4.5,1.18,1.18,81.1,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 4-0
-2026-11-26 20:40:00,401915810,Egnatia vs Lincoln Red Imps (Uefa Conference League),[VIP] Tarjetas > 3.5,1.61,1.61,63.2,🟢 [VALOR ALTO / OPERABLE],700.0,Ganada,1127.0,AUDITADA FT 2-1
-2026-11-26 20:40:00,401915810,Egnatia vs Lincoln Red Imps (Uefa Conference League),[FREE] Doble Oport. 1X,1.16,1.16,77.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,580.0,AUDITADA FT 2-1
-2026-11-26 20:40:00,401915810,Egnatia vs Lincoln Red Imps (Uefa Conference League),[FREE] Goles Egnatia > 0.5,1.27,1.27,74.7,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,635.0,AUDITADA FT 2-1
-2026-11-26 20:40:00,401915811,Heart of Midlothian vs AS Monaco (Uefa Conference League),[VIP] Goles AS Monaco > 1.5,1.53,1.53,66.7,🟢 [VALOR ALTO / OPERABLE],1000.0,Ganada,1530.0,AUDITADA FT 2-3
-2026-11-26 20:40:00,401915811,Heart of Midlothian vs AS Monaco (Uefa Conference League),[VIP] Córners > 8.5,1.53,1.53,66.7,🟢 [VALOR ALTO / OPERABLE],1000.0,Ganada,1530.0,AUDITADA FT 2-3
-2026-11-26 20:40:00,401915811,Heart of Midlothian vs AS Monaco (Uefa Conference League),[FREE] Over 1.5 Goles,1.18,1.18,81.3,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 2-3
-2026-11-26 20:40:00,401915811,Heart of Midlothian vs AS Monaco (Uefa Conference League),[FREE] Sin Empate AS Monaco,1.23,1.23,81.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,615.0,AUDITADA FT 2-3
-2026-11-26 20:40:00,401915813,Iberia 1999 vs Getafe (Uefa Conference League),[VIP] Combo 1X + U3.5,1.54,1.54,66.4,🟢 [VALOR ALTO / OPERABLE],1000.0,Ganada,1540.0,AUDITADA FT 1-0
-2026-11-26 20:40:00,401915813,Iberia 1999 vs Getafe (Uefa Conference League),[VIP] Tarjetas > 5.5,1.6,1.60,63.7,🟢 [VALOR ALTO / OPERABLE],800.0,Ganada,1280.0,AUDITADA FT 1-0
-2026-11-26 20:40:00,401915813,Iberia 1999 vs Getafe (Uefa Conference League),[FREE] Combo 1X + U4.5,1.28,1.28,72.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,640.0,AUDITADA FT 1-0
-2026-11-26 20:40:00,401915813,Iberia 1999 vs Getafe (Uefa Conference League),[FREE] Remates Puerta > 4.5,1.28,1.28,60.4,🟢 [VALOR ALTO / OPERABLE],500.0,Ganada,640.0,AUDITADA FT 1-0
-2026-11-26 20:40:00,401915812,Jablonec vs FC Lugano (Uefa Conference League),[VIP] Ambos Marcan (BTTS),1.57,1.57,62.5,🟢 [VALOR ALTO / OPERABLE],500.0,Perdida,0.0,AUDITADA FT 2-0
-2026-11-26 20:40:00,401915812,Jablonec vs FC Lugano (Uefa Conference League),[VIP] Combo X2 + O1.5,1.52,1.52,66.9,🟢 [VALOR ALTO / OPERABLE],800.0,Perdida,0.0,AUDITADA FT 2-0
-2026-11-26 20:40:00,401915812,Jablonec vs FC Lugano (Uefa Conference League),[FREE] Córners FC Lugano > 4.5,1.28,1.28,65.3,🟢 [VALOR ALTO / OPERABLE],500.0,Perdida,0.0,AUDITADA FT 2-0
-2026-11-26 20:40:00,401915812,Jablonec vs FC Lugano (Uefa Conference League),[FREE] Doble Oport. X2,1.25,1.25,73.3,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 2-0
-2026-11-26 20:40:00,401915739,Kauno Zalgiris vs Riga FC (Uefa Conference League),[VIP] Combo X2 + U3.5,1.5,1.50,69.7,🟢 [LUZ VERDE / ALTO VALOR],2300.0,Perdida,0.0,AUDITADA FT 2-0
-2026-11-26 20:40:00,401915739,Kauno Zalgiris vs Riga FC (Uefa Conference League),[FREE] Goles Riga FC > 0.5,1.18,1.18,78.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 2-0
-2026-11-26 20:40:00,401915739,Kauno Zalgiris vs Riga FC (Uefa Conference League),[FREE] Tarjetas > 3.5,1.28,1.28,62.5,🟢 [VALOR ALTO / OPERABLE],500.0,Ganada,640.0,AUDITADA FT 2-0
-2026-11-26 20:40:00,401915809,Pafos vs FC Midtjylland (Uefa Conference League),[VIP] Combo 1X + O1.5,1.52,1.52,67.3,🟢 [VALOR ALTO / OPERABLE],1100.0,Perdida,0.0,AUDITADA FT 0-2
-2026-11-26 20:40:00,401915809,Pafos vs FC Midtjylland (Uefa Conference League),[VIP] Ambos Marcan (BTTS),1.44,1.44,59.1,🟢 [VALOR ALTO / OPERABLE],500.0,Perdida,0.0,AUDITADA FT 0-2
-2026-11-26 20:40:00,401915809,Pafos vs FC Midtjylland (Uefa Conference League),[FREE] Córners > 7.5,1.28,1.28,60.7,🟢 [VALOR ALTO / OPERABLE],500.0,Ganada,640.0,AUDITADA FT 0-2
-2026-11-26 20:40:00,401915809,Pafos vs FC Midtjylland (Uefa Conference League),[FREE] Doble Oport. 1X,1.46,1.46,80.2,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Perdida,0.0,AUDITADA FT 0-2
-2026-11-26 20:40:00,401915808,SK Brann vs AGF (Uefa Conference League),[VIP] Sin Empate SK Brann,1.55,1.55,73.0,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Perdida,0.0,AUDITADA FT 1-4
-2026-11-26 20:40:00,401915808,SK Brann vs AGF (Uefa Conference League),[VIP] Córners > 8.5,1.45,1.45,75.1,🟢 [LUZ VERDE / ALTO VALOR],4900.0,Perdida,0.0,AUDITADA FT 1-4
-2026-11-26 20:40:00,401915808,SK Brann vs AGF (Uefa Conference League),[FREE] Combo 1X + U4.5,1.18,1.18,86.4,🟢 [LUZ VERDE / ALTO VALOR],2700.0,Perdida,0.0,AUDITADA FT 1-4
-2026-11-26 20:40:00,401915808,SK Brann vs AGF (Uefa Conference League),[FREE] Remates Puerta > 5.5,1.28,1.28,59.1,🟢 [VALOR ALTO / OPERABLE],500.0,Ganada,640.0,AUDITADA FT 1-4
-2026-11-26 22:55:00,401915504,Crystal Palace vs Real Sociedad (Uefa Europa League),[VIP] Ambos Marcan (BTTS),1.5,1.50,76.9,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,7500.0,AUDITADA FT 2-1
-2026-11-26 22:55:00,401915504,Crystal Palace vs Real Sociedad (Uefa Europa League),[VIP] Over 2.5 Goles,1.57,1.57,65.1,🟢 [VALOR ALTO / OPERABLE],1000.0,Ganada,1570.0,AUDITADA FT 2-1
-2026-11-26 22:55:00,401915504,Crystal Palace vs Real Sociedad (Uefa Europa League),[FREE] Gol en 2do Tiempo,1.18,1.18,84.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 2-1
-2026-11-26 22:55:00,401915504,Crystal Palace vs Real Sociedad (Uefa Europa League),[FREE] Goles Real Socieda > 0.5,1.17,1.17,80.3,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,585.0,AUDITADA FT 2-1
-2026-11-26 22:55:00,401915516,Ferencvaros vs NK Celje (Uefa Europa League),[VIP] Combo 1X + O1.5,1.5,1.50,76.2,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Perdida,0.0,AUDITADA FT 0-0
-2026-11-26 22:55:00,401915516,Ferencvaros vs NK Celje (Uefa Europa League),[FREE] Over 1.5 Goles,1.18,1.18,82.7,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 0-0
-2026-11-26 22:55:00,401915516,Ferencvaros vs NK Celje (Uefa Europa League),[FREE] Doble Oport. 1X,1.18,1.18,84.6,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 0-0
-2026-11-26 22:55:00,401915502,Juventus vs Omonia Nicosia (Uefa Europa League),[VIP] Over 2.5 Goles,1.57,1.57,64.9,🟢 [VALOR ALTO / OPERABLE],800.0,Ganada,1256.0,AUDITADA FT 4-1
-2026-11-26 22:55:00,401915502,Juventus vs Omonia Nicosia (Uefa Europa League),[VIP] Córners > 8.5,1.86,1.86,55.0,🟡 [MODERADO / VIGILAR],500.0,Perdida,0.0,AUDITADA FT 4-1
-2026-11-26 22:55:00,401915502,Juventus vs Omonia Nicosia (Uefa Europa League),[FREE] Victoria Juventus,1.18,1.18,76.6,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 4-1
-2026-11-26 22:55:00,401915502,Juventus vs Omonia Nicosia (Uefa Europa League),[FREE] Gol en 2do Tiempo,1.28,1.28,72.7,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,640.0,AUDITADA FT 4-1
-2026-11-26 22:55:00,401915501,Lyon vs Lillestrom (Uefa Europa League),[VIP] Over 2.5 Goles,1.54,1.54,66.4,🟢 [VALOR ALTO / OPERABLE],1000.0,Perdida,0.0,AUDITADA FT 0-0
-2026-11-26 22:55:00,401915501,Lyon vs Lillestrom (Uefa Europa League),[VIP] Gol en 2do Tiempo,1.4,1.40,72.7,🟢 [LUZ VERDE / ALTO VALOR],1100.0,Perdida,0.0,AUDITADA FT 0-0
-2026-11-26 22:55:00,401915501,Lyon vs Lillestrom (Uefa Europa League),[FREE] Victoria Lyon,1.19,1.19,76.3,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 0-0
-2026-11-26 22:55:00,401915501,Lyon vs Lillestrom (Uefa Europa League),[FREE] Córners Lyon > 4.5,1.27,1.27,74.7,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,635.0,AUDITADA FT 0-0
-2026-11-26 22:55:00,401915505,NEC Nijmegen vs Stade Rennais (Uefa Europa League),[VIP] Ambos Marcan (BTTS),1.5,1.50,77.9,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,7500.0,AUDITADA FT 3-1
-2026-11-26 22:55:00,401915505,NEC Nijmegen vs Stade Rennais (Uefa Europa League),[VIP] Over 2.5 Goles,1.54,1.54,66.4,🟢 [VALOR ALTO / OPERABLE],1000.0,Ganada,1540.0,AUDITADA FT 3-1
-2026-11-26 22:55:00,401915505,NEC Nijmegen vs Stade Rennais (Uefa Europa League),[FREE] Gol en 1T,1.18,1.18,82.2,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 3-1
-2026-11-26 22:55:00,401915505,NEC Nijmegen vs Stade Rennais (Uefa Europa League),[FREE] Goles Stade Rennai > 0.5,1.16,1.16,82.3,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,580.0,AUDITADA FT 3-1
-2026-11-26 22:55:00,401915503,OFI Crete vs Anderlecht (Uefa Europa League),[VIP] Ambos Marcan (BTTS),1.52,1.52,66.9,🟢 [VALOR ALTO / OPERABLE],800.0,Ganada,1216.0,AUDITADA FT 1-3
-2026-11-26 22:55:00,401915503,OFI Crete vs Anderlecht (Uefa Europa League),[VIP] Tarjetas > 3.5,1.64,1.64,62.3,🟢 [VALOR ALTO / OPERABLE],800.0,Ganada,1312.0,AUDITADA FT 1-3
-2026-11-26 22:55:00,401915503,OFI Crete vs Anderlecht (Uefa Europa League),[FREE] Sin Empate Anderlecht,1.32,1.32,68.7,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,660.0,AUDITADA FT 1-3
-2026-11-26 22:55:00,401915503,OFI Crete vs Anderlecht (Uefa Europa League),[FREE] Córners > 7.5,1.28,1.28,61.2,🟢 [VALOR ALTO / OPERABLE],500.0,Ganada,640.0,AUDITADA FT 1-3
-2026-11-26 22:55:00,401915514,Sparta Prague vs AZ Alkmaar (Uefa Europa League),[VIP] Ambos Marcan (BTTS),1.5,1.50,71.1,🟢 [LUZ VERDE / ALTO VALOR],3300.0,Ganada,4950.0,AUDITADA FT 2-4
-2026-11-26 22:55:00,401915514,Sparta Prague vs AZ Alkmaar (Uefa Europa League),[VIP] Gol en 2do Tiempo,1.38,1.38,83.6,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,6900.0,AUDITADA FT 2-4
-2026-11-26 22:55:00,401915514,Sparta Prague vs AZ Alkmaar (Uefa Europa League),[FREE] Córners AZ Alkmaar > 4.5,1.28,1.28,74.1,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 2-4
-2026-11-26 22:55:00,401915514,Sparta Prague vs AZ Alkmaar (Uefa Europa League),[FREE] Tarjetas > 2.5,1.28,1.28,73.7,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,640.0,AUDITADA FT 2-4
-2026-11-26 22:55:00,401915513,Sunderland vs Jagiellonia Bialystok (Uefa Europa League),[VIP] Goles Sunderland > 1.5,1.49,1.49,63.1,🟢 [VALOR ALTO / OPERABLE],500.0,Perdida,0.0,AUDITADA FT 1-1
-2026-11-26 22:55:00,401915513,Sunderland vs Jagiellonia Bialystok (Uefa Europa League),[VIP] Gol en 2do Tiempo,1.47,1.47,69.4,🟢 [LUZ VERDE / ALTO VALOR],1100.0,Ganada,1617.0,AUDITADA FT 1-1
-2026-11-26 22:55:00,401915513,Sunderland vs Jagiellonia Bialystok (Uefa Europa League),[FREE] Victoria Sunderland,1.24,1.24,74.2,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 1-1
-2026-11-26 22:55:00,401915513,Sunderland vs Jagiellonia Bialystok (Uefa Europa League),[FREE] Over 1.5 Goles,1.24,1.24,76.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,620.0,AUDITADA FT 1-1
-2026-11-26 22:55:00,401915512,Torreense vs Celtic (Uefa Europa League),[VIP] Ambos Marcan (BTTS),1.5,1.50,75.7,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,7500.0,AUDITADA FT 1-2
-2026-11-26 22:55:00,401915512,Torreense vs Celtic (Uefa Europa League),[VIP] Over 2.5 Goles,1.57,1.57,65.1,🟢 [VALOR ALTO / OPERABLE],1000.0,Ganada,1570.0,AUDITADA FT 1-2
-2026-11-26 22:55:00,401915512,Torreense vs Celtic (Uefa Europa League),[FREE] Gol en 2do Tiempo,1.18,1.18,84.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 1-2
-2026-11-26 22:55:00,401915512,Torreense vs Celtic (Uefa Europa League),[FREE] Goles Celtic > 0.5,1.16,1.16,83.1,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,580.0,AUDITADA FT 1-2
-2026-11-26 22:55:00,401915515,TSG Hoffenheim vs SK Sturm Graz (Uefa Europa League),[VIP] Combo 1X + O1.5,1.5,1.50,76.8,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,7500.0,AUDITADA FT 3-1
-2026-11-26 22:55:00,401915515,TSG Hoffenheim vs SK Sturm Graz (Uefa Europa League),[VIP] Córners > 8.5,1.45,1.45,76.2,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,7250.0,AUDITADA FT 3-1
-2026-11-26 22:55:00,401915515,TSG Hoffenheim vs SK Sturm Graz (Uefa Europa League),[FREE] Gol en 1T,1.28,1.28,69.4,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,640.0,AUDITADA FT 3-1
-2026-11-26 22:55:00,401915515,TSG Hoffenheim vs SK Sturm Graz (Uefa Europa League),[FREE] Over 1.5 Goles,1.18,1.18,85.4,🟢 [LUZ VERDE / ALTO VALOR],1100.0,Ganada,1298.0,AUDITADA FT 3-1
-2026-11-26 22:55:00,401915806,Borac Banja Luka vs Atalanta (Uefa Conference League),[VIP] Combo X2 + O1.5,1.55,1.55,65.6,🟢 [VALOR ALTO / OPERABLE],800.0,Ganada,1240.0,AUDITADA FT 2-3
-2026-11-26 22:55:00,401915806,Borac Banja Luka vs Atalanta (Uefa Conference League),[VIP] Ambos Marcan (BTTS),1.59,1.59,64.2,🟢 [VALOR ALTO / OPERABLE],900.0,Ganada,1431.0,AUDITADA FT 2-3
-2026-11-26 22:55:00,401915806,Borac Banja Luka vs Atalanta (Uefa Conference League),[FREE] Tarjetas > 3.5,1.28,1.28,62.6,🟢 [VALOR ALTO / OPERABLE],500.0,Ganada,640.0,AUDITADA FT 2-3
-2026-11-26 22:55:00,401915806,Borac Banja Luka vs Atalanta (Uefa Conference League),[FREE] Doble Oport. X2,1.27,1.27,74.7,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,635.0,AUDITADA FT 2-3
-2026-11-26 22:55:00,401915802,Braga vs KuPS Kuopio (Uefa Conference League),[VIP] Over 2.5 Goles,1.7,1.70,60.1,🟢 [VALOR ALTO / OPERABLE],800.0,Ganada,1360.0,AUDITADA FT 4-0
-2026-11-26 22:55:00,401915802,Braga vs KuPS Kuopio (Uefa Conference League),[VIP] Tarjetas > 3.5,1.74,1.74,58.6,🟢 [VALOR ALTO / OPERABLE],700.0,Perdida,0.0,AUDITADA FT 4-0
-2026-11-26 22:55:00,401915802,Braga vs KuPS Kuopio (Uefa Conference League),[FREE] Gol en 1T,1.26,1.26,75.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,630.0,AUDITADA FT 4-0
-2026-11-26 22:55:00,401915802,Braga vs KuPS Kuopio (Uefa Conference League),[FREE] Doble Oport. 1X,1.18,1.18,84.7,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 4-0
-2026-11-26 22:55:00,401915803,CSKA Sofia vs Trabzonspor (Uefa Conference League),[VIP] Ambos Marcan (BTTS),1.5,1.50,71.6,🟢 [LUZ VERDE / ALTO VALOR],3700.0,Ganada,5550.0,AUDITADA FT 1-2
-2026-11-26 22:55:00,401915803,CSKA Sofia vs Trabzonspor (Uefa Conference League),[VIP] Combo X2 + O1.5,1.57,1.57,64.9,🟢 [VALOR ALTO / OPERABLE],800.0,Ganada,1256.0,AUDITADA FT 1-2
-2026-11-26 22:55:00,401915803,CSKA Sofia vs Trabzonspor (Uefa Conference League),[FREE] Tarjetas > 3.5,1.28,1.28,61.8,🟢 [VALOR ALTO / OPERABLE],500.0,Ganada,640.0,AUDITADA FT 1-2
-2026-11-26 22:55:00,401915803,CSKA Sofia vs Trabzonspor (Uefa Conference League),[FREE] Remates Puerta > 5.5,1.28,1.28,61.3,🟢 [VALOR ALTO / OPERABLE],500.0,Ganada,640.0,AUDITADA FT 1-2
-2026-11-26 22:55:00,401915807,FC Nordsjælland vs Panathinaikos (Uefa Conference League),[VIP] Ambos Marcan (BTTS),1.5,1.50,68.1,🟢 [LUZ VERDE / ALTO VALOR],1100.0,Ganada,1650.0,AUDITADA FT 3-2
-2026-11-26 22:55:00,401915807,FC Nordsjælland vs Panathinaikos (Uefa Conference League),[VIP] Gol en 2do Tiempo,1.38,1.38,80.4,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,6900.0,AUDITADA FT 3-2
-2026-11-26 22:55:00,401915807,FC Nordsjælland vs Panathinaikos (Uefa Conference League),[FREE] Córners > 8.5,1.28,1.28,68.0,🟢 [VALOR ALTO / OPERABLE],500.0,Perdida,0.0,AUDITADA FT 3-2
-2026-11-26 22:55:00,401915807,FC Nordsjælland vs Panathinaikos (Uefa Conference League),[FREE] Tarjetas > 2.5,1.28,1.28,68.7,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,640.0,AUDITADA FT 3-2
-2026-11-26 22:55:00,401915805,Hajduk Split vs Sint-Truidense (Uefa Conference League),[VIP] Combo 1X + U4.5,1.64,1.64,62.1,🟢 [VALOR ALTO / OPERABLE],700.0,Perdida,0.0,AUDITADA FT 0-2
-2026-11-26 22:55:00,401915805,Hajduk Split vs Sint-Truidense (Uefa Conference League),[VIP] Tarjetas > 3.5,1.78,1.78,57.3,🟡 [MODERADO / VIGILAR],600.0,Ganada,1068.0,AUDITADA FT 0-2
-2026-11-26 22:55:00,401915805,Hajduk Split vs Sint-Truidense (Uefa Conference League),[FREE] Goles Hajduk Split > 0.5,1.26,1.26,74.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 0-2
-2026-11-26 22:55:00,401915805,Hajduk Split vs Sint-Truidense (Uefa Conference League),[FREE] Over 1.5 Goles,1.28,1.28,73.1,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,640.0,AUDITADA FT 0-2
-2026-11-26 22:55:00,401915738,Inter D'Escaldes vs F.C. København (Uefa Conference League),[VIP] Over 2.5 Goles,1.62,1.62,62.8,🟢 [VALOR ALTO / OPERABLE],700.0,Perdida,0.0,AUDITADA FT 2-0
-2026-11-26 22:55:00,401915738,Inter D'Escaldes vs F.C. København (Uefa Conference League),[VIP] Tarjetas > 3.5,1.74,1.74,58.7,🟢 [VALOR ALTO / OPERABLE],700.0,Perdida,0.0,AUDITADA FT 2-0
-2026-11-26 22:55:00,401915738,Inter D'Escaldes vs F.C. København (Uefa Conference League),[FREE] Goles F.C. Københa > 0.5,1.16,1.16,86.4,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 2-0
-2026-11-26 22:55:00,401915738,Inter D'Escaldes vs F.C. København (Uefa Conference League),[FREE] Victoria F.C. Københa,1.24,1.24,74.6,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 2-0
-2026-11-26 22:55:00,401915804,KAA Gent vs Red Star Belgrade (Uefa Conference League),[VIP] Combo 1X + U4.5,1.62,1.62,63.0,🟢 [VALOR ALTO / OPERABLE],800.0,Ganada,1296.0,AUDITADA FT 1-1
-2026-11-26 22:55:00,401915804,KAA Gent vs Red Star Belgrade (Uefa Conference League),[VIP] Tarjetas > 3.5,1.85,1.85,55.3,🟡 [MODERADO / VIGILAR],500.0,Ganada,925.0,AUDITADA FT 1-1
-2026-11-26 22:55:00,401915804,KAA Gent vs Red Star Belgrade (Uefa Conference League),[FREE] Gol en 1T,1.28,1.28,73.7,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,640.0,AUDITADA FT 1-1
-2026-11-26 22:55:00,401915804,KAA Gent vs Red Star Belgrade (Uefa Conference League),[FREE] Remates Puerta > 4.5,1.28,1.28,60.4,🟢 [VALOR ALTO / OPERABLE],500.0,Ganada,640.0,AUDITADA FT 1-1
-2026-11-26 22:55:00,401915801,SC Freiburg vs FC Twente (Uefa Conference League),[VIP] Ambos Marcan (BTTS),1.5,1.50,76.5,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,7500.0,AUDITADA FT 2-1
-2026-11-26 22:55:00,401915801,SC Freiburg vs FC Twente (Uefa Conference League),[VIP] Total Asiático > 2.25,1.53,1.53,66.5,🟢 [VALOR ALTO / OPERABLE],800.0,Ganada,1224.0,AUDITADA FT 2-1
-2026-11-26 22:55:00,401915801,SC Freiburg vs FC Twente (Uefa Conference League),[FREE] Gol en 2do Tiempo,1.18,1.18,83.1,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 2-1
-2026-11-26 22:55:00,401915801,SC Freiburg vs FC Twente (Uefa Conference League),[FREE] Goles FC Twente > 0.5,1.2,1.20,78.4,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,600.0,AUDITADA FT 2-1
-2026-11-27 01:55:00,401841329,São Paulo vs Remo (Brasil (Serie A)),[VIP] Combo 1X + O1.5,1.5,PENDIENTE_CLV,72.5,🟢 [LUZ VERDE / ALTO VALOR],4400.0,Pendiente,0.0,AUDITANDO
-2026-11-27 01:55:00,401841329,São Paulo vs Remo (Brasil (Serie A)),[VIP] Córners > 8.5,1.56,PENDIENTE_CLV,65.5,🟢 [VALOR ALTO / OPERABLE],1000.0,Pendiente,0.0,AUDITANDO
-2026-11-27 01:55:00,401841329,São Paulo vs Remo (Brasil (Serie A)),[FREE] Over 1.5 Goles,1.18,PENDIENTE_CLV,79.6,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
-2026-11-27 01:55:00,401841329,São Paulo vs Remo (Brasil (Serie A)),[FREE] Doble Oport. 1X,1.18,1.08,84.6,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
-2026-11-27 03:55:00,401931982,Pachuca vs Guadalajara (México (Liga Mx)),[VIP] Ambos Marcan (BTTS),1.52,1.60,67.0,🟢 [VALOR ALTO / OPERABLE],900.0,Pendiente,0.0,AUDITANDO
-2026-11-27 03:55:00,401931982,Pachuca vs Guadalajara (México (Liga Mx)),[VIP] Gol en 2do Tiempo,1.38,PENDIENTE_CLV,81.2,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Pendiente,0.0,AUDITANDO
-2026-11-27 03:55:00,401931982,Pachuca vs Guadalajara (México (Liga Mx)),[FREE] Córners > 8.5,1.25,PENDIENTE_CLV,76.2,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
-2026-11-27 03:55:00,401931982,Pachuca vs Guadalajara (México (Liga Mx)),[FREE] Tarjetas > 2.5,1.28,PENDIENTE_CLV,61.6,🟢 [VALOR ALTO / OPERABLE],500.0,Pendiente,0.0,AUDITANDO
-2026-11-27 06:05:00,401931995,León vs Cruz Azul (México (Liga Mx)),[VIP] Ambos Marcan (BTTS),1.5,3.35,70.8,🟢 [LUZ VERDE / ALTO VALOR],3100.0,Pendiente,0.0,AUDITANDO
-2026-11-27 06:05:00,401931995,León vs Cruz Azul (México (Liga Mx)),[VIP] Gol en 2do Tiempo,1.38,PENDIENTE_CLV,81.6,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Pendiente,0.0,AUDITANDO
-2026-11-27 06:05:00,401931995,León vs Cruz Azul (México (Liga Mx)),[FREE] Córners Cruz Azul > 4.5,1.28,PENDIENTE_CLV,71.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
-2026-11-27 06:05:00,401931995,León vs Cruz Azul (México (Liga Mx)),[FREE] Tarjetas > 2.5,1.28,PENDIENTE_CLV,70.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
+2026-11-26 18:25:00,401915816,Kairat Almaty vs Mjällby AIF (Uefa Conference League),[VIP] Combo X2 + U3.5,1.63,SIN_CLV,62.5,🟢 [VALOR ALTO / OPERABLE],700.0,Perdida,0.0,AUDITADA FT 1-0
+2026-11-26 18:25:00,401915816,Kairat Almaty vs Mjällby AIF (Uefa Conference League),[FREE] Over 1.5 Goles,1.28,SIN_CLV,74.4,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 1-0
+2026-11-26 18:25:00,401915816,Kairat Almaty vs Mjällby AIF (Uefa Conference League),[FREE] Doble Oport. X2,1.43,SIN_CLV,77.9,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Perdida,0.0,AUDITADA FT 1-0
+2026-11-26 20:25:00,401900871,Al Faisaly vs Al Diriyah (Arabia Saudita (Saudi Pro League)),[VIP] Goles Al Diriyah > 0.5,1.45,SIN_CLV,71.3,🟢 [LUZ VERDE / ALTO VALOR],1900.0,Ganada,2755.0,AUDITADA FT 2-2
+2026-11-26 20:25:00,401900871,Al Faisaly vs Al Diriyah (Arabia Saudita (Saudi Pro League)),[FREE] Total Menos de 3.5 (Under),1.28,SIN_CLV,74.4,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 2-2
+2026-11-26 20:25:00,401900871,Al Faisaly vs Al Diriyah (Arabia Saudita (Saudi Pro League)),[FREE] Remates Puerta > 4.5,1.28,SIN_CLV,63.1,🟢 [VALOR ALTO / OPERABLE],500.0,Perdida,0.0,AUDITADA FT 2-2
+2026-11-26 20:40:00,401915506,Besiktas vs Hapoel Be'er (Uefa Europa League),[VIP] Combo 1X + O1.5,1.5,SIN_CLV,80.1,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,7500.0,AUDITADA FT 2-1
+2026-11-26 20:40:00,401915506,Besiktas vs Hapoel Be'er (Uefa Europa League),[VIP] Córners > 8.5,1.88,SIN_CLV,54.4,🟡 [MODERADO / VIGILAR],500.0,Ganada,940.0,AUDITADA FT 2-1
+2026-11-26 20:40:00,401915506,Besiktas vs Hapoel Be'er (Uefa Europa League),[FREE] Over 1.5 Goles,1.18,SIN_CLV,81.4,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 2-1
+2026-11-26 20:40:00,401915506,Besiktas vs Hapoel Be'er (Uefa Europa League),[FREE] Doble Oport. 1X,1.18,SIN_CLV,84.7,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 2-1
+2026-11-26 20:40:00,401915519,Celta Vigo vs AFC Bournemouth (Uefa Europa League),[VIP] Total Asiático > 2.25,1.71,SIN_CLV,59.8,🟢 [VALOR ALTO / OPERABLE],800.0,Ganada,1368.0,AUDITADA FT 1-2
+2026-11-26 20:40:00,401915519,Celta Vigo vs AFC Bournemouth (Uefa Europa League),[VIP] Tarjetas > 3.5,1.85,SIN_CLV,55.0,🟡 [MODERADO / VIGILAR],500.0,Ganada,925.0,AUDITADA FT 1-2
+2026-11-26 20:40:00,401915519,Celta Vigo vs AFC Bournemouth (Uefa Europa League),[FREE] Gol en 1T,1.18,SIN_CLV,80.3,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 1-2
+2026-11-26 20:40:00,401915519,Celta Vigo vs AFC Bournemouth (Uefa Europa League),[FREE] Doble Oport. X2,1.22,SIN_CLV,77.6,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,610.0,AUDITADA FT 1-2
+2026-11-26 20:40:00,401915517,Dinamo Zagreb vs Bayer Leverkusen (Uefa Europa League),[VIP] Ambos Marcan (BTTS),1.46,SIN_CLV,59.3,🟢 [VALOR ALTO / OPERABLE],500.0,Perdida,0.0,AUDITADA FT 0-2
+2026-11-26 20:40:00,401915517,Dinamo Zagreb vs Bayer Leverkusen (Uefa Europa League),[VIP] Gol en 2do Tiempo,1.38,SIN_CLV,81.9,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Perdida,0.0,AUDITADA FT 0-2
+2026-11-26 20:40:00,401915517,Dinamo Zagreb vs Bayer Leverkusen (Uefa Europa League),[FREE] Córners > 8.5,1.28,SIN_CLV,60.9,🟢 [VALOR ALTO / OPERABLE],500.0,Ganada,640.0,AUDITADA FT 0-2
+2026-11-26 20:40:00,401915517,Dinamo Zagreb vs Bayer Leverkusen (Uefa Europa League),[FREE] Remates Puerta > 5.5,1.28,SIN_CLV,65.9,🟢 [VALOR ALTO / OPERABLE],500.0,Perdida,0.0,AUDITADA FT 0-2
+2026-11-26 20:40:00,401915507,Marseille vs Levski Sofia (Uefa Europa League),[VIP] Combo X2 + U3.5,1.5,SIN_CLV,68.6,🟢 [LUZ VERDE / ALTO VALOR],1400.0,Perdida,0.0,AUDITADA FT 1-0
+2026-11-26 20:40:00,401915507,Marseille vs Levski Sofia (Uefa Europa League),[FREE] Goles Levski Sofia > 0.5,1.28,SIN_CLV,73.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 1-0
+2026-11-26 20:40:00,401915507,Marseille vs Levski Sofia (Uefa Europa League),[FREE] Total Menos de 3.5 (Under),1.23,SIN_CLV,77.2,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,615.0,AUDITADA FT 1-0
+2026-11-26 20:40:00,401915521,Olympiacos vs AC Milan (Uefa Europa League),[VIP] Doble Oport. 1X,1.38,SIN_CLV,76.4,🟢 [LUZ VERDE / ALTO VALOR],3600.0,Perdida,0.0,AUDITADA FT 2-4
+2026-11-26 20:40:00,401915521,Olympiacos vs AC Milan (Uefa Europa League),[VIP] Córners > 8.5,1.61,SIN_CLV,63.3,🟢 [VALOR ALTO / OPERABLE],800.0,Perdida,0.0,AUDITADA FT 2-4
+2026-11-26 20:40:00,401915521,Olympiacos vs AC Milan (Uefa Europa League),[FREE] Combo 1X + U4.5,1.18,SIN_CLV,86.5,🟢 [LUZ VERDE / ALTO VALOR],2900.0,Perdida,0.0,AUDITADA FT 2-4
+2026-11-26 20:40:00,401915521,Olympiacos vs AC Milan (Uefa Europa League),[FREE] Remates Puerta > 5.5,1.28,SIN_CLV,59.0,🟢 [VALOR ALTO / OPERABLE],500.0,Ganada,640.0,AUDITADA FT 2-4
+2026-11-26 20:40:00,401915520,RB Salzburg vs Ararat-Armenia (Uefa Europa League),[VIP] Córners RB Salzburg > 4.5,1.38,SIN_CLV,83.8,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,6900.0,AUDITADA FT 2-0
+2026-11-26 20:40:00,401915520,RB Salzburg vs Ararat-Armenia (Uefa Europa League),[VIP] Combo 1X + O1.5,1.5,SIN_CLV,69.4,🟢 [LUZ VERDE / ALTO VALOR],2100.0,Ganada,3150.0,AUDITADA FT 2-0
+2026-11-26 20:40:00,401915520,RB Salzburg vs Ararat-Armenia (Uefa Europa League),[FREE] Over 1.5 Goles,1.23,SIN_CLV,77.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,615.0,AUDITADA FT 2-0
+2026-11-26 20:40:00,401915520,RB Salzburg vs Ararat-Armenia (Uefa Europa League),[FREE] Doble Oport. 1X,1.18,SIN_CLV,84.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 2-0
+2026-11-26 20:40:00,401915508,Union St.-Gilloise vs Lech Poznan (Uefa Europa League),[VIP] Goles Union St.-Gi > 1.5,1.45,SIN_CLV,72.1,🟢 [LUZ VERDE / ALTO VALOR],2500.0,Ganada,3625.0,AUDITADA FT 2-2
+2026-11-26 20:40:00,401915508,Union St.-Gilloise vs Lech Poznan (Uefa Europa League),[VIP] Gol en 2do Tiempo,1.45,SIN_CLV,70.4,🟢 [LUZ VERDE / ALTO VALOR],1200.0,Ganada,1740.0,AUDITADA FT 2-2
+2026-11-26 20:40:00,401915508,Union St.-Gilloise vs Lech Poznan (Uefa Europa League),[FREE] Sin Empate Union St.-Gi,1.18,SIN_CLV,85.4,🟢 [LUZ VERDE / ALTO VALOR],1100.0,Mitad Devuelta,1100.0,AUDITADA FT 2-2
+2026-11-26 20:40:00,401915508,Union St.-Gilloise vs Lech Poznan (Uefa Europa League),[FREE] Córners > 7.5,1.28,SIN_CLV,66.2,🟢 [VALOR ALTO / OPERABLE],500.0,Ganada,640.0,AUDITADA FT 2-2
+2026-11-26 20:40:00,401915518,Viktoria Plzen vs Benfica (Uefa Europa League),[VIP] Combo X2 + O1.5,1.5,SIN_CLV,78.0,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Perdida,0.0,AUDITADA FT 4-0
+2026-11-26 20:40:00,401915518,Viktoria Plzen vs Benfica (Uefa Europa League),[VIP] Córners > 8.5,1.47,SIN_CLV,69.4,🟢 [LUZ VERDE / ALTO VALOR],1100.0,Ganada,1617.0,AUDITADA FT 4-0
+2026-11-26 20:40:00,401915518,Viktoria Plzen vs Benfica (Uefa Europa League),[FREE] Gol en 1T,1.28,SIN_CLV,72.4,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,640.0,AUDITADA FT 4-0
+2026-11-26 20:40:00,401915518,Viktoria Plzen vs Benfica (Uefa Europa League),[FREE] Tarjetas > 2.5,1.28,SIN_CLV,67.3,🟢 [VALOR ALTO / OPERABLE],500.0,Perdida,0.0,AUDITADA FT 4-0
+2026-11-26 20:40:00,401915815,Ajax Amsterdam vs FC Thun (Uefa Conference League),[VIP] Córners Ajax Amsterdam > 4.5,1.38,SIN_CLV,81.3,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,6900.0,AUDITADA FT 4-0
+2026-11-26 20:40:00,401915815,Ajax Amsterdam vs FC Thun (Uefa Conference League),[VIP] Combo 1X + U3.5,1.53,SIN_CLV,66.7,🟢 [VALOR ALTO / OPERABLE],1000.0,Perdida,0.0,AUDITADA FT 4-0
+2026-11-26 20:40:00,401915815,Ajax Amsterdam vs FC Thun (Uefa Conference League),[FREE] Gol en 1T,1.28,SIN_CLV,74.1,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,640.0,AUDITADA FT 4-0
+2026-11-26 20:40:00,401915815,Ajax Amsterdam vs FC Thun (Uefa Conference League),[FREE] Doble Oport. 1X,1.18,SIN_CLV,85.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 4-0
+2026-11-26 20:40:00,401915814,Brighton & Hove Albion vs CSU Craiova (Uefa Conference League),[VIP] Combo 1X + U4.5,1.5,SIN_CLV,69.7,🟢 [LUZ VERDE / ALTO VALOR],2300.0,Ganada,3450.0,AUDITADA FT 4-0
+2026-11-26 20:40:00,401915814,Brighton & Hove Albion vs CSU Craiova (Uefa Conference League),[FREE] Goles Brighton & H > 0.5,1.28,SIN_CLV,73.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,640.0,AUDITADA FT 4-0
+2026-11-26 20:40:00,401915814,Brighton & Hove Albion vs CSU Craiova (Uefa Conference League),[FREE] Córners Brighton & Hove > 4.5,1.18,SIN_CLV,81.1,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 4-0
+2026-11-26 20:40:00,401915810,Egnatia vs Lincoln Red Imps (Uefa Conference League),[VIP] Tarjetas > 3.5,1.61,SIN_CLV,63.2,🟢 [VALOR ALTO / OPERABLE],700.0,Ganada,1127.0,AUDITADA FT 2-1
+2026-11-26 20:40:00,401915810,Egnatia vs Lincoln Red Imps (Uefa Conference League),[FREE] Doble Oport. 1X,1.16,SIN_CLV,77.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,580.0,AUDITADA FT 2-1
+2026-11-26 20:40:00,401915810,Egnatia vs Lincoln Red Imps (Uefa Conference League),[FREE] Goles Egnatia > 0.5,1.27,SIN_CLV,74.7,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,635.0,AUDITADA FT 2-1
+2026-11-26 20:40:00,401915811,Heart of Midlothian vs AS Monaco (Uefa Conference League),[VIP] Goles AS Monaco > 1.5,1.53,SIN_CLV,66.7,🟢 [VALOR ALTO / OPERABLE],1000.0,Ganada,1530.0,AUDITADA FT 2-3
+2026-11-26 20:40:00,401915811,Heart of Midlothian vs AS Monaco (Uefa Conference League),[VIP] Córners > 8.5,1.53,SIN_CLV,66.7,🟢 [VALOR ALTO / OPERABLE],1000.0,Ganada,1530.0,AUDITADA FT 2-3
+2026-11-26 20:40:00,401915811,Heart of Midlothian vs AS Monaco (Uefa Conference League),[FREE] Over 1.5 Goles,1.18,SIN_CLV,81.3,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 2-3
+2026-11-26 20:40:00,401915811,Heart of Midlothian vs AS Monaco (Uefa Conference League),[FREE] Sin Empate AS Monaco,1.23,SIN_CLV,81.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,615.0,AUDITADA FT 2-3
+2026-11-26 20:40:00,401915813,Iberia 1999 vs Getafe (Uefa Conference League),[VIP] Combo 1X + U3.5,1.54,SIN_CLV,66.4,🟢 [VALOR ALTO / OPERABLE],1000.0,Ganada,1540.0,AUDITADA FT 1-0
+2026-11-26 20:40:00,401915813,Iberia 1999 vs Getafe (Uefa Conference League),[VIP] Tarjetas > 5.5,1.6,SIN_CLV,63.7,🟢 [VALOR ALTO / OPERABLE],800.0,Ganada,1280.0,AUDITADA FT 1-0
+2026-11-26 20:40:00,401915813,Iberia 1999 vs Getafe (Uefa Conference League),[FREE] Combo 1X + U4.5,1.28,SIN_CLV,72.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,640.0,AUDITADA FT 1-0
+2026-11-26 20:40:00,401915813,Iberia 1999 vs Getafe (Uefa Conference League),[FREE] Remates Puerta > 4.5,1.28,SIN_CLV,60.4,🟢 [VALOR ALTO / OPERABLE],500.0,Ganada,640.0,AUDITADA FT 1-0
+2026-11-26 20:40:00,401915812,Jablonec vs FC Lugano (Uefa Conference League),[VIP] Ambos Marcan (BTTS),1.57,SIN_CLV,62.5,🟢 [VALOR ALTO / OPERABLE],500.0,Perdida,0.0,AUDITADA FT 2-0
+2026-11-26 20:40:00,401915812,Jablonec vs FC Lugano (Uefa Conference League),[VIP] Combo X2 + O1.5,1.52,SIN_CLV,66.9,🟢 [VALOR ALTO / OPERABLE],800.0,Perdida,0.0,AUDITADA FT 2-0
+2026-11-26 20:40:00,401915812,Jablonec vs FC Lugano (Uefa Conference League),[FREE] Córners FC Lugano > 4.5,1.28,SIN_CLV,65.3,🟢 [VALOR ALTO / OPERABLE],500.0,Perdida,0.0,AUDITADA FT 2-0
+2026-11-26 20:40:00,401915812,Jablonec vs FC Lugano (Uefa Conference League),[FREE] Doble Oport. X2,1.25,SIN_CLV,73.3,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 2-0
+2026-11-26 20:40:00,401915739,Kauno Zalgiris vs Riga FC (Uefa Conference League),[VIP] Combo X2 + U3.5,1.5,SIN_CLV,69.7,🟢 [LUZ VERDE / ALTO VALOR],2300.0,Perdida,0.0,AUDITADA FT 2-0
+2026-11-26 20:40:00,401915739,Kauno Zalgiris vs Riga FC (Uefa Conference League),[FREE] Goles Riga FC > 0.5,1.18,SIN_CLV,78.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 2-0
+2026-11-26 20:40:00,401915739,Kauno Zalgiris vs Riga FC (Uefa Conference League),[FREE] Tarjetas > 3.5,1.28,SIN_CLV,62.5,🟢 [VALOR ALTO / OPERABLE],500.0,Ganada,640.0,AUDITADA FT 2-0
+2026-11-26 20:40:00,401915809,Pafos vs FC Midtjylland (Uefa Conference League),[VIP] Combo 1X + O1.5,1.52,SIN_CLV,67.3,🟢 [VALOR ALTO / OPERABLE],1100.0,Perdida,0.0,AUDITADA FT 0-2
+2026-11-26 20:40:00,401915809,Pafos vs FC Midtjylland (Uefa Conference League),[VIP] Ambos Marcan (BTTS),1.44,SIN_CLV,59.1,🟢 [VALOR ALTO / OPERABLE],500.0,Perdida,0.0,AUDITADA FT 0-2
+2026-11-26 20:40:00,401915809,Pafos vs FC Midtjylland (Uefa Conference League),[FREE] Córners > 7.5,1.28,SIN_CLV,60.7,🟢 [VALOR ALTO / OPERABLE],500.0,Ganada,640.0,AUDITADA FT 0-2
+2026-11-26 20:40:00,401915809,Pafos vs FC Midtjylland (Uefa Conference League),[FREE] Doble Oport. 1X,1.46,SIN_CLV,80.2,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Perdida,0.0,AUDITADA FT 0-2
+2026-11-26 20:40:00,401915808,SK Brann vs AGF (Uefa Conference League),[VIP] Sin Empate SK Brann,1.55,SIN_CLV,73.0,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Perdida,0.0,AUDITADA FT 1-4
+2026-11-26 20:40:00,401915808,SK Brann vs AGF (Uefa Conference League),[VIP] Córners > 8.5,1.45,SIN_CLV,75.1,🟢 [LUZ VERDE / ALTO VALOR],4900.0,Perdida,0.0,AUDITADA FT 1-4
+2026-11-26 20:40:00,401915808,SK Brann vs AGF (Uefa Conference League),[FREE] Combo 1X + U4.5,1.18,SIN_CLV,86.4,🟢 [LUZ VERDE / ALTO VALOR],2700.0,Perdida,0.0,AUDITADA FT 1-4
+2026-11-26 20:40:00,401915808,SK Brann vs AGF (Uefa Conference League),[FREE] Remates Puerta > 5.5,1.28,SIN_CLV,59.1,🟢 [VALOR ALTO / OPERABLE],500.0,Ganada,640.0,AUDITADA FT 1-4
+2026-11-26 22:55:00,401915504,Crystal Palace vs Real Sociedad (Uefa Europa League),[VIP] Ambos Marcan (BTTS),1.5,SIN_CLV,76.9,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,7500.0,AUDITADA FT 2-1
+2026-11-26 22:55:00,401915504,Crystal Palace vs Real Sociedad (Uefa Europa League),[VIP] Over 2.5 Goles,1.57,SIN_CLV,65.1,🟢 [VALOR ALTO / OPERABLE],1000.0,Ganada,1570.0,AUDITADA FT 2-1
+2026-11-26 22:55:00,401915504,Crystal Palace vs Real Sociedad (Uefa Europa League),[FREE] Gol en 2do Tiempo,1.18,SIN_CLV,84.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 2-1
+2026-11-26 22:55:00,401915504,Crystal Palace vs Real Sociedad (Uefa Europa League),[FREE] Goles Real Socieda > 0.5,1.17,SIN_CLV,80.3,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,585.0,AUDITADA FT 2-1
+2026-11-26 22:55:00,401915516,Ferencvaros vs NK Celje (Uefa Europa League),[VIP] Combo 1X + O1.5,1.5,SIN_CLV,76.2,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Perdida,0.0,AUDITADA FT 0-0
+2026-11-26 22:55:00,401915516,Ferencvaros vs NK Celje (Uefa Europa League),[FREE] Over 1.5 Goles,1.18,SIN_CLV,82.7,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 0-0
+2026-11-26 22:55:00,401915516,Ferencvaros vs NK Celje (Uefa Europa League),[FREE] Doble Oport. 1X,1.18,SIN_CLV,84.6,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 0-0
+2026-11-26 22:55:00,401915502,Juventus vs Omonia Nicosia (Uefa Europa League),[VIP] Over 2.5 Goles,1.57,SIN_CLV,64.9,🟢 [VALOR ALTO / OPERABLE],800.0,Ganada,1256.0,AUDITADA FT 4-1
+2026-11-26 22:55:00,401915502,Juventus vs Omonia Nicosia (Uefa Europa League),[VIP] Córners > 8.5,1.86,SIN_CLV,55.0,🟡 [MODERADO / VIGILAR],500.0,Perdida,0.0,AUDITADA FT 4-1
+2026-11-26 22:55:00,401915502,Juventus vs Omonia Nicosia (Uefa Europa League),[FREE] Victoria Juventus,1.18,SIN_CLV,76.6,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 4-1
+2026-11-26 22:55:00,401915502,Juventus vs Omonia Nicosia (Uefa Europa League),[FREE] Gol en 2do Tiempo,1.28,SIN_CLV,72.7,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,640.0,AUDITADA FT 4-1
+2026-11-26 22:55:00,401915501,Lyon vs Lillestrom (Uefa Europa League),[VIP] Over 2.5 Goles,1.54,SIN_CLV,66.4,🟢 [VALOR ALTO / OPERABLE],1000.0,Perdida,0.0,AUDITADA FT 0-0
+2026-11-26 22:55:00,401915501,Lyon vs Lillestrom (Uefa Europa League),[VIP] Gol en 2do Tiempo,1.4,SIN_CLV,72.7,🟢 [LUZ VERDE / ALTO VALOR],1100.0,Perdida,0.0,AUDITADA FT 0-0
+2026-11-26 22:55:00,401915501,Lyon vs Lillestrom (Uefa Europa League),[FREE] Victoria Lyon,1.19,SIN_CLV,76.3,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 0-0
+2026-11-26 22:55:00,401915501,Lyon vs Lillestrom (Uefa Europa League),[FREE] Córners Lyon > 4.5,1.27,SIN_CLV,74.7,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,635.0,AUDITADA FT 0-0
+2026-11-26 22:55:00,401915505,NEC Nijmegen vs Stade Rennais (Uefa Europa League),[VIP] Ambos Marcan (BTTS),1.5,SIN_CLV,77.9,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,7500.0,AUDITADA FT 3-1
+2026-11-26 22:55:00,401915505,NEC Nijmegen vs Stade Rennais (Uefa Europa League),[VIP] Over 2.5 Goles,1.54,SIN_CLV,66.4,🟢 [VALOR ALTO / OPERABLE],1000.0,Ganada,1540.0,AUDITADA FT 3-1
+2026-11-26 22:55:00,401915505,NEC Nijmegen vs Stade Rennais (Uefa Europa League),[FREE] Gol en 1T,1.18,SIN_CLV,82.2,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 3-1
+2026-11-26 22:55:00,401915505,NEC Nijmegen vs Stade Rennais (Uefa Europa League),[FREE] Goles Stade Rennai > 0.5,1.16,SIN_CLV,82.3,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,580.0,AUDITADA FT 3-1
+2026-11-26 22:55:00,401915503,OFI Crete vs Anderlecht (Uefa Europa League),[VIP] Ambos Marcan (BTTS),1.52,SIN_CLV,66.9,🟢 [VALOR ALTO / OPERABLE],800.0,Ganada,1216.0,AUDITADA FT 1-3
+2026-11-26 22:55:00,401915503,OFI Crete vs Anderlecht (Uefa Europa League),[VIP] Tarjetas > 3.5,1.64,SIN_CLV,62.3,🟢 [VALOR ALTO / OPERABLE],800.0,Ganada,1312.0,AUDITADA FT 1-3
+2026-11-26 22:55:00,401915503,OFI Crete vs Anderlecht (Uefa Europa League),[FREE] Sin Empate Anderlecht,1.32,SIN_CLV,68.7,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,660.0,AUDITADA FT 1-3
+2026-11-26 22:55:00,401915503,OFI Crete vs Anderlecht (Uefa Europa League),[FREE] Córners > 7.5,1.28,SIN_CLV,61.2,🟢 [VALOR ALTO / OPERABLE],500.0,Ganada,640.0,AUDITADA FT 1-3
+2026-11-26 22:55:00,401915514,Sparta Prague vs AZ Alkmaar (Uefa Europa League),[VIP] Ambos Marcan (BTTS),1.5,SIN_CLV,71.1,🟢 [LUZ VERDE / ALTO VALOR],3300.0,Ganada,4950.0,AUDITADA FT 2-4
+2026-11-26 22:55:00,401915514,Sparta Prague vs AZ Alkmaar (Uefa Europa League),[VIP] Gol en 2do Tiempo,1.38,SIN_CLV,83.6,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,6900.0,AUDITADA FT 2-4
+2026-11-26 22:55:00,401915514,Sparta Prague vs AZ Alkmaar (Uefa Europa League),[FREE] Córners AZ Alkmaar > 4.5,1.28,SIN_CLV,74.1,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 2-4
+2026-11-26 22:55:00,401915514,Sparta Prague vs AZ Alkmaar (Uefa Europa League),[FREE] Tarjetas > 2.5,1.28,SIN_CLV,73.7,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,640.0,AUDITADA FT 2-4
+2026-11-26 22:55:00,401915513,Sunderland vs Jagiellonia Bialystok (Uefa Europa League),[VIP] Goles Sunderland > 1.5,1.49,SIN_CLV,63.1,🟢 [VALOR ALTO / OPERABLE],500.0,Perdida,0.0,AUDITADA FT 1-1
+2026-11-26 22:55:00,401915513,Sunderland vs Jagiellonia Bialystok (Uefa Europa League),[VIP] Gol en 2do Tiempo,1.47,SIN_CLV,69.4,🟢 [LUZ VERDE / ALTO VALOR],1100.0,Ganada,1617.0,AUDITADA FT 1-1
+2026-11-26 22:55:00,401915513,Sunderland vs Jagiellonia Bialystok (Uefa Europa League),[FREE] Victoria Sunderland,1.24,SIN_CLV,74.2,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 1-1
+2026-11-26 22:55:00,401915513,Sunderland vs Jagiellonia Bialystok (Uefa Europa League),[FREE] Over 1.5 Goles,1.24,SIN_CLV,76.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,620.0,AUDITADA FT 1-1
+2026-11-26 22:55:00,401915512,Torreense vs Celtic (Uefa Europa League),[VIP] Ambos Marcan (BTTS),1.5,SIN_CLV,75.7,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,7500.0,AUDITADA FT 1-2
+2026-11-26 22:55:00,401915512,Torreense vs Celtic (Uefa Europa League),[VIP] Over 2.5 Goles,1.57,SIN_CLV,65.1,🟢 [VALOR ALTO / OPERABLE],1000.0,Ganada,1570.0,AUDITADA FT 1-2
+2026-11-26 22:55:00,401915512,Torreense vs Celtic (Uefa Europa League),[FREE] Gol en 2do Tiempo,1.18,SIN_CLV,84.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 1-2
+2026-11-26 22:55:00,401915512,Torreense vs Celtic (Uefa Europa League),[FREE] Goles Celtic > 0.5,1.16,SIN_CLV,83.1,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,580.0,AUDITADA FT 1-2
+2026-11-26 22:55:00,401915515,TSG Hoffenheim vs SK Sturm Graz (Uefa Europa League),[VIP] Combo 1X + O1.5,1.5,SIN_CLV,76.8,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,7500.0,AUDITADA FT 3-1
+2026-11-26 22:55:00,401915515,TSG Hoffenheim vs SK Sturm Graz (Uefa Europa League),[VIP] Córners > 8.5,1.45,SIN_CLV,76.2,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,7250.0,AUDITADA FT 3-1
+2026-11-26 22:55:00,401915515,TSG Hoffenheim vs SK Sturm Graz (Uefa Europa League),[FREE] Gol en 1T,1.28,SIN_CLV,69.4,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,640.0,AUDITADA FT 3-1
+2026-11-26 22:55:00,401915515,TSG Hoffenheim vs SK Sturm Graz (Uefa Europa League),[FREE] Over 1.5 Goles,1.18,SIN_CLV,85.4,🟢 [LUZ VERDE / ALTO VALOR],1100.0,Ganada,1298.0,AUDITADA FT 3-1
+2026-11-26 22:55:00,401915806,Borac Banja Luka vs Atalanta (Uefa Conference League),[VIP] Combo X2 + O1.5,1.55,SIN_CLV,65.6,🟢 [VALOR ALTO / OPERABLE],800.0,Ganada,1240.0,AUDITADA FT 2-3
+2026-11-26 22:55:00,401915806,Borac Banja Luka vs Atalanta (Uefa Conference League),[VIP] Ambos Marcan (BTTS),1.59,SIN_CLV,64.2,🟢 [VALOR ALTO / OPERABLE],900.0,Ganada,1431.0,AUDITADA FT 2-3
+2026-11-26 22:55:00,401915806,Borac Banja Luka vs Atalanta (Uefa Conference League),[FREE] Tarjetas > 3.5,1.28,SIN_CLV,62.6,🟢 [VALOR ALTO / OPERABLE],500.0,Ganada,640.0,AUDITADA FT 2-3
+2026-11-26 22:55:00,401915806,Borac Banja Luka vs Atalanta (Uefa Conference League),[FREE] Doble Oport. X2,1.27,SIN_CLV,74.7,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,635.0,AUDITADA FT 2-3
+2026-11-26 22:55:00,401915802,Braga vs KuPS Kuopio (Uefa Conference League),[VIP] Over 2.5 Goles,1.7,SIN_CLV,60.1,🟢 [VALOR ALTO / OPERABLE],800.0,Ganada,1360.0,AUDITADA FT 4-0
+2026-11-26 22:55:00,401915802,Braga vs KuPS Kuopio (Uefa Conference League),[VIP] Tarjetas > 3.5,1.74,SIN_CLV,58.6,🟢 [VALOR ALTO / OPERABLE],700.0,Perdida,0.0,AUDITADA FT 4-0
+2026-11-26 22:55:00,401915802,Braga vs KuPS Kuopio (Uefa Conference League),[FREE] Gol en 1T,1.26,SIN_CLV,75.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,630.0,AUDITADA FT 4-0
+2026-11-26 22:55:00,401915802,Braga vs KuPS Kuopio (Uefa Conference League),[FREE] Doble Oport. 1X,1.18,SIN_CLV,84.7,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 4-0
+2026-11-26 22:55:00,401915803,CSKA Sofia vs Trabzonspor (Uefa Conference League),[VIP] Ambos Marcan (BTTS),1.5,SIN_CLV,71.6,🟢 [LUZ VERDE / ALTO VALOR],3700.0,Ganada,5550.0,AUDITADA FT 1-2
+2026-11-26 22:55:00,401915803,CSKA Sofia vs Trabzonspor (Uefa Conference League),[VIP] Combo X2 + O1.5,1.57,SIN_CLV,64.9,🟢 [VALOR ALTO / OPERABLE],800.0,Ganada,1256.0,AUDITADA FT 1-2
+2026-11-26 22:55:00,401915803,CSKA Sofia vs Trabzonspor (Uefa Conference League),[FREE] Tarjetas > 3.5,1.28,SIN_CLV,61.8,🟢 [VALOR ALTO / OPERABLE],500.0,Ganada,640.0,AUDITADA FT 1-2
+2026-11-26 22:55:00,401915803,CSKA Sofia vs Trabzonspor (Uefa Conference League),[FREE] Remates Puerta > 5.5,1.28,SIN_CLV,61.3,🟢 [VALOR ALTO / OPERABLE],500.0,Ganada,640.0,AUDITADA FT 1-2
+2026-11-26 22:55:00,401915807,FC Nordsjælland vs Panathinaikos (Uefa Conference League),[VIP] Ambos Marcan (BTTS),1.5,SIN_CLV,68.1,🟢 [LUZ VERDE / ALTO VALOR],1100.0,Ganada,1650.0,AUDITADA FT 3-2
+2026-11-26 22:55:00,401915807,FC Nordsjælland vs Panathinaikos (Uefa Conference League),[VIP] Gol en 2do Tiempo,1.38,SIN_CLV,80.4,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,6900.0,AUDITADA FT 3-2
+2026-11-26 22:55:00,401915807,FC Nordsjælland vs Panathinaikos (Uefa Conference League),[FREE] Córners > 8.5,1.28,SIN_CLV,68.0,🟢 [VALOR ALTO / OPERABLE],500.0,Perdida,0.0,AUDITADA FT 3-2
+2026-11-26 22:55:00,401915807,FC Nordsjælland vs Panathinaikos (Uefa Conference League),[FREE] Tarjetas > 2.5,1.28,SIN_CLV,68.7,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,640.0,AUDITADA FT 3-2
+2026-11-26 22:55:00,401915805,Hajduk Split vs Sint-Truidense (Uefa Conference League),[VIP] Combo 1X + U4.5,1.64,SIN_CLV,62.1,🟢 [VALOR ALTO / OPERABLE],700.0,Perdida,0.0,AUDITADA FT 0-2
+2026-11-26 22:55:00,401915805,Hajduk Split vs Sint-Truidense (Uefa Conference League),[VIP] Tarjetas > 3.5,1.78,SIN_CLV,57.3,🟡 [MODERADO / VIGILAR],600.0,Ganada,1068.0,AUDITADA FT 0-2
+2026-11-26 22:55:00,401915805,Hajduk Split vs Sint-Truidense (Uefa Conference League),[FREE] Goles Hajduk Split > 0.5,1.26,SIN_CLV,74.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 0-2
+2026-11-26 22:55:00,401915805,Hajduk Split vs Sint-Truidense (Uefa Conference League),[FREE] Over 1.5 Goles,1.28,SIN_CLV,73.1,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,640.0,AUDITADA FT 0-2
+2026-11-26 22:55:00,401915738,Inter D'Escaldes vs F.C. København (Uefa Conference League),[VIP] Over 2.5 Goles,1.62,SIN_CLV,62.8,🟢 [VALOR ALTO / OPERABLE],700.0,Perdida,0.0,AUDITADA FT 2-0
+2026-11-26 22:55:00,401915738,Inter D'Escaldes vs F.C. København (Uefa Conference League),[VIP] Tarjetas > 3.5,1.74,SIN_CLV,58.7,🟢 [VALOR ALTO / OPERABLE],700.0,Perdida,0.0,AUDITADA FT 2-0
+2026-11-26 22:55:00,401915738,Inter D'Escaldes vs F.C. København (Uefa Conference League),[FREE] Goles F.C. Københa > 0.5,1.16,SIN_CLV,86.4,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 2-0
+2026-11-26 22:55:00,401915738,Inter D'Escaldes vs F.C. København (Uefa Conference League),[FREE] Victoria F.C. Københa,1.24,SIN_CLV,74.6,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 2-0
+2026-11-26 22:55:00,401915804,KAA Gent vs Red Star Belgrade (Uefa Conference League),[VIP] Combo 1X + U4.5,1.62,SIN_CLV,63.0,🟢 [VALOR ALTO / OPERABLE],800.0,Ganada,1296.0,AUDITADA FT 1-1
+2026-11-26 22:55:00,401915804,KAA Gent vs Red Star Belgrade (Uefa Conference League),[VIP] Tarjetas > 3.5,1.85,SIN_CLV,55.3,🟡 [MODERADO / VIGILAR],500.0,Ganada,925.0,AUDITADA FT 1-1
+2026-11-26 22:55:00,401915804,KAA Gent vs Red Star Belgrade (Uefa Conference League),[FREE] Gol en 1T,1.28,SIN_CLV,73.7,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,640.0,AUDITADA FT 1-1
+2026-11-26 22:55:00,401915804,KAA Gent vs Red Star Belgrade (Uefa Conference League),[FREE] Remates Puerta > 4.5,1.28,SIN_CLV,60.4,🟢 [VALOR ALTO / OPERABLE],500.0,Ganada,640.0,AUDITADA FT 1-1
+2026-11-26 22:55:00,401915801,SC Freiburg vs FC Twente (Uefa Conference League),[VIP] Ambos Marcan (BTTS),1.5,SIN_CLV,76.5,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,7500.0,AUDITADA FT 2-1
+2026-11-26 22:55:00,401915801,SC Freiburg vs FC Twente (Uefa Conference League),[VIP] Total Asiático > 2.25,1.53,SIN_CLV,66.5,🟢 [VALOR ALTO / OPERABLE],800.0,Ganada,1224.0,AUDITADA FT 2-1
+2026-11-26 22:55:00,401915801,SC Freiburg vs FC Twente (Uefa Conference League),[FREE] Gol en 2do Tiempo,1.18,SIN_CLV,83.1,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 2-1
+2026-11-26 22:55:00,401915801,SC Freiburg vs FC Twente (Uefa Conference League),[FREE] Goles FC Twente > 0.5,1.2,SIN_CLV,78.4,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,600.0,AUDITADA FT 2-1
+2026-11-27 01:55:00,401841329,São Paulo vs Remo (Brasil (Serie A)),[VIP] Combo 1X + O1.5,1.5,SIN_CLV,72.5,🟢 [LUZ VERDE / ALTO VALOR],4400.0,Ganada,6600.0,AUDITADA FT 3-1
+2026-11-27 01:55:00,401841329,São Paulo vs Remo (Brasil (Serie A)),[VIP] Córners > 8.5,1.56,SIN_CLV,65.5,🟢 [VALOR ALTO / OPERABLE],1000.0,Perdida,0.0,AUDITADA FT 3-1
+2026-11-27 01:55:00,401841329,São Paulo vs Remo (Brasil (Serie A)),[FREE] Over 1.5 Goles,1.18,SIN_CLV,79.6,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 3-1
+2026-11-27 01:55:00,401841329,São Paulo vs Remo (Brasil (Serie A)),[FREE] Doble Oport. 1X,1.18,SIN_CLV,84.6,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,590.0,AUDITADA FT 3-1
+2026-11-27 03:55:00,401931982,Pachuca vs Guadalajara (México (Liga Mx)),[VIP] Ambos Marcan (BTTS),1.52,SIN_CLV,67.0,🟢 [VALOR ALTO / OPERABLE],900.0,Ganada,1368.0,AUDITADA FT 2-1
+2026-11-27 03:55:00,401931982,Pachuca vs Guadalajara (México (Liga Mx)),[VIP] Gol en 2do Tiempo,1.38,SIN_CLV,81.2,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,6900.0,AUDITADA FT 2-1
+2026-11-27 03:55:00,401931982,Pachuca vs Guadalajara (México (Liga Mx)),[FREE] Córners > 8.5,1.25,SIN_CLV,76.2,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 2-1
+2026-11-27 03:55:00,401931982,Pachuca vs Guadalajara (México (Liga Mx)),[FREE] Tarjetas > 2.5,1.28,SIN_CLV,61.6,🟢 [VALOR ALTO / OPERABLE],500.0,Ganada,640.0,AUDITADA FT 2-1
+2026-11-27 06:05:00,401931995,León vs Cruz Azul (México (Liga Mx)),[VIP] Ambos Marcan (BTTS),1.5,SIN_CLV,70.8,🟢 [LUZ VERDE / ALTO VALOR],3100.0,Perdida,0.0,AUDITADA FT 0-4
+2026-11-27 06:05:00,401931995,León vs Cruz Azul (México (Liga Mx)),[VIP] Gol en 2do Tiempo,1.38,SIN_CLV,81.6,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Ganada,6900.0,AUDITADA FT 0-4
+2026-11-27 06:05:00,401931995,León vs Cruz Azul (México (Liga Mx)),[FREE] Córners Cruz Azul > 4.5,1.28,SIN_CLV,71.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Perdida,0.0,AUDITADA FT 0-4
+2026-11-27 06:05:00,401931995,León vs Cruz Azul (México (Liga Mx)),[FREE] Tarjetas > 2.5,1.28,SIN_CLV,70.5,🟢 [LUZ VERDE / ALTO VALOR],500.0,Ganada,640.0,AUDITADA FT 0-4
+2026-11-27 21:55:00,401875536,FC Groningen vs Willem II (Países Bajos (Eredivisie)),[VIP] Ambos Marcan (BTTS),1.6,PENDIENTE_CLV,62.4,🟢 [VALOR ALTO / OPERABLE],500.0,Pendiente,0.0,AUDITANDO
+2026-11-27 21:55:00,401875536,FC Groningen vs Willem II (Países Bajos (Eredivisie)),[VIP] Combo 1X + O1.5,1.53,PENDIENTE_CLV,66.5,🟢 [VALOR ALTO / OPERABLE],800.0,Pendiente,0.0,AUDITANDO
+2026-11-27 21:55:00,401875536,FC Groningen vs Willem II (Países Bajos (Eredivisie)),[FREE] Over 1.5 Goles,1.26,PENDIENTE_CLV,81.6,🟢 [LUZ VERDE / ALTO VALOR],2600.0,Pendiente,0.0,AUDITANDO
+2026-11-27 21:55:00,401875536,FC Groningen vs Willem II (Países Bajos (Eredivisie)),[FREE] Sin Empate FC Groningen,1.12,PENDIENTE_CLV,79.4,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
+2026-11-27 22:25:00,401883102,Leganés vs CD Sabadell (España (Segunda)),[VIP] Goles Leganés > 0.5,1.46,PENDIENTE_CLV,71.1,🟢 [LUZ VERDE / ALTO VALOR],2100.0,Pendiente,0.0,AUDITANDO
+2026-11-27 22:25:00,401883102,Leganés vs CD Sabadell (España (Segunda)),[VIP] Tarjetas > 3.5,1.66,PENDIENTE_CLV,61.3,🟢 [VALOR ALTO / OPERABLE],700.0,Pendiente,0.0,AUDITANDO
+2026-11-27 22:25:00,401883102,Leganés vs CD Sabadell (España (Segunda)),[FREE] Total Menos de 3.5 (Under),1.28,PENDIENTE_CLV,77.2,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
+2026-11-27 22:25:00,401883102,Leganés vs CD Sabadell (España (Segunda)),[FREE] Doble Oport. 1X,1.3,PENDIENTE_CLV,74.9,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
+2026-11-27 22:25:00,401884720,Werder Bremen vs Borussia Mönchengladbach (Alemania (Bundesliga)),[VIP] Gol en 2do Tiempo,1.4,PENDIENTE_CLV,79.8,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Pendiente,0.0,AUDITANDO
+2026-11-27 22:25:00,401884720,Werder Bremen vs Borussia Mönchengladbach (Alemania (Bundesliga)),[VIP] Ambos Marcan (BTTS),1.46,PENDIENTE_CLV,70.6,🟢 [LUZ VERDE / ALTO VALOR],1700.0,Pendiente,0.0,AUDITANDO
+2026-11-27 22:25:00,401884720,Werder Bremen vs Borussia Mönchengladbach (Alemania (Bundesliga)),[FREE] Gol en 1T,1.26,PENDIENTE_CLV,78.8,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
+2026-11-27 22:25:00,401884720,Werder Bremen vs Borussia Mönchengladbach (Alemania (Bundesliga)),[FREE] Tarjetas > 2.5,1.36,PENDIENTE_CLV,71.9,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
+2026-11-27 22:40:00,401875004,Venezia vs Bologna (Italia (Serie A)),[VIP] Gol en 2do Tiempo,1.4,PENDIENTE_CLV,77.0,🟢 [LUZ VERDE / ALTO VALOR],4900.0,Pendiente,0.0,AUDITANDO
+2026-11-27 22:40:00,401875004,Venezia vs Bologna (Italia (Serie A)),[FREE] Goles Bologna > 0.5,1.28,PENDIENTE_CLV,77.4,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
+2026-11-27 22:40:00,401875004,Venezia vs Bologna (Italia (Serie A)),[FREE] Remates Puerta > 5.5,1.38,PENDIENTE_CLV,65.0,🟢 [VALOR ALTO / OPERABLE],500.0,Pendiente,0.0,AUDITANDO
+2026-11-27 22:40:00,401876392,Brest vs Paris FC (Francia (Ligue 1)),[VIP] Gol en 1T,1.4,PENDIENTE_CLV,74.1,🟢 [LUZ VERDE / ALTO VALOR],2300.0,Pendiente,0.0,AUDITANDO
+2026-11-27 22:40:00,401876392,Brest vs Paris FC (Francia (Ligue 1)),[VIP] Ambos Marcan (BTTS),1.61,PENDIENTE_CLV,65.1,🟢 [VALOR ALTO / OPERABLE],2000.0,Pendiente,0.0,AUDITANDO
+2026-11-27 22:40:00,401876392,Brest vs Paris FC (Francia (Ligue 1)),[FREE] Over 1.5 Goles,1.26,PENDIENTE_CLV,78.1,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
+2026-11-27 22:40:00,401876392,Brest vs Paris FC (Francia (Ligue 1)),[FREE] Tarjetas > 2.5,1.38,PENDIENTE_CLV,63.9,🟢 [VALOR ALTO / OPERABLE],500.0,Pendiente,0.0,AUDITANDO
+2026-11-27 22:55:00,401882791,Levante vs Racing Santander (España (Laliga)),[VIP] Combo 1X + O1.5,1.5,PENDIENTE_CLV,71.8,🟢 [LUZ VERDE / ALTO VALOR],3800.0,Pendiente,0.0,AUDITANDO
+2026-11-27 22:55:00,401882791,Levante vs Racing Santander (España (Laliga)),[FREE] Over 1.5 Goles,1.26,PENDIENTE_CLV,82.2,🟢 [LUZ VERDE / ALTO VALOR],3400.0,Pendiente,0.0,AUDITANDO
+2026-11-27 22:55:00,401882791,Levante vs Racing Santander (España (Laliga)),[FREE] Sin Empate Levante,1.5,PENDIENTE_CLV,72.7,🟢 [LUZ VERDE / ALTO VALOR],4500.0,Pendiente,0.0,AUDITANDO
+2026-11-27 22:55:00,401879225,Nottingham Forest vs Chelsea (Inglaterra (Premier)),[FREE] Total Menos de 3.5 (Under),1.37,PENDIENTE_CLV,72.4,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
+2026-11-27 22:55:00,401879225,Nottingham Forest vs Chelsea (Inglaterra (Premier)),[FREE] Remates Puerta > 5.5,1.38,PENDIENTE_CLV,70.1,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
+2026-11-27 23:10:00,401885389,Maritimo vs C.D. Nacional (Portugal (Primeira Liga)),[VIP] Gol en 2do Tiempo,1.4,PENDIENTE_CLV,76.6,🟢 [LUZ VERDE / ALTO VALOR],4500.0,Pendiente,0.0,AUDITANDO
+2026-11-27 23:10:00,401885389,Maritimo vs C.D. Nacional (Portugal (Primeira Liga)),[FREE] Goles Maritimo > 0.5,1.32,PENDIENTE_CLV,74.7,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
+2026-11-27 23:10:00,401885389,Maritimo vs C.D. Nacional (Portugal (Primeira Liga)),[FREE] Remates Puerta > 5.5,1.38,PENDIENTE_CLV,60.0,🟢 [VALOR ALTO / OPERABLE],500.0,Pendiente,0.0,AUDITANDO
+2026-11-28 01:55:00,401841337,Fluminense vs Cruzeiro (Brasil (Serie A)),[VIP] Ambos Marcan (BTTS),1.6,PENDIENTE_CLV,64.8,🟢 [VALOR ALTO / OPERABLE],1500.0,Pendiente,0.0,AUDITANDO
+2026-11-28 01:55:00,401841337,Fluminense vs Cruzeiro (Brasil (Serie A)),[VIP] Gol en 2do Tiempo,1.4,PENDIENTE_CLV,83.1,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Pendiente,0.0,AUDITANDO
+2026-11-28 01:55:00,401841337,Fluminense vs Cruzeiro (Brasil (Serie A)),[FREE] Gol en 1T,1.35,PENDIENTE_CLV,73.4,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
+2026-11-28 01:55:00,401841337,Fluminense vs Cruzeiro (Brasil (Serie A)),[FREE] Tarjetas > 2.5,1.31,PENDIENTE_CLV,74.9,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
+2026-11-28 02:30:00,401936055,Deportivo Cali vs Atlético Bucaramanga (Colombia (Primera A)),[VIP] Total Menos de 2.5 (Under),1.82,PENDIENTE_CLV,56.0,🟡 [MODERADO / VIGILAR],500.0,Pendiente,0.0,AUDITANDO
+2026-11-28 02:30:00,401936055,Deportivo Cali vs Atlético Bucaramanga (Colombia (Primera A)),[FREE] Total Menos de 3.5 (Under),1.3,PENDIENTE_CLV,76.3,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
+2026-11-28 02:30:00,401936055,Deportivo Cali vs Atlético Bucaramanga (Colombia (Primera A)),[FREE] Tarjetas > 3.5,1.38,PENDIENTE_CLV,64.2,🟢 [VALOR ALTO / OPERABLE],500.0,Pendiente,0.0,AUDITANDO
+2026-11-28 03:55:00,401933727,Columbus Crew vs Inter Miami CF (Usa (Mls)),[VIP] Goles Inter Miami  > 0.5,1.46,PENDIENTE_CLV,72.1,🟢 [LUZ VERDE / ALTO VALOR],2900.0,Pendiente,0.0,AUDITANDO
+2026-11-28 03:55:00,401933727,Columbus Crew vs Inter Miami CF (Usa (Mls)),[VIP] Gol en 2do Tiempo,1.4,PENDIENTE_CLV,82.7,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Pendiente,0.0,AUDITANDO
+2026-11-28 03:55:00,401933727,Columbus Crew vs Inter Miami CF (Usa (Mls)),[FREE] Over 1.5 Goles,1.26,PENDIENTE_CLV,81.9,🟢 [LUZ VERDE / ALTO VALOR],3100.0,Pendiente,0.0,AUDITANDO
+2026-11-28 03:55:00,401933727,Columbus Crew vs Inter Miami CF (Usa (Mls)),[FREE] Tarjetas > 2.5,1.33,PENDIENTE_CLV,73.6,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
+2026-11-28 04:35:00,401936054,Millonarios vs América de Cali (Colombia (Primera A)),[VIP] Combo 1X + U3.5,1.5,PENDIENTE_CLV,68.0,🟢 [LUZ VERDE / ALTO VALOR],1000.0,Pendiente,0.0,AUDITANDO
+2026-11-28 04:35:00,401936054,Millonarios vs América de Cali (Colombia (Primera A)),[FREE] Doble Oport. 1X,1.2,PENDIENTE_CLV,79.3,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
+2026-11-28 04:35:00,401936054,Millonarios vs América de Cali (Colombia (Primera A)),[FREE] Goles Millonarios > 0.5,1.34,PENDIENTE_CLV,74.0,🟢 [LUZ VERDE / ALTO VALOR],500.0,Pendiente,0.0,AUDITANDO
+2026-11-28 05:55:00,401933725,Real Salt Lake vs Vancouver Whitecaps (Usa (Mls)),[VIP] Victoria Vancouver Wh,1.44,PENDIENTE_CLV,71.0,🟢 [LUZ VERDE / ALTO VALOR],1300.0,Pendiente,0.0,AUDITANDO
+2026-11-28 05:55:00,401933725,Real Salt Lake vs Vancouver Whitecaps (Usa (Mls)),[VIP] Goles Vancouver Wh > 1.5,1.51,PENDIENTE_CLV,67.7,🟢 [VALOR ALTO / OPERABLE],1100.0,Pendiente,0.0,AUDITANDO
+2026-11-28 05:55:00,401933725,Real Salt Lake vs Vancouver Whitecaps (Usa (Mls)),[FREE] Sin Empate Vancouver Wh,1.26,PENDIENTE_CLV,86.1,🟢 [LUZ VERDE / ALTO VALOR],5000.0,Pendiente,0.0,AUDITANDO
+2026-11-28 05:55:00,401933725,Real Salt Lake vs Vancouver Whitecaps (Usa (Mls)),[FREE] Over 1.5 Goles,1.26,PENDIENTE_CLV,80.9,🟢 [LUZ VERDE / ALTO VALOR],1800.0,Pendiente,0.0,AUDITANDO
