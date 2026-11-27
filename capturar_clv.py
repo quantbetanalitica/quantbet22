@@ -42,8 +42,8 @@ ARCHIVO_AUDITORIA = "auditoria_apuestas.csv"
 ARCHIVO_LOG_CLV = "registro_clv_real.csv"
 
 # Bot privado de Auditorías (SOLO tu móvil personal, nunca canales de clientes)
-TOKEN_TELEGRAM_CLV = os.getenv("TG_TOKEN_TICKETS", "8805035408:AAGPYUxmFz-Spfum1P2vacMZz5bToXUPMWI")
-CHAT_ID_TELEGRAM_CLV = os.getenv("TG_CHAT_ID_AUDITORIAS", "1491740882")
+TOKEN_TELEGRAM_CLV = (os.getenv("TG_TOKEN_TICKETS") or "").strip() or "8805035408:AAGPYUxmFz-Spfum1P2vacMZz5bToXUPMWI"
+CHAT_ID_TELEGRAM_CLV = (os.getenv("TG_CHAT_ID_AUDITORIAS") or "").strip() or "1491740882"
 
 COLUMNAS_LOG_CLV = [
     "Timestamp_Captura",
@@ -166,7 +166,7 @@ def _es_evento_femenino(local_str, vis_str, grupo_str=""):
 def _crear_info_vacio():
     return {
         "1": "N/A", "X": "N/A", "2": "N/A", "1X": None, "X2": None,
-        "dnb_local": None, "dnb_visita": None, "btts_si": None, "over25": None,
+        "dnb_local": None, "dnb_visita": None, "btts_si": None, "btts_no": None, "over25": None,
         "fuente": "kambi",
         "over_goles": {}, "under_goles": {},
         "over_goles_1t": {}, "under_goles_1t": {},
@@ -200,20 +200,39 @@ def _parsear_ofertas_kambi(bet_offers, info_evento):
                 pass
             continue
 
+        crit_es_clean = str(crit.get("label") or "").strip().lower()
+        crit_en_clean = str(crit.get("englishLabel") or "").strip().lower()
+        palabras_exoticas = (
+            "1st", "2nd", "1.ª", "2.ª", "half", "halves", "parte", "partes", "tiempo", "tiempos",
+            "mitad", "mitades", "both halves", "over", "under", "más", "mas", "menos",
+            " & ", " and ", " y ", " + ", "draw", "empate", "win", "gana", "2+", "2 or more", "min", "corner", "card"
+        )
+
         if "double chance" in tipo_low or "doble oportunidad" in tipo_low or "double chance" in crit_lbl or "doble oportunidad" in crit_lbl:
-            for out in outcomes:
-                lbl = str(out.get("englishLabel") or out.get("label") or "").strip().upper()
-                odd_r = out.get("odds")
-                if odd_r:
-                    o_dec = round(float(odd_r) / 1000.0, 2)
-                    if lbl == "1X":
-                        info_evento["1X"] = o_dec
-                    elif lbl == "X2":
-                        info_evento["X2"] = o_dec
+            es_dc_puro = (
+                crit_en_clean in ("double chance", "full time double chance", "regular time double chance")
+                or crit_es_clean in ("doble oportunidad", "doble oportunidad - tiempo reglamentario")
+                or (not any(h in crit_lbl for h in ("1st", "2nd", "1.ª", "2.ª", "half", "halves", "parte", "tiempo", "mitad", " & ", " and ", " + ", "over", "under", "both teams", "ambos")))
+            )
+            if es_dc_puro and (info_evento.get("1X") is None or info_evento.get("X2") is None):
+                for out in outcomes:
+                    lbl = str(out.get("englishLabel") or out.get("label") or "").strip().upper()
+                    odd_r = out.get("odds")
+                    if odd_r:
+                        o_dec = round(float(odd_r) / 1000.0, 2)
+                        if lbl == "1X" and info_evento.get("1X") is None:
+                            info_evento["1X"] = o_dec
+                        elif lbl == "X2" and info_evento.get("X2") is None:
+                            info_evento["X2"] = o_dec
             continue
 
         if any(k in crit_lbl or k in tipo_low for k in ("draw no bet", "sin empate", "empate no acci", "empate no v")):
-            if not any(h in crit_lbl for h in ("1st", "2nd", "1.ª", "2.ª", "half", "parte", "tiempo")) and len(outcomes) >= 2:
+            es_dnb_puro = (
+                not any(h in crit_lbl for h in ("1st", "2nd", "1.ª", "2.ª", "half", "halves", "parte", "tiempo", "mitad", " & ", " and ", " + ", "over", "under"))
+                and len(outcomes) == 2
+                and info_evento.get("dnb_local") is None
+            )
+            if es_dnb_puro:
                 try:
                     o0, o1 = outcomes[0].get("odds"), outcomes[1].get("odds")
                     if o0 and o1:
@@ -224,12 +243,22 @@ def _parsear_ofertas_kambi(bet_offers, info_evento):
             continue
 
         if "both teams to score" in crit_lbl or "ambos equipos marcan" in crit_lbl or "ambos marcan" in crit_lbl:
-            if not any(h in crit_lbl for h in ("1st", "2nd", "1.ª", "2.ª", "half", "parte", "tiempo")):
+            # SOLO BTTS estándar de partido completo (bloquea "Both Halves", "BTTS & Over", "BTTS 2+", etc.)
+            es_btts_exacto = (
+                crit_en_clean in ("both teams to score", "both teams to score - regular time", "both teams to score (regular time)")
+                or crit_es_clean in ("ambos equipos marcan", "ambos marcan", "ambos equipos marcarán", "ambos equipos marcan - tiempo reglamentario")
+                or (not any(h in crit_lbl for h in palabras_exoticas))
+            )
+            if es_btts_exacto and len(outcomes) == 2 and info_evento.get("btts_si") is None:
                 for out in outcomes:
                     lbl = str(out.get("englishLabel") or out.get("label") or "").strip().lower()
                     odd_r = out.get("odds")
-                    if odd_r and lbl in ("yes", "sí", "si"):
-                        info_evento["btts_si"] = round(float(odd_r) / 1000.0, 2)
+                    if odd_r:
+                        o_dec = round(float(odd_r) / 1000.0, 2)
+                        if lbl in ("yes", "sí", "si"):
+                            info_evento["btts_si"] = o_dec
+                        elif lbl == "no":
+                            info_evento["btts_no"] = o_dec
             continue
 
         if "over/under" not in tipo_low and "total" not in tipo_low:
@@ -472,8 +501,12 @@ def extraer_cuota_cierre_mercado(mercado_limpio, info_kambi, local="", visitante
         return u_c, _calcular_cuota_novig_dos_lados(u_c, o_c) if (u_c and o_c) else None
 
     if "btts" in m_low or "ambos marcan" in m_low:
-        b = info_kambi.get("btts_si")
-        return (round(float(b), 2), None) if isinstance(b, (int, float)) else (None, None)
+        b_si = info_kambi.get("btts_si")
+        b_no = info_kambi.get("btts_no")
+        if isinstance(b_si, (int, float)):
+            nv = _calcular_cuota_novig_dos_lados(b_si, b_no) if isinstance(b_no, (int, float)) else None
+            return round(float(b_si), 2), nv
+        return None, None
 
     c1, cx, c2 = info_kambi.get("1"), info_kambi.get("X"), info_kambi.get("2")
     if "doble oport" in m_low and "1x" in m_low:
@@ -623,6 +656,7 @@ def enviar_alerta_clv_telegram(items_capturados, umbral_abs_pct=0.0):
         if r.status_code == 200:
             print(f"    📲 [TELEGRAM OK] Alerta CLV enviada a tu móvil ({len(filtrados)} picks).")
             return True
+        print(f"    ⚠️ [TELEGRAM HTTP {r.status_code}] No se pudo enviar alerta: {r.text[:180]}")
     except Exception as e:
         print(f"    ⚠️ Error enviando alerta CLV por Telegram: {e}")
     return False
