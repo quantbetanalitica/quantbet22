@@ -1269,12 +1269,32 @@ def generar_captura_automatica(res_m, tipo_filtro="DESCARTES", guardar_imagen=Tr
         reverse=True
     )
 
-    # FIX v24: Los 3 partidos FREE y 4 VIP de clientes son 7 partidos distintos.
-    # NUNCA bloquear familias buenas de fútbol (Goles, Tiempos, 1X, Goles Equipo) en FREE porque VIP las haya usado;
-    # solo excluir el nombre literal exacto del pick VIP (y repetir familias secundarias como córners/faltas/tarjetas).
+    # Anti-colinealidad cruzada v26.9 (protege auditoría de las 4 apuestas FREE+VIP del mismo partido):
+    # 1) Máximo 2 picks dependientes de gol entre las 4 selecciones combinadas (evita que un 0-0/1-0 tumbe 3/4 picks).
+    # 2) Prohibir repetir el mismo favorito direccional (ej. Combo 1X en VIP + Sin Empate Local en FREE) en el mismo duelo.
+    def _lado_direccional_pick(nom_pk):
+        nl = str(nom_pk or "").lower()
+        if "1x" in nl:
+            return "local"
+        if "x2" in nl:
+            return "visita"
+        if nl.startswith("victoria ") or nl.startswith("sin empate "):
+            if str(res_m.get("local", ""))[:7].lower() in nl:
+                return "local"
+            if str(res_m.get("visitante", ""))[:7].lower() in nl:
+                return "visita"
+        return None
+
     sel_vip_prev = res_m.get("seleccion_vip", [])
     nombres_usados_vip = {m[0] for m in sel_vip_prev}
     fams_secundarias_vip = {obtener_familia(m[0]) for m in sel_vip_prev if obtener_familia(m[0]) in FAMILIAS_SECUNDARIAS}
+    lados_dir_vip = {_lado_direccional_pick(m[0]) for m in sel_vip_prev} - {None}
+    if tipo_filtro == "FREE" and lados_dir_vip:
+        for cand_f in candidatos_free:
+            if _lado_direccional_pick(cand_f[0]) in lados_dir_vip:
+                nombres_usados_vip.add(cand_f[0])
+    n_gol_en_vip = sum(1 for m in sel_vip_prev if _es_pick_dependiente_gol_global(m[0]))
+    max_gol_free_cruzado = max(0, 2 - n_gol_en_vip) if (tipo_filtro == "FREE" and sel_vip_prev and tot_goles < 3.30) else None
 
     top_2_free_base = seleccionar_par_distinto_familia(
         candidatos_free,
@@ -1283,7 +1303,7 @@ def generar_captura_automatica(res_m, tipo_filtro="DESCARTES", guardar_imagen=Tr
         tipo_filtro="FREE",
         registrar_memoria=(tipo_filtro == "FREE"),
         tot_goles=tot_goles,
-        max_picks_gol=None
+        max_picks_gol=max_gol_free_cruzado
     )
 
     if tipo_filtro == "FREE":
