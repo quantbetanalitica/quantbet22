@@ -563,7 +563,7 @@ def cargar_boxscores_reales_web():
     return {}
 
 
-@st.cache_data(ttl=120, show_spinner=False)
+@st.cache_data(ttl=60, show_spinner=False)
 def obtener_boxscore_vivo_espn_web(espn_event_id, nombre_local=""):
     """Consulta puntual a ESPN summary (1 sola petición, cacheada 120s) únicamente para una tarjeta
     ya finalizada con pick estadístico cuyo boxscore aún no llegó a cache_boxscore_ft.json."""
@@ -978,11 +978,14 @@ def _detectar_slugs_espn_por_partido(partido_str):
     return []
 
 
-@st.cache_data(ttl=90, show_spinner=False)
+@st.cache_data(ttl=60, show_spinner=False)
 def consultar_marcadores_vivo_espn_web(slugs_tuple, fecha_jornada_str):
-    """Consulta ligera en paralelo a ESPN (cacheada 90s) ÚNICAMENTE para las ligas de tarjetas
+    """Consulta ligera en paralelo a ESPN (cacheada 60s) ÚNICAMENTE para las ligas de tarjetas
     activas/pendientes de la jornada actual. Timeout estricto de 3s para jamás frenar la Web App."""
-    out = {"ft": {}, "indice_ft": [], "en_vivo": {}, "indice_vivo": [], "espn_ids": {}, "indice_espn_ids": []}
+    out = {
+        "ft": {}, "indice_ft": [], "en_vivo": {}, "indice_vivo": [],
+        "vivo_det": {}, "indice_vivo_det": [], "espn_ids": {}, "indice_espn_ids": [],
+    }
     if not slugs_tuple or not fecha_jornada_str:
         return out
     try:
@@ -1047,9 +1050,40 @@ def consultar_marcadores_vivo_espn_web(slugs_tuple, fecha_jornada_str):
                     gh_v = int(float(c_h.get("score") or 0))
                     ga_v = int(float(c_a.get("score") or 0))
                     rel = str(st_type.get("shortDetail") or st_d.get("displayClock") or "EN JUEGO").strip()
-                    if rel.upper() == "HT":
+                    es_ht = rel.upper() in ("HT", "HALFTIME", "DESCANSO", "DESCANSO (HT)")
+                    if es_ht:
                         rel = "Descanso (HT)"
-                    evs_out.append(("LIVE", eid, f_ev, loc_n, vis_n, (rel, gh_v, ga_v)))
+                    try:
+                        period_v = int(st_d.get("period") or 1)
+                    except Exception:
+                        period_v = 1
+                    ls_h_v = c_h.get("linescores") or []
+                    ls_a_v = c_a.get("linescores") or []
+                    det_g_v = [d for d in (comp.get("details") or []) if d.get("scoringPlay")]
+                    if period_v == 1 or es_ht:
+                        ght_v = gh_v + ga_v
+                    elif ls_h_v and ls_a_v:
+                        ght_v = int(float(ls_h_v[0].get("value") or 0)) + int(float(ls_a_v[0].get("value") or 0))
+                    elif det_g_v:
+                        ght_h_v = ght_a_v = 0
+                        for dg in det_g_v:
+                            rel_g = str((dg.get("clock") or {}).get("displayValue") or "")
+                            nums_g = re.findall(r"\d+", rel_g)
+                            min_g = int(nums_g[0]) if nums_g else 90
+                            if ("45+" in rel_g) or (min_g <= 45 and "90+" not in rel_g):
+                                if str((dg.get("team") or {}).get("id") or "") == str((c_a.get("team") or {}).get("id") or ""):
+                                    ght_a_v += 1
+                                else:
+                                    ght_h_v += 1
+                        ght_v = min(gh_v, ght_h_v) + min(ga_v, ght_a_v)
+                    else:
+                        ght_v = None
+                    en_2t_v = (period_v >= 2) and (not es_ht)
+                    det_live = {
+                        "rel": rel, "gh": gh_v, "ga": ga_v, "ght": ght_v,
+                        "en_2t": en_2t_v, "period": period_v, "es_ht": es_ht, "eid": eid,
+                    }
+                    evs_out.append(("LIVE", eid, f_ev, loc_n, vis_n, ((rel, gh_v, ga_v), det_live)))
         except Exception:
             pass
         return evs_out
@@ -1069,10 +1103,14 @@ def consultar_marcadores_vivo_espn_web(slugs_tuple, fecha_jornada_str):
                     out["ft"][duelo_k] = dato
                     out["indice_ft"].append((f_ev, tl, tv, dato))
                 elif tipo_ev == "LIVE":
+                    tupla_v, det_live = dato
                     if eid:
-                        out["en_vivo"][eid] = dato
-                    out["en_vivo"][duelo_k] = dato
-                    out["indice_vivo"].append((tl, tv, dato))
+                        out["en_vivo"][eid] = tupla_v
+                        out["vivo_det"][eid] = det_live
+                    out["en_vivo"][duelo_k] = tupla_v
+                    out["vivo_det"][duelo_k] = det_live
+                    out["indice_vivo"].append((tl, tv, tupla_v))
+                    out["indice_vivo_det"].append((tl, tv, det_live))
     return out
 
 
@@ -1106,9 +1144,132 @@ def enriquecer_mapa_vivo_tarjetas(mapa_base, tarjetas_dia, jornada_str, ahora_es
     ev_mix.update(datos_v["en_vivo"])
     mapa_mix["_en_vivo"] = ev_mix
     mapa_mix["_indice_vivo"] = list(datos_v["indice_vivo"]) + list(mapa_base.get("_indice_vivo", []))
+    mapa_mix["_vivo_det"] = dict(datos_v.get("vivo_det", {}))
+    mapa_mix["_indice_vivo_det"] = list(datos_v.get("indice_vivo_det", []))
     mapa_mix["_espn_ids"] = dict(datos_v.get("espn_ids", {}))
     mapa_mix["_indice_espn_ids"] = list(datos_v.get("indice_espn_ids", []))
     return mapa_mix
+
+
+def obtener_detalle_en_vivo_partido(mapa_ft, id_partido, duelo_str):
+    """Devuelve el diccionario vivo_det (gh, ga, ght, en_2t, period, rel, eid) si el partido está en juego."""
+    if not isinstance(mapa_ft, dict):
+        return None
+    v_det = mapa_ft.get("_vivo_det") or {}
+    id_s = str(id_partido or "").strip()
+    if id_s and id_s in v_det:
+        return v_det[id_s]
+    duelo_low = str(duelo_str or "").split(" (")[0].strip().lower()
+    if duelo_low in v_det:
+        return v_det[duelo_low]
+    if " vs " in duelo_low:
+        lb, vb = duelo_low.split(" vs ", 1)
+        tl, tv = _tokens_club(lb), _tokens_club(vb)
+        for tl_v, tv_v, det_v in mapa_ft.get("_indice_vivo_det", []):
+            if _tokens_match_seguro_web(tl, tl_v) and _tokens_match_seguro_web(tv, tv_v):
+                return det_v
+    return None
+
+
+def evaluar_acierto_en_vivo(merc, vivo_det, duelo_str="", stats_vivo=None):
+    """Evalúa un pick DURANTE el partido.
+    Devuelve True ÚNICAMENTE si el evento ya es matemáticamente IRREVERSIBLE (ej. Over ya superado,
+    BTTS con ambos equipos anotando, Gol 1T/2T ya caído, o estadística ya superada en boxscore en vivo).
+    NUNCA marca una selección como perdida ni cierra mercados reversibles (Under, 1X, X2, Victoria, DNB, Combos)
+    antes del pitazo final (FT); para todos esos casos devuelve None (Pendiente / En juego)."""
+    if not isinstance(vivo_det, dict):
+        return None
+    try:
+        gh = int(vivo_det.get("gh", 0))
+        ga = int(vivo_det.get("ga", 0))
+    except Exception:
+        return None
+    tot = gh + ga
+    ght = vivo_det.get("ght")
+    en_2t = bool(vivo_det.get("en_2t"))
+
+    m = str(merc or "").replace("[VIP] ", "").replace("[FREE] ", "").strip()
+    m_low = m.lower()
+    m_norm = "".join(c for c in unicodedata.normalize("NFD", m_low) if unicodedata.category(c) != "Mn")
+    duelo_norm = "".join(c for c in unicodedata.normalize("NFD", str(duelo_str).split(" (")[0].lower()) if unicodedata.category(c) != "Mn")
+    loc_n, vis_n = (duelo_norm.split(" vs ") + ["", ""])[:2]
+
+    # Mercados reversibles hasta el pitazo final: JAMÁS dar por ganados o perdidos en vivo
+    if any(k in m_low for k in ("under", "menos de", "combo", "1x", "x2", "doble oport", "victoria", "vict.", "sin empate", "dnb", "empate")):
+        return None
+
+    # 1. Over X.5 Goles Totales
+    if ("over " in m_low or "mas de " in m_norm) and "goles" in m_low and "1t" not in m_low and "2t" not in m_low and "tiempo" not in m_low and not any(k in m_low for k in ("córner", "corner", "tarjeta", "falta", "remate")):
+        m_ov = re.search(r"(\d+(?:\.\d+)?)", m_low)
+        if m_ov and tot > float(m_ov.group(1)):
+            return True
+        return None
+
+    # 2. Asiático > 2.25 (irreversible con 3+) / > 2.75 (irreversible con 4+)
+    if "asiatico > 2.25" in m_norm or "asiático > 2.25" in m_low:
+        return True if tot >= 3 else None
+    if "asiatico > 2.75" in m_norm or "asiático > 2.75" in m_low:
+        return True if tot >= 4 else None
+
+    # 3. Ambos Marcan (BTTS)
+    if "btts" in m_low or "ambos marcan" in m_low:
+        return True if (gh > 0 and ga > 0) else None
+
+    # 4. Gol en 1T / Goles 1T > X.5
+    if "goles 1t" in m_low or "gol en 1t" in m_low or "gol 1t" in m_low:
+        m_n = re.search(r">\s*(\d+(?:\.\d+)?)", m)
+        lin_1t = float(m_n.group(1)) if m_n else 0.5
+        return True if (ght is not None and int(ght) > lin_1t) else None
+
+    # 5. Gol en 2do Tiempo / Goles 2T > X.5 (solo si ya estamos en 2T y conocemos ght exacto)
+    if "goles 2" in m_low or "gol en 2" in m_low or "gol 2t" in m_low:
+        m_n = re.search(r">\s*(\d+(?:\.\d+)?)", m)
+        lin_2t = float(m_n.group(1)) if m_n else 0.5
+        if en_2t and ght is not None:
+            g_2t = max(0, tot - int(ght))
+            return True if g_2t > lin_2t else None
+        return None
+
+    # 6. Goles por equipo (Goles <Equipo> > X.5)
+    if "goles " in m_low and ">" in m_low:
+        m_n = re.search(r">\s*(\d+(?:\.\d+)?)", m)
+        lin_eq = float(m_n.group(1)) if m_n else 0.5
+        if loc_n and loc_n[:5] in m_norm:
+            return True if gh > lin_eq else None
+        if vis_n and vis_n[:5] in m_norm:
+            return True if ga > lin_eq else None
+        return None
+
+    # 7. Estadísticas en vivo (boxscore real ESPN)
+    if isinstance(stats_vivo, dict):
+        if "tarjetas" in m_low or "amarill" in m_low:
+            m_n = re.search(r"(?:>|m[aá]s\s+de)\s*(\d+(?:\.\d+)?)", m, flags=re.I)
+            lin_t = float(m_n.group(1)) if m_n else 3.5
+            if "amarill" in m_low and stats_vivo.get("yellow_total") is not None and float(stats_vivo["yellow_total"]) > lin_t:
+                return True
+            if stats_vivo.get("cards_total") is not None and float(stats_vivo["cards_total"]) > lin_t:
+                return True
+        elif "faltas" in m_low:
+            m_n = re.search(r"(?:>|m[aá]s\s+de)\s*(\d+(?:\.\d+)?)", m, flags=re.I)
+            lin_f = float(m_n.group(1)) if m_n else 22.5
+            if stats_vivo.get("fouls_total") is not None and float(stats_vivo["fouls_total"]) > lin_f:
+                return True
+        elif "corners" in m_norm:
+            m_n = re.search(r"(?:>|m[aá]s\s+de)\s*(\d+(?:\.\d+)?)", m, flags=re.I)
+            lin_c = float(m_n.group(1)) if m_n else 7.5
+            if lin_c <= 5.5:
+                if loc_n and loc_n[:5] in m_norm and stats_vivo.get("corners_home") is not None and float(stats_vivo["corners_home"]) > lin_c:
+                    return True
+                if vis_n and vis_n[:5] in m_norm and stats_vivo.get("corners_away") is not None and float(stats_vivo["corners_away"]) > lin_c:
+                    return True
+            elif stats_vivo.get("corners_total") is not None and float(stats_vivo["corners_total"]) > lin_c:
+                return True
+        elif "remates" in m_low:
+            m_n = re.search(r"(?:>|m[aá]s\s+de)\s*(\d+(?:\.\d+)?)", m, flags=re.I)
+            lin_r = float(m_n.group(1)) if m_n else 6.5
+            if stats_vivo.get("shots_on_target_total") is not None and float(stats_vivo["shots_on_target_total"]) > lin_r:
+                return True
+    return None
 
 
 def buscar_resultado_inteligente(mapa_ft, id_partido, duelo_str, dia_str=None):
@@ -1206,7 +1367,7 @@ def _enriquecer_mapa_ft_pendientes_csv(mapa_base, df_csv, ahora_esp):
     return mapa_mix
 
 
-@st.cache_data(ttl=90, show_spinner=False)
+@st.cache_data(ttl=60, show_spinner=False)
 def obtener_resumen_auditoria():
     mapa_ft = cargar_mapa_resultados_caches()
     ahora_esp = obtener_hora_espana()
@@ -1874,7 +2035,7 @@ st.divider()
 # ==============================================================================
 # PANEL EN VIVO CON ACTUALIZACIÓN SILENCIOSA EN SEGUNDO PLANO CADA 60 SEGUNDOS
 # ==============================================================================
-@st.fragment(run_every=90)
+@st.fragment(run_every=60)
 def renderizar_panel_en_vivo_silencioso():
     mapa_ft_live = cargar_mapa_resultados_caches()
     _, _, _, _, df_hist_live = obtener_resumen_auditoria()
@@ -1956,21 +2117,35 @@ def renderizar_panel_en_vivo_silencioso():
             else:
                 clase_caja = "card-verde"
                 en_juego_f, txt_minuto_f = obtener_estado_minuto_en_vivo(mapa_ft_live, jornada_elegida, hora_p, id_p, tf["partido"])
+                vivo_det_f = obtener_detalle_en_vivo_partido(mapa_ft_live, id_p, tf["partido"]) if en_juego_f else None
+                stats_vivo_f = None
+                if vivo_det_f and any(any(k in str(op.get("mercado", "")).lower() for k in ("córners", "corners", "remates", "faltas", "tarjetas", "amarill")) for op in opciones_f):
+                    loc_f_n = str(tf["partido"]).split(" (")[0].split(" vs ")[0].strip() if " vs " in str(tf["partido"]) else ""
+                    stats_vivo_f = obtener_boxscore_vivo_espn_web(vivo_det_f.get("eid"), loc_f_n)
+
+                hits_vivo_f = []
+                for op in opciones_f:
+                    hv = evaluar_acierto_en_vivo(op["mercado"], vivo_det_f, tf["partido"], stats_vivo=stats_vivo_f) if vivo_det_f else None
+                    hits_vivo_f.append(hv is True)
+                n_hits_f = sum(1 for x in hits_vivo_f if x)
+
                 if en_juego_f:
-                    sem_titulo = f"<span class='badge-live-blink'><span class='dot-blink'></span> {txt_minuto_f}</span>"
+                    extra_hit_f = f" &nbsp;<span class='badge-ganada'>✅ {n_hits_f}/{total_card} EN VIVO</span>" if n_hits_f > 0 else ""
+                    sem_titulo = f"<span class='badge-live-blink'><span class='dot-blink'></span> {txt_minuto_f}</span>{extra_hit_f}"
                 else:
                     sem_titulo = f"<span class='badge-programado'>{txt_minuto_f}</span>"
 
-                if idx_free == 0:
-                    if opciones_f:
-                        op1 = opciones_f[0]
-                        c_mostrar = round(float(op1.get("cuota", 1.28)), 2)
-                        filas_html += f"<div style='margin-top:8px; color:#e8fff0;'>• <span class='badge-abierta'>🟢 ABIERTA GRATIS</span> &nbsp; <b>{formatear_mercado_claro_web(op1['mercado'], tf['partido'])}</b> ({op1['prob']}%) ➔ Cuota > <b>{c_mostrar:.2f}</b></div>"
-                    if len(opciones_f) > 1:
-                        filas_html += f"<div style='margin-top:8px; color:#ffcd00;'>• <span class='badge-candado'>📲 2ª JUGADA GRATIS</span> &nbsp; <i>Disponible sin costo dentro de nuestro <a href='{LINK_TELEGRAM_FREE}' target='_blank' style='color:#00ff64; font-weight:600;'>Canal FREE de Telegram (Entrar aquí)</a></i></div>"
-                else:
-                    filas_html += f"<div style='margin-top:8px; color:#ffcd00;'>• <span class='badge-candado'>📲 1ª JUGADA GRATIS</span> &nbsp; <i>Disponible sin costo dentro de nuestro <a href='{LINK_TELEGRAM_FREE}' target='_blank' style='color:#00ff64; font-weight:600;'>Canal FREE de Telegram (Entrar aquí)</a></i></div>"
-                    filas_html += f"<div style='margin-top:8px; color:#ffcd00;'>• <span class='badge-candado'>📲 2ª JUGADA GRATIS</span> &nbsp; <i>Disponible sin costo dentro de nuestro <a href='{LINK_TELEGRAM_FREE}' target='_blank' style='color:#00ff64; font-weight:600;'>Canal FREE de Telegram (Entrar aquí)</a></i></div>"
+                for idx_op_f, op in enumerate(opciones_f):
+                    c_mostrar = round(float(op.get("cuota", 1.28)), 2)
+                    if hits_vivo_f[idx_op_f]:
+                        filas_html += f"<div style='margin-top:8px; color:#e8fff0;'>• <span class='badge-ganada'>🟢 ✅ GANADA EN VIVO</span> &nbsp; <b>{formatear_mercado_claro_web(op['mercado'], tf['partido'])}</b> ({op['prob']}%) ➔ Cuota > <b>{c_mostrar:.2f}</b></div>"
+                    elif idx_free == 0 and idx_op_f == 0:
+                        etq_est = "⏳ EN JUEGO" if en_juego_f else "🟢 ABIERTA GRATIS"
+                        filas_html += f"<div style='margin-top:8px; color:#e8fff0;'>• <span class='badge-abierta'>{etq_est}</span> &nbsp; <b>{formatear_mercado_claro_web(op['mercado'], tf['partido'])}</b> ({op['prob']}%) ➔ Cuota > <b>{c_mostrar:.2f}</b></div>"
+                    else:
+                        etq_num = f"{idx_op_f + 1}ª JUGADA GRATIS"
+                        est_live_txt = " • ⏳ En juego" if en_juego_f else ""
+                        filas_html += f"<div style='margin-top:8px; color:#ffcd00;'>• <span class='badge-candado'>📲 {etq_num}{est_live_txt}</span> &nbsp; <i>Disponible sin costo dentro de nuestro <a href='{LINK_TELEGRAM_FREE}' target='_blank' style='color:#00ff64; font-weight:600;'>Canal FREE de Telegram (Entrar aquí)</a></i></div>"
 
             html_bloques += (
                 f"<div class='{clase_caja}'>"
@@ -2023,10 +2198,23 @@ def renderizar_panel_en_vivo_silencioso():
                 sem_v = f"🟢 [{aciertos_v}/{total_v}]" if aciertos_v == total_v else (f"🟡 [{aciertos_v}/{total_v}]" if aciertos_v >= 1 else f"🔴 [{aciertos_v}/{total_v}]")
                 titulo_pref = "🔓 VIP AUDITADO:"
             else:
-                clase_v = "card-amarilla"
                 en_juego_v, txt_minuto_v = obtener_estado_minuto_en_vivo(mapa_ft_live, jornada_elegida, hora_pv, id_pv, tv["partido"])
+                vivo_det_v = obtener_detalle_en_vivo_partido(mapa_ft_live, id_pv, tv["partido"]) if en_juego_v else None
+                stats_vivo_v = None
+                if vivo_det_v and any(any(k in str(op.get("mercado", "")).lower() for k in ("córners", "corners", "remates", "faltas", "tarjetas", "amarill")) for op in opciones_v):
+                    loc_v_n = str(tv["partido"]).split(" (")[0].split(" vs ")[0].strip() if " vs " in str(tv["partido"]) else ""
+                    stats_vivo_v = obtener_boxscore_vivo_espn_web(vivo_det_v.get("eid"), loc_v_n)
+
+                hits_vivo_v = []
+                for op in opciones_v:
+                    hv = evaluar_acierto_en_vivo(op["mercado"], vivo_det_v, tv["partido"], stats_vivo=stats_vivo_v) if vivo_det_v else None
+                    hits_vivo_v.append(hv is True)
+                n_hits_v = sum(1 for x in hits_vivo_v if x)
+
+                clase_v = "card-verde" if (n_hits_v == total_v and total_v > 0) else "card-amarilla"
                 if en_juego_v:
-                    sem_v = f"<span class='badge-live-blink'><span class='dot-blink'></span> {txt_minuto_v}</span> &nbsp;<span class='badge-candado'>🔒 EXCLUSIVO VIP</span>"
+                    extra_hit_v = f" &nbsp;<span class='badge-ganada'>✅ {n_hits_v}/{total_v} EN VIVO</span>" if n_hits_v > 0 else " &nbsp;<span class='badge-candado'>🔒 EXCLUSIVO VIP</span>"
+                    sem_v = f"<span class='badge-live-blink'><span class='dot-blink'></span> {txt_minuto_v}</span>{extra_hit_v}"
                     titulo_pref = "⚡ PARTIDO VIP EN JUEGO:"
                 else:
                     sem_v = f"<span class='badge-programado'>{txt_minuto_v}</span> &nbsp;<span class='badge-candado'>🔒 EXCLUSIVO VIP</span>"
@@ -2034,13 +2222,22 @@ def renderizar_panel_en_vivo_silencioso():
 
                 for idx_op, op in enumerate(opciones_v, start=1):
                     c_vip_mostrar = max(1.40, float(op.get("cuota", 1.48)))
-                    filas_v_html += (
-                        f"<div style='margin-top:10px; color:#f5f5f5; font-size:0.98rem;'>"
-                        f"• <span class='badge-candado'>🔒 SELECCIÓN VIP #{idx_op}</span> &nbsp; "
-                        f"Probabilidad Modelo: <b>{op.get('prob', 78.0)}%</b> ➔ Cuota VIP > <b>{c_vip_mostrar:.2f}</b> "
-                        f"<span style='color:#ffcd00; font-size:0.84rem; margin-left:8px;'><i>(Plazas VIP cerradas • Se audita en público al finalizar)</i></span>"
-                        f"</div>"
-                    )
+                    if hits_vivo_v[idx_op - 1]:
+                        filas_v_html += (
+                            f"<div style='margin-top:10px; color:#e8fff0; font-size:0.98rem;'>"
+                            f"• <span class='badge-ganada'>🟢 ✅ GANADA EN VIVO</span> &nbsp; "
+                            f"<b>[VIP] {formatear_mercado_claro_web(op['mercado'], tv['partido'])}</b> ({op.get('prob', 78.0)}%) ➔ Cuota Alta > <b>{c_vip_mostrar:.2f}</b>"
+                            f"</div>"
+                        )
+                    else:
+                        estado_pend_v = "⏳ EN JUEGO • Pendiente hasta FT" if en_juego_v else "Plazas VIP cerradas • Se audita en público al finalizar"
+                        filas_v_html += (
+                            f"<div style='margin-top:10px; color:#f5f5f5; font-size:0.98rem;'>"
+                            f"• <span class='badge-candado'>🔒 SELECCIÓN VIP #{idx_op}</span> &nbsp; "
+                            f"Probabilidad Modelo: <b>{op.get('prob', 78.0)}%</b> ➔ Cuota VIP > <b>{c_vip_mostrar:.2f}</b> "
+                            f"<span style='color:#ffcd00; font-size:0.84rem; margin-left:8px;'><i>({estado_pend_v})</i></span>"
+                            f"</div>"
+                        )
 
             html_bloques += (
                 f"<div class='{clase_v}'>"
