@@ -329,17 +329,17 @@ def seleccionar_par_distinto_familia(lista_candidatos, excluidos=None, familias_
                 penal_hist += (4.8 if fam == "goles_equipo" else 3.6) * rep_rec
 
         if fam == "faltas":
-            ajuste_tier = -10.5
+            ajuste_tier = -4.0
         elif fam in {"corners", "tarjetas"}:
-            ajuste_tier = -6.5
+            ajuste_tier = -3.0
         elif fam == "remates":
-            ajuste_tier = -2.5
+            ajuste_tier = -1.5
         elif fam == "tiempos":
-            ajuste_tier = 8.5 if nom == "Gol en 1T" else 7.0
+            ajuste_tier = 6.5 if nom == "Gol en 2do Tiempo" else 6.0
         elif fam in {"ganador", "combo", "btts", "goles"}:
-            ajuste_tier = 7.2
+            ajuste_tier = 6.0
         else:  # goles_equipo
-            ajuste_tier = 4.2
+            ajuste_tier = 4.5
         return float(prob) + ajuste_tier - penal_hist
 
     candidatos_rotados = sorted(lista_candidatos, key=_puntaje_rotacion, reverse=True)
@@ -527,18 +527,21 @@ def calcular_cuota_real_casa(prob, cuota_modelo=None, tipo_nivel="FREE", nombre_
     cuota_justa = 100.0 / prob
     base = float(cuota_modelo) if (cuota_modelo and cuota_modelo > 1.05) else (cuota_justa * 0.96)
     if tipo_nivel == "FREE":
-        return round(max(1.26, min(1.38, max(base, cuota_justa * 0.97))), 2)
+        return round(max(1.28, min(1.38, max(base, cuota_justa * 0.98))), 2)
     elif tipo_nivel == "VIP":
         n = str(nombre_mercado)
         if "Asiático > 2.25" in n or "BTTS" in n or "Ambos Marcan" in n or "Combo" in n or "Córners > 9.5" in n or "Remates Puerta > 8.5" in n or "Gol de " in n:
-            piso_vip = 1.50
-        elif "Remates Puerta > 7.5" in n or "Córners > 8.5" in n or "Goles " in n:
             piso_vip = 1.46
+        elif "Remates Puerta > 7.5" in n or "Córners > 8.5" in n or "Goles " in n:
+            piso_vip = 1.42
         elif "Remates Puerta > 6.5" in n or "Menos de 2.5" in n or "Faltas" in n:
-            piso_vip = 1.43
-        else:
             piso_vip = 1.40
-        return round(max(piso_vip, min(1.88, max(base, cuota_justa * 1.02))), 2)
+        else:
+            piso_vip = 1.38
+        # Si el mercado tiene probabilidad >= 79% (cuota justa <= 1.26) y NO vino de Kambi, no inflar artificialmente a 1.38 para VIP
+        if prob >= 79.0 and base < 1.30:
+            return round(max(1.24, min(1.34, cuota_justa * 0.99)), 2)
+        return round(max(piso_vip, min(1.62, max(base, cuota_justa * 1.01))), 2)
     return round(max(1.18, min(1.65, base)), 2)
 
 
@@ -831,12 +834,10 @@ def generar_captura_automatica(res_m, tipo_filtro="DESCARTES", guardar_imagen=Tr
         except Exception:
             continue
 
-    # CANDADO ESTRICTO DE MERCADO ABIERTO (CERO IMPROVISACIÓN):
-    # Si Kambi encontró el partido y tiene al menos 6 mercados reales abiertos, las tarjetas FREE/VIP
-    # SOLO pueden seleccionar mercados que existan de verdad en cuotas_reales_casa (cero cuotas inventadas).
+    # CASCADA REAL DE MERCADOS (v26.6 — NUNCA descartar a ciegas porque Kambi aún no haya abierto una estadística):
+    # Si Kambi abrió cuota real del mercado, se calibra con ella (50/50); si no, opera el cálculo histórico 12-20 partidos del modelo.
     fuente_bp_gi = str(cuotas_bp_all.get("fuente") or "").lower()
-    candado_mercado_real_kambi = (fuente_bp_gi.startswith("kambi:") or bool(res_m.get("kambi_detallado"))) and len(cuotas_reales_casa) >= 6
-    # Goleador individual desactivado en tarjetas automáticas hasta auditar autores reales por evento
+    candado_mercado_real_kambi = False  # Kambi calibra cuando existe; ya NO bloquea mercados válidos del modelo histórico
 
     mercados_ritmo = []
     mercados_ganador_respaldo = []
@@ -844,11 +845,10 @@ def generar_captura_automatica(res_m, tipo_filtro="DESCARTES", guardar_imagen=Tr
     for nombre, prob, cuota_orig in mercados_brutos:
         if prob is None or cuota_orig is None:
             continue
-        if candado_mercado_real_kambi and nombre not in cuotas_reales_casa:
-            continue
+        en_kambi_exacto = nombre in cuotas_reales_casa
         # Si la casa de apuestas (BetPlay/Kambi) tiene cuota real abierta para este mercado exacto,
-        # calibrar la probabilidad combinando nuestro Poisson con la probabilidad implícita sin margen de la casa
-        if nombre in cuotas_reales_casa:
+        # calibrar la probabilidad combinando nuestro modelo con la probabilidad implícita sin margen de la casa
+        if en_kambi_exacto:
             try:
                 odd_k_real = float(cuotas_reales_casa[nombre])
                 if odd_k_real > 1.05:
@@ -857,8 +857,14 @@ def generar_captura_automatica(res_m, tipo_filtro="DESCARTES", guardar_imagen=Tr
                     cuota_orig = odd_k_real
             except Exception:
                 pass
-        if prob < 56.0:
+        # Si es estadística (Córners/Faltas/Remates/Tarjetas) sin cuota Kambi aún abierta, exigir convicción sólida >= 60%
+        if (not en_kambi_exacto) and obtener_familia(nombre) in FAMILIAS_SECUNDARIAS and float(prob) < 60.0:
             continue
+        if prob < 58.0:
+            continue
+
+
+
         es_fem_gi = ("WOMEN" in liga_vis) or ("FEMEN" in liga_vis)
         over_corners_bp = cuotas_bp_all.get("over_corners") or {}
         over_faltas_bp = cuotas_bp_all.get("over_faltas") or {}
@@ -1158,11 +1164,11 @@ def generar_captura_automatica(res_m, tipo_filtro="DESCARTES", guardar_imagen=Tr
                 if es_liga_cerrada and (c_vic is None or c_vic > 1.55):
                     continue
                 if c_vic is not None:
-                    if tipo_filtro == "FREE" and (c_vic < 1.18 or c_vic > 1.46):
+                    if tipo_filtro == "FREE" and (c_vic < 1.20 or c_vic > 1.42):
                         continue
-                    if tipo_filtro == "VIP" and (c_vic < 1.35 or c_vic > 1.78):
+                    if tipo_filtro == "VIP" and (c_vic < 1.38 or c_vic > 1.62):
                         continue
-                    if prob < 56.0:
+                    if prob < 62.0:
                         continue
                 else:
                     if es_v_loc and (vis_protegido or float(res_m.get("p_h", 0)) < 68.0):
@@ -1245,19 +1251,23 @@ def generar_captura_automatica(res_m, tipo_filtro="DESCARTES", guardar_imagen=Tr
 
     candidatos_free = []
     for m in todos_ordenados:
-        if m[0] in exclusivos_vip_extremos or m[0] in lineas_bajas_irreales or m[1] < 62.0:
+        if m[0] in exclusivos_vip_extremos or m[0] in lineas_bajas_irreales or m[1] < 66.0:
             continue
         cuo_f = calcular_cuota_real_casa(m[1], m[2], "FREE", m[0], cuotas_reales_casa)
-        if candado_mercado_real_kambi and (cuo_f < 1.20 or cuo_f > 1.39):
+        if cuo_f > 1.42:
             continue
-        candidatos_free.append((m[0], min(86.5, m[1]), cuo_f))
+        candidatos_free.append((m[0], min(88.5, round(float(m[1]), 1)), cuo_f))
     if len(candidatos_free) < 2:
         candidatos_free = [
-            (m[0], min(86.5, m[1]), calcular_cuota_real_casa(m[1], m[2], "FREE", m[0], cuotas_reales_casa))
+            (m[0], min(88.5, round(float(m[1]), 1)), calcular_cuota_real_casa(m[1], m[2], "FREE", m[0], cuotas_reales_casa))
             for m in todos_ordenados
-            if m[0] not in exclusivos_vip_extremos
-            and (not candado_mercado_real_kambi or (1.16 <= calcular_cuota_real_casa(m[1], m[2], "FREE", m[0], cuotas_reales_casa) <= 1.42))
+            if m[0] not in exclusivos_vip_extremos and m[1] >= 60.0
         ]
+    # Fase 1 (Máxima Efectividad): priorizar en FREE los mercados con mayor probabilidad real en zona dulce 1.28-1.38
+    candidatos_free.sort(
+        key=lambda x: (x[1] >= 74.0, 1.28 <= x[2] <= 1.38, x[1]),
+        reverse=True
+    )
 
     # FIX v24: Los 3 partidos FREE y 4 VIP de clientes son 7 partidos distintos.
     # NUNCA bloquear familias buenas de fútbol (Goles, Tiempos, 1X, Goles Equipo) en FREE porque VIP las haya usado;
@@ -1290,18 +1300,26 @@ def generar_captura_automatica(res_m, tipo_filtro="DESCARTES", guardar_imagen=Tr
 
         candidatos_vip = []
         for m in todos_ordenados:
-            if m[1] < 57.0 or m[0] in excluidos_vip:
+            if m[1] < 60.0 or m[0] in excluidos_vip:
                 continue
             cuo_v = calcular_cuota_real_casa(m[1], m[2], "VIP", m[0], cuotas_reales_casa)
-            # Separación estricta v24: FREE = 1.26-1.38 | VIP >= 1.40 (cero solapamiento con FREE)
-            if cuo_v < 1.40:
+            # Zona dulce VIP v26.6: 1.38 - 1.62 (evita cuotas > 1.65 donde el acierto cae al 58%)
+            if cuo_v < 1.38 or cuo_v > 1.68:
                 continue
             candidatos_vip.append((m[0], min(89.5, round(float(m[1]), 1)), cuo_v))
+        if len(candidatos_vip) < 2:
+            for m in todos_ordenados:
+                if m[1] < 57.0 or m[0] in excluidos_vip or any(x[0] == m[0] for x in candidatos_vip):
+                    continue
+                cuo_v = calcular_cuota_real_casa(m[1], m[2], "VIP", m[0], cuotas_reales_casa)
+                if cuo_v >= 1.38:
+                    candidatos_vip.append((m[0], min(89.5, round(float(m[1]), 1)), cuo_v))
+        # Prioridad máxima efectividad en VIP: zona dulce 1.38-1.62 + probabilidad >= 70% + mayor probabilidad real
         candidatos_vip.sort(
             key=lambda x: (
+                1.38 <= x[2] <= 1.62,
+                x[1] >= 70.0,
                 obtener_familia(x[0]) in FAMILIAS_FUTBOL_PURO,
-                obtener_familia(x[0]) not in FAMILIAS_SECUNDARIAS,
-                1.40 <= x[2] <= 1.78,
                 x[1]
             ),
             reverse=True
@@ -1350,42 +1368,41 @@ def generar_captura_automatica(res_m, tipo_filtro="DESCARTES", guardar_imagen=Tr
         respaldo_vip = []
         respaldo_free = []
 
-        if tot_goles <= 2.38:
-            # Guion Cerrado: Under 3.5 (FREE) y Under 2.5 / Tarjetas / Faltas seguras (VIP)
-            if p_u35_real >= 65.0:
+        # Respaldo v26.4: TODOS los 20+ mercados activos (incluyendo Under, X2, Córners, Goles Equipo y Combos) con matemática calibrada
+        if tot_goles <= 2.35:
+            if p_u35_real >= 68.0:
                 respaldo_free.append(("Total Menos de 3.5 (Under)", p_u35_real, calcular_cuota_real_casa(p_u35_real, res_m.get("c_min_under35"), "FREE", "Total Menos de 3.5 (Under)", cuotas_reales_casa)))
-            if p_u25_real >= 56.0:
+            if p_u25_real >= 58.0:
                 respaldo_vip.append(("Total Menos de 2.5 (Under)", p_u25_real, calcular_cuota_real_casa(p_u25_real, res_m.get("c_min_under25"), "VIP", "Total Menos de 2.5 (Under)", cuotas_reales_casa)))
         else:
-            # Guion Abierto / Equilibrado
-            if p_o15_real >= 71.0 and tot_goles >= 2.48 and float(res_m.get("prob_marcador_corto") or 0.0) < 27.0:
-                respaldo_free.append(("Over 1.5 Goles", p_o15_real, calcular_cuota_real_casa(p_o15_real, res_m.get("c_min_15"), "FREE", "Over 1.5 Goles", cuotas_reales_casa)))
-            if p_btts_real >= 58.0 and tot_goles >= 2.60:
-                respaldo_vip.append(("Ambos Marcan (BTTS)", p_btts_real, calcular_cuota_real_casa(p_btts_real, res_m.get("c_min_btts"), "VIP", "Ambos Marcan (BTTS)", cuotas_reales_casa)))
-            if p_2t_real >= 72.0 and tot_goles >= 2.75:
+            if p_2t_real >= 68.0:
+                respaldo_free.append(("Gol en 2do Tiempo", p_2t_real, calcular_cuota_real_casa(p_2t_real, res_m.get("c_min_05_2t"), "FREE", "Gol en 2do Tiempo", cuotas_reales_casa)))
                 respaldo_vip.append(("Gol en 2do Tiempo", p_2t_real, calcular_cuota_real_casa(p_2t_real, res_m.get("c_min_05_2t"), "VIP", "Gol en 2do Tiempo", cuotas_reales_casa)))
-            if p_1t_real >= 70.0 and tot_goles >= 2.85:
+            if p_o15_real >= 69.0 and tot_goles >= 2.38:
+                respaldo_free.append(("Over 1.5 Goles", p_o15_real, calcular_cuota_real_casa(p_o15_real, res_m.get("c_min_15"), "FREE", "Over 1.5 Goles", cuotas_reales_casa)))
+            if p_1t_real >= 66.0 and tot_goles >= 2.45:
+                respaldo_free.append(("Gol en 1T", p_1t_real, calcular_cuota_real_casa(p_1t_real, res_m.get("c_min_05_ht"), "FREE", "Gol en 1T", cuotas_reales_casa)))
                 respaldo_vip.append(("Gol en 1T", p_1t_real, calcular_cuota_real_casa(p_1t_real, res_m.get("c_min_05_ht"), "VIP", "Gol en 1T", cuotas_reales_casa)))
-
+            if p_btts_real >= 58.0 and tot_goles >= 2.50:
+                respaldo_vip.append(("Ambos Marcan (BTTS)", p_btts_real, calcular_cuota_real_casa(p_btts_real, res_m.get("c_min_btts"), "VIP", "Ambos Marcan (BTTS)", cuotas_reales_casa)))
         if puede_1x_resp and float(res_m.get("p_1x") or 0) >= 70.0:
             respaldo_free.append(("Doble Oport. 1X", round(float(res_m.get("p_1x")), 1), calcular_cuota_real_casa(float(res_m.get("p_1x")), res_m.get("c_min_1x"), "FREE", "Doble Oport. 1X", cuotas_reales_casa)))
         elif puede_x2_resp and float(res_m.get("p_x2") or 0) >= 72.0:
             respaldo_free.append(("Doble Oport. X2", round(float(res_m.get("p_x2")), 1), calcular_cuota_real_casa(float(res_m.get("p_x2")), res_m.get("c_min_x2"), "FREE", "Doble Oport. X2", cuotas_reales_casa)))
 
-        # Remates, Faltas, Tarjetas y Córners SOLO con sus probabilidades REALES Binomial Negativa
+        if p_f_free and float(p_f_free) >= 62.0 and (linea_f_free <= 22.5 or nom_f_free in cuotas_reales_casa):
+            respaldo_free.append((nom_f_free, round(float(p_f_free), 1), c_ff))
+        if p_f_vip and float(p_f_vip) >= 58.0 and (linea_f_vip <= 22.5 or nom_f_vip in cuotas_reales_casa):
+            respaldo_vip.append((nom_f_vip, round(float(p_f_vip), 1), c_fv))
         if p_tf_m and float(p_tf_m) >= 62.0:
             respaldo_free.append((f"Remates Puerta > {linea_t_free:.1f}", round(float(p_tf_m), 1), calcular_cuota_real_casa(float(p_tf_m), c_tf_m, "FREE", f"Remates Puerta > {linea_t_free:.1f}", cuotas_reales_casa)))
         if p_tv_m and float(p_tv_m) >= 57.0:
             respaldo_vip.append((f"Remates Puerta > {linea_t_vip:.1f}", round(float(p_tv_m), 1), calcular_cuota_real_casa(float(p_tv_m), c_tv_m, "VIP", f"Remates Puerta > {linea_t_vip:.1f}", cuotas_reales_casa)))
-        if p_f_free and float(p_f_free) >= 63.0 and (linea_f_free <= 22.5 or nom_f_free in cuotas_reales_casa):
-            respaldo_free.append((nom_f_free, round(float(p_f_free), 1), c_ff))
-        if p_f_vip and float(p_f_vip) >= 58.0 and ((linea_f_vip <= 22.5 and tot_goles < 2.65) or nom_f_vip in cuotas_reales_casa):
-            respaldo_vip.append((nom_f_vip, round(float(p_f_vip), 1), c_fv))
         if p_t35_real >= 58.0:
             respaldo_vip.append((f"Tarjetas > {res_m.get('linea_tarj', 3.5)}", p_t35_real, calcular_cuota_real_casa(p_t35_real, res_m.get("c_min_t35"), "VIP", f"Tarjetas > {res_m.get('linea_tarj', 3.5)}", cuotas_reales_casa)))
-        if p_c75_real >= 64.0 and (tot_corn >= 8.40 or "Córners > 7.5" in cuotas_reales_casa):
+        if p_c75_real >= 66.0 and (tot_corn >= 8.75 or "Córners > 7.5" in cuotas_reales_casa):
             respaldo_free.append(("Córners > 7.5", p_c75_real, calcular_cuota_real_casa(p_c75_real, res_m.get("c_min_c75"), "FREE", "Córners > 7.5", cuotas_reales_casa)))
-        if p_c85_real >= 60.0 and (tot_corn >= 9.40 or "Córners > 8.5" in cuotas_reales_casa):
+        if p_c85_real >= 62.0 and (tot_corn >= 9.85 or "Córners > 8.5" in cuotas_reales_casa):
             respaldo_vip.append(("Córners > 8.5", p_c85_real, calcular_cuota_real_casa(p_c85_real, res_m.get("c_min_c85"), "VIP", "Córners > 8.5", cuotas_reales_casa)))
 
         respaldo_fams = respaldo_vip if tipo_filtro == "VIP" else respaldo_free
@@ -1409,7 +1426,7 @@ def generar_captura_automatica(res_m, tipo_filtro="DESCARTES", guardar_imagen=Tr
                 continue
             if float(r_m[1] or 0) < (56.0 if tipo_filtro == "VIP" else 60.0):
                 continue
-            if tipo_filtro == "VIP" and float(r_m[2] or 0) < 1.40:
+            if tipo_filtro == "VIP" and float(r_m[2] or 0) < 1.38:
                 continue
             if es_fem_resp and ("Faltas" in r_m[0] or "Tarjetas" in r_m[0]) and r_m[0] not in cuotas_reales_casa:
                 continue
@@ -1465,7 +1482,7 @@ def generar_captura_automatica(res_m, tipo_filtro="DESCARTES", guardar_imagen=Tr
                  round(float(p_f_em_v or 0.0), 1),
                  calcular_cuota_real_casa(float(p_f_em_v or 62.0), c_f_em_v, lvl_em, f"Faltas Totales > {lin_f_em:.1f}", cuotas_reales_casa)),
             ]
-            if tot_goles <= 2.40 or hay_under_otra:
+            if tot_goles <= 2.35 or hay_under_otra:
                 emergencia.insert(0, ("Total Menos de 2.5 (Under)" if lvl_em == "VIP" else "Total Menos de 3.5 (Under)",
                     round(float((res_m.get("p_under25") if lvl_em == "VIP" else res_m.get("p_under35")) or 0.0), 1),
                     calcular_cuota_real_casa(float((res_m.get("p_under25") if lvl_em == "VIP" else res_m.get("p_under35")) or 68.0), (res_m.get("c_min_under25") if lvl_em == "VIP" else res_m.get("c_min_under35")), lvl_em, "Total Menos de 2.5 (Under)" if lvl_em == "VIP" else "Total Menos de 3.5 (Under)", cuotas_reales_casa)))
@@ -1485,7 +1502,7 @@ def generar_captura_automatica(res_m, tipo_filtro="DESCARTES", guardar_imagen=Tr
                 ]
             for e_m in emergencia:
                 fam_em = obtener_familia(e_m[0])
-                if lvl_em == "VIP" and float(e_m[2] or 0) < 1.40:
+                if lvl_em == "VIP" and float(e_m[2] or 0) < 1.38:
                     continue
                 n_gol_comb_em = sum(1 for x in (list(top_2) + list(otra_sel)) if _es_pick_dependiente_gol_global(x[0]))
                 if (tot_goles < 3.25 or es_copa_dom_fb) and n_gol_comb_em >= 2 and _es_pick_dependiente_gol_global(e_m[0]):
@@ -1503,6 +1520,53 @@ def generar_captura_automatica(res_m, tipo_filtro="DESCARTES", guardar_imagen=Tr
                     fams_misma_tarjeta.add(fam_em)
                 if len(top_2) == 2:
                     break
+
+        # GARANTÍA ABSOLUTA DE 2 SELECCIONES REALES EN EL JPG (v26.6):
+        # Ninguna tarjeta JPG puede quedar con 1 sola apuesta. Completa con el siguiente mejor mercado real
+        # ya calculado del partido (sin inventar probabilidades y de distinta familia).
+        if len(top_2) < 2:
+            lvl_g = tipo_filtro if tipo_filtro in ("FREE", "VIP") else "FREE"
+            usados_g = {m[0] for m in top_2}
+            fams_g = {obtener_familia(m[0]) for m in top_2}
+            pool_garantia = []
+            for m_b in (list(todos_ordenados) + list(mercados_brutos)):
+                if not m_b or m_b[1] is None or m_b[2] is None:
+                    continue
+                nm_g, pr_g, cu_g = m_b[0], round(float(m_b[1]), 1), float(m_b[2])
+                if pr_g < 50.0 or nm_g in usados_g:
+                    continue
+                if any(x[0] == nm_g for x in pool_garantia):
+                    continue
+                cuo_g = calcular_cuota_real_casa(pr_g, cu_g, lvl_g, nm_g, cuotas_reales_casa)
+                pool_garantia.append((nm_g, min(89.0, pr_g), cuo_g))
+            pool_garantia.sort(key=lambda x: (obtener_familia(x[0]) not in fams_g, x[1]), reverse=True)
+            # Pase 1: distinta familia y sin repetir el pick exacto de la otra tarjeta
+            for cand_g in pool_garantia:
+                fam_cg = obtener_familia(cand_g[0])
+                if fam_cg not in fams_g and cand_g[0] not in usados_actual:
+                    top_2.append(cand_g)
+                    fams_g.add(fam_cg)
+                    usados_g.add(cand_g[0])
+                if len(top_2) == 2:
+                    break
+            # Pase 2 (caso extremo): distinta familia aunque se solape con otra tarjeta (nunca dejar 1 sola apuesta)
+            if len(top_2) < 2:
+                for cand_g in pool_garantia:
+                    fam_cg = obtener_familia(cand_g[0])
+                    if fam_cg not in fams_g and cand_g[0] not in usados_g:
+                        top_2.append(cand_g)
+                        fams_g.add(fam_cg)
+                        usados_g.add(cand_g[0])
+                    if len(top_2) == 2:
+                        break
+            # Pase 3 (último recurso absoluto): cualquier mercado distinto con mayor probabilidad real
+            if len(top_2) < 2:
+                for cand_g in pool_garantia:
+                    if cand_g[0] not in usados_g:
+                        top_2.append(cand_g)
+                        usados_g.add(cand_g[0])
+                    if len(top_2) == 2:
+                        break
 
     res_m[f"seleccion_{tipo_filtro.lower()}"] = top_2
     if not guardar_imagen:
