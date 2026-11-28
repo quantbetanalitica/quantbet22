@@ -13,13 +13,14 @@
     "phi_remates": 1.4,
     "phi_tarjetas": 1.3,
     "peso_mercado_1x2": 0.56,
-    "peso_mercado_goles": 0.42,
+    "peso_mercado_goles": 0.55,
     "entropia_max_ganador": 0.945,
     "notas": "BLOQUEADA (ROI real positivo): Ritmo alto, córners altos.",
     "muestra_auditada": 75,
     "efectividad_real_pct": 78.7,
     "brier_score": 0.162,
-    "log_loss": 0.5031
+    "log_loss": 0.5031,
+    "ventana_csv": 10
   },
   "españa": {
     "nombre": "LaLiga EA Sports",
@@ -35,7 +36,7 @@
     "phi_remates": 1.238,
     "phi_tarjetas": 1.195,
     "peso_mercado_1x2": 0.66,
-    "peso_mercado_goles": 0.52,
+    "peso_mercado_goles": 0.58,
     "entropia_max_ganador": 0.925,
     "notas": "Desbloqueada y recalibrada (v24): mayor peso al mercado y menor sobreconfianza en X2/Under.",
     "gamma_localia": 0.34,
@@ -44,7 +45,8 @@
     "muestra_auditada": 59,
     "efectividad_real_pct": 71.2,
     "brier_score": 0.2093,
-    "log_loss": 0.613
+    "log_loss": 0.613,
+    "ventana_csv": 10
   },
   "españa_2": {
     "nombre": "LaLiga Hypermotion (2ª)",
@@ -69,7 +71,8 @@
     "muestra_auditada": 60,
     "efectividad_real_pct": 80.0,
     "brier_score": 0.157,
-    "log_loss": 0.4924
+    "log_loss": 0.4924,
+    "ventana_csv": 10
   },
   "italia": {
     "nombre": "Serie A",
@@ -160,7 +163,8 @@
     "muestra_auditada": 34,
     "efectividad_real_pct": 70.6,
     "brier_score": 0.2046,
-    "log_loss": 0.5948
+    "log_loss": 0.5948,
+    "ventana_csv": 10
   },
   "holanda": {
     "nombre": "Eredivisie",
@@ -203,7 +207,8 @@
     "notas": "Ritmo medio-alto.",
     "gamma_localia": 0.1682,
     "muestra_csv": 380,
-    "ultima_calibracion": "2026-11-26 17:10"
+    "ultima_calibracion": "2026-11-26 17:10",
+    "ventana_csv": 10
   },
   "turquia": {
     "nombre": "Süper Lig Turquía (DESACTIVADA)",
@@ -243,7 +248,8 @@
     "muestra_auditada": 29,
     "efectividad_real_pct": 62.1,
     "brier_score": 0.2543,
-    "log_loss": 0.7158
+    "log_loss": 0.7158,
+    "ventana_csv": 10
   },
   "colombia": {
     "nombre": "Liga BetPlay Colombia",
@@ -265,7 +271,8 @@
     "muestra_auditada": 97,
     "efectividad_real_pct": 74.2,
     "brier_score": 0.1944,
-    "log_loss": 0.5777
+    "log_loss": 0.5777,
+    "ventana_csv": 10
   },
   "argentina": {
     "nombre": "Liga Profesional Argentina",
@@ -287,7 +294,8 @@
     "muestra_auditada": 44,
     "efectividad_real_pct": 72.7,
     "brier_score": 0.1991,
-    "log_loss": 0.5915
+    "log_loss": 0.5915,
+    "ventana_csv": 10
   },
   "brasil": {
     "nombre": "Brasileirão Serie A",
@@ -331,7 +339,8 @@
     "muestra_auditada": 48,
     "efectividad_real_pct": 70.8,
     "brier_score": 0.2014,
-    "log_loss": 0.5936
+    "log_loss": 0.5936,
+    "ventana_csv": 10
   },
   "usa": {
     "nombre": "MLS Estados Unidos",
@@ -353,7 +362,8 @@
     "muestra_auditada": 90,
     "efectividad_real_pct": 78.9,
     "brier_score": 0.1643,
-    "log_loss": 0.5093
+    "log_loss": 0.5093,
+    "ventana_csv": 10
   },
   "UEFA CHAMPIONS LEAGUE": {
     "nombre": "UEFA Champions League",
@@ -375,7 +385,8 @@
     "muestra_auditada": 134,
     "efectividad_real_pct": 76.9,
     "brier_score": 0.1639,
-    "log_loss": 0.5015
+    "log_loss": 0.5015,
+    "ventana_csv": 10
   },
   "UEFA EUROPA LEAGUE": {
     "nombre": "UEFA Europa League",
@@ -397,7 +408,8 @@
     "muestra_auditada": 12,
     "efectividad_real_pct": 91.7,
     "brier_score": 0.0889,
-    "log_loss": 0.3355
+    "log_loss": 0.3355,
+    "ventana_csv": 10
   },
   "UEFA CONFERENCE LEAGUE": {
     "nombre": "UEFA Conference League",
@@ -419,7 +431,8 @@
     "muestra_auditada": 2,
     "efectividad_real_pct": 100.0,
     "brier_score": 0.0511,
-    "log_loss": 0.2562
+    "log_loss": 0.2562,
+    "ventana_csv": 10
   },
   "COPA LIBERTADORES": {
     "nombre": "CONMEBOL Copa Libertadores",
@@ -441,7 +454,8 @@
     "muestra_auditada": 3,
     "efectividad_real_pct": 33.3,
     "brier_score": 0.4204,
-    "log_loss": 1.1063
+    "log_loss": 1.1063,
+    "ventana_csv": 10
   },
   "COPA SUDAMERICANA": {
     "nombre": "CONMEBOL Copa Sudamericana",
@@ -463,7 +477,8 @@
     "muestra_auditada": 4,
     "efectividad_real_pct": 100.0,
     "brier_score": 0.0463,
-    "log_loss": 0.2377
+    "log_loss": 0.2377,
+    "ventana_csv": 10
   },
   "copa_españa": {
     "nombre": "Copa del Rey (España)",
@@ -485,7 +500,8 @@
     "muestra_auditada": 84,
     "efectividad_real_pct": 81.0,
     "brier_score": 0.1688,
-    "log_loss": 0.5295
+    "log_loss": 0.5295,
+    "ventana_csv": 10
   },
   "copa_inglaterra": {
     "nombre": "FA Cup / EFL Cup (Inglaterra)",
@@ -507,7 +523,8 @@
     "muestra_auditada": 93,
     "efectividad_real_pct": 75.3,
     "brier_score": 0.193,
-    "log_loss": 0.5797
+    "log_loss": 0.5797,
+    "ventana_csv": 10
   },
   "copa_italia": {
     "nombre": "Coppa Italia",
@@ -525,7 +542,8 @@
     "peso_mercado_1x2": 0.72,
     "peso_mercado_goles": 0.58,
     "entropia_max_ganador": 0.915,
-    "notas": "Eliminatoria italiana con rotaciones: separada de Serie A."
+    "notas": "Eliminatoria italiana con rotaciones: separada de Serie A.",
+    "ventana_csv": 10
   },
   "copa_alemania": {
     "nombre": "DFB Pokal (Alemania)",
@@ -547,7 +565,8 @@
     "muestra_auditada": 38,
     "efectividad_real_pct": 94.7,
     "brier_score": 0.0681,
-    "log_loss": 0.2842
+    "log_loss": 0.2842,
+    "ventana_csv": 10
   },
   "copa_francia": {
     "nombre": "Coupe de France",
@@ -569,7 +588,8 @@
     "muestra_auditada": 35,
     "efectividad_real_pct": 80.0,
     "brier_score": 0.168,
-    "log_loss": 0.5238
+    "log_loss": 0.5238,
+    "ventana_csv": 10
   },
   "copa_portugal": {
     "nombre": "Taça de Portugal",
@@ -591,7 +611,8 @@
     "muestra_auditada": 21,
     "efectividad_real_pct": 71.4,
     "brier_score": 0.1931,
-    "log_loss": 0.5693
+    "log_loss": 0.5693,
+    "ventana_csv": 10
   },
   "copa_holanda": {
     "nombre": "KNVB Beker (Países Bajos)",
@@ -609,7 +630,8 @@
     "peso_mercado_1x2": 0.74,
     "peso_mercado_goles": 0.6,
     "entropia_max_ganador": 0.915,
-    "notas": "Copa holandesa: separada de Eredivisie."
+    "notas": "Copa holandesa: separada de Eredivisie.",
+    "ventana_csv": 10
   },
   "copa_colombia": {
     "nombre": "Copa BetPlay / Superliga (Colombia)",
@@ -631,7 +653,8 @@
     "muestra_auditada": 4,
     "efectividad_real_pct": 50.0,
     "brier_score": 0.3034,
-    "log_loss": 0.832
+    "log_loss": 0.832,
+    "ventana_csv": 10
   },
   "copa_argentina": {
     "nombre": "Copa Argentina / Copa de la Liga",
@@ -653,7 +676,8 @@
     "muestra_auditada": 1,
     "efectividad_real_pct": 100.0,
     "brier_score": 0.0269,
-    "log_loss": 0.1791
+    "log_loss": 0.1791,
+    "ventana_csv": 10
   },
   "copa_brasil": {
     "nombre": "Copa do Brasil",
@@ -675,7 +699,8 @@
     "muestra_auditada": 1,
     "efectividad_real_pct": 0.0,
     "brier_score": 0.5285,
-    "log_loss": 1.2983
+    "log_loss": 1.2983,
+    "ventana_csv": 10
   },
   "europa": {
     "nombre": "Competición Europea / UWCL",
@@ -693,7 +718,8 @@
     "peso_mercado_1x2": 0.74,
     "peso_mercado_goles": 0.66,
     "entropia_max_ganador": 0.93,
-    "notas": "Anclado fuertemente al mercado real."
+    "notas": "Anclado fuertemente al mercado real.",
+    "ventana_csv": 10
   },
   "internacional": {
     "nombre": "Selecciones Nacionales (Aislado)",
@@ -732,7 +758,8 @@
     "notas": "Perfil independiente Grecia.",
     "gamma_localia": 0.2312,
     "muestra_csv": 380,
-    "ultima_calibracion": "2026-11-26 17:10"
+    "ultima_calibracion": "2026-11-26 17:10",
+    "ventana_csv": 10
   },
   "escocia": {
     "nombre": "Scottish Premiership",
@@ -753,6 +780,7 @@
     "notas": "Perfil independiente Escocia.",
     "gamma_localia": 0.2365,
     "muestra_csv": 380,
-    "ultima_calibracion": "2026-11-26 17:10"
+    "ultima_calibracion": "2026-11-26 17:10",
+    "ventana_csv": 10
   }
 }
