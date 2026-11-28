@@ -517,10 +517,10 @@ def obtener_estado_minuto_en_vivo(mapa_ft, dia_str, hora_ini_str, id_partido, du
     info_live = None
     if id_partido and str(id_partido) in mapa_vivo:
         info_live = mapa_vivo[str(id_partido)]
-    elif str(duelo_str).strip().lower() in mapa_vivo:
-        info_live = mapa_vivo[str(duelo_str).strip().lower()]
+    elif str(duelo_str).split(" (")[0].strip().lower() in mapa_vivo:
+        info_live = mapa_vivo[str(duelo_str).split(" (")[0].strip().lower()]
     else:
-        duelo_low = str(duelo_str).strip().lower()
+        duelo_low = str(duelo_str).split(" (")[0].strip().lower()
         if " vs " in duelo_low:
             l_b, v_b = duelo_low.split(" vs ", 1)
             tl, tv = _tokens_club(l_b), _tokens_club(v_b)
@@ -563,16 +563,124 @@ def cargar_boxscores_reales_web():
     return {}
 
 
-def obtener_boxscore_real_web(id_partido, duelo_str=""):
-    """Lectura instantánea (<1ms) desde cache_boxscore_ft.json sin llamadas HTTP bloqueantes.
-    Si el boxscore real aún no llegó al caché, devuelve None (nunca inventa GANADA)."""
-    clave_id = str(id_partido or "").strip()
-    if not clave_id:
+@st.cache_data(ttl=120, show_spinner=False)
+def obtener_boxscore_vivo_espn_web(espn_event_id, nombre_local=""):
+    """Consulta puntual a ESPN summary (1 sola petición, cacheada 120s) únicamente para una tarjeta
+    ya finalizada con pick estadístico cuyo boxscore aún no llegó a cache_boxscore_ft.json."""
+    eid = str(espn_event_id or "").strip()
+    if not eid.isdigit():
         return None
+    try:
+        r = requests.get(
+            f"https://site.api.espn.com/apis/site/v2/sports/soccer/all/summary?event={eid}",
+            timeout=3.0,
+        )
+        if r.status_code != 200:
+            return None
+        data_e = r.json() or {}
+        stats_res = {
+            "corners_home": None, "corners_away": None, "corners_total": None,
+            "shots_on_target_home": None, "shots_on_target_away": None, "shots_on_target_total": None,
+            "fouls_home": None, "fouls_away": None, "fouls_total": None,
+            "yellow_total": None, "cards_total": None, "has_stats": False,
+        }
+
+        def _f_val(v):
+            try:
+                return float(str(v).strip().replace("%", ""))
+            except Exception:
+                return None
+
+        bts = (data_e.get("boxscore") or {}).get("teams") or []
+        if len(bts) >= 2:
+            idx_h, idx_a = 0, 1
+            if nombre_local:
+                tl_loc = _tokens_club(nombre_local)
+                t0 = _tokens_club((bts[0].get("team") or {}).get("displayName", ""))
+                t1 = _tokens_club((bts[1].get("team") or {}).get("displayName", ""))
+                if _tokens_match_seguro_web(tl_loc, t1) and not _tokens_match_seguro_web(tl_loc, t0):
+                    idx_h, idx_a = 1, 0
+
+            def _map_st(st_l):
+                mp = {}
+                for s in (st_l or []):
+                    fv = _f_val(s.get("displayValue"))
+                    if fv is None:
+                        continue
+                    for kc in (s.get("name"), s.get("label"), s.get("abbreviation")):
+                        if kc:
+                            mp[str(kc).strip().lower()] = fv
+                return mp
+
+            eh = _map_st(bts[idx_h].get("statistics"))
+            ea = _map_st(bts[idx_a].get("statistics"))
+
+            ch = eh.get("woncorners") if eh.get("woncorners") is not None else eh.get("corners")
+            ca = ea.get("woncorners") if ea.get("woncorners") is not None else ea.get("corners")
+            sh = eh.get("shotsontarget") if eh.get("shotsontarget") is not None else (eh.get("shotsongoal") if eh.get("shotsongoal") is not None else eh.get("shots on goal"))
+            sa = ea.get("shotsontarget") if ea.get("shotsontarget") is not None else (ea.get("shotsongoal") if ea.get("shotsongoal") is not None else ea.get("shots on goal"))
+            fh = eh.get("foulscommitted") if eh.get("foulscommitted") is not None else eh.get("fouls")
+            fa = ea.get("foulscommitted") if ea.get("foulscommitted") is not None else ea.get("fouls")
+            yh = eh.get("yellowcards") if eh.get("yellowcards") is not None else eh.get("yellow cards")
+            ya = ea.get("yellowcards") if ea.get("yellowcards") is not None else ea.get("yellow cards")
+            rh = eh.get("redcards") or eh.get("red cards") or 0.0
+            ra = ea.get("redcards") or ea.get("red cards") or 0.0
+
+            if ch is not None and ca is not None and (ch + ca) > 0:
+                stats_res["corners_home"], stats_res["corners_away"], stats_res["corners_total"] = ch, ca, ch + ca
+            if sh is not None and sa is not None and (sh + sa) > 0:
+                stats_res["shots_on_target_home"], stats_res["shots_on_target_away"], stats_res["shots_on_target_total"] = sh, sa, sh + sa
+            if fh is not None and fa is not None and (fh + fa) > 0:
+                stats_res["fouls_home"], stats_res["fouls_away"], stats_res["fouls_total"] = fh, fa, fh + fa
+            if yh is not None or ya is not None:
+                yt = (yh or 0.0) + (ya or 0.0)
+                stats_res["yellow_total"] = yt
+                stats_res["cards_total"] = yt + rh + ra
+
+        if stats_res["cards_total"] is None:
+            kevs = data_e.get("keyEvents") or []
+            if kevs:
+                yc = sum(1.0 for k in kevs if any(w in str((k.get("type") or {}).get("text") or "").lower() for w in ("yellow", "amarill")))
+                rc = sum(1.0 for k in kevs if any(w in str((k.get("type") or {}).get("text") or "").lower() for w in ("red", "roja")))
+                stats_res["yellow_total"] = yc
+                stats_res["cards_total"] = yc + rc
+
+        stats_res["has_stats"] = any(
+            stats_res[k] is not None for k in ("corners_total", "shots_on_target_total", "fouls_total", "cards_total")
+        )
+        return stats_res if stats_res["has_stats"] else None
+    except Exception:
+        return None
+
+
+def obtener_boxscore_real_web(id_partido, duelo_str="", mapa_ft=None, consultar_vivo=False):
+    """Lectura prioritaria desde cache_boxscore_ft.json; si consultar_vivo=True y es una tarjeta
+    finalizada sin boxscore en caché, consulta puntualmente ESPN summary (cacheado 120s)."""
+    clave_id = str(id_partido or "").strip()
     cache_local = cargar_boxscores_reales_web()
-    d_c = cache_local.get(clave_id)
-    if isinstance(d_c, dict) and d_c.get("has_stats"):
-        return d_c
+    if clave_id:
+        d_c = cache_local.get(clave_id)
+        if isinstance(d_c, dict) and d_c.get("has_stats"):
+            return d_c
+    if not consultar_vivo:
+        return None
+    espn_id = None
+    if isinstance(mapa_ft, dict):
+        espn_map = mapa_ft.get("_espn_ids") or {}
+        duelo_low = str(duelo_str).split(" (")[0].strip().lower()
+        espn_id = espn_map.get(clave_id) or espn_map.get(duelo_low)
+        if not espn_id and " vs " in duelo_low:
+            lb, vb = duelo_low.split(" vs ", 1)
+            tl, tv = _tokens_club(lb), _tokens_club(vb)
+            for tl_e, tv_e, eid_e in mapa_ft.get("_indice_espn_ids", []):
+                if _tokens_match_seguro_web(tl, tl_e) and _tokens_match_seguro_web(tv, tv_e):
+                    espn_id = eid_e
+                    break
+    if not espn_id and clave_id.isdigit() and int(clave_id) >= 400000000:
+        espn_id = clave_id
+    if espn_id:
+        loc_nom = str(duelo_str).split(" (")[0].split(" vs ")[0].strip() if " vs " in str(duelo_str) else ""
+        return obtener_boxscore_vivo_espn_web(espn_id, loc_nom)
     return None
 
 
@@ -665,7 +773,7 @@ def evaluar_mercado_real(merc, gh, ga, g_ht, duelo_str="", stats_reales=None):
             return ga > lin_eq
         return False
     elif "tarjetas" in m_low or "amarill" in m_low:
-        m_n = re.search(r">\s*(\d+(?:\.\d+)?)", m)
+        m_n = re.search(r"(?:>|m[aá]s\s+de)\s*(\d+(?:\.\d+)?)", m, flags=re.I)
         linea_t = float(m_n.group(1)) if m_n else 3.5
         if isinstance(stats_reales, dict):
             if "amarill" in m_low and stats_reales.get("yellow_total") is not None:
@@ -674,28 +782,30 @@ def evaluar_mercado_real(merc, gh, ga, g_ht, duelo_str="", stats_reales=None):
                 return float(stats_reales["cards_total"]) > linea_t
         return None
     elif "faltas" in m_low:
-        m_n = re.search(r">\s*(\d+(?:\.\d+)?)", m)
+        m_n = re.search(r"(?:>|m[aá]s\s+de)\s*(\d+(?:\.\d+)?)", m, flags=re.I)
         linea_f = float(m_n.group(1)) if m_n else 22.5
-        if isinstance(stats_reales, dict) and stats_reales.get("fouls_total") is not None:
+        if isinstance(stats_reales, dict) and stats_reales.get("fouls_total") is not None and float(stats_reales["fouls_total"]) > 0:
             return float(stats_reales["fouls_total"]) > linea_f
         return None
     elif "corners" in m_norm:
-        m_n = re.search(r">\s*(\d+(?:\.\d+)?)", m)
+        m_n = re.search(r"(?:>|m[aá]s\s+de)\s*(\d+(?:\.\d+)?)", m, flags=re.I)
         linea_c = float(m_n.group(1)) if m_n else 7.5
-        if isinstance(stats_reales, dict):
+        if isinstance(stats_reales, dict) and float(stats_reales.get("corners_total") or 0) > 0:
             if linea_c <= 5.5:
                 if loc_n and loc_n[:5] in m_norm and stats_reales.get("corners_home") is not None:
                     return float(stats_reales["corners_home"]) > linea_c
                 if vis_n and vis_n[:5] in m_norm and stats_reales.get("corners_away") is not None:
                     return float(stats_reales["corners_away"]) > linea_c
-            if stats_reales.get("corners_total") is not None:
-                return float(stats_reales["corners_total"]) > linea_c
+            return float(stats_reales["corners_total"]) > linea_c
         return None
     elif "remates" in m_low:
-        m_n = re.search(r">\s*(\d+(?:\.\d+)?)", m)
+        m_n = re.search(r"(?:>|m[aá]s\s+de)\s*(\d+(?:\.\d+)?)", m, flags=re.I)
         linea_r = float(m_n.group(1)) if m_n else 6.5
         if isinstance(stats_reales, dict) and stats_reales.get("shots_on_target_total") is not None:
-            return float(stats_reales["shots_on_target_total"]) > linea_r
+            sot_t = float(stats_reales["shots_on_target_total"])
+            if sot_t <= 0 or (tot >= 2 and sot_t < (tot - 1)):
+                return None
+            return sot_t > linea_r
         return None
     return tot >= 2
 
@@ -735,7 +845,8 @@ def _completar_dos_selecciones(lista_sels, tipo_t="VIP", mercados_ya_usados=None
 
 PARTIDOS_EXCLUIDOS = (
     "calvo sotelo", "cd minera", "utebo", "amorebieta", "portugalete", "real union", "real unión",
-    "turquía (süper lig)", "turquia (super lig)", "süper lig"
+    "turquía (süper lig)", "turquia (super lig)", "süper lig",
+    "copa asi", "afc cup", "afc champions"
 )
 
 
@@ -832,6 +943,174 @@ def cargar_mapa_resultados_caches():
     return mapa
 
 
+def _detectar_slugs_espn_por_partido(partido_str):
+    """Mapea el texto de competición dentro del nombre del partido al slug exacto de ESPN."""
+    txt = str(partido_str or "").lower()
+    if "premier" in txt: return ["eng.1"]
+    if "fa cup" in txt: return ["eng.fa"]
+    if "efl" in txt or "carabao" in txt: return ["eng.league_cup"]
+    if "laliga" in txt or "la liga" in txt: return ["esp.1"]
+    if "segunda" in txt: return ["esp.2"]
+    if "copa del rey" in txt: return ["esp.copa_del_rey"]
+    if "bundesliga" in txt: return ["ger.1"]
+    if "pokal" in txt: return ["ger.dfb_pokal"]
+    if "serie a" in txt and "brasil" in txt: return ["bra.1"]
+    if "copa do brasil" in txt: return ["bra.copa_do_brasil"]
+    if "serie a" in txt: return ["ita.1"]
+    if "coppa italia" in txt: return ["ita.coppa_italia"]
+    if "ligue 1" in txt: return ["fra.1"]
+    if "eredivisie" in txt or "países bajos" in txt or "paises bajos" in txt: return ["ned.1"]
+    if "primeira" in txt or "portugal" in txt: return ["por.1", "por.taca.portugal"]
+    if "mls" in txt or "usa" in txt: return ["usa.1"]
+    if "liga mx" in txt or "méxico" in txt or "mexico" in txt: return ["mex.1"]
+    if "colombia" in txt or "betplay" in txt: return ["col.1", "col.copa", "col.2"]
+    if "argentina" in txt: return ["arg.1", "arg.copa"]
+    if "saudi" in txt or "arabia" in txt: return ["ksa.1"]
+    if "women" in txt or "femen" in txt: return ["uefa.wchampions"]
+    if "champions" in txt: return ["uefa.champions"]
+    if "europa league" in txt: return ["uefa.europa"]
+    if "conference" in txt: return ["uefa.europa.conf"]
+    if "libertadores" in txt: return ["conmebol.libertadores"]
+    if "sudamericana" in txt: return ["conmebol.sudamericana"]
+    if "nations" in txt: return ["uefa.nations", "concacaf.nations.league"]
+    if "eliminatorias" in txt or "amistoso" in txt or "mundial" in txt:
+        return ["fifa.friendly", "fifa.worldq.conmebol", "fifa.worldq.uefa"]
+    return []
+
+
+@st.cache_data(ttl=90, show_spinner=False)
+def consultar_marcadores_vivo_espn_web(slugs_tuple, fecha_jornada_str):
+    """Consulta ligera en paralelo a ESPN (cacheada 90s) ÚNICAMENTE para las ligas de tarjetas
+    activas/pendientes de la jornada actual. Timeout estricto de 3s para jamás frenar la Web App."""
+    out = {"ft": {}, "indice_ft": [], "en_vivo": {}, "indice_vivo": [], "espn_ids": {}, "indice_espn_ids": []}
+    if not slugs_tuple or not fecha_jornada_str:
+        return out
+    try:
+        dt_f = datetime.strptime(fecha_jornada_str, "%Y-%m-%d")
+        fechas_ymd = [dt_f.strftime("%Y%m%d"), (dt_f + timedelta(days=1)).strftime("%Y%m%d")]
+    except Exception:
+        return out
+
+    tareas = [(sl, ymd) for sl in slugs_tuple for ymd in fechas_ymd]
+
+    def _fetch_slug_dia(par):
+        sl, ymd = par
+        evs_out = []
+        try:
+            r = requests.get(
+                f"https://site.api.espn.com/apis/site/v2/sports/soccer/{sl}/scoreboard?dates={ymd}&limit=60",
+                timeout=3.0,
+            )
+            if r.status_code != 200:
+                return evs_out
+            for ev in (r.json().get("events") or []):
+                comp = (ev.get("competitions") or [{}])[0]
+                comps = comp.get("competitors") or []
+                if len(comps) < 2:
+                    continue
+                c_h = next((c for c in comps if c.get("homeAway") == "home"), comps[0])
+                c_a = next((c for c in comps if c.get("homeAway") == "away"), comps[1])
+                loc_n = str((c_h.get("team") or {}).get("displayName") or "").strip().lower()
+                vis_n = str((c_a.get("team") or {}).get("displayName") or "").strip().lower()
+                if not loc_n or not vis_n:
+                    continue
+                eid = str(ev.get("id") or "").strip()
+                f_ev = str(ev.get("date") or "")[:10] or fecha_jornada_str
+                st_d = comp.get("status") or {}
+                st_type = st_d.get("type") or {}
+                state = str(st_type.get("state") or "")
+                completed = (st_type.get("completed") is True) or (state == "post")
+                if completed:
+                    gh = int(float(c_h.get("score") or 0))
+                    ga = int(float(c_a.get("score") or 0))
+                    ls_h = c_h.get("linescores") or []
+                    ls_a = c_a.get("linescores") or []
+                    det_g = [d for d in (comp.get("details") or []) if d.get("scoringPlay")]
+                    if ls_h and ls_a:
+                        ght = int(float(ls_h[0].get("value") or 0)) + int(float(ls_a[0].get("value") or 0))
+                    elif det_g:
+                        ght_h = ght_a = 0
+                        for dg in det_g:
+                            rel_s = str((dg.get("clock") or {}).get("displayValue") or "")
+                            nums = re.findall(r"\d+", rel_s)
+                            min_g = int(nums[0]) if nums else 90
+                            if ("45+" in rel_s) or (min_g <= 45 and "90+" not in rel_s):
+                                if str((dg.get("team") or {}).get("id") or "") == str((c_a.get("team") or {}).get("id") or ""):
+                                    ght_a += 1
+                                else:
+                                    ght_h += 1
+                        ght = min(gh, ght_h) + min(ga, ght_a)
+                    else:
+                        ght = (gh + ga) // 2
+                    evs_out.append(("FT", eid, f_ev, loc_n, vis_n, (gh, ga, ght)))
+                elif state == "in":
+                    gh_v = int(float(c_h.get("score") or 0))
+                    ga_v = int(float(c_a.get("score") or 0))
+                    rel = str(st_type.get("shortDetail") or st_d.get("displayClock") or "EN JUEGO").strip()
+                    if rel.upper() == "HT":
+                        rel = "Descanso (HT)"
+                    evs_out.append(("LIVE", eid, f_ev, loc_n, vis_n, (rel, gh_v, ga_v)))
+        except Exception:
+            pass
+        return evs_out
+
+    with ThreadPoolExecutor(max_workers=min(8, max(1, len(tareas)))) as ex:
+        for lote in ex.map(_fetch_slug_dia, tareas):
+            for tipo_ev, eid, f_ev, loc_n, vis_n, dato in lote:
+                tl, tv = _tokens_club(loc_n), _tokens_club(vis_n)
+                duelo_k = f"{loc_n} vs {vis_n}"
+                if eid:
+                    out["espn_ids"][eid] = eid
+                    out["espn_ids"][duelo_k] = eid
+                    out["indice_espn_ids"].append((tl, tv, eid))
+                if tipo_ev == "FT":
+                    if eid:
+                        out["ft"][eid] = dato
+                    out["ft"][duelo_k] = dato
+                    out["indice_ft"].append((f_ev, tl, tv, dato))
+                elif tipo_ev == "LIVE":
+                    if eid:
+                        out["en_vivo"][eid] = dato
+                    out["en_vivo"][duelo_k] = dato
+                    out["indice_vivo"].append((tl, tv, dato))
+    return out
+
+
+def enriquecer_mapa_vivo_tarjetas(mapa_base, tarjetas_dia, jornada_str, ahora_esp):
+    """Superpone resultados en vivo y FT recién terminados desde ESPN solo para las tarjetas
+    de jornada_str que ya comenzaron y aún no tienen FT en caché local."""
+    slugs_req = set()
+    for t in (tarjetas_dia or []):
+        id_t = str(t.get("id_partido", "")).strip()
+        part_t = str(t.get("partido", "")).strip()
+        hora_t = str(t.get("hora", "20:00")).strip()
+        dt_ini_t, _ = calcular_dt_inicio_y_fin(jornada_str, hora_t)
+        if dt_ini_t > (ahora_esp + timedelta(minutes=5)):
+            continue
+        if buscar_resultado_inteligente(mapa_base, id_t, part_t, jornada_str) is not None:
+            continue
+        for sl in _detectar_slugs_espn_por_partido(part_t):
+            slugs_req.add(sl)
+
+    if not slugs_req:
+        return mapa_base
+
+    datos_v = consultar_marcadores_vivo_espn_web(tuple(sorted(slugs_req)), jornada_str)
+    if not datos_v.get("ft") and not datos_v.get("en_vivo"):
+        return mapa_base
+
+    mapa_mix = dict(mapa_base)
+    mapa_mix.update(datos_v["ft"])
+    mapa_mix["_indice_rapido"] = list(mapa_base.get("_indice_rapido", [])) + list(datos_v["indice_ft"])
+    ev_mix = dict(mapa_base.get("_en_vivo", {}))
+    ev_mix.update(datos_v["en_vivo"])
+    mapa_mix["_en_vivo"] = ev_mix
+    mapa_mix["_indice_vivo"] = list(datos_v["indice_vivo"]) + list(mapa_base.get("_indice_vivo", []))
+    mapa_mix["_espn_ids"] = dict(datos_v.get("espn_ids", {}))
+    mapa_mix["_indice_espn_ids"] = list(datos_v.get("indice_espn_ids", []))
+    return mapa_mix
+
+
 def buscar_resultado_inteligente(mapa_ft, id_partido, duelo_str, dia_str=None):
     if id_partido and str(id_partido) in mapa_ft:
         return mapa_ft[str(id_partido)]
@@ -868,11 +1147,68 @@ def buscar_resultado_inteligente(mapa_ft, id_partido, duelo_str, dia_str=None):
     return None
 
 
-@st.cache_data(ttl=120, show_spinner=False)
+def _enriquecer_mapa_ft_pendientes_csv(mapa_base, df_csv, ahora_esp):
+    """Consulta ligera a ESPN (cacheada 90s) para TODOS los partidos Pendiente de las últimas 48h
+    en auditoria_apuestas.csv (no solo las 7 tarjetas de clientes), para que la tabla inferior
+    y los KPIs se actualicen automáticamente apenas termine cada encuentro."""
+    if df_csv is None or df_csv.empty or "Estado" not in df_csv.columns:
+        return mapa_base
+    pend = df_csv[df_csv["Estado"].astype(str).str.strip() == "Pendiente"]
+    if pend.empty:
+        return mapa_base
+
+    slugs_por_fecha = {}
+    for _, rp in pend.iterrows():
+        f_reg = str(rp.get("Fecha_Registro", "")).strip()
+        part_p = str(rp.get("Partido", "")).strip()
+        id_p = str(rp.get("ID_Partido", "")).strip()
+        if any(ex in part_p.lower() for ex in PARTIDOS_EXCLUIDOS):
+            continue
+        try:
+            dt_fin_est = datetime.strptime(f_reg[:16], "%Y-%m-%d %H:%M")
+        except Exception:
+            continue
+        # Solo partidos que ya comenzaron (dt_ini ~ dt_fin - 1h55m <= ahora) y de las últimas 48h
+        dt_ini_est = dt_fin_est - timedelta(hours=1, minutes=55)
+        if dt_ini_est > (ahora_esp + timedelta(minutes=5)) or (ahora_esp - dt_fin_est).days > 2:
+            continue
+        dia_jorn = (dt_fin_est - timedelta(days=1)).strftime("%Y-%m-%d") if dt_fin_est.hour < 7 else dt_fin_est.strftime("%Y-%m-%d")
+        if buscar_resultado_inteligente(mapa_base, id_p, part_p, dia_jorn) is not None:
+            continue
+        for sl in _detectar_slugs_espn_por_partido(part_p):
+            slugs_por_fecha.setdefault(dia_jorn, set()).add(sl)
+
+    if not slugs_por_fecha:
+        return mapa_base
+
+    mapa_mix = dict(mapa_base)
+    idx_rap = list(mapa_base.get("_indice_rapido", []))
+    espn_ids_m = dict(mapa_base.get("_espn_ids", {}))
+    idx_eids = list(mapa_base.get("_indice_espn_ids", []))
+    hubo_datos = False
+
+    for f_j, sl_set in sorted(slugs_por_fecha.items()):
+        datos_v = consultar_marcadores_vivo_espn_web(tuple(sorted(sl_set)), f_j)
+        if datos_v.get("ft"):
+            mapa_mix.update(datos_v["ft"])
+            idx_rap.extend(datos_v.get("indice_ft", []))
+            hubo_datos = True
+        if datos_v.get("espn_ids"):
+            espn_ids_m.update(datos_v["espn_ids"])
+            idx_eids.extend(datos_v.get("indice_espn_ids", []))
+
+    if not hubo_datos:
+        return mapa_base
+
+    mapa_mix["_indice_rapido"] = idx_rap
+    mapa_mix["_espn_ids"] = espn_ids_m
+    mapa_mix["_indice_espn_ids"] = idx_eids
+    return mapa_mix
+
+
+@st.cache_data(ttl=90, show_spinner=False)
 def obtener_resumen_auditoria():
     mapa_ft = cargar_mapa_resultados_caches()
-    mapa_horas_fin = mapa_ft.get("_horas_fin", {})
-    mapa_dt_fin = mapa_ft.get("_dt_fin", {})
     ahora_esp = obtener_hora_espana()
 
     if os.path.exists("auditoria_apuestas.csv"):
@@ -882,6 +1218,10 @@ def obtener_resumen_auditoria():
             tabla = pd.DataFrame()
     else:
         tabla = pd.DataFrame()
+
+    mapa_ft = _enriquecer_mapa_ft_pendientes_csv(mapa_ft, tabla, ahora_esp)
+    mapa_horas_fin = dict(mapa_ft.get("_horas_fin", {}))
+    mapa_dt_fin = dict(mapa_ft.get("_dt_fin", {}))
 
     filas_clientes = []
     for nombre_j in sorted(os.listdir(".")):
@@ -1008,7 +1348,10 @@ def obtener_resumen_auditoria():
 
             if info_m:
                 gh, ga, ght = info_m
-                gano_real = evaluar_mercado_real(merc_k, gh, ga, ght, part_k, stats_reales=obtener_boxscore_real_web(id_k, part_k))
+                es_reciente_bx = (dia_r >= (ahora_esp - timedelta(days=2)).strftime("%Y-%m-%d"))
+                es_stat_bx = any(k in merc_k.lower() for k in ("córners", "corners", "remates", "faltas", "tarjetas", "amarill"))
+                box_r = obtener_boxscore_real_web(id_k, part_k, mapa_ft=mapa_ft, consultar_vivo=(es_reciente_bx and es_stat_bx))
+                gano_real = evaluar_mercado_real(merc_k, gh, ga, ght, part_k, stats_reales=box_r)
                 if gano_real is None:
                     indices_no_finalizados.append(idx)
                     continue
@@ -1018,6 +1361,13 @@ def obtener_resumen_auditoria():
 
             part_k_sin_liga = part_k.split(" (")[0].strip().lower()
             dt_fin_exacto = mapa_dt_fin.get(id_k) or mapa_dt_fin.get(part_k_sin_liga)
+            if dt_fin_exacto:
+                try:
+                    dt_dia_ref = datetime.strptime(dia_r, "%Y-%m-%d").date()
+                    if abs((dt_fin_exacto.date() - dt_dia_ref).days) > 1:
+                        dt_fin_exacto = None
+                except Exception:
+                    pass
             if not dt_fin_exacto:
                 hora_fin_est = mapa_horas_fin.get(id_k) or mapa_horas_fin.get(part_k_sin_liga) or (h_reg_r if len(h_reg_r) == 5 and ":" in h_reg_r else "21:55")
                 try:
@@ -1149,29 +1499,32 @@ def obtener_resumen_auditoria():
         if filas_combinadas_auditadas:
             finalizadas = pd.concat([finalizadas, pd.DataFrame(filas_combinadas_auditadas)], ignore_index=True)
 
-        # 1. KPIs Globales 100% REALES (sin pisos artificiales y excluyendo boxscore legacy contaminado < 2026-11-24)
+        # 1. Universo 100% VERIFICADO Y COHERENTE (Arriba y Abajo muestran EXACTAMENTE las mismas apuestas):
+        #    - Excluye [DESCARTE] y excluye boxscore legacy anterior al 2026-11-24 (cuando aún no existía feed Boxscore real)
         mask_box_legacy = (
             (finalizadas["Dia"].astype(str) < "2026-11-24")
             & finalizadas["Mercado"].astype(str).str.contains(r"Córners|Corners|Remates|Faltas|Tarjetas|Amarill", case=False, regex=True, na=False)
         )
-        finalizadas_kpi = finalizadas[~mask_box_legacy & (~finalizadas["Mercado"].astype(str).str.contains("DESCARTE", case=False, na=False))].copy()
-        aciertos = len(finalizadas_kpi[finalizadas_kpi["Estado"].isin(["Ganada", "Mitad Devuelta"])])
-        total_eval = len(finalizadas_kpi)
-        efectividad = round((aciertos / max(1, total_eval)) * 100.0, 1) if total_eval > 0 else 0.0
-
-        inv = pd.to_numeric(finalizadas_kpi["Stake_COP"], errors="coerce").fillna(500.0)
-        cuo = pd.to_numeric(finalizadas_kpi["Cuota_Compra"], errors="coerce").fillna(1.30)
-        es_gan = finalizadas_kpi["Estado"].isin(["Ganada", "Mitad Devuelta"])
-        ret_calc = (inv * cuo).where(es_gan, 0.0)
-        roi = round(((ret_calc.sum() - inv.sum()) / max(1.0, inv.sum())) * 100.0, 1) if inv.sum() > 0 else 0.0
-
-        # 2. Tabla inferior limpia: oculta [DESCARTES] y asegura 4 mercados únicos (2 FREE + 2 VIP) por partido + Combinada Doble y Triple Sniper
-        tabla_publica = finalizadas[~finalizadas["Mercado"].astype(str).str.contains("DESCARTE", case=False, na=False)].copy()
+        tabla_publica = finalizadas[
+            ~mask_box_legacy
+            & (~finalizadas["Mercado"].astype(str).str.contains("DESCARTE", case=False, na=False))
+        ].copy()
         tabla_publica = tabla_publica.drop_duplicates(subset=["Dia", "Partido_Norm", "Mercado"], keep="first")
         df_f2 = tabla_publica[tabla_publica["Mercado"].astype(str).str.startswith("[FREE]")].groupby(["Dia", "Partido_Norm"], as_index=False).head(2)
         df_v2 = tabla_publica[tabla_publica["Mercado"].astype(str).str.startswith("[VIP]")].groupby(["Dia", "Partido_Norm"], as_index=False).head(2)
         df_c2 = tabla_publica[tabla_publica["Mercado"].astype(str).str.startswith(("[VIP DOBLE]", "[PRO SNIPER]"))].copy()
         tabla_publica = pd.concat([df_f2, df_v2, df_c2], ignore_index=True)
+
+        # 2. KPIs Globales calculados EXACTAMENTE sobre tabla_publica (cero contradicción entre encabezado y tabla)
+        aciertos = int(tabla_publica["Estado"].isin(["Ganada", "Mitad Devuelta"]).sum())
+        total_eval = len(tabla_publica)
+        efectividad = round((aciertos / max(1, total_eval)) * 100.0, 1) if total_eval > 0 else 0.0
+
+        inv = pd.to_numeric(tabla_publica["Stake_COP"], errors="coerce").fillna(500.0)
+        cuo = pd.to_numeric(tabla_publica["Cuota_Compra"], errors="coerce").fillna(1.30)
+        es_gan = tabla_publica["Estado"].isin(["Ganada", "Mitad Devuelta"])
+        ret_calc = (inv * cuo).where(es_gan, 0.0)
+        roi = round(((ret_calc.sum() - inv.sum()) / max(1.0, inv.sum())) * 100.0, 1) if inv.sum() > 0 else 0.0
 
         return efectividad, aciertos, total_eval, roi, tabla_publica
     except Exception:
@@ -1223,7 +1576,12 @@ def listar_jornadas():
 
 
 def evaluar_pick_tarjeta(mapa_ft, df_hist, dia_str, id_partido, duelo_str, pick_str, hora_ini_str="20:00"):
-    if calcular_dt_fin_real(dia_str, hora_ini_str) > obtener_hora_espana():
+    ahora_ev = obtener_hora_espana()
+    dt_ini_ev, dt_fin_ev = calcular_dt_inicio_y_fin(dia_str, hora_ini_str)
+    if dt_ini_ev > ahora_ev:
+        return "", None
+    info_ft_temprano = buscar_resultado_inteligente(mapa_ft, id_partido, duelo_str, dia_str) if ahora_ev >= (dt_ini_ev + timedelta(minutes=95)) else None
+    if dt_fin_ev > ahora_ev and info_ft_temprano is None:
         return "", None
 
     # PRIORIDAD #1: Respetar el estado REAL ya auditado con boxscore en auditoria_apuestas.csv
@@ -1253,9 +1611,10 @@ def evaluar_pick_tarjeta(mapa_ft, df_hist, dia_str, id_partido, duelo_str, pick_
         except Exception:
             pass
 
-    # PRIORIDAD #2: Evaluar con marcador FT/HT real + boxscore real (cache_boxscore_ft.json)
-    box_stats = obtener_boxscore_real_web(id_partido, duelo_str)
-    info_m = buscar_resultado_inteligente(mapa_ft, id_partido, duelo_str, dia_str)
+    # PRIORIDAD #2: Evaluar con marcador FT/HT real + boxscore real (cache local o ESPN bajo demanda)
+    info_m = info_ft_temprano or buscar_resultado_inteligente(mapa_ft, id_partido, duelo_str, dia_str)
+    es_pick_stat = any(k in pick_limpio for k in ("córners", "corners", "remates", "faltas", "tarjetas", "amarill"))
+    box_stats = obtener_boxscore_real_web(id_partido, duelo_str, mapa_ft=mapa_ft, consultar_vivo=(info_m is not None and es_pick_stat))
     if info_m:
         gh, ga, ght = info_m
         gano = evaluar_mercado_real(pick_str, gh, ga, ght, duelo_str, stats_reales=box_stats)
@@ -1515,7 +1874,7 @@ st.divider()
 # ==============================================================================
 # PANEL EN VIVO CON ACTUALIZACIÓN SILENCIOSA EN SEGUNDO PLANO CADA 60 SEGUNDOS
 # ==============================================================================
-@st.fragment(run_every=120)
+@st.fragment(run_every=90)
 def renderizar_panel_en_vivo_silencioso():
     mapa_ft_live = cargar_mapa_resultados_caches()
     _, _, _, _, df_hist_live = obtener_resumen_auditoria()
@@ -1548,6 +1907,7 @@ def renderizar_panel_en_vivo_silencioso():
             t for t in tarjetas_dia
             if not any(ex in str(t.get("partido", "")).lower() for ex in PARTIDOS_EXCLUIDOS)
         ]
+        mapa_ft_live = enriquecer_mapa_vivo_tarjetas(mapa_ft_live, tarjetas_dia, jornada_elegida, ahora_esp_actual)
         lista_free = [t for t in tarjetas_dia if t.get("tipo_tarjeta") == "FREE"]
         lista_vip = [t for t in tarjetas_dia if t.get("tipo_tarjeta") == "VIP"]
         usados_jornada_partido = {}
@@ -1571,7 +1931,7 @@ def renderizar_panel_en_vivo_silencioso():
                 mapa_ft_live, df_hist_live, jornada_elegida, id_p, tf["partido"],
                 opciones_f[0]["mercado"] if opciones_f else "Over 1.5", hora_p
             )
-            partido_finalizado = (gano_prueba is not None)
+            partido_finalizado = (gano_prueba is not None) or bool(marc_prueba)
 
             if partido_finalizado:
                 for op in opciones_f:
@@ -1639,7 +1999,7 @@ def renderizar_panel_en_vivo_silencioso():
                 mapa_ft_live, df_hist_live, jornada_elegida, id_pv, tv["partido"],
                 opciones_v[0]["mercado"] if opciones_v else "Over 1.5", hora_pv
             )
-            partido_vip_finalizado = (gano_pv is not None)
+            partido_vip_finalizado = (gano_pv is not None) or bool(marc_pv)
 
             if partido_vip_finalizado:
                 for op in opciones_v:
@@ -1738,6 +2098,13 @@ def renderizar_panel_en_vivo_silencioso():
             part_s = str(r.get("Partido", "")).split(" (")[0].strip().lower()
 
             dt_real = mapa_dt_fin.get(id_s) or mapa_dt_fin.get(part_s)
+            if dt_real:
+                try:
+                    dt_dia_orig = datetime.strptime(dia_s, "%Y-%m-%d").date()
+                    if abs((dt_real.date() - dt_dia_orig).days) > 1:
+                        dt_real = None
+                except Exception:
+                    pass
             if dt_real and dt_real <= ahora_esp_tabla:
                 return pd.Series([dt_real, f"{dt_real.strftime('%Y-%m-%d')} | 🏁 {dt_real.strftime('%H:%M')}h (FT)"])
 
