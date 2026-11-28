@@ -1,0 +1,313 @@
+{
+  "fecha": "2026-11-28",
+  "tarjetas_clientes": [
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "401874977",
+      "hora": "20:45",
+      "partido": "Internazionale vs Genoa (Italia (Serie A))",
+      "selecciones": [
+        {
+          "mercado": "Combo 1X + O1.5",
+          "prob": 75.8,
+          "cuota": 1.46
+        },
+        {
+          "mercado": "Goles Internaziona > 0.5",
+          "prob": 89.0,
+          "cuota": 1.24
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "401874826",
+      "hora": "18:00",
+      "partido": "Torino vs Lazio (Italia (Serie A))",
+      "selecciones": [
+        {
+          "mercado": "Combo X2 + O1.5",
+          "prob": 72.7,
+          "cuota": 1.46
+        },
+        {
+          "mercado": "Goles Lazio > 0.5",
+          "prob": 88.4,
+          "cuota": 1.24
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "401878752",
+      "hora": "18:30",
+      "partido": "Ipswich Town vs Aston Villa (Inglaterra (Premier))",
+      "selecciones": [
+        {
+          "mercado": "Gol en 1T",
+          "prob": 74.2,
+          "cuota": 1.38
+        },
+        {
+          "mercado": "Goles Aston Villa > 0.5",
+          "prob": 78.1,
+          "cuota": 1.42
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "VIP",
+      "id_partido": "401876390",
+      "hora": "20:45",
+      "partido": "Le Mans vs Lille (Francia (Ligue 1))",
+      "selecciones": [
+        {
+          "mercado": "Sin Empate Lille",
+          "prob": 71.9,
+          "cuota": 1.44
+        },
+        {
+          "mercado": "Gol en 1T",
+          "prob": 71.4,
+          "cuota": 1.41
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "FREE",
+      "id_partido": "401882789",
+      "hora": "21:00",
+      "partido": "Real Madrid vs Alavés (España (Laliga))",
+      "selecciones": [
+        {
+          "mercado": "Gol en 1T",
+          "prob": 72.7,
+          "cuota": 1.36
+        },
+        {
+          "mercado": "Remates Puerta > 6.5",
+          "prob": 71.1,
+          "cuota": 1.38
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "FREE",
+      "id_partido": "401912519",
+      "hora": "21:00",
+      "partido": "Palmeiras vs Estudiantes de La Plata (Copa Libertadores)",
+      "selecciones": [
+        {
+          "mercado": "Doble Oport. 1X",
+          "prob": 84.5,
+          "cuota": 1.19
+        },
+        {
+          "mercado": "Gol en 2do Tiempo",
+          "prob": 65.4,
+          "cuota": 1.38
+        }
+      ]
+    },
+    {
+      "tipo_tarjeta": "FREE",
+      "id_partido": "401884726",
+      "hora": "18:30",
+      "partido": "VfB Stuttgart vs Eintracht Frankfurt (Alemania (Bundesliga))",
+      "selecciones": [
+        {
+          "mercado": "Over 1.5 Goles",
+          "prob": 75.9,
+          "cuota": 1.3
+        },
+        {
+          "mercado": "Remates Puerta > 7.5",
+          "prob": 70.9,
+          "cuota": 1.38
+        }
+      ]
+    }
+  ],
+  "combinada_doble": {
+    "selecciones": [
+      {
+        "partido": "Leeds United vs Coventry City",
+        "hora": "16:00",
+        "mercado": "Doble Oport. 1X",
+        "prob": 85.15245720784496,
+        "cuota": 1.36,
+        "score_elite": 18
+      },
+      {
+        "partido": "Nice vs Troyes",
+        "hora": "20:45",
+        "mercado": "Doble Oport. 1X",
+        "prob": 85.0675142409192,
+        "cuota": 1.36,
+        "score_elite": 18
+      }
+    ],
+    "cuota_total": 1.85,
+    "prob_directa": 72.4,
+    "prob_protegida": 86.9
+  },
+  "combinada_sniper": {
+    "selecciones": [
+      {
+        "partido": "VfB Stuttgart vs Eintracht Frankfurt",
+        "hora": "18:30",
+        "mercado": "Doble Oport. 1X",
+        "prob": 81.1490545902772,
+        "cuota": 1.44,
+        "score_elite": 18
+      },
+      {
+        "partido": "Botafogo vs Bahia",
+        "hora": "01:00",
+        "mercado": "Gol en 2do Tiempo",
+        "prob": 80.94613084901815,
+        "cuota": 1.44,
+        "score_elite": 8
+      },
+      {
+        "partido": "Ipswich Town vs Aston Villa",
+        "hora": "18:30",
+        "mercado": "Gol en 2do Tiempo",
+        "prob": 80.84473223716948,
+        "cuota": 1.44,
+        "score_elite": 38
+      }
+    ],
+    "cuota_total": 2.99,
+    "prob_directa": 53.1,
+    "prob_protegida": 77.1
+  },
+  "combinadas_exclusivas_pro": [
+    {
+      "clave": "cuadruple_elite_pro",
+      "titulo": "CUÁDRUPLE ÉLITE PRO",
+      "subtitulo": "EXCLUSIVO PRO: 4 PARTIDOS DE ALTA CONFLUENCIA",
+      "sufijo": "CUADRUPLE_ELITE_PRO",
+      "stake": "Invertir el 1% de tu capital (Alto Retorno)",
+      "selecciones": [
+        {
+          "partido": "Real Betis vs Rayo Vallecano",
+          "hora": "14:00",
+          "mercado": "Doble Oport. 1X",
+          "prob": 85.01149088877307,
+          "cuota": 1.4,
+          "score_elite": 38,
+          "nuevo": true
+        },
+        {
+          "partido": "Real Madrid vs Alavés",
+          "hora": "21:00",
+          "mercado": "Doble Oport. 1X",
+          "prob": 84.89413480328726,
+          "cuota": 1.4,
+          "score_elite": 53,
+          "nuevo": true
+        },
+        {
+          "partido": "Mainz vs 1. FC Union Berlin",
+          "hora": "15:30",
+          "mercado": "Doble Oport. 1X",
+          "prob": 84.82978320124876,
+          "cuota": 1.4,
+          "score_elite": 18,
+          "nuevo": true
+        },
+        {
+          "partido": "Internazionale vs Genoa",
+          "hora": "20:45",
+          "mercado": "Doble Oport. 1X",
+          "prob": 84.70588235294117,
+          "cuota": 1.4,
+          "score_elite": 53,
+          "nuevo": true
+        }
+      ],
+      "cuota_total": 3.84,
+      "prob_directa": 51.9,
+      "prob_protegida": 77.9
+    },
+    {
+      "clave": "especial_ritmo_pro",
+      "titulo": "ESPECIAL RITMO PRO",
+      "subtitulo": "EXCLUSIVO PRO: CÓRNERS Y REMATES (3 PARTIDOS)",
+      "sufijo": "RITMO_CORNERS_PRO",
+      "stake": "Invertir del 1% al 2% de tu capital (Ritmo Puro)",
+      "selecciones": [
+        {
+          "partido": "América vs Monterrey",
+          "hora": "04:10",
+          "mercado": "Córners América > 4.5",
+          "prob": 78.97,
+          "cuota": 1.38,
+          "score_elite": 8,
+          "nuevo": true
+        },
+        {
+          "partido": "FC Cologne vs SV Elversberg",
+          "hora": "15:30",
+          "mercado": "Remates Puerta > 6.5",
+          "prob": 73.29,
+          "cuota": 1.51,
+          "score_elite": 18,
+          "nuevo": true
+        },
+        {
+          "partido": "Nice vs Troyes",
+          "hora": "20:45",
+          "mercado": "Córners > 7.5",
+          "prob": 72.86,
+          "cuota": 1.52,
+          "score_elite": 18,
+          "nuevo": true
+        }
+      ],
+      "cuota_total": 3.17,
+      "prob_directa": 42.2,
+      "prob_protegida": 66.2
+    },
+    {
+      "clave": "especial_valor_pro",
+      "titulo": "ESPECIAL VALOR PRO",
+      "subtitulo": "EXCLUSIVO PRO: TÁCTICA, FRICCIÓN Y EV+ (3 PARTIDOS)",
+      "sufijo": "VALOR_TACTICO_PRO",
+      "stake": "Invertir del 1% al 2% de tu capital (Valor EV+)",
+      "selecciones": [
+        {
+          "partido": "Real Betis vs Rayo Vallecano",
+          "hora": "14:00",
+          "mercado": "Doble Oport. 1X",
+          "prob": 85.01149088877307,
+          "cuota": 1.4,
+          "score_elite": 38,
+          "nuevo": true
+        },
+        {
+          "partido": "Real Madrid vs Alavés",
+          "hora": "21:00",
+          "mercado": "Doble Oport. 1X",
+          "prob": 84.89413480328726,
+          "cuota": 1.4,
+          "score_elite": 53,
+          "nuevo": true
+        },
+        {
+          "partido": "Mainz vs 1. FC Union Berlin",
+          "hora": "15:30",
+          "mercado": "Doble Oport. 1X",
+          "prob": 84.82978320124876,
+          "cuota": 1.4,
+          "score_elite": 18,
+          "nuevo": true
+        }
+      ],
+      "cuota_total": 2.74,
+      "prob_directa": 61.2,
+      "prob_protegida": 82.0
+    }
+  ]
+}
