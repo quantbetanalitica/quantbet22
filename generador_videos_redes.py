@@ -1731,9 +1731,11 @@ def renderizar_video_mp4_2_slides(slide_1, slide_2, ruta_mp3, ruta_mp4_salida, s
 
 
 def generar_diccionario_copys_por_red(tipo_video, p_data, tasa_acierto="91.1%"):
+    import hashlib as _hl_cp
     loc = p_data.get("local", "Equipo Local")
     vis = p_data.get("visitante", "Visitante")
-    liga = p_data.get("liga_visual", "Fútbol Europeo")
+    liga = p_data.get("liga_visual", "Fútbol Profesional")
+    fecha_p = str(p_data.get("fecha", "")).strip()
     goles = float(p_data.get("tot_goles", 2.65) or 2.65)
 
     tag_loc = limpiar_hashtag(loc)
@@ -1743,35 +1745,71 @@ def generar_diccionario_copys_por_red(tipo_video, p_data, tasa_acierto="91.1%"):
     s = chr(10)
     ds = s + s
 
-    pregunta_gancho = f"¿Cuál es tu marcador para {loc} vs {vis}? Comenta DATOS + tu resultado ⚽"
-    cta_embudo = "La 2ª lectura clave, el radar de córners/remates y los demás partidos de hoy ya están publicados en nuestro panel diario y comunidad (accede desde nuestro perfil)."
+    # Semilla determinista por partido y fecha: evita repetir el mismo título/apertura en vídeos seguidos (anti-revisión TikTok)
+    seed_i = int(_hl_cp.md5(f"{loc}_{vis}_{fecha_p}_{tipo_video}".encode("utf-8")).hexdigest()[:8], 16)
+
+    aperturas = [
+        f"Radiografía estadística de {loc} vs {vis} ({liga}): el modelo estima {goles:.2f} goles esperados.",
+        f"Lo que marcan los datos antes de {loc} vs {vis}: {goles:.2f} goles proyectados con Poisson y Dixon-Coles.",
+        f"Previa matemática en {liga}: {loc} frente a {vis} con una línea base de {goles:.2f} goles esperados.",
+        f"Así llegan {loc} y {vis} según la simulación en Python: ritmo proyectado de {goles:.2f} goles.",
+        f"Claves numéricas del cruce {loc} vs {vis} ({liga}): {goles:.2f} goles esperados en el modelo.",
+        f"Números previos al partido entre {loc} y {vis}: proyección estadística de {goles:.2f} goles en {liga}.",
+        f"Lectura táctica con datos para {loc} vs {vis}: el modelo de Poisson marca {goles:.2f} goles esperados.",
+        f"Estudio previo de esta jornada en {liga}: {loc} vs {vis} arroja {goles:.2f} goles esperados.",
+    ]
+    preguntas_cierre = [
+        f"¿Cómo ves este {loc} vs {vis}? Déjalo en los comentarios ⚽",
+        f"¿Quién crees que impone el ritmo en los 90 minutos? Te leo abajo ⚽",
+        f"¿Partido abierto o cerrado? Deja tu marcador para {loc} vs {vis} ⚽",
+        f"¿Cuál es tu lectura táctica para este {loc} vs {vis}? ⚽",
+    ]
+    titulos_yt = [
+        f"{loc} vs {vis} | Radiografía estadística en Python {tag_loc} {tag_vis} #shorts",
+        f"{loc} vs {vis} | Datos previos del modelo Poisson {tag_loc} {tag_vis} #shorts",
+        f"{loc} vs {vis} | Claves tácticas y goles esperados {tag_loc} {tag_vis} #shorts",
+        f"{loc} vs {vis} | Lo que muestran los números ({parte_liga}) {tag_loc} #shorts",
+    ]
+
+    apertura = aperturas[seed_i % len(aperturas)]
+    pregunta_final = preguntas_cierre[(seed_i // 7) % len(preguntas_cierre)]
+    yt_titulo = titulos_yt[(seed_i // 13) % len(titulos_yt)][:98]
+
+    etq_jornada = f"la jornada del {fecha_p}" if fecha_p else "esta jornada"
+    cta_limpio = (
+        f"La 2ª lectura clave, el radar de córners y remates, y el resto de partidos de {etq_jornada} "
+        "ya están publicados en nuestro panel diario y comunidad (enlace en el perfil)."
+    )
+    tags_base = f"{tag_loc} {tag_vis} {tag_liga} #futbol #estadisticas #analisistactico"
 
     if tipo_video == "1_ESTRELLA_10AM":
         return {
             "horario": "14:00 (España) - PREVIA ESTADÍSTICA #2",
             "titulo_interno": f"VIDEO 2 (14:00) - {loc.upper()} VS {vis.upper()} ({p_data.get('hora', '')})",
             "tiktok": (
-                f"{pregunta_gancho} "
-                f"Avance del modelo en Python para {loc} vs {vis} ({liga}): proyección base de {goles:.2f} goles esperados. "
-                f"{cta_embudo}" + ds +
-                f"{tag_loc} {tag_vis} {tag_liga} #futbol #datosfutbol #analisistactico #cienciadedatos"
+                f"{apertura} {pregunta_final}" + ds +
+                f"{cta_limpio}" + ds +
+                f"{tags_base} #cienciadedatos"
             ),
             "instagram": (
-                f"{pregunta_gancho}" + ds +
-                f"📊 Avance del modelo ({liga}):" + s +
-                f"• Goles esperados (xG): {goles:.2f} | Córners, remates y 2ª lectura: reservados en el panel diario." + ds +
-                f"{cta_embudo} Guarda este video para comparar al pitazo final. ⚽" + ds +
-                f"{tag_loc} {tag_vis} {tag_liga} #futbol #reels #datosfutbol #analisistactico"
+                f"{apertura}" + ds +
+                f"📊 Resumen del modelo ({liga}):" + s +
+                f"• Goles esperados (xG): {goles:.2f} | Córners, remates y 2ª lectura disponibles en el panel diario." + ds +
+                f"{cta_limpio}" + s +
+                f"{pregunta_final}" + ds +
+                f"{tags_base} #reels"
             ),
-            "youtube_titulo": f"{loc} vs {vis} | El dato que nadie ve en Python {tag_loc} {tag_vis} {tag_liga} #shorts"[:98],
+            "youtube_titulo": yt_titulo,
             "youtube_descripcion": (
-                f"{pregunta_gancho} Avance estadístico de {loc} vs {vis} ({liga}) con modelo Poisson y Dixon-Coles: "
-                f"{goles:.2f} goles esperados. {cta_embudo}" + ds +
-                f"{tag_loc} {tag_vis} {tag_liga} #shorts #futbol #datosfutbol #analisistactico"
+                f"{apertura}" + ds +
+                f"{cta_limpio}" + s +
+                f"{pregunta_final}" + ds +
+                f"{tags_base} #shorts"
             ),
             "facebook": (
-                f"{pregunta_gancho} Avance táctico de {loc} vs {vis} ({liga}): {goles:.2f} goles esperados según nuestro modelo en Python. {cta_embudo}" + ds +
-                f"{tag_loc} {tag_vis} {tag_liga} #futbol #reels #datosfutbol #analisistactico"
+                f"{apertura}" + ds +
+                f"{cta_limpio} {pregunta_final}" + ds +
+                f"{tags_base} #reels"
             ),
         }
 
@@ -1780,26 +1818,29 @@ def generar_diccionario_copys_por_red(tipo_video, p_data, tasa_acierto="91.1%"):
             "horario": "21:30 (España) - PREVIA ESTADÍSTICA #1",
             "titulo_interno": f"VIDEO 1 (21:30) - {loc.upper()} VS {vis.upper()} ({p_data.get('hora', '')})",
             "tiktok": (
-                f"{pregunta_gancho} 📊⚽ "
-                f"Nuestro modelo en Python ya analizó {loc} vs {vis} ({liga}): {goles:.2f} goles esperados en el avance inicial. "
-                f"{cta_embudo}" + ds +
-                f"{tag_loc} {tag_vis} {tag_liga} #futbol #datosfutbol #analisistactico #cienciadedatos"
+                f"{apertura} {pregunta_final}" + ds +
+                f"{cta_limpio}" + ds +
+                f"{tags_base} #cienciadedatos"
             ),
             "instagram": (
-                f"{pregunta_gancho} 📈⚽" + ds +
-                f"Avance matemático de {loc} vs {vis} ({liga}):" + s +
+                f"{apertura}" + ds +
+                f"📈 Estudio matemático ({liga}):" + s +
                 f"• Goles esperados (xG): {goles:.2f} | Matriz completa y 2ª lectura disponibles en el panel diario." + ds +
-                f"{cta_embudo}" + ds +
-                f"{tag_loc} {tag_vis} {tag_liga} #futbol #reels #datosfutbol #analisistactico"
+                f"{cta_limpio}" + s +
+                f"{pregunta_final}" + ds +
+                f"{tags_base} #reels"
             ),
-            "youtube_titulo": f"{loc} vs {vis} | Dato oculto del modelo Poisson {tag_loc} {tag_vis} {tag_liga} #shorts"[:98],
+            "youtube_titulo": yt_titulo,
             "youtube_descripcion": (
-                f"{pregunta_gancho} Avance estadístico de {loc} vs {vis} ({liga}) con {goles:.2f} goles esperados. {cta_embudo}" + ds +
-                f"{tag_loc} {tag_vis} {tag_liga} #shorts #futbol #datosfutbol #analisistactico"
+                f"{apertura}" + ds +
+                f"{cta_limpio}" + s +
+                f"{pregunta_final}" + ds +
+                f"{tags_base} #shorts"
             ),
             "facebook": (
-                f"{pregunta_gancho} Avance del {loc} vs {vis} ({liga}): {goles:.2f} goles esperados proyectados. {cta_embudo}" + ds +
-                f"{tag_loc} {tag_vis} {tag_liga} #futbol #reels #datosfutbol #analisistactico"
+                f"{apertura}" + ds +
+                f"{cta_limpio} {pregunta_final}" + ds +
+                f"{tags_base} #reels"
             ),
         }
 
@@ -2765,7 +2806,7 @@ def _crear_escena_3_jugada_pro(datos, esc_l, esc_v, ruta_out):
 def _crear_escena_4_debate_tactico_pro(datos, esc_l, esc_v, ruta_out, otros_partidos=None):
     """Escena 4 (Cartelera del Día + Embudo Seguro): muestra los otros partidazos de hoy listos en el panel + puente al perfil."""
     lienzo = _crear_fondo_broadcast_pro(acento_izq=(0, 232, 118), acento_der=(255, 204, 0))
-    y_bot = _dibujar_cabecera_pro(lienzo, esc_l, esc_v, datos["local"], datos["visitante"], datos["liga"], "CARTELERA ANALIZADA DE HOY", y_base=112)
+    y_bot = _dibujar_cabecera_pro(lienzo, esc_l, esc_v, datos["local"], datos["visitante"], datos["liga"], "CARTELERA DE ESTA JORNADA", y_base=112)
     draw = ImageDraw.Draw(lienzo, "RGBA")
 
     lista_otros = list(otros_partidos or [])[:4]
@@ -2821,12 +2862,12 @@ def _crear_escena_4_debate_tactico_pro(datos, esc_l, esc_v, ruta_out, otros_part
     f_b4 = _fuente_pro("bold", 23)
     draw.text((_centrar_x_pro(draw, "PANEL COMPLETO Y COMUNIDAD DIARIA", f_b4), y_cta + 34), "PANEL COMPLETO Y COMUNIDAD DIARIA", font=f_b4, fill=(10, 12, 18, 255))
 
-    f_q1 = _fuente_pro_ajustada(draw, "ACCEDE DESDE NUESTRO PERFIL", "bold", 42, 860, 26)
-    f_q2 = _fuente_pro_ajustada(draw, "COMENTA 'DATOS' + TU MARCADOR EXACTO", "bold", 26, 860, 18)
+    f_q1 = _fuente_pro_ajustada(draw, "PANEL COMPLETO EN EL PERFIL", "bold", 42, 860, 26)
+    f_q2 = _fuente_pro_ajustada(draw, "¿CUÁL ES TU MARCADOR? DÉJALO ABAJO", "bold", 26, 860, 18)
     f_q3 = _fuente_pro("mono", 20)
-    draw.text((_centrar_x_pro(draw, "ACCEDE DESDE NUESTRO PERFIL", f_q1), y_cta + 92), "ACCEDE DESDE NUESTRO PERFIL", font=f_q1, fill=_C_BLANCO_PRO)
-    draw.text((_centrar_x_pro(draw, "COMENTA 'DATOS' + TU MARCADOR EXACTO", f_q2), y_cta + 154), "COMENTA 'DATOS' + TU MARCADOR EXACTO", font=f_q2, fill=_C_VERDE_PRO)
-    draw.text((_centrar_x_pro(draw, "APP WEB INTERACTIVA  •  SEGUIMIENTO EN TIEMPO REAL", f_q3), y_cta + 204), "APP WEB INTERACTIVA  •  SEGUIMIENTO EN TIEMPO REAL", font=f_q3, fill=_C_GRIS_PRO)
+    draw.text((_centrar_x_pro(draw, "PANEL COMPLETO EN EL PERFIL", f_q1), y_cta + 92), "PANEL COMPLETO EN EL PERFIL", font=f_q1, fill=_C_BLANCO_PRO)
+    draw.text((_centrar_x_pro(draw, "¿CUÁL ES TU MARCADOR? DÉJALO ABAJO", f_q2), y_cta + 154), "¿CUÁL ES TU MARCADOR? DÉJALO ABAJO", font=f_q2, fill=_C_VERDE_PRO)
+    draw.text((_centrar_x_pro(draw, "ESTADÍSTICAS EN VIVO  •  DIXON-COLES + POISSON", f_q3), y_cta + 204), "ESTADÍSTICAS EN VIVO  •  DIXON-COLES + POISSON", font=f_q3, fill=_C_GRIS_PRO)
 
     lienzo.convert("RGB").save(ruta_out, quality=96)
     return ruta_out
@@ -3264,26 +3305,26 @@ def generar_paquete_redes_sociales(fecha_jornada, partidos_vip, partidos_descart
                 _crear_historia_diaria_pro(datos_v, esc_l, esc_v, tit_v, ruta_historia_hoy)
 
             if num_v == 1:
-                intro_voz = f"Ojo con el dato que sacó nuestro algoritmo en Páiton para este {loc_v} contra {vis_v} por {liga_hab}. Quédate hasta el final porque hoy analizamos {n_total_panel} partidos en el panel."
+                intro_voz = f"Ojo con el dato que sacó nuestro modelo en Páiton para este {loc_v} contra {vis_v} por {liga_hab}. Quédate hasta el final porque analizamos {n_total_panel} partidos de esta jornada."
             else:
-                intro_voz = f"Nadie está viendo este detalle estadístico del {loc_v} frente a {vis_v} por {liga_hab}. Mira el avance del modelo antes del pitazo inicial."
+                intro_voz = f"Mira este detalle estadístico previo al {loc_v} frente a {vis_v} por {liga_hab}. Así proyecta el modelo matemático el ritmo del partido."
 
             segmentos_4 = [
                 (
-                    f"Avance en Python: {loc_v} vs {vis_v}|Quédate hasta el final para ver la cartelera",
+                    f"Estudio en Python: {loc_v} vs {vis_v}|Radiografía previa de esta jornada",
                     intro_voz,
                 ),
                 (
-                    f"Avance Poisson: {datos_v['tot_goles']:.2f} goles esperados|Córners, remates y faltas en el panel",
-                    f"En el avance inicial, el modelo estima {g_hab} goles esperados. Pero las cifras exactas de córners, remates a puerta y disciplina están reservadas en nuestra aplicación web.",
+                    f"Proyección Poisson: {datos_v['tot_goles']:.2f} goles esperados|Córners, remates y faltas en el panel",
+                    f"En la simulación inicial, el modelo estima {g_hab} goles esperados. Las métricas completas de córners, remates a puerta y disciplina quedan disponibles en nuestro panel diario.",
                 ),
                 (
-                    f"Lectura 1: {pick_vis}|Lectura 2 y modelo 1X2 solo en la comunidad",
-                    f"La primera lectura estadística apunta a {pick_voz}. La segunda lectura de mayor valor y las probabilidades exactas de resultado ya están desbloqueadas en nuestra comunidad diaria.",
+                    f"Lectura 1: {pick_vis}|Lectura 2 y modelo 1X2 en el panel diario",
+                    f"La primera tendencia estadística apunta a {pick_voz}. La segunda lectura clave y las probabilidades exactas de resultado están publicadas en nuestra comunidad.",
                 ),
                 (
-                    f"Accede al panel completo desde nuestro perfil|Comenta DATOS + tu marcador exacto",
-                    f"Además de este duelo, ya tienes listos otros {len(otros_cartelera_v) or 4} partidazos de hoy con su matriz completa. Entra desde nuestro perfil para acceder al panel diario y comenta DATOS con tu marcador exacto.",
+                    f"Panel completo disponible en el perfil|¿Cuál es tu marcador? Déjalo en comentarios",
+                    f"Además de este duelo, ya tienes listos otros {len(otros_cartelera_v) or 4} partidos de esta jornada con su matriz completa. Cuéntame en los comentarios cuál es tu marcador exacto.",
                 ),
             ]
 
