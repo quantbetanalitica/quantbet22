@@ -899,10 +899,11 @@ def generar_captura_automatica(res_m, tipo_filtro="DESCARTES", guardar_imagen=Tr
         )
         es_liga_cerrada = ("SEGUNDA" in liga_vis) or ("ARGENTINA" in liga_vis)
 
-        # 1. Prohibido recomendar Menos de (Under) en Selecciones (incluyendo Nations League), Copas o con favorito claro (evita Suiza vs Escocia 4-0)
+        # 1. Prohibido recomendar Menos de (Under) en Selecciones, Copas, ligas abiertas de ritmo alto o con favorito claro
         es_torneo_selecciones = any(k in liga_vis for k in ["INTERNACIONAL", "ELIMINATORIAS", "NATIONS", "EURO", "MUNDIAL", "COPA AMÉRICA"])
+        es_liga_ritmo_alto = any(k in liga_vis for k in ["INGLATERRA", "PREMIER", "ALEMANIA", "BUNDESLIGA", "PAÍSES BAJOS", "PAISES BAJOS", "EREDIVISIE", "HOLANDA", "USA", "MLS"])
         if "Menos de" in nombre:
-            if res_m.get("es_copa") or es_torneo_selecciones:
+            if res_m.get("es_copa") or es_torneo_selecciones or es_liga_ritmo_alto:
                 continue
             if "2.5" in nombre:
                 tope_u25 = 2.42 if (is_america or es_liga_cerrada) else 2.36
@@ -912,11 +913,10 @@ def generar_captura_automatica(res_m, tipo_filtro="DESCARTES", guardar_imagen=Tr
                 if tot_goles >= 2.52 or (hay_favorito_claro and tot_goles >= 2.35) or prob < 69.0:
                     continue
 
-        # 2. Ambos Marcan (BTTS) calibrado por matemáticas reales (Poisson + Kambi):
-        #    Permitido en VIP si ambos equipos tienen gol (prob >= 57.5% y tot_goles >= 2.45), aunque exista favorito (ej. Nice vs PSG 2-3, Newcastle vs Arsenal 2-2)
+        # 2. Ambos Marcan (BTTS) calibrado v26.10: exige convicción real de ambos ataques (corta BTTS arriesgados @1.60+)
         if nombre == "Ambos Marcan (BTTS)":
             ataque_min_btts = float(res_m.get("ataque_debil") or 0.95)
-            if tot_goles < 2.50 or prob < 58.0 or ataque_min_btts < 0.92:
+            if tot_goles < 2.65 or prob < 62.5 or ataque_min_btts < 1.05:
                 continue
 
         # 3. Regla #3: Filtro Dixon-Coles exacto para Over 1.5 (si P(0-0)+P(1-0)+P(0-1) >= 27%, no priorizar Over 1.5)
@@ -1064,12 +1064,15 @@ def generar_captura_automatica(res_m, tipo_filtro="DESCARTES", guardar_imagen=Tr
             elif tot_goles < 3.65 or prob < 62.0:
                 continue
 
-        # 3B. Gate profesional para Goles por Equipo (> 0.5 y > 1.5): mercado clave de fútbol puro
+        # 3B. Gate profesional v26.10 para Goles por Equipo (> 0.5 y > 1.5): evita 0-0 en duelos cerrados (ej. Leganés, Venezia)
         if obtener_familia(nombre) == "goles_equipo":
             es_ge_loc = res_m["local"][:8].lower() in nombre.lower()
             lam_ge = float(res_m.get("l_local_mat" if es_ge_loc else "l_vis_mat") or (tot_goles * 0.5))
+            es_liga_cerrada_ge = es_liga_cerrada or ("COLOMBIA" in liga_vis)
             if "> 0.5" in nombre:
-                if lam_ge < 1.18 or prob < 68.0:
+                min_lam_ge = 1.45 if es_liga_cerrada_ge else 1.32
+                min_prob_ge = 71.0 if es_liga_cerrada_ge else 68.0
+                if lam_ge < min_lam_ge or prob < min_prob_ge or riesgo_corto_dc >= 26.0:
                     continue
                 if tipo_filtro == "VIP" and (cuota_orig < 1.34 or cuota_orig > 1.80):
                     continue
@@ -1388,8 +1391,11 @@ def generar_captura_automatica(res_m, tipo_filtro="DESCARTES", guardar_imagen=Tr
         respaldo_vip = []
         respaldo_free = []
 
-        # Respaldo v26.4: TODOS los 20+ mercados activos (incluyendo Under, X2, Córners, Goles Equipo y Combos) con matemática calibrada
-        if tot_goles <= 2.35:
+        # Respaldo v26.10: Respeta bloqueo de Under en ligas de ritmo alto / copas / selecciones y gate estricto de BTTS
+        es_liga_ritmo_alto_fb = any(k in liga_vis for k in ("INGLATERRA", "PREMIER", "ALEMANIA", "BUNDESLIGA", "PAÍSES BAJOS", "PAISES BAJOS", "EREDIVISIE", "HOLANDA", "USA", "MLS"))
+        es_torneo_sel_fb = any(k in liga_vis for k in ("INTERNACIONAL", "ELIMINATORIAS", "NATIONS", "EURO", "MUNDIAL", "COPA AMÉRICA"))
+        permite_under_fb = (not res_m.get("es_copa")) and (not es_torneo_sel_fb) and (not es_liga_ritmo_alto_fb)
+        if tot_goles <= 2.35 and permite_under_fb:
             if p_u35_real >= 68.0:
                 respaldo_free.append(("Total Menos de 3.5 (Under)", p_u35_real, calcular_cuota_real_casa(p_u35_real, res_m.get("c_min_under35"), "FREE", "Total Menos de 3.5 (Under)", cuotas_reales_casa)))
             if p_u25_real >= 58.0:
@@ -1403,7 +1409,7 @@ def generar_captura_automatica(res_m, tipo_filtro="DESCARTES", guardar_imagen=Tr
             if p_1t_real >= 66.0 and tot_goles >= 2.45:
                 respaldo_free.append(("Gol en 1T", p_1t_real, calcular_cuota_real_casa(p_1t_real, res_m.get("c_min_05_ht"), "FREE", "Gol en 1T", cuotas_reales_casa)))
                 respaldo_vip.append(("Gol en 1T", p_1t_real, calcular_cuota_real_casa(p_1t_real, res_m.get("c_min_05_ht"), "VIP", "Gol en 1T", cuotas_reales_casa)))
-            if p_btts_real >= 58.0 and tot_goles >= 2.50:
+            if p_btts_real >= 62.5 and tot_goles >= 2.65 and float(res_m.get("ataque_debil") or 0.95) >= 1.05:
                 respaldo_vip.append(("Ambos Marcan (BTTS)", p_btts_real, calcular_cuota_real_casa(p_btts_real, res_m.get("c_min_btts"), "VIP", "Ambos Marcan (BTTS)", cuotas_reales_casa)))
         if puede_1x_resp and float(res_m.get("p_1x") or 0) >= 70.0:
             respaldo_free.append(("Doble Oport. 1X", round(float(res_m.get("p_1x")), 1), calcular_cuota_real_casa(float(res_m.get("p_1x")), res_m.get("c_min_1x"), "FREE", "Doble Oport. 1X", cuotas_reales_casa)))
@@ -1502,7 +1508,7 @@ def generar_captura_automatica(res_m, tipo_filtro="DESCARTES", guardar_imagen=Tr
                  round(float(p_f_em_v or 0.0), 1),
                  calcular_cuota_real_casa(float(p_f_em_v or 62.0), c_f_em_v, lvl_em, f"Faltas Totales > {lin_f_em:.1f}", cuotas_reales_casa)),
             ]
-            if tot_goles <= 2.35 or hay_under_otra:
+            if (tot_goles <= 2.35 or hay_under_otra) and permite_under_fb:
                 emergencia.insert(0, ("Total Menos de 2.5 (Under)" if lvl_em == "VIP" else "Total Menos de 3.5 (Under)",
                     round(float((res_m.get("p_under25") if lvl_em == "VIP" else res_m.get("p_under35")) or 0.0), 1),
                     calcular_cuota_real_casa(float((res_m.get("p_under25") if lvl_em == "VIP" else res_m.get("p_under35")) or 68.0), (res_m.get("c_min_under25") if lvl_em == "VIP" else res_m.get("c_min_under35")), lvl_em, "Total Menos de 2.5 (Under)" if lvl_em == "VIP" else "Total Menos de 3.5 (Under)", cuotas_reales_casa)))
@@ -1553,6 +1559,8 @@ def generar_captura_automatica(res_m, tipo_filtro="DESCARTES", guardar_imagen=Tr
                 if not m_b or m_b[1] is None or m_b[2] is None:
                     continue
                 nm_g, pr_g, cu_g = m_b[0], round(float(m_b[1]), 1), float(m_b[2])
+                if (not permite_under_fb) and ("Menos de" in nm_g or "Under" in nm_g):
+                    continue
                 if pr_g < 50.0 or nm_g in usados_g:
                     continue
                 if any(x[0] == nm_g for x in pool_garantia):
